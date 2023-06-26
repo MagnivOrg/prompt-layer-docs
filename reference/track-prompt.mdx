@@ -1,0 +1,40 @@
+---
+title: "Track Prompt"
+api: "POST https://api.promptlayer.com/rest/track-prompt"
+---
+
+Associate a prompt template with a request.
+
+## Request Parameters
+
+<ParamField body="prompt_name" type="string">
+</ParamField>
+
+<ParamField body="prompt_input_variables" type="object" optional="true">
+</ParamField>
+
+<ParamField body="api_key" type="string">
+    Your PromptLayer API Key
+</ParamField>
+<ParamField body="request_id" type="string">
+</ParamField>
+<ParamField body="version" type="string" optional="true">
+</ParamField>
+
+<RequestExample>
+
+```python Python
+import requests
+response = requests.post(
+  "https://api.promptlayer.com/rest/track-prompt",
+  json={
+      "api_key": "<YOUR_API_KEY>",
+      "prompt_name": "<PROMPT_NAME>",
+      "prompt_input_variables": {"variable1": "value1", "variable2": "value2"},
+      "request_id": "<REQUEST_ID>",
+      "version": "<VERSION>"
+  },
+)
+```
+
+</RequestExample>

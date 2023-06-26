@@ -1,0 +1,34 @@
+---
+title: "Track Metadata"
+api: "POST https://api.promptlayer.com/rest/track-metadata"
+---
+
+Associate a metadata dictionary with a request. This can be used for things like session_ids, user_ids, location, etc.
+
+## Request Parameters
+
+<ParamField body="api_key" type="string">
+    Your PromptLayer API Key
+</ParamField>
+<ParamField body="request_id" type="string">
+</ParamField>
+<ParamField body="metadata" type="object">
+</ParamField>
+
+<RequestExample>
+
+```python Python
+import requests
+response = requests.post(
+  "https://api.promptlayer.com/rest/track-metadata",
+  json={
+      "api_key": "<YOUR_API_KEY>",
+      "request_id": "<REQUEST_ID>",
+      "metadata": {"session_id": "abc123", "user_id": "user123"}
+  },
+)
+```
+
+</RequestExample>
+
+👋 Contact us at hello@magniv.io if you run into any problems.

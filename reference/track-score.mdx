@@ -1,0 +1,20 @@
+---
+title: "Track Score"
+api: "POST https://api.promptlayer.com/rest/track-score"
+---
+
+Track score allows you to associate a score 0-100 with each request.
+
+## Request Parameters
+
+<ParamField body="request_id" type="string">
+    The `request_id` from `track-request`
+</ParamField>
+
+<ParamField body="score" type="integer">
+    The score you would like to give to this request (0 - 100)
+</ParamField>
+
+<ParamField body="api_key" type="string">
+    Your PromptLayer API Key
+</ParamField>

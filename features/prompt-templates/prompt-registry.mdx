@@ -1,0 +1,211 @@
+---
+title: "Prompt Registry"
+icon: "notebook"
+---
+
+The Prompt Registry helps get your LLM app ready for production. It allows you to easily manage your prompt templates, which are customizable prompt strings with placeholders for variables. 
+
+Specifically, a prompt template is your prompt string with variables indicated in curly brackets (`This is a prompt by {author_name}`). Prompt templates can have tags and are uniquely named.
+
+You can use this tool to programmatically retrieve and publish prompts (even at runtime!). That is, this registry makes it easy to start A/B testing your prompts. Viewed as a "**Prompt Management System**”, this registry allows your org to pull out and organize the prompts that are currently dispersed throughout your codebase. 
+
+<video controls="controls">
+    <source src="/videos/registrytrimmed.mp4" type="video/mp4" />
+</video> 
+
+
+## LangChain PromptTemplate Standard
+
+PromptLayer is built to support the LangChain PromptTemplate schema standard. Learn more on LangChain’s docs: [https://langchain.readthedocs.io/en/latest/modules/prompts.html](https://langchain.readthedocs.io/en/latest/modules/prompts.html)
+
+Both regular and few shot templates are supported.
+
+## Publishing a Template
+
+You can use the UI or API to create a template. 
+
+Templates are unique by name, which means that publishing a template with the same name will overwrite old templates.
+
+### Web UI
+
+<img src='/images/prompt-template.png' />
+
+To create a template using the UI, simply navigate to the Registry and click "Create Template". This will allow you to create the template visually. You can also edit old templates from the UI.
+
+Rename a template by triple-clicking on its name. It’s best practice to keep template names unique and lowercase.
+
+Try dragging in a JSON PromptTemplate file. For more information about serialization, see the [Langchain docs](https://langchain.readthedocs.io/en/latest/modules/prompts/examples/prompt_serialization.html).
+
+### Python API
+
+```python
+promptlayer.prompts.publish(
+    "my_template", prompt_template=my_template, tags=["my_tag"])
+```
+
+- If you're using Python, you can programmatically use `promptlayer.prompts.publish` to create a template. You can also use Langchain to create a template, either by pulling it from LangchainHub, creating a custom template, or providing a Python dictionary directly.
+    
+To pull a template from LangchainHub, you can use the following code:
+
+```python
+from langchain.prompts import load_prompt
+prompt = load_prompt('lc://prompts/llm_bash/prompt.json')
+
+promptlayer.prompts.publish(
+  "llmbash", 
+  tags=["langchain_hub"],
+  prompt_template=prompt)
+```
+
+To create a custom [LangChain PromptTemplate](https://langchain.readthedocs.io/en/latest/modules/prompts.html), you can use the following code:
+
+```python
+from langchain import PromptTemplate
+template="5 example GPT prompt templates for {subject}:"
+prompt = PromptTemplate(input_variables=["subject"], template=template)
+
+promptlayer.prompts.publish("prompt_examples", prompt_template=prompt)
+```
+    
+
+### REST API
+
+- Publish a new prompt using the endpoint `library-publish-prompt-template` below:
+    
+    **REST API Endpoint: library-publish-prompt-template**
+    
+    This endpoint is used to publish a new prompt template to the Prompt Registry library.
+    
+    **Method**
+    
+    - `POST`
+    
+    **Request Parameters**
+    
+    - `api_key` (required): Your API key for authentication purposes.
+    - `prompt_name` (required): Name of the prompt to store
+    - `prompt_template` (required): The JSON object of the prompt template to be published.
+    - `tags` (optional): List of string tags to associate with this prompt template
+    
+    **Response**
+    
+    - `200 OK`: The prompt template was successfully published.
+    - `401 Unauthorized`: The provided API key is invalid or missing.
+    - `400 Bad Request`: The request was malformed or missing required parameters.
+    
+    **Example Request**
+    
+    ```
+    POST <https://api.promptlayer.com/library-publish-prompt-template>
+    Content-Type: application/json
+    
+    {
+      "api_key": "your_api_key",
+      "template": {
+        "name": "my_template",
+        "prompt_template": {
+    			"template": "This is my prompt template with variables {variable1} and {variable2}.",
+    			"template_format": "f-string",
+    	    "input_variables": ["variable1", "variable2"]
+    		}
+      }
+    }
+    
+    ```
+    
+    **Example Response**
+    
+    ```
+    HTTP/1.1 200 OK
+    Content-Type: text/plain
+    
+    {"success": true}
+    ```
+    
+
+## Getting a Template
+
+The Prompt Registry is designed to be used at runtime to pull the relevant prompt for your completion.
+
+It’s simple.
+
+### Python API
+
+```python
+template_dict = promptlayer.prompts.get("my_template")
+```
+
+Optionally, to return a Langchain `PromptTemplate` type include the **************langchain=True************** as an optional argument as shown below.
+
+```python
+prompt_template_obj = promptlayer.prompts.get("my_template", langchain=True)
+```
+
+You can also optionally pass `version` to get an older version of a prompt. By default the newest version of a prompt is returned
+
+```python
+template_dict = promptlayer.prompts.get("my_template", version=3)
+```
+
+### REST API
+
+- Get a new prompt using the endpoint `library-get-prompt-template` below:
+    
+    **REST API Endpoint: library-get-prompt-template**
+    
+    This endpoint is used to get a prompt template from the Prompt Registry library.
+    
+    **Method**
+    
+    - `POST`
+    
+    **Request Parameters**
+    
+    - `api_key` (required): Your API key for authentication purposes.
+    - `prompt_name` (required): Name of the prompt to retrieve
+    
+    **Response**
+    
+    - `200 OK`: The prompt template was successfully published.
+    - `401 Unauthorized`: The provided API key is invalid or missing.
+    - `400 Bad Request`: The request was malformed or missing required parameters.
+    - `404 Not Found`: There was no prompt with the given name.
+    
+    **Example Request**
+    
+    ```
+    POST <https://api.promptlayer.com/library-publish-prompt-template>
+    Content-Type: application/json
+    
+    {
+      "api_key": "your_api_key",
+      "prompt_name": "my_prompt_template"
+    }
+    
+    ```
+    
+    **Example Response**
+    
+    ```
+    HTTP/1.1 200 OK
+    Content-Type: text/plain
+    
+    {
+    	"prompt_name": "my_prompt_template",
+    	"prompt_template": {
+        "name": "my_template",
+        "prompt_template": {
+    			"template": "This is my prompt template with variables {variable1} and {variable2}.",
+    			"template_format": "f-string",
+    	    "input_variables": ["variable1", "variable2"]
+    		}
+      }
+    }
+    ```
+    
+
+## A/B Testing
+
+The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing. 
+
+CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better. This can help you optimize your prompts and improve user engagement.

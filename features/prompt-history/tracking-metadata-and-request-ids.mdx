@@ -1,0 +1,88 @@
+---
+title: "Tracking Metadata and Request IDs"
+icon: "magnifying-glass"
+---
+
+PromptLayer allows attaching metadata to requests. 
+
+Metadata types:
+
+[Learn more about how this all fits together & how to build an evaluation system using these features.](/guides/features/prompt-templates/evaluation-and-ranking)
+
+All tracking in PromptLayer is based on the `pl_request_id` . Depending on how you are using PromptLayer, you will need to get the `pl_request_id`.
+
+- Specific instructions for retrieving the ID are below:
+    1. `REST api` with `/track-request`: The `pl_request_id` is returned as `request_id` in the case of a successful request 
+    2. `openai` directly from the `promptlayer` python library:  Set the argument `return_pl_id` to true in your function call. This will change the `openai` call to now return the `openai` response and the `pl_request_id`. If you are using `stream=true`, then only the last `pl_request_id` will be the id, otherwise, it will be `None`
+        
+        ```python
+        from promptlayer import openai
+        response, pl_request_id = openai.Completion.create(
+          engine="text-davinci-003", 
+          prompt="hi my name is ", 
+          return_pl_id=True
+        )
+        ```
+        
+    3. `langchain` PromptLayer integration:Set the argument `return_pl_id` to true when you instantialize your model. This will add the PromptLayer request ID in the `generation_info` field of the `Generation` returned when using `.generate` or `.agenerate`
+        
+        For example:
+        
+        ```python
+        from langchain.llms import PromptLayerOpenAI
+        llm = PromptLayerOpenAI(return_pl_id=True)
+        
+        llm_results = llm.generate(["hello world"])
+        for res in llm_results.generations:
+            print("pl request id: ", res[0].generation_info["pl_request_id"])
+        ```
+        
+
+## Associating a Request to a PromptTemplate
+
+To associate requests with a prompt from the prompt registry, run the following line
+
+```python
+promptlayer.track.prompt(
+  request_id=pl_request_id, 
+  prompt_name="example-2",
+  prompt_input_variables=input_variables,
+  version=2
+)
+```
+
+Where `prompt_name` is a prompt in your prompt registry, `prompt_input_variables` is a dictionary corresponding to the input variables you formatted the prompt with, and `version` is the version of the prompt you are trying to track. `version` is optional, by default it will track the newest version of the prompt.
+
+This information will appear on your dashboard under your request and prompt template pages.
+
+## Score (0-100) for each Request
+
+To associate a score with a prompt, you can either do this from the dashboard under the request page or by running the following line
+
+```python
+promptlayer.track.score(
+  request_id=pl_request_id, 
+  score=100
+)
+```
+
+The score must be between 0 to 100 (inclusive). You will see the score on the dashboard. If you have a prompt associated with a request, you will also get an average score for that prompt on the prompt registry page associated with that prompt.
+
+## General Metadata
+
+PromptLayer allows you to attach multiple key value pairs as metadata to a request. In the dashboard, you can look up requests and analyze analytics using metadata.
+
+```python
+promptlayer.track.metadata(
+  request_id=pl_request_id,
+  metadata={
+      "user_id":"1abf2345f",
+      "post_id": "2cef2345f"
+  }
+)
+```
+
+Things to note:
+
+1. Currently keys and values need to be strings in PromptLayer.
+2. If you track a key that was already tracked before for a specific request_id, the value that corresponds to that key will be updated.

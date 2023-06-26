@@ -1,9 +1,9 @@
 {
   "$schema": "https://mintlify.com/schema.json",
-  "name": "Starter Kit",
+  "name": "PromptLayer",
   "logo": {
-    "dark": "/logo/dark.svg",
-    "light": "/logo/light.svg"
+    "dark": "/logo/logo.png",
+    "light": "/logo/logo.png"
   },
   "favicon": "/favicon.png",
   "colors": {
@@ -11,43 +11,38 @@
     "light": "#81D7F7",
     "dark": "#004E7A"
   },
-  "topbarLinks": [
-    {
-      "name": "Documentation",
-      "url": "https://mintlify.com/docs"
-    }
-  ],
-  "topbarCtaButton": {
-    "name": "Dashboard",
-    "url": "https://dashboard.mintlify.com"
-  },
-  "tabs": [
-    {
-      "name": "API Reference",
-      "url": "api-reference"
-    }
-  ],
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "development"]
+      "pages": ["introduction"]
     },
     {
-      "group": "Essentials",
-      "pages": ["essentials/markdown", "essentials/code", "essentials/images", "essentials/settings", "essentials/navigation"]
+      "group": "Languages & Environments",
+      "pages": ["languages/javascript", "languages/python", "languages/langchain", "languages/rest-api"]
     },
     {
-      "group": "API Documentation",
-      "pages": ["api-reference/authentication"]
-    },
-    {
-      "group": "Endpoint Examples",
+      "group": "Features",
       "pages": [
-        "api-reference/endpoint/get",
-        "api-reference/endpoint/create",
-        "api-reference/endpoint/update",
-        "api-reference/endpoint/delete"
+        {
+          "group": "Prompt History",
+          "pages": ["features/prompt-history/chatgpt-support", "features/prompt-history/organizing-with-tags", "features/prompt-history/sharing-prompts", "features/prompt-history/tracking-metadata-and-request-ids"]
+        }, 
+        {
+          "group": "Prompt Templates",
+          "pages": [
+            "features/prompt-templates/evaluation-and-ranking",
+            "features/prompt-templates/prompt-registry"
+          ]
+        }
       ]
+    },
+    {
+      "group": "What is PromptLayer?",
+      "pages": ["what-is-promptlayer/how-it-works"]
+    },
+    {
+      "group": "Reference",
+      "pages": ["reference/rest-api-reference", "reference/track-request", "reference/get-prompt-template", "reference/publish-prompt-template", "reference/track-score", "reference/track-prompt", "reference/track-metadata"]
     }
   ],
   "footerSocials": {

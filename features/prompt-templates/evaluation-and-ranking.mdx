@@ -1,0 +1,60 @@
+---
+title: "Evaluation and Ranking"
+icon: "ranking-star"
+---
+
+One of the biggest challenges in prompt engineering is understanding if Prompt A performs better than Prompt B. PromptLayer helps you solve this.
+
+The best way to understand your prompts is by analyzing them in production. Below are some ways you can use PromptLayer to answer the following key questions:
+
+- How much does PromptA vs PromptB cost?
+- How often is PromptA used?
+- Is PromptA working better than PromptB?
+- Which prompts are receiving the most negative user feedback?
+- How do I synthetically evaluate my prompts using LLMs?
+
+## Scoring
+
+*Every request in PromptLayer has a “Score”. This score is an integer 0-100.*
+
+<img src="/images/evaluation-score.png" />
+
+Ranking in PromptLayer revolves around this Score value. You can update it through the UI (see screenshot above) or programmatically ([More details here](/guides/features/prompt-history/tracking-metadata-and-request-ids)).
+
+The three most common ways to Score to rank your prompts are:
+
+1. **User feedback**: Present a 👍 and 👎 to your users after the completion. A user press of one of those buttons fills in a score of [100, 0] respectively.
+2. **RLHF**: Use our visual dashboard to fill in scores by hand. You can then use this data to decide between prompt templates or to fine-tune.
+3. **Synthetic Evaluation**: Use LLMs to score LLMs. After getting a completion, run an evaluation prompt on it and translate that to a score [0, 100]. 
+    
+    For example, your prompt could be:
+    
+    ```
+    The following is an AI chat message given to a user:
+    
+    {completion}
+    
+    --
+    
+    We are worried that the chatbot is being rude. How rude is the chat on a scale of 0 to 100?
+    ```
+    
+
+## Evaluation
+
+After populating Scores as described above, navigate to the Prompt Template page to see how each template stacks up.
+
+<img src="/images/all-templates.png" />
+
+
+## Pricing
+
+We live in the real world, so money matters. Building a prod LLM system means managing price. Some LLMs are cheaper than other LLMs. Some prompts are cheaper than other prompts.
+
+Each request history page will tell you its individual cost:
+
+<img src="/images/individual-cost.png" />
+
+You can also see the lifetime cost of a template in the Prompt Registry template page.
+
+<img src="/images/lifetime-cost.png" />

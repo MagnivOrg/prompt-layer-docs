@@ -1,0 +1,95 @@
+---
+title: 'Python'
+icon: 'python'
+---
+
+To get started, create an account by clicking “*Log in*” on [PromptLayer](https://promptlayer.com/). Once logged in, click the button to create an API key and save this in a secure location ([Guide to Using Env Vars](https://towardsdatascience.com/the-quick-guide-to-using-environment-variables-in-python-d4ec9291619e)).
+
+Once you have that all set up, [install PromptLayer using](https://pypi.org/project/promptlayer/) `pip`.
+
+```bash
+pip install promptlayer
+```
+
+PromptLayer python library has support for both OpenAI and Anthropic LLMs!
+
+## OpenAI
+
+In the Python file where you use OpenAI APIs, add the following. This allows us to keep track of your requests without needing any other code changes.
+
+```python
+import promptlayer
+promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
+openai = promptlayer.openai
+```
+
+**You can then use `openai` as you would if you had imported it directly.**
+
+<Info>Your OpenAI API Key is **never** sent to our servers. All OpenAI requests are made locally from your machine, PromptLayer just logs the request.</Info>
+
+There is only one difference… PromptLayer allows you to add tags through the `pl_tags` argument. This allows you to track and group requests in the dashboard. 
+
+************Tags are not required but we recommend them!************
+
+```python
+openai.Completion.create(
+	engine="text-ada-001", 
+	prompt="My name is", 
+	pl_tags=["name-guessing", "pipeline-2"]
+)
+```
+
+After making your first few requests, you should be able to see them in the PromptLayer dashboard!
+
+<img src="/images/prompt-in-dashboard.png" />
+
+Here is a complete code snippet:
+
+```python
+import promptlayer
+import os
+promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
+openai=promptlayer.openai
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+openai.Completion.create(
+	engine="text-ada-001", 
+	prompt="My name is", 
+	pl_tags=["name-guessing", "pipeline-2"]
+)
+```
+
+## Anthropic
+
+Using Anthropic with PromptLayer is very similar to how to one would use OpenAI. 
+
+Below is an example code snippet of the one line replacement:
+
+```python
+import os
+import promptlayer
+import anthropic
+
+anthropic = promptlayer.anthropic
+promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
+anthropic_client = anthropic.Client(
+	os.environ.get("ANTHROPIC_API_KEY")   
+)
+
+response = anthropic_client.completion(
+	prompt=f"{anthropic.HUMAN_PROMPT} How many toes do dogs have? more information more information more{anthropic.AI_PROMPT}",
+	stop_sequences=[anthropic.HUMAN_PROMPT],
+	model="claude-v1-100k",
+	max_tokens_to_sample=100,
+	pl_tags=["test-anthropic-1"],
+	return_pl_id=True,
+)
+print(response)
+```
+
+Here is how it would look like on the dashbaord:
+
+<img src="/images/anthropic-test.png" />
+
+---
+
+Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@magniv.io)

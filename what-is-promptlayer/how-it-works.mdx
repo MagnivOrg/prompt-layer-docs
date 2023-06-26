@@ -1,0 +1,35 @@
+---
+title: "How PromptLayer Works"
+description: "Data-driven prompt engineering"
+icon: "question"
+---
+
+PromptLayer is a devtool that allows you to track, manage, and share your GPT prompt engineering. It acts as a middleware between your code and OpenAI's python library, recording all your API requests and saving relevant metadata for easy exploration and search in the PromptLayer dashboard.
+
+### **How it Works**
+
+PromptLayer works by wrapping your OpenAI API requests and logging data about them after they are sent. This is all done from your machine, your API key is never sent. This means that it does not interfere with the functionality of your existing codebase or require any changes to your application's architecture. All you need to do is add PromptLayer as an add-on to your existing LLM application and start making requests as usual.
+
+As you make OpenAI API requests, PromptLayer records them and saves relevant metadata such as the prompt used, the response returned, and any additional parameters that were passed. This data is stored by PromptLayer and can be easily accessed via the PromptLayer dashboard.
+
+[https://github.com/MagnivOrg/prompt-layer-library](https://github.com/MagnivOrg/prompt-layer-library)
+
+### **Features**
+
+Some of the key features of PromptLayer include:
+
+- **API request logging:** PromptLayer records all your OpenAI API requests, allowing you to search and explore request history in the PromptLayer dashboard.
+- **Metadata tracking:** Under the hood, PromptLayer logs each OpenAI request *after* the request is made, saving relevant metadata such as the prompt used, the response returned, and any additional parameters that were passed.
+- **Easy integration:** PromptLayer is an add-on to your existing LLM application and requires no changes to your application's architecture.
+- **Designed for production:** PromptLayer is designed to help maintain LLMs in production and aid in the development process. It is prod-ready and will not interfere with your application's functionality even if it fails.
+- **Collaboration:** PromptLayer allows you to share your prompt engineering with others, making it easy to collaborate on projects with teammates or share your work with the wider community.
+
+### **Getting Started**
+
+To get started with PromptLayer, you will need to sign up for an account on the PromptLayer website. Once you have created an account, you can follow the instructions to add PromptLayer as an add-on to your existing LLM application.
+
+Once you have added PromptLayer to your application, all your OpenAI API requests will be logged and saved to the cloud. You can access this data via the PromptLayer dashboard, which allows you to search and explore your request history, view metadata, and collaborate with others.
+
+### **Conclusion**
+
+PromptLayer is a powerful devtool that makes it easy to track, manage, and share your GPT prompt engineering. With its easy integration, prod-ready design, and collaboration features, it is an essential tool for anyone working with LLMs in production or development. Sign up for an account on the PromptLayer website to get started today!

@@ -1,0 +1,37 @@
+---
+title: "Organizing With Tags"
+icon: "tag"
+---
+
+While using PromptLayer, over time the number of logs will grow, making it difficult to find what you are looking for. Tags are a great way to help keep things organized.
+
+Tags can be used for whatever you want, but the top 2 ways are to:
+
+1. Keep track of which application you are working on
+2. If you are chaining prompts together, where you are in the pipeline
+
+For example, if you are working on an email application that has three chained stages, it would be a good idea to tag all the requests in this application with `email` and the corresponding stage `stage-x`
+
+To add a tag, add the keyword argument `pl_tags` into your openAI request like so:
+
+```python
+openai.Completion.create(
+  engine="text-ada-001", 
+  prompt="My name is", 
+  pl_tags=["pipeline3", "world"]
+)
+```
+This will then show up on your PromptLayer dashboard:
+
+
+<img src="/images/tags.png" alt="" srcset="" width="50%" />
+
+
+
+And can be filtered by clicking on the tags button by the search-bar:
+
+<img src="/images/tag-filter.png" alt="" srcset="" width="50%" />
+---
+
+Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@magniv.io)
+

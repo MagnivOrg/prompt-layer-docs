@@ -1,0 +1,38 @@
+---
+title: 'REST API'
+icon: 'webhook'
+---
+
+Right now, the best way to access PromptLayer is through our Python wrapper library that can be installed with `pip install promptlayer`.
+
+Our REST API is fully supported, the Python library is simply a wrapper over it. 
+
+## Overview
+
+PromptLayer provides a powerful REST API that allows you to interact with the platform programmatically. The API enables you to perform various actions, such as tracking requests, getting prompt templates, publishing prompt templates, tracking scores, associating prompt templates with requests, and associating metadata with requests.
+
+## API Reference
+
+For detailed information about the available API endpoints and their usage, please refer to our [REST API Reference](/guides/reference/rest-api-reference).
+
+## Example Usage
+
+Here's an example of making a request to the PromptLayer REST API using Python:
+
+```python
+import requests
+response = requests.post(
+  "https://api.promptlayer.com/rest/track-request",
+  json={
+    "api_key": "pl_<YOUR API KEY>",
+    "function_name": "openai.Completion.create",
+    "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
+    "tags": ["hello", "world"],
+    "request_response": {"id": "cmpl-6TEeJCRVlqQSQqhD8CYKd1HdCcFxM", "object": "text_completion", "created": 1672425843, "model": "text-ada-001", "choices": [{"text": " advocacy\"My name is advocacy.", "index": 0, "logprobs": None, "finish_reason": "stop"}]},
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "prompt_id": "<PROMPT ID>",
+    "prompt_input_variables": "<Dictionary of variables for prompt>",
+    "prompt_version": "<Integer of prompt version>"m
+  },
+)
