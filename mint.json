@@ -50,5 +50,9 @@
     "linkedin": "https://www.linkedin.com/company/promptlayer/",
     "discord": "https://discord.com/invite/VMZVbyeb"
   },
-  "backgroundImage": "/background.png"
+  "backgroundImage": "/background.png",
+  "topbarLinks": [{
+    "name": "Contact Us",
+    "url": "mailto:hello@promptlayer.com"
+  }]
 }
