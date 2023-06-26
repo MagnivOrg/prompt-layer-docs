@@ -5,7 +5,7 @@
     "dark": "/logo/logo.png",
     "light": "/logo/logo.png"
   },
-  "favicon": "/favicon.png",
+  "favicon": "/logo/logo.png",
   "colors": {
     "primary": "#12A7D3",
     "light": "#81D7F7",
@@ -46,9 +46,10 @@
     }
   ],
   "footerSocials": {
-    "twitter": "https://twitter.com/mintlify",
+    "twitter": "https://twitter.com/promptlayer",
     "github": "https://github.com/mintlify",
-    "linkedin": "https://www.linkedin.com/company/mintsearch"
+    "linkedin": "https://www.linkedin.com/company/promptlayer/",
+    "discord": "https://discord.com/invite/VMZVbyeb"
   },
   "backgroundImage": "/background.png"
 }
