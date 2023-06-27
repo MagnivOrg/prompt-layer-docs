@@ -5,6 +5,20 @@ api: "POST https://api.promptlayer.com/rest/track-score"
 
 Track score allows you to associate a score 0-100 with each request.
 
+## Example Code
+```python
+import requests
+request_response = requests.post(
+  "https://api.promptlayer.com/rest/track-score",
+  json={
+      "request_id": "<PL_REQUEST_ID>",
+      "score": "<NUMBER>",
+      "api_key": "pl_<YOUR API KEY>",
+  },
+)
+```
+
+
 ## Request Parameters
 
 <ParamField body="request_id" type="string">

@@ -5,6 +5,27 @@ api: "POST https://api.promptlayer.com/rest/track-request"
 
 Track request allows you to send your LLM request to our platform. On success, this request will return a `request_id` which is necessary for `track-score`
 
+## Example Code
+```jsx
+import requests
+request_response = requests.post(
+  "https://api.promptlayer.com/rest/track-request",
+  json={
+  "function_name": "openai.Completion.create",
+    // kwargs will need messages if using chat-based completion
+  "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
+  "tags": ["hello", "world"],
+  "request_response": {"id": "cmpl-6TEeJCRVlqQSQqhD8CYKd1HdCcFxM", "object": "text_completion", "created": 1672425843, "model": "text-ada-001", "choices": [{"text": " advocacy\"\n\nMy name is advocacy.", "index": 0, "logprobs": None, "finish_reason": "stop"}]},
+  "request_start_time": 1673987077.463504,
+  "request_end_time": 1673987077.463504,
+  "prompt_id": "<PROMPT ID>",
+  "prompt_input_variables": "<Dictionary of variables for prompt>"
+  "prompt_version":<Integer of prompt version>
+  "api_key": "pl_<YOUR API KEY>",
+  },
+)
+```
+
 ## Request Parameters
 <ParamField body="function_name" type="string">
     The name of the function. It should be one of the following `openai.Completion.create` or `openai.ChatCompletion.create` we use this to know how to parse the response correctly

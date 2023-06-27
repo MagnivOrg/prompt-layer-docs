@@ -5,6 +5,22 @@ api: "POST https://api.promptlayer.com/rest/publish-prompt-template"
 
 Publish Prompt Template allows you to programmatically create a new version of a prompt 
 
+## Example Code
+
+```python
+import requests
+request_response = requests.post(
+  "https://api.promptlayer.com/rest/publish-prompt-template",
+  json={
+      "prompt_name": "<PROMPTNAME>",
+      "prompt_template": "<PROMPTEMPLATE>",
+      "tags": "<TAGS>",
+      "api_key": "pl_<YOUR API KEY>",
+  },
+)
+```
+
+
 ## Request Parameters
 
 <ParamField body="prompt_name" type="string">

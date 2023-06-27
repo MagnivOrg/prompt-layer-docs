@@ -5,6 +5,22 @@ api: "GET https://api.promptlayer.com/rest/get-prompt-template"
 
 Get Prompt Template allows you to get the template for a prompt based on the name. If the template is found, it will send you back a json object that includes some metadata (including the `id`, which can be used as the `prompt_id` in `track-request`) and the `prompt-template` itself which is a JSON representation of your prompt [following the langchain format.](https://langchain.readthedocs.io/en/latest/modules/prompts/examples/prompt_serialization.html#loading-from-json) 
 
+## Example Code
+```python
+import requests
+response = requests.get(
+  "https://api.promptlayer.com/rest/get-prompt-template",
+  headers={
+    "X-API-KEY": "<YOUR PROMPTLAYER API KEY>"
+  }, 
+  params={
+    "prompt_name": "<PROMPTNAME>",
+    "version": "<PROMPTVERSION>"
+  }
+)
+```
+
+
 ## Request Parameters
 <ParamField body="prompt_name" type="string">
 </ParamField>

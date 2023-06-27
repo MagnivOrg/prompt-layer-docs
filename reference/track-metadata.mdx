@@ -5,6 +5,19 @@ api: "POST https://api.promptlayer.com/rest/track-metadata"
 
 Associate a metadata dictionary with a request. This can be used for things like session_ids, user_ids, location, etc.
 
+## Example Code
+```python
+import requests
+response = requests.post(
+  "https://api.promptlayer.com/rest/track-metadata",
+  json={
+      "api_key": "<YOUR_API_KEY>",
+      "request_id": "<REQUEST_ID>",
+      "metadata": {"session_id": "abc123", "user_id": "user123"}
+  },
+)
+```
+
 ## Request Parameters
 
 <ParamField body="api_key" type="string">
