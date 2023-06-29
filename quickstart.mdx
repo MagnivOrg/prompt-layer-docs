@@ -1,0 +1,90 @@
+---
+title: "Quickstart"
+icon: "flag-checkered"
+---
+
+PromptLayer takes less than 5 minutes to get started.
+- Sign up for an account at www.promptlayer.com
+- Grab an API key from PromptLayer.
+
+It's super easy to add PromptLayer to an existing project. Usually only takes one line.
+
+__Get started with the code below!__
+
+<CodeGroup>
+
+```python Python
+# Make sure to `pip install promptlayer`
+import promptlayer
+
+# Swap out your 'import openai'
+openai = promptlayer.openai
+
+# Do something fun 🚀
+openai.Completion.create(
+  engine="text-davinci-003", 
+  prompt="My name is", 
+  pl_tags=["name-guessing", "pipeline-2"]
+)
+```
+
+
+```python Python with LangChain
+# Make sure to `pip install promptlayer`
+
+# Using OpenAI completions
+from langchain.llms import PromptLayerOpenAI
+llm = PromptLayerOpenAI(pl_tags=["langchain"])
+llm("My name is")
+
+# Using OpenAI chat
+from langchain.chat_models import PromptLayerChatOpenAI
+from langchain.schema import (SystemMessage, HumanMessage)
+chat = PromptLayerChatOpenAI(pl_tags=["langchain"])
+chat([
+  SystemMessage(content="You are an AI assistant."),
+  HumanMessage(content="What's your name?")
+])
+```
+
+```js JS/TS with Langchain
+// Install with `npm install langchain`
+
+// Using OpenAI completions
+const { PromptLayerOpenAI } = require("langchain/llms/openai");
+const llm = new PromptLayerOpenAI({
+  temperature: 0.9,
+  openAIApiKey: "YOUR-API-KEY", // Replace with your OpenAI API key
+  promptLayerApiKey: "YOUR-API-KEY", // Replace with your PromptLayer API key
+});
+llm.call("How do I use PromptLayer with OpenAIChat?").then(console.log);
+
+// Using OpenAI chat
+const { PromptLayerChatOpenAI } = require("langchain/chat_models/openai");
+const { SystemChatMessage } = require("langchain/schema");
+const chat = new PromptLayerChatOpenAI({
+    returnPromptLayerId: true,
+    openAIApiKey: "YOUR-API-KEY", // Replace with your OpenAI API key
+    promptLayerApiKey: "YOUR-API-KEY", // Replace with your PromptLayer API key
+    });
+chat.generate([
+  [new SystemChatMessage("You are a helpful AI assistant."),],
+]).then(console.log);
+```
+
+```txt REST
+https://api.promptlayer.com/rest/track-request
+{
+  "function_name": "openai.Completion.create",
+  "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
+      // Messages will be in `kwargs` if using a chat model
+  "tags": ["promptlayer-test"],
+  "request_response": {...},
+  "request_start_time": 1673987077.463504,
+  "request_end_time": 1673987077.463504,
+  "api_key": "pl_<YOUR API KEY>",
+}
+```
+</CodeGroup>
+    
+   

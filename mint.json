@@ -14,11 +14,11 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction"]
+      "pages": ["introduction", "quickstart"]
     },
     {
       "group": "Languages & Environments",
-      "pages": ["languages/javascript", "languages/python", "languages/langchain", "languages/rest-api"]
+      "pages": ["languages/python", "languages/javascript", "languages/langchain", "languages/rest-api"]
     },
     {
       "group": "Features",
@@ -33,7 +33,8 @@
             "features/prompt-templates/evaluation-and-ranking",
             "features/prompt-templates/prompt-registry"
           ]
-        }
+        },
+        "features/faq"
       ]
     },
     {
