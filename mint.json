@@ -37,8 +37,8 @@
       ]
     },
     {
-      "group": "What is PromptLayer?",
-      "pages": ["what-is-promptlayer/how-it-works"]
+      "group": "Why PromptLayer?",
+      "pages": ["what-is-promptlayer/advanced-search", "what-is-promptlayer/how-it-works"]
     },
     {
       "group": "Reference",

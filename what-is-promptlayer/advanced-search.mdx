@@ -1,0 +1,87 @@
+---
+title: "Advanced Search"
+icon: "magnifying-glass"
+---
+
+PromptLayer advanced search capabilities allows you to find exactly what you want using tags, search queries, metadata, and favorites.
+
+## Using the Search Bar
+
+To start your search, enter the keywords you want to find into the search bar and click on the "Search" button. You can use freeform search to find any text within the PromptLayer.
+
+![Advanced Search](/images/advanced-search.png)
+
+## Advanced Search Filters
+
+#### Metadata Search
+
+Use the metadata search filter to search for specific metadata within the PromptLayer. You can search for user IDs, session IDs, tokens, error messages, status codes, and other metadata by entering the metadata field name and value into the search bar. 
+
+PromptLayer allows you to attach multiple key value pairs as metadata to a request. In the dashboard, you can look up requests and analyze analytics using metadata. The method for adding metadata to a request can be found in our documentation here.
+
+```python
+promptlayer.track.metadata(
+  request_id=pl_request_id,
+  metadata={
+      "user_id":"1abf2345f",
+      "session_id": "2cef2345f",
+      "error_message": "None"
+  }
+)
+```
+
+The metadata search filter works by clicking on "Key" in the advanced search filter, selecting the desired metadata key (in this case, user_id), selecting the relevant value under "Value", and clicking "Add filter".
+
+<img src="/images/metadata-search.gif" width="80%"/>
+
+
+#### Tags Search
+
+Use the tags search filter to search for specific tags within the PromptLayer. 
+
+Tags are used to group product features, prod/dev versions, and other categories. You can search for tags by selecting them in the "Tags" dropdown.
+
+Tagging a request is easy. Read more about it here.
+
+<CodeGroup>
+
+```python Python Native
+openai.Completion.create(
+  engine="text-ada-001", 
+  prompt="My name is", 
+  pl_tags=["mytag1", "mytag2"]
+)
+```
+
+
+```python Python LangChain
+from langchain.llms import PromptLayerOpenAI
+llm = PromptLayerOpenAI(pl_tags=["mytag1", "mytag2"])
+resp = llm("tell me a joke")
+```
+
+```javascript Javascript/REST
+const axios = require('axios');
+
+const requestData = {
+  function_name: 'openai.Completion.create',
+  kwargs: {
+    engine: 'text-davinci-003',
+    prompt: 'tell me a joke',
+  },
+  tags: ["mytag1", "mytag2"],
+  ...
+};
+
+axios.post('https://api.promptlayer.com/rest/track-request', requestData)
+  .then(response => {
+    console.log(response.data);
+  })
+```
+</CodeGroup>
+
+#### Favorites
+
+By selecting the "favorite" tag, you can narrow by favorited requests. To favorite a request, click the star on the top right on the dashboard.
+
+![Favorites](/images/favorites.png)
