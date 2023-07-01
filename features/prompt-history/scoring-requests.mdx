@@ -1,0 +1,15 @@
+---
+title: "Score Requests"
+icon: "star"
+---
+
+Every PromptLayer request can be given an integer score 0-100.
+
+To associate a score with a prompt, you can either do this visually from the dashboard or by running the following line
+
+```python
+promptlayer.track.score(
+  request_id=pl_request_id, 
+  score=100
+)
+```

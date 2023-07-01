@@ -23,23 +23,24 @@
     {
       "group": "Features",
       "pages": [
+        "features/prompt-history/tagging-requests",
+        "features/prompt-history/sharing-prompts",
+        "features/prompt-registry",
         {
-          "group": "Prompt History",
-          "pages": ["features/prompt-history/chatgpt-support", "features/prompt-history/organizing-with-tags", "features/prompt-history/sharing-prompts", "features/prompt-history/tracking-metadata-and-request-ids"]
-        }, 
-        {
-          "group": "Prompt Templates",
+          "group": "Advanced Logging",
           "pages": [
-            "features/prompt-templates/evaluation-and-ranking",
-            "features/prompt-templates/prompt-registry"
+            "features/prompt-history/request-id",
+            "features/prompt-history/scoring-requests",
+            "features/prompt-history/tracking-templates",
+            "features/prompt-history/metadata"
           ]
         },
-        "features/faq"
+        "features/faq"  
       ]
     },
     {
       "group": "Why PromptLayer?",
-      "pages": ["what-is-promptlayer/advanced-search", "what-is-promptlayer/how-it-works"]
+      "pages": ["why-promptlayer/advanced-search", "why-promptlayer/evaluation-and-ranking", "why-promptlayer/how-it-works"]
     },
     {
       "group": "Reference",

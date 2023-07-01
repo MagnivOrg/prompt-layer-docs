@@ -1,16 +1,49 @@
 ---
 title: 'LangChain'
-icon: 'bird'
+icon: 'crow'
 ---
 
-You can use PromptLayer with [LangChain](https://langchain.readthedocs.io). LangChain is a popular Python library aimed at assisting in the development of LLM applications. It provides a lot of helpful features like chains, agents, and memory.
+PromptLayer works seamlessly with [LangChain](https://langchain.readthedocs.io). LangChain is a popular Python library aimed at assisting in the development of LLM applications. It provides a lot of helpful features like chains, agents, and memory.
 
-Using PromptLayer with LangChain is simple. See docs below:
+### Reference Docs
 
-[Python Docs](https://python.langchain.com/docs/modules/model_io/models/llms/integrations/promptlayer_openai)
+Using PromptLayer with LangChain is simple. See the LangChain docs below:
 
-[Javascript Docs](https://js.langchain.com/docs/modules/models/llms/integrations#promptlayeropenai)
+- [Python Docs](https://python.langchain.com/docs/modules/model_io/models/llms/integrations/promptlayer_openai)
 
----
+- [Javascript Docs](https://js.langchain.com/docs/modules/models/llms/integrations#promptlayeropenai)
 
-👋 Contact us at hello@magniv.io if you run into any problems
+### Example Snippet
+
+You can use PromptLayer+LangChain with both regular completions and chat-type completions.
+
+
+<CodeGroup>
+
+ ```python Chat (Recommended)
+from langchain.chat_models import PromptLayerChatOpenAI
+from langchain.schema import (
+    SystemMessage,
+    HumanMessage,
+)
+chat = PromptLayerChatOpenAI(pl_tags=["langchain"])
+chat([
+  SystemMessage(content="You are a helpful assistant that translates English to French."),
+  HumanMessage(content="Translate this sentence from English to French. I love programming.")
+])
+```
+
+```python Chat (Alternate)
+from langchain.llms import PromptLayerOpenAIChat
+llm = PromptLayerOpenAIChat()
+resp = llm("tell me a joke")
+```
+
+```python Completion
+from langchain.llms import PromptLayerOpenAI
+llm = PromptLayerOpenAI(pl_tags=["langchain"])
+llm("My name is")
+```
+
+</CodeGroup>
+    

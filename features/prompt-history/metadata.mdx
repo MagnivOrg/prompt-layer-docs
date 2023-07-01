@@ -1,0 +1,23 @@
+---
+title: "Metadata"
+icon: "brackets-curly"
+---
+
+PromptLayer allows you to attach multiple key value pairs as metadata to a request. In the dashboard, you can look up requests and analyze analytics using metadata.
+
+We recommend using this for things like session IDs, user IDs, or error messages. Metadata is useful to help you use the [advanced search](/why-promptlayer/advanced-search) or understand the Analytics page.
+
+```python
+promptlayer.track.metadata(
+  request_id=pl_request_id,
+  metadata={
+      "user_id":"1abf2345f",
+      "post_id": "2cef2345f"
+  }
+)
+```
+
+Things to note:
+
+1. Currently keys and values need to be strings in PromptLayer.
+2. If you track a key that was already tracked before for a specific request_id, the value that corresponds to that key will be replaced.

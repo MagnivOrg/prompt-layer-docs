@@ -1,0 +1,34 @@
+---
+title: "Request IDs"
+icon: "id-card"
+---
+
+Every PromptLayer log has a unique PromptLayer Request ID (`pl_id`). 
+
+All tracking in PromptLayer is based on the `pl_request_id`. This identifier is needed to enrich logs with metadata, templates, and more.
+
+- Specific instructions for retrieving the ID are below:
+    1. `REST api` with `/track-request`: The `pl_request_id` is returned as `request_id` in the case of a successful request 
+    2. `openai` directly from the `promptlayer` python library:  Set the argument `return_pl_id` to true in your function call. This will change the `openai` call to now return the `openai` response and the `pl_request_id`. If you are using `stream=true`, then only the last `pl_request_id` will be the id, otherwise, it will be `None`
+        
+        ```python
+        from promptlayer import openai
+        response, pl_request_id = openai.Completion.create(
+          engine="text-davinci-003", 
+          prompt="hi my name is ", 
+          return_pl_id=True
+        )
+        ```
+        
+    3. `langchain` PromptLayer integration:Set the argument `return_pl_id` to true when you instantialize your model. This will add the PromptLayer request ID in the `generation_info` field of the `Generation` returned when using `.generate` or `.agenerate`
+        
+        For example:
+        
+        ```python
+        from langchain.llms import PromptLayerOpenAI
+        llm = PromptLayerOpenAI(return_pl_id=True)
+        
+        llm_results = llm.generate(["hello world"])
+        for res in llm_results.generations:
+            print("pl request id: ", res[0].generation_info["pl_request_id"])
+        ```
