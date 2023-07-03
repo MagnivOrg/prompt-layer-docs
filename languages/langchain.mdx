@@ -5,18 +5,206 @@ icon: 'crow'
 
 PromptLayer works seamlessly with [LangChain](https://langchain.readthedocs.io). LangChain is a popular Python library aimed at assisting in the development of LLM applications. It provides a lot of helpful features like chains, agents, and memory.
 
-### Reference Docs
-
 Using PromptLayer with LangChain is simple. See the LangChain docs below:
 
 - [Python Docs](https://python.langchain.com/docs/modules/model_io/models/llms/integrations/promptlayer_openai)
 
 - [Javascript Docs](https://js.langchain.com/docs/modules/models/llms/integrations#promptlayeropenai)
 
-### Example Snippet
+There are two main ways to use LangChain with PromptLayer. The recommended way (as of LangChain version `0.0.221`) is to use the `PromptLayerCallbackHandler`. Alternatively, you can use a PromptLayer-specific LLM or Chat model.
 
-You can use PromptLayer+LangChain with both regular completions and chat-type completions.
+## Using Callbacks
 
+<Info>Right now, callbacks only work with LangChain in Python.</Info>
+
+This is the recommended way to use LangChain with PromptLayer. It is simpler and more extendible than the other method below. 
+
+_Every_ LLM supported by LangChain works with PromptLayer's callback.
+
+Start by importing `PromptLayerCallbackHandler`. This callback function will log your request after each LLM response.
+
+```python
+import promptlayer # Don't forget this 🍰
+from langchain.callbacks import PromptLayerCallbackHandler
+```
+
+Now, when instantiating a model, just include the `PromptLayerCallbackHandler` in the callbacks.
+
+```python
+llm = OpenAI(
+    model_name="text-davinci-003",
+    callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])],
+)
+```
+🎉 That's it! 🎉
+
+### Full Examples
+
+Below are some full examples using PromptLayer with various LLMs through LangChain.
+
+#### OpenAI
+
+<CodeGroup>
+
+```python Completion
+import promptlayer # Don't forget this 🍰
+from langchain.callbacks import PromptLayerCallbackHandler
+
+# OpenAI Completion Model
+from langchain.llms import OpenAI
+
+llm = OpenAI(
+    model_name="text-davinci-003",
+    callbacks=[
+        PromptLayerCallbackHandler(pl_tags=["langchain"])
+    ],
+)
+llm("How tall are you?")
+```
+
+
+```python Chat
+import promptlayer # Don't forget this 🍰
+from langchain.callbacks import PromptLayerCallbackHandler
+
+# OpenAI Chat Model
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import (
+    AIMessage,
+    HumanMessage,
+    SystemMessage,
+)
+
+chat_llm = ChatOpenAI(
+    temperature=0,
+    streaming=True,
+    callbacks=[PromptLayerCallbackHandler(
+        pl_tags=["langchain"]
+    )],
+)
+llm_results = chat_llm(
+    [
+        SystemMessage(content="You are a funny AI comedian."),
+        HumanMessage(content="What comes after 1,2,3 ?"),
+    ]
+)
+print(llm_results)
+```
+
+</CodeGroup>
+
+#### GPT4All
+
+```python
+import promptlayer # Don't forget this 🍰
+from langchain.callbacks import PromptLayerCallbackHandler
+
+from langchain.llms import GPT4All
+model = GPT4All(model="./models/gpt4all-model.bin", n_ctx=512, n_threads=8)
+
+response = model("Once upon a time, ", callbacks=[
+    PromptLayerCallbackHandler(pl_tags=["langchain", "gpt4all"])])
+```
+
+#### HuggingFace Hub
+
+You can use the HuggingFace wrapper to try out many different LLMs.
+
+```python
+import promptlayer # Don't forget this 🍰
+from langchain.callbacks import PromptLayerCallbackHandler
+
+from langchain import HuggingFaceHub
+
+falcon_repo_id = "tiiuae/falcon-7b-instruct"
+
+llm = HuggingFaceHub(repo_id=falcon_repo_id, 
+        huggingfacehub_api_token="<HUGGINFACEHUB_API_TOKEN>", 
+        model_kwargs={"temperature": 1.0, "max_length": 64}, 
+        callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain", "huggingface"])])
+
+llm("How do you make a layer cake?")
+````
+
+#### Async Requests
+
+```python
+import promptlayer # Don't forget this 🍰
+from langchain.callbacks import PromptLayerCallbackHandler
+
+# OpenAI Completion Model
+from langchain.llms import OpenAI
+
+import asyncio
+async def async_generate(llm):
+    resp = await llm.agenerate(['My name is "'])
+    print(resp, pl_request_id)
+
+asyncio.run(async_generate(openai_llm))
+```
+
+
+### PromptLayer Request ID
+
+The [PromptLayer request ID](/features/prompt-history/request-id) is used to tag requests with [metadata](/features/prompt-history/metadata), [scores](/features/prompt-history/scoring-requests), [associated prompt templates](/features/prompt-history/tracking-templates), and more.
+
+`PromptLayerCallbackHandler` can optionally take in its own callback function that takes the request ID as an argument.
+
+<CodeGroup> 
+
+```python Simple
+def pl_id_callback(pl_request_id):
+    print(pl_request_id)
+
+llm = OpenAI(
+    model_name="text-davinci-003",
+    callbacks=[
+        PromptLayerCallbackHandler(
+            pl_id_callback=pl_id_callback, 
+            pl_tags=["langchain"]
+        )
+    ],
+)
+
+llm("How tall are you?")
+```
+
+```python Full Example
+def pl_id_scoring_callback(pl_id):
+    print("PromptLayer Request ID:", pl_id)
+    
+    # ⭐ score is an integer 0-100
+    promptlayer.track.score(
+        request_id=pl_id, score=100
+    )
+    # 📊 metadata is a dictionary of request data
+    promptlayer.track.metadata(
+        request_id=pl_id, metadata={"user_id": "0000"}
+    )
+    # 👁️ associate a prompt template with the request
+    promptlayer.track.prompt(
+        request_id=pl_id,
+        prompt_name="name_prompt",
+        prompt_input_variables={"name": "Jared"},
+        version=2,
+    )
+
+openai_llm = OpenAI(
+    model_name="text-davinci-003",
+    callbacks=[PromptLayerCallbackHandler(
+            pl_id_callback=pl_id_scoring_callback, 
+            pl_tags=["langchain"])],
+)
+```
+
+</CodeGroup>
+
+
+## PromptLayer OpenAI Models
+
+Alternatively, the older (but still supported) way to use LangChain with PromptLayer is through specific PromptLayer LLMs and Chat Models.
+
+See below for examples:
 
 <CodeGroup>
 
