@@ -41,7 +41,7 @@
     },
     {
       "group": "Why PromptLayer?",
-      "pages": ["why-promptlayer/advanced-search", "why-promptlayer/evaluation-and-ranking", "why-promptlayer/how-it-works"]
+      "pages": ["why-promptlayer/advanced-search", "why-promptlayer/analytics", "why-promptlayer/evaluation-and-ranking", "why-promptlayer/how-it-works"]
     },
     {
       "group": "Reference",
