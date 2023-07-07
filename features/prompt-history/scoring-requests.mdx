@@ -5,12 +5,31 @@ icon: "star"
 
 Every PromptLayer request can be given an integer score 0-100.
 
-To associate a score with a prompt, you can either do this visually from the dashboard or by running the following line
+![score](/images/score.png)
 
-```python
+To associate a score with a prompt, you can either do this visually from the dashboard or programmatically.
+
+[Endpoint Reference](/reference/track-score)
+
+<CodeGroup>
+
+```python Python
 promptlayer.track.score(
   request_id=pl_request_id, 
   score=100
 )
 ```
-![score](/images/score.png)
+
+```bash REST
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-score \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "api_key": "pl_<YOUR API KEY>",
+    "request_id": "<REQUEST ID>",
+    "score": <YOUR SCORE>
+  }'
+```
+
+</CodeGroup>
+

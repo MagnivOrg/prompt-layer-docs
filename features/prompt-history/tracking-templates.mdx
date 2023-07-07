@@ -5,9 +5,13 @@ icon: "chart-scatter-bubble"
 
 PromptLayer allows you to track prompt template usage, latency, cost, and more. This is done by associating a request with a prompt template as shown below.
 
-To associate requests with a prompt from the prompt registry, run the following line
+[Endpoint Reference](/reference/track-prompt)
 
-```python
+To associate requests with a prompt from the prompt registry, run the code
+
+<CodeGroup>
+
+```python Python
 promptlayer.track.prompt(
   request_id=pl_request_id, 
   prompt_name="example-2",
@@ -15,6 +19,21 @@ promptlayer.track.prompt(
   version=2
 )
 ```
+
+```bash REST
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-prompt \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "api_key": "pl_<YOUR API KEY>",
+    "request_id": "<REQUEST ID>",
+    "prompt_name": "<PROMPT TEMPLATE NAME>",
+    "prompt_input_variables": <PROMPT TEMPLATE INPUT VARIABLES>,
+    "version": <PROMPT TEMPLATE VERSION NUMBER>
+  }'
+```
+
+</CodeGroup>
 
 Where `prompt_name` is a prompt in your prompt registry, `prompt_input_variables` is a dictionary corresponding to the input variables you formatted the prompt with, and `version` is the version of the prompt you are trying to track. `version` is optional, by default it will track the newest version of the prompt.
 

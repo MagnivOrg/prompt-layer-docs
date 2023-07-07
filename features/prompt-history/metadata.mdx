@@ -7,7 +7,11 @@ PromptLayer allows you to attach multiple key value pairs as metadata to a reque
 
 We recommend using this for things like session IDs, user IDs, or error messages. Metadata is useful to help you use the [advanced search](/why-promptlayer/advanced-search) or understand the Analytics page.
 
-```python
+[Endpoint Reference](/reference/track-metadata)
+
+<CodeGroup>
+
+```python Python
 promptlayer.track.metadata(
   request_id=pl_request_id,
   metadata={
@@ -16,6 +20,22 @@ promptlayer.track.metadata(
   }
 )
 ```
+
+```bash REST
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-metadata \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "api_key": "pl_<YOUR API KEY>",
+    "request_id": "<REQUEST ID>",
+    "metadata": {
+      "user_id":"1abf2345f",
+      "post_id": "2cef2345f"
+    }
+  }'
+```
+
+</CodeGroup>
 
 Things to note:
 
@@ -27,4 +47,5 @@ Things to note:
 Once metadata is added, you will then be able to see it in the web UI.
 
 ![score](/images/metadata-ui.png)
+
 
