@@ -17,3 +17,11 @@ Try updating both LangChain and PromptLayer to their most recent versions.
 Yes, we take great pride in staying up to date. PromptLayer is 1-to-1 with OpenAI's library. That means, if you are using PromptLayer+OpenAI through the Python libraries, [function calling](https://openai.com/blog/function-calling-and-other-api-updates) will be implicitly supported.
 
 If you are using our REST library, [track-request](/reference/track-request) mirrors OpenAI's request schema. You can add `functions` into `kwargs` and use function-type messages as you would use normal messages in `gpt-4`.
+
+## Does PromptLayer support streaming?
+
+Streaming requests are supported on the PromptLayer Python SDK (both with OpenAI and Antrhopic).
+
+If you are using [LangChain](/languages/langchain), streaming is only supported when you use the `PromptLayerCallbackHandler`. Streaming is not supported through the PromptLayer-specific LLMs (the old way to use LangChain).
+
+Finally, if you are interacting with PromptLayer through our [REST API](/languages/rest-api) you will need to store the whole output and log it to PromptLayer (`track-request`) only after it is finished.
