@@ -1,0 +1,217 @@
+---
+title: "Getting Started Tutorial"
+icon: "rocket"
+---
+
+## Let's Begin
+
+### Setting Up Your Environment
+
+Before we get started, we need to load our environment variables from a `.env` file. This file should contain your API keys and any other environment-specific settings. We can load these variables using the `dotenv` package:
+
+```python
+from dotenv import load_dotenv
+
+# Load environment variables from .env file
+load_dotenv('.env')
+```
+
+Once we have loaded our environment variables, we can set up our API key for PromptLayer:
+
+```python
+import promptlayer
+import os
+promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
+```
+
+### Making Your First Request
+
+Next, we'll swap out our `import openai` and set our OpenAI API key. We'll make a simple request to the OpenAI GPT-3 engine to generate a response for the prompt "My name is":
+
+```python
+openai = promptlayer.openai
+openai.api_key = os.environ.get("OPENAI_API_KEY")
+
+response = openai.Completion.create(
+  engine="text-davinci-003", 
+  prompt="My name is",
+)
+print(response.choices[0].text)
+```
+
+The response you'll see should be a continuation of the prompt, such as "John. Nice to meet you, John."
+
+### Tagging a Request
+
+We can also add tags to our requests to make it easier to search for them later on:
+
+```python
+response = openai.Completion.create(
+  engine="text-davinci-003", 
+  prompt="My name is",
+  pl_tags=["getting_started_example"]
+)
+print(response.choices[0].text)
+```
+
+### Scoring a Request
+
+PromptLayer allows us to score a request. Here, we ask for the capital of New York, and then score the response based on whether it contains the correct answer:
+
+```python
+response, pl_request_id = openai.Completion.create(
+  engine="text-davinci-003", 
+  prompt="What is the capital of New York? \\n\\nThe capital of New York is",
+  pl_tags=["getting_started_example"],
+  return_pl_id=True
+)
+
+answer = response.choices[0].text
+print(answer)
+
+correct_answer = "albany" in answer.lower()
+promptlayer.track.score(
+    request_id=pl_request_id,
+    score=100 if correct_answer else 0,
+)
+```
+
+### Adding Metadata
+
+We can add metadata to a request to store additional information about it. Here, we make a request to rate how much a person would enjoy a city based on their interests, and then add metadata such as the user's ID and location:
+
+```python
+prompt_template = """You are an AI assistant that helps travelers pick a city to travel to. 
+You do this by rating how much a person would enjoy a city based on their interests.
+Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least.
+
+Sample city: New York City
+Sample interests: food, museums, hiking
+Sample answer: 8
+
+City: {city}
+Interests: {interests}
+Answer: """
+
+response, pl_request_id = openai.Completion.create(
+  engine="text-davinci-003", 
+  prompt=prompt_template.format(city="Washington, D.C.", interests="resorts, museums, beaches"),
+  pl_tags=["getting_started_example"],
+  return_pl_id=True
+)
+
+answer = response.choices[0].text
+print(answer)
+
+numeric_answer = None
+error_message = None
+try:
+    numeric_answer = int(answer.strip())
+except ValueError as e:
+    error_message = str(e)
+    pass
+promptlayer.track.score(
+    request_id=pl_request_id,
+    score=100 if numeric_answer else 0,
+)
+
+print("Numeric answer:", numeric_answer)
+
+promptlayer.track.metadata(
+    request_id=pl_request_id,
+    metadata={
+        "referrer": "getting_started.ipynb",
+        "origin": "NYC, USA",
+        "user_id": "sdf328",
+        "error_message": "No error" if numeric_answer else error_message,
+    }
+)
+```
+
+## Prompt Templates
+
+### Creating a Prompt in the Registry
+
+We can create a prompt in the PromptLayer prompt registry. This allows us to easily reuse this prompt in the future:
+
+```python
+city_choice_prompt = promptlayer.prompts.get("city_choice")
+city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1)
+print(city_choice_prompt_v1['template'])
+```
+
+### Linking a Prompt to a Request
+
+Once a prompt is in the registry, we can link it to a request. This makes it easier to track which prompts are being used in our requests:
+
+```python
+city_choice_prompt = promptlayer.prompts.get("city_choice")
+prompt_template = city_choice_prompt['template']
+input_variables = {
+    "city": "Washington, D.C.", 
+    "interests": "resorts, museums, beaches"
+}
+response, pl_request_id = openai.Completion.create(
+  engine="text-davinci-003", 
+  prompt=prompt_template.format(**input_variables),
+  pl_tags=["getting_started_example"],
+  return_pl_id=True
+)
+print("Answer:", response.choices[0].text)
+
+promptlayer.track.prompt(request_id=pl_request_id, 
+    prompt_name='city_choice', prompt_input_variables=input_variables)
+```
+
+## Using Different Models
+
+In addition to OpenAI, PromptLayer supports other models as well. Here's an example of how to use a chat model from OpenAI:
+
+```python
+openai = promptlayer.openai
+
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=[
+        {"role": "system", "content": "You are a helpful AI assistant that helps people bake."},
+        {"role": "user", "content": "How do you make a layer cake?"}
+    ],
+)
+print(response.choices[0].message.content)
+```
+
+We can also use models from Anthropic:
+
+```python
+anthropic = promptlayer.anthropic
+client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+
+response = client.completions.create(
+    prompt=f"{anthropic.HUMAN_PROMPT} How many toes do dogs have? {anthropic.AI_PROMPT}",
+    stop_sequences=[anthropic.HUMAN_PROMPT],
+    model="claude-2",
+    max_tokens_to_sample=100,
+    pl_tags=["claude"]
+)
+print(response.completion)
+```
+
+And here's an example of using the Falcon-7b model from LangChain:
+
+```python
+from langchain.callbacks import PromptLayerCallbackHandler
+from langchain import HuggingFaceHub
+
+falcon = "tiiuae/falcon-7b-instruct"
+
+llm = HuggingFaceHub(
+    repo_id=falcon, 
+    huggingfacehub_api_token=os.environ.get("HUGGING_FACE_API_KEY"), 
+    model_kwargs={"temperature": 1.0, "max_length": 64}, 
+    callbacks=[PromptLayerCallbackHandler(pl_tags=["falcon-7b"])]
+)
+request = llm("How do you make a layer cake?")
+print(request)
+```
+
+And that's it! With this tutorial, you should now be able to use PromptLayer to work with different language models, make and score requests, and track your prompts and requests. Enjoy using PromptLayer!
