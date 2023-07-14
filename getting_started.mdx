@@ -130,6 +130,9 @@ curl --location --request POST 'https://api.promptlayer.com/rest/track-request' 
 
 The response you'll see should be a continuation of the prompt, such as "John. Nice to meet you, John."
 
+Refresh the dashboard and walla! ✨
+![Request log screenshot](images/getting-started-first-request.png)
+
 ## Enriching Requests
 
 Enriching requests often requires a [PromptLayer request ID](/features/prompt-history/request-id). All PromptLayer requests have unique IDs, and these can be optionally returned when logging the request.
@@ -191,6 +194,9 @@ curl --location --request POST 'https://api.promptlayer.com/rest/track-request' 
 ```
 
 </CodeGroup>
+
+Filter by tags on the dashboard as seen below.
+![Tags filtering screenshot](images/getting-started-tags.png)
 
 ### Scoring a Request
 
@@ -319,6 +325,9 @@ curl --location --request POST 'https://api.promptlayer.com/rest/score-request' 
 ```
 
 </CodeGroup>
+
+Scores can also be set visually in the dashboard.
+![Scoring screenshot](images/getting-started-score.png)
 
 ### Adding Metadata
 
@@ -556,15 +565,35 @@ curl --location --request POST 'https://api.promptlayer.com/rest/add-metadata' \
 ```
 </CodeGroup>
 
+## Analytics & Search
+
+Now that you have successfully tagged requests with tags & metadata, you can use these features to better sort through requests in the dashboard.
+
+The [Analytics page](/why-promptlayer/analytics) shows high-level graphs and statistics about your usage. You can use metadata keys or tags to filter analytics.
+
+<video controls="controls">
+    <source src="/videos/getting-started-analytics.mp4" type="video/mp4" />
+</video> 
+
+You can also take advantage of our [advanced search](/why-promptlayer/advanced-search) by using metadata to search in the sidebar.
+
+<video controls="controls">
+    <source src="/videos/getting-started-advanced-search.mp4" type="video/mp4" />
+</video> 
+
 ## Prompt Templates
 
 ### Creating a Prompt in the Registry
 
-We can create a prompt in the PromptLayer prompt registry. This allows us to easily reuse this prompt in the future:
+We can create a prompt in the PromptLayer [Prompt Registry](/features/prompt-registry). This allows us to easily reuse this prompt in the future:
 
-After creating a prompt template, we can retrieve it programmatically using the API. [The Prompt Registry](/features/prompt-registry) is often used as a prompt template CMS to avoid blocking prompt changes on eng rollouts.
+<video controls="controls">
+    <source src="/videos/getting-started-prompt-registry.mp4" type="video/mp4" />
+</video> 
 
-The Prompt Registry handles versioning. As you can see below, we can retrieve the latest prompt or a specific stable version.
+After creating a prompt template, we can retrieve it programmatically using the API. The Prompt Registry is often used as a prompt template CMS to avoid blocking prompt changes on eng rollouts.
+
+The Prompt Registry handles versioning, just visually edit the prompt in the dashboard to save a new version. As you can see below, we can retrieve the latest prompt or a specific stable version.
 
 <CodeGroup>
 
@@ -745,9 +774,16 @@ curl --location --request POST 'https://api.promptlayer.com/rest/get-prompt-temp
 ```
 </CodeGroup>
 
+### Prompt template evaluation
+
+Now that you have created multiple versions of a prompt template and associated it with request logs, navigate back to the Prompt Registry to find statistics about each version.
+
+PromptLayer lets you compare prompt templates across score, latency, and cost. You can also easily see which requests used which templates.
+![Prompt template stats](/images/getting-started-prompt-registry-stats.png)
+
 ## Using Different Models
 
-In addition to OpenAI, PromptLayer supports other models as well. 
+In addition to those provided by OpenAI, PromptLayer supports many other providers and model types. 
 
 ### Chat-GPT
 
