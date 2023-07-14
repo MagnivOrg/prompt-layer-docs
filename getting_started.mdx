@@ -41,7 +41,7 @@ require('dotenv').config({ path: '.env' });
 
 </CodeGroup>
 
-Once we have loaded our environment variables, we can import `promptlayer` and set up our API key for PromptLayer. Make sure to `pip install promptlayer` first if you are using Python.
+Once we have loaded our environment variables, we can import `promptlayer` and set up our API key for PromptLayer. Make sure to `pip install promptlayer` first if you are using [Python](/languages/python).
 
 <CodeGroup>
 
@@ -58,11 +58,11 @@ const promptLayerApiKey = process.env.PROMPTLAYER_API_KEY;
 
 ### Making Your First Request
 
-PromptLayer is at its core a REST library. Using our (Python SDK)[/languages/python] is equivalent to directly making requests to our API, just a little easier.
+PromptLayer is at its core a REST library. Using our [Python SDK](/languages/python) is equivalent to directly making [requests to our API](/languages/rest-api), just a little easier.
 
 Because latency is so important, the best way to use PromptLayer is to first make your request to OpenAI and then log the request to PromptLayer. This is how our Python SDK works under the hood.
 
-If you are used to working with the OpenAI SDK, all you will need to do is swap out your `import openai` for `openai = promptlayer.openai`. The rest of your code stays the same!
+If you are used to working with the Python SDK, all you will need to do is swap out your `import openai` for `openai = promptlayer.openai`. The rest of your code stays the same!
 
 In this step we'll make a simple request to the OpenAI GPT-3 engine to generate a response for the prompt "My name is".
 
@@ -132,11 +132,13 @@ The response you'll see should be a continuation of the prompt, such as "John. N
 
 ## Enriching Requests
 
-Enriching requests often requires a request_id. All PromptLayer requests have unique IDs, and these can be optionally returned when logging the request.
+Enriching requests often requires a [PromptLayer request ID](/features/prompt-history/request-id). All PromptLayer requests have unique IDs, and these can be optionally returned when logging the request.
 
 ### Tagging a Request
 
-We can also add tags (`pl_tags`) to our requests to make it easier to search through and organize requests on the dashboard:
+We can also add tags (`pl_tags`) to our requests to make it easier to search through and organize requests on the dashboard.
+
+[Learn more about tags.](features/prompt-history/tagging-requests)
 
 <CodeGroup>
 
@@ -194,7 +196,7 @@ curl --location --request POST 'https://api.promptlayer.com/rest/track-request' 
 
 Using PromptLayer we can score a request with an integer 0 - 100. This is most often used to understand how effective certain prompts are in production.
 
-Users use scores in many ways. Below are some examples:
+Users use scores in many ways [(learn more)](features/prompt-history/scoring-requests). Below are some examples:
 - 100 is the generated code compiles, 0 if not
 - 100 if the user denotes a thumbs-up, 0 for thumbs-down
 - LLM synthetic evaluation of how much the output matched the prompt
@@ -323,6 +325,8 @@ curl --location --request POST 'https://api.promptlayer.com/rest/score-request' 
 We can add metadata to a request to store additional information about it. Metadata is a map of string keys to string values. 
 
 Metadata is used to associate requests with specific users, track rollouts, and to store things like error messages (maybe from generated code). You can then filter requests & analytics on the PromptLayer dashboard using metadata keys.
+
+[Learn more about metadata.](features/prompt-history/metadata)
 
 Here, we make a request to rate how much a person would enjoy a city based on their interests, and then add metadata such as the user's ID and location:
 
@@ -558,7 +562,7 @@ curl --location --request POST 'https://api.promptlayer.com/rest/add-metadata' \
 
 We can create a prompt in the PromptLayer prompt registry. This allows us to easily reuse this prompt in the future:
 
-After creating a prompt template, we can retrieve it programmatically using the API. The Prompt Registry is often used as a prompt template CMS to avoid blocking prompt changes on eng rollouts.
+After creating a prompt template, we can retrieve it programmatically using the API. [The Prompt Registry](/features/prompt-registry) is often used as a prompt template CMS to avoid blocking prompt changes on eng rollouts.
 
 The Prompt Registry handles versioning. As you can see below, we can retrieve the latest prompt or a specific stable version.
 
@@ -631,7 +635,7 @@ curl --location --request GET 'https://api.promptlayer.com/rest/get-prompt-templ
 
 The Prompt Registry becomes the most useful when you start linking requests with prompt template versions. This makes it easy to compare prompt templates across latency, cost, and quality. It also let's you easily understand the input variables and how they change.
 
-Once a prompt is in the registry, we can link it to a request:
+Once a prompt is in the registry, we can link it to a request ([learn more](features/prompt-history/tracking-templates)):
 
 <CodeGroup>
 
@@ -823,9 +827,9 @@ response = client.completions.create(
 print(response.completion)
 ```
 
-### Falcon-7b & HuggingFaceHub
+### HuggingFaceHub
 
-Here's an example of using the Falcon-7b model from HuggingFaceHub. By using LangChain with the `PromptLayerCallbackHandler`, you can access tons of LLMs.
+Here's an example of using the Falcon-7b model from HuggingFaceHub. By using LangChain with the `PromptLayerCallbackHandler`, you can access tons of LLMs. [Learn more.](languages/langchain#huggingface-hub)
 
 ```python
 from langchain.callbacks import PromptLayerCallbackHandler
