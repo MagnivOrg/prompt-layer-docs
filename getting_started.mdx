@@ -3,72 +3,253 @@ title: "Getting Started Tutorial"
 icon: "rocket"
 ---
 
-## Let's Begin
+In this tutorial, we will guide you through the process of data-driven prompt engineering.
+
+PromptLayer provides a unified interface for working with different language models, making and scoring requests, and tracking your prompts and requests. It supports a variety of models, from OpenAI, Anthropic, HuggingFace, and more.
+
+Whether you're a data scientist, a machine learning engineer, or a developer, PromptLayer can help you manage your language models more effectively and efficiently. Let's get started!
+
 
 ### Setting Up Your Environment
 
-Before we get started, we need to load our environment variables from a `.env` file. This file should contain your API keys and any other environment-specific settings. We can load these variables using the `dotenv` package:
+Before we get started, we need to load our environment variables from a `.env` file. This file should contain your API keys for PromptLayer and OpenAI. 
 
-```python
+Get your PromptLayer API key through our dashboard by signing up at www.promptlayer.com
+
+```txt .env
+OPENAI_API_KEY=<YOUR_OPENAI_API_KEY>
+PROMPTLAYER_API_KEY=<YOUR_PROMPTLAYER_API_KEY>
+```
+
+We can load these variables using the `dotenv` package:
+
+<CodeGroup>
+
+```python Python
 from dotenv import load_dotenv
 
 # Load environment variables from .env file
 load_dotenv('.env')
 ```
 
-Once we have loaded our environment variables, we can set up our API key for PromptLayer:
+```js Javascript
+// You would use the `dotenv` package in Node.js to load environment variables
+// Install with `npm install dotenv`
 
-```python
+require('dotenv').config({ path: '.env' });
+```
+
+</CodeGroup>
+
+Once we have loaded our environment variables, we can import `promptlayer` and set up our API key for PromptLayer. Make sure to `pip install promptlayer` first if you are using Python.
+
+<CodeGroup>
+
+```python Python
 import promptlayer
 import os
 promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
 ```
 
+```js Javascript
+const promptLayerApiKey = process.env.PROMPTLAYER_API_KEY;
+```
+</CodeGroup>
+
 ### Making Your First Request
 
-Next, we'll swap out our `import openai` and set our OpenAI API key. We'll make a simple request to the OpenAI GPT-3 engine to generate a response for the prompt "My name is":
+PromptLayer is at its core a REST library. Using our (Python SDK)[/languages/python] is equivalent to directly making requests to our API, just a little easier.
 
-```python
+Because latency is so important, the best way to use PromptLayer is to first make your request to OpenAI and then log the request to PromptLayer. This is how our Python SDK works under the hood.
+
+If you are used to working with the OpenAI SDK, all you will need to do is swap out your `import openai` for `openai = promptlayer.openai`. The rest of your code stays the same!
+
+In this step we'll make a simple request to the OpenAI GPT-3 engine to generate a response for the prompt "My name is".
+
+<CodeGroup>
+
+```python Python
+# Instead of `import openai` we will use
 openai = promptlayer.openai
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
+# Make a completion to OpenAI
 response = openai.Completion.create(
   engine="text-davinci-003", 
   prompt="My name is",
 )
 print(response.choices[0].text)
 ```
+
+```python Python (LangChain)
+from langchain.callbacks import PromptLayerCallbackHandler
+
+# OpenAI Completion Model
+from langchain.llms import OpenAI
+
+# Set up OpenAI model with PromptLayer callback
+llm = OpenAI(
+    model_name="text-davinci-003", 
+    callbacks=[PromptLayerCallbackHandler()],
+)
+
+# Make a completion to OpenAI
+response = llm("My name is")
+print(response)
+```
+
+```js Javascript
+// Install with `npm install langchain`
+
+// Use OpenAI completion LLMs with PromptLayer
+const { PromptLayerOpenAI } = require("langchain/llms/openai");
+const llm = new PromptLayerOpenAI({
+  temperature: 0.9,
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+});
+
+// Make a completion to OpenAI
+llm.call("My name is").then(response => console.log(response));
+```
+
+```bash REST
+curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "function_name": "openai.Completion.create",
+    "kwargs": {"engine": "text-davinci-003", "prompt": "My name is"},
+    "tags": ["promptlayer-test"],
+    "request_response": {...},
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "api_key": "pl_<YOUR API KEY>"
+}'
+```
+</CodeGroup>
 
 The response you'll see should be a continuation of the prompt, such as "John. Nice to meet you, John."
 
+## Enriching Requests
+
+Enriching requests often requires a request_id. All PromptLayer requests have unique IDs, and these can be optionally returned when logging the request.
+
 ### Tagging a Request
 
-We can also add tags to our requests to make it easier to search for them later on:
+We can also add tags (`pl_tags`) to our requests to make it easier to search through and organize requests on the dashboard:
 
-```python
+<CodeGroup>
+
+```python Python
 response = openai.Completion.create(
   engine="text-davinci-003", 
   prompt="My name is",
-  pl_tags=["getting_started_example"]
+  pl_tags=["getting_started_example"] # 🍰 PromptLayer tags
 )
+
 print(response.choices[0].text)
 ```
 
+```python Python (LangChain)
+llm = OpenAI(
+    model_name="text-davinci-003", 
+    callbacks=[
+        PromptLayerCallbackHandler(
+            pl_tags=["getting_started_example"] # 🍰 PromptLayer tags
+        ),
+    ],
+)
+
+response = llm("My name is")
+print(response)
+```
+
+```js Javascript
+const llm = new PromptLayerOpenAI({
+  temperature: 0.9,
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+  plTags: ["getting_started_example"], // 🍰 PromptLayer tags
+});
+
+llm.call("My name is").then(response => console.log(response));
+```
+
+```bash REST
+curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "function_name": "openai.Completion.create",
+    "kwargs": {"engine": "text-davinci-003", "prompt": "My name is", "tags": ["getting_started_example"]},
+    "request_response": {...},
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "api_key": "pl_<YOUR API KEY>"
+}'
+```
+
+</CodeGroup>
+
 ### Scoring a Request
 
-PromptLayer allows us to score a request. Here, we ask for the capital of New York, and then score the response based on whether it contains the correct answer:
+Using PromptLayer we can score a request with an integer 0 - 100. This is most often used to understand how effective certain prompts are in production.
 
-```python
+Users use scores in many ways. Below are some examples:
+- 100 is the generated code compiles, 0 if not
+- 100 if the user denotes a thumbs-up, 0 for thumbs-down
+- LLM synthetic evaluation of how much the output matched the prompt
+
+Here, we ask for the capital of New York, and then score the response based on whether it contains the correct answer. 
+
+To set the score, we make a second request to the PromptLayer API with the `request_id` and a score.
+
+<CodeGroup>
+
+```python Python
 response, pl_request_id = openai.Completion.create(
   engine="text-davinci-003", 
   prompt="What is the capital of New York? \\n\\nThe capital of New York is",
   pl_tags=["getting_started_example"],
-  return_pl_id=True
+  return_pl_id=True # Make sure to set this to True
 )
 
 answer = response.choices[0].text
 print(answer)
+correct_answer = "albany" in answer.lower()
 
+# Log score to 🍰 PromptLayer
+promptlayer.track.score(
+    request_id=pl_request_id,
+    score=100 if correct_answer else 0,
+)
+```
+
+```python Python (LangChain)
+"""
+To retrieve the pl_request_id using LangChain, we
+specify a callback function (pl_id_callback) 
+that receives the ID on successful logging of the request.
+"""
+
+# Callback function that saves our request_id
+pl_request_id = None
+def save_pl_id(pl_id):
+    global pl_request_id
+    print("PromptLayer Request ID:", pl_id)
+    pl_request_id = pl_id
+
+llm = OpenAI(
+    model_name="text-davinci-003",
+    callbacks=[PromptLayerCallbackHandler(
+            pl_id_callback=save_pl_id, # Here is where we set our callback func
+            pl_tags=["getting_started_example"])],
+)
+
+# Let's see what the answer is...
+answer = llm("What is the capital of New York? \\n\\nThe capital of New York is")
+print(answer)
+
+# Check if the answer is correct & log score to 🍰 PromptLayer
 correct_answer = "albany" in answer.lower()
 promptlayer.track.score(
     request_id=pl_request_id,
@@ -76,11 +257,78 @@ promptlayer.track.score(
 )
 ```
 
+```js Javascript
+const axios = require('axios');
+const { PromptLayerOpenAI } = require("langchain/llms/openai");
+
+const llm = new PromptLayerOpenAI({
+  temperature: 0.9,
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+  plTags: ["getting_started_example"],
+  returnPromptLayerId: true,
+});
+
+// You need to use .generate to retrieve the request_id
+llm.generate(["What is the capital of New York? \\n\\nThe capital of New York is"]).then(response => {
+    const promptLayerRequestId = response.generations[0][0].generationInfo.promptLayerRequestId;
+    const answer = response.generations[0][0].text;
+    console.log(answer);
+
+    // Figure out if the answer is correct...
+    const correctAnswer = answer.toLowerCase().includes("albany");
+
+    // Score answer with 🍰 PromptLayer
+    axios
+        .post('https://api.promptlayer.com/rest/track-score', {
+            request_id: promptLayerRequestId,
+            score: correctAnswer ? 100 : 0,
+            api_key: process.env.PROMPTLAYER_API_KEY,
+        })
+        .then(_ => {
+            console.log("Successfully scored answer");
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+```
+
+```bash REST
+# Create a request
+curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "function_name": "openai.Completion.create",
+    "kwargs": {"engine": "text-davinci-003", "prompt": "What is the capital of New York? \\n\\nThe capital of New York is", "tags": ["getting_started_example"]},
+    "request_response": {...},
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "api_key": "pl_<YOUR API KEY>"
+}'
+
+# Score the request
+curl --location --request POST 'https://api.promptlayer.com/rest/score-request' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "request_id": <YOUR REQUEST ID>,
+    "score": <YOUR SCORE>
+}'
+```
+
+</CodeGroup>
+
 ### Adding Metadata
 
-We can add metadata to a request to store additional information about it. Here, we make a request to rate how much a person would enjoy a city based on their interests, and then add metadata such as the user's ID and location:
+We can add metadata to a request to store additional information about it. Metadata is a map of string keys to string values. 
 
-```python
+Metadata is used to associate requests with specific users, track rollouts, and to store things like error messages (maybe from generated code). You can then filter requests & analytics on the PromptLayer dashboard using metadata keys.
+
+Here, we make a request to rate how much a person would enjoy a city based on their interests, and then add metadata such as the user's ID and location:
+
+<CodeGroup>
+
+```python Python
 prompt_template = """You are an AI assistant that helps travelers pick a city to travel to. 
 You do this by rating how much a person would enjoy a city based on their interests.
 Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least.
@@ -103,6 +351,7 @@ response, pl_request_id = openai.Completion.create(
 answer = response.choices[0].text
 print(answer)
 
+# Let's convert the answer to an int
 numeric_answer = None
 error_message = None
 try:
@@ -110,6 +359,8 @@ try:
 except ValueError as e:
     error_message = str(e)
     pass
+
+# Use score in 🍰 PromptLayer to track if answer was an int
 promptlayer.track.score(
     request_id=pl_request_id,
     score=100 if numeric_answer else 0,
@@ -117,6 +368,7 @@ promptlayer.track.score(
 
 print("Numeric answer:", numeric_answer)
 
+# Log metadata for request in 🍰 PromptLayer
 promptlayer.track.metadata(
     request_id=pl_request_id,
     metadata={
@@ -128,25 +380,266 @@ promptlayer.track.metadata(
 )
 ```
 
+```python Python (LangChain)
+pl_request_id = None
+def save_pl_id(pl_id):
+    global pl_request_id
+    pl_request_id = pl_id
+
+prompt_template = """You are an AI assistant that helps travelers pick a city to travel to. 
+You do this by rating how much a person would enjoy a city based on their interests.
+Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least.
+
+Sample city: New York City
+Sample interests: food, museums, hiking
+Sample answer: 8
+
+City: {city}
+Interests: {interests}
+Answer: """
+
+llm = OpenAI(
+    model_name="text-davinci-003", 
+    callbacks=[PromptLayerCallbackHandler(
+            pl_id_callback=save_pl_id, 
+            pl_tags=["getting_started_example"])],
+)
+
+# Let's get the answer...
+answer = llm(prompt_template.format(city="Washington, D.C.", interests="resorts, museums, beaches"))
+print(answer)
+
+# Let's conver the answer to an int
+numeric_answer = None
+error_message = None
+try:
+    numeric_answer = int(answer.strip())
+except ValueError as e:
+    error_message = str(e)
+    pass
+
+# Use score in 🍰 PromptLayer to track if answer was an int
+promptlayer.track.score(
+    request_id=pl_request_id,
+    score=100 if numeric_answer else 0,
+)
+
+print("Numeric answer:", numeric_answer)
+
+# Log metadata for request in 🍰 PromptLayer
+promptlayer.track.metadata(
+    request_id=pl_request_id,
+    metadata={
+        "referrer": "getting_started.ipynb",
+        "origin": "NYC, USA",
+        "user_id": "sdf328",
+        "error_message": "No error" if numeric_answer else error_message,
+    }
+)
+```
+
+```js Javascript
+const promptTemplate = `You are an AI assistant that helps travelers pick a city to travel to. 
+You do this by rating how much a person would enjoy a city based on their interests.
+Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least.
+
+Sample city: New York City
+Sample interests: food, museums, hiking
+Sample answer: 8
+
+City: {city}
+Interests: {interests}
+Answer: `;
+
+const llm = new PromptLayerOpenAI({
+  temperature: 0.9,
+  openAIApiKey: process.env.OPENAI_API_KEY,
+  promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+  plTags: ["getting_started_example"],
+  returnPromptLayerId: true,
+});
+
+// Replace input variables in our prompt template
+const inputVariables = {city: "Washington, D.C.", interests: "resorts, museums, beaches"};
+let replacedPromptTemplate = promptTemplate;
+Object.entries(inputVariables).forEach(([key, value]) => {
+  replacedPromptTemplate = replacedPromptTemplate.replace(`{${key}}`, value);
+});
+
+llm.generate([replacedPromptTemplate]).then(response => {
+    const promptLayerRequestId = response.generations[0][0].generationInfo.promptLayerRequestId;
+    const answer = response.generations[0][0].text;
+    console.log(answer);
+
+    // Let's conver the answer to an int
+    let numericAnswer = null;
+    let errorMessage = null;
+    try {
+        numericAnswer = parseInt(answer.trim());
+    } catch (e) {
+        errorMessage = e.toString();
+    }
+    
+    // Use score in 🍰 PromptLayer to track if answer was an int
+    axios
+        .post('https://api.promptlayer.com/rest/track-score', {
+            request_id: promptLayerRequestId,
+            score: numericAnswer ? 100 : 0,
+            api_key: process.env.PROMPTLAYER_API_KEY,
+        })
+        .then(_ => {
+            console.log("Successfully scored answer");
+        })
+        .catch(error => {
+            console.error(error);
+        });
+
+    const metadata = {
+        referrer: "getting_started.ipynb",
+        origin: "NYC, USA",
+        userId: "sdf328",
+        errorMessage: numericAnswer ? "No error" : errorMessage,
+    };
+    // Log metadata for request in 🍰 PromptLayer
+    axios
+        .post('https://api.promptlayer.com/rest/track-metadata', {
+            request_id: promptLayerRequestId,
+            metadata: metadata,
+            api_key: process.env.PROMPTLAYER_API_KEY,
+        })
+        .then(_ => {
+            console.log("Successfully logged metadata");
+        })
+        .catch(error => {
+            console.error(error);
+        });
+});
+```
+
+```bash REST
+# Create a request
+curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "function_name": "openai.Completion.create",
+    "kwargs": {"engine": "text-davinci-003", "prompt": "<YOUR PROMPT>", "tags": ["getting_started_example"]},
+    "request_response": {...},
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "api_key": "pl_<YOUR API KEY>"
+}'
+
+# Score the request
+curl --location --request POST 'https://api.promptlayer.com/rest/score-request' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "request_id": <YOUR REQUEST ID>,
+    "score": <YOUR SCORE>
+}'
+
+# Add metadata to the request
+curl --location --request POST 'https://api.promptlayer.com/rest/add-metadata' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "request_id": <YOUR REQUEST ID>,
+    "metadata": {
+        "referrer": "getting_started.ipynb",
+        "origin": "NYC, USA",
+        "user_id": "sdf328",
+        "error_message": "<YOUR ERROR MESSAGE>"
+    }
+}'
+```
+</CodeGroup>
+
 ## Prompt Templates
 
 ### Creating a Prompt in the Registry
 
 We can create a prompt in the PromptLayer prompt registry. This allows us to easily reuse this prompt in the future:
 
-```python
+After creating a prompt template, we can retrieve it programmatically using the API. The Prompt Registry is often used as a prompt template CMS to avoid blocking prompt changes on eng rollouts.
+
+The Prompt Registry handles versioning. As you can see below, we can retrieve the latest prompt or a specific stable version.
+
+<CodeGroup>
+
+```python Python
 city_choice_prompt = promptlayer.prompts.get("city_choice")
 city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1)
 print(city_choice_prompt_v1['template'])
 ```
 
+```python Python (LangChain)
+city_choice_prompt = promptlayer.prompts.get("city_choice", langchain=True)
+city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1, langchain=True)
+print(city_choice_prompt_v1.template)
+```
+
+```js Javascript
+axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
+    headers: {
+      'X-API-KEY': process.env.PROMPTLAYER_API_KEY
+    },
+    params: {
+      'prompt_name': 'city_choice',
+    }
+  })
+  .then(function (response) {
+    console.log(response.data.prompt_template);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
+    headers: {
+      'X-API-KEY': process.env.PROMPTLAYER_API_KEY
+    },
+    params: {
+      'prompt_name': 'city_choice',
+      'version': 1, // This time, let's specify the version
+    }
+  })
+  .then(function (response) {
+    console.log(response.data.prompt_template);
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+```
+
+```bash REST
+# Get a prompt by its name
+curl --location --request GET 'https://api.promptlayer.com/rest/get-prompt-template' \
+--header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>' \
+--data-raw '{
+    "prompt_name": "city_choice"
+}'
+
+# Get a prompt by its name and version
+curl --location --request GET 'https://api.promptlayer.com/rest/get-prompt-template' \
+--header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>' \
+--data-raw '{
+    "prompt_name": "city_choice",
+    "version": 1
+}'
+```
+</CodeGroup>
+
 ### Linking a Prompt to a Request
 
-Once a prompt is in the registry, we can link it to a request. This makes it easier to track which prompts are being used in our requests:
+The Prompt Registry becomes the most useful when you start linking requests with prompt template versions. This makes it easy to compare prompt templates across latency, cost, and quality. It also let's you easily understand the input variables and how they change.
 
-```python
+Once a prompt is in the registry, we can link it to a request:
+
+<CodeGroup>
+
+```python Python
+# Grab the prompt template
 city_choice_prompt = promptlayer.prompts.get("city_choice")
 prompt_template = city_choice_prompt['template']
+
 input_variables = {
     "city": "Washington, D.C.", 
     "interests": "resorts, museums, beaches"
@@ -159,15 +652,106 @@ response, pl_request_id = openai.Completion.create(
 )
 print("Answer:", response.choices[0].text)
 
+# Associate the request with the prompt template we used
 promptlayer.track.prompt(request_id=pl_request_id, 
     prompt_name='city_choice', prompt_input_variables=input_variables)
 ```
 
+
+```python Python (LangChain)
+# Grab the prompt template in a LangChain-friendly format
+city_choice_prompt = promptlayer.prompts.get("city_choice", langchain=True)
+input_variables = {
+    "city": "Washington, D.C.", 
+    "interests": "resorts, museums, beaches"
+}
+answer = llm(prompt_template.format(**input_variables))
+print("Answer:", answer)
+
+# Associate the request with the prompt template we used
+promptlayer.track.prompt(request_id=pl_request_id, 
+    prompt_name='city_choice', prompt_input_variables=input_variables)
+```
+
+```js Javascript
+
+// Getting the template from 🍰 PromptLayer
+axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
+    headers: {
+      'X-API-KEY': process.env.PROMPTLAYER_API_KEY
+    },
+    params: {
+      'prompt_name': 'city_choice',
+      'langchain': true,
+    }
+  })
+  .then(function (response) {
+    let promptTemplate = response.data.prompt_template.template;
+    const inputVariables = {
+        city: "Washington, D.C.",
+        interests: "resorts, museums, beaches"
+    };
+    let replacedPromptTemplate = promptTemplate;
+    Object.entries(inputVariables).forEach(([key, value]) => {
+      replacedPromptTemplate = replacedPromptTemplate.replace(`{${key}}`, value);
+    });
+    
+    const llm = new PromptLayerOpenAI({
+      temperature: 0.9,
+      openAIApiKey: process.env.OPENAI_API_KEY,
+      promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+      plTags: ["getting_started_example"],
+      returnPromptLayerId: true,
+    });
+    
+    // Generating an answer
+    llm.generate([replacedPromptTemplate]).then(response => {
+        const promptLayerRequestId = response.generations[0][0].generationInfo.promptLayerRequestId;
+        const answer = response.generations[0][0].text;
+        console.log("Answer:", answer);
+
+        // Associate the request with the prompt template we used in 🍰 PromptLayer
+        axios
+        .post('https://api.promptlayer.com/rest/track-prompt', {
+            request_id: promptLayerRequestId,
+            prompt_name: 'city_choice',
+            prompt_input_variables: inputVariables,
+            api_key: process.env.PROMPTLAYER_API_KEY,
+        })
+        .then(_ => {
+            console.log("Successfully tracked prompt");
+        })
+        .catch(error => {
+            console.error(error);
+        });
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+```
+
+```bash REST
+# Send a request using the PromptLayer API
+curl --location --request POST 'https://api.promptlayer.com/rest/get-prompt-template' \
+--header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>' \
+--data-raw '{
+    "prompt_name": "city_choice"
+}'
+```
+</CodeGroup>
+
 ## Using Different Models
 
-In addition to OpenAI, PromptLayer supports other models as well. Here's an example of how to use a chat model from OpenAI:
+In addition to OpenAI, PromptLayer supports other models as well. 
 
-```python
+### Chat-GPT
+
+Here's an example of how to use a chat model from OpenAI:
+
+<CodeGroup>
+
+```python Python
 openai = promptlayer.openai
 
 response = openai.ChatCompletion.create(
@@ -180,7 +764,50 @@ response = openai.ChatCompletion.create(
 print(response.choices[0].message.content)
 ```
 
-We can also use models from Anthropic:
+```python Python (LangChain)
+from langchain.chat_models import ChatOpenAI
+from langchain.schema import AIMessage, HumanMessage, SystemMessage
+
+llm = ChatOpenAI(model="gpt-3.5-turbo", callbacks=[PromptLayerCallbackHandler()])
+
+response = llm(
+    [
+        SystemMessage(content="You are a helpful AI assistant that helps people bake."),
+        HumanMessage(content="How do you make a layer cake?"),
+    ]
+)
+print(response)
+```
+
+```js Javascript
+const { PromptLayerChatOpenAI } = require("langchain/chat_models/openai");
+const { SystemMessage, HumanMessage } = require("langchain/schema");
+const chat = new PromptLayerChatOpenAI({
+    returnPromptLayerId: true,
+    openAIApiKey: process.env.OPENAI_API_KEY,
+    promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
+    });
+chat.call([
+  new SystemMessage("You are a helpful AI assistant."),
+  new HumanMessage("What's your name?")
+]).then(response => console.log(response));
+```
+
+```bash REST
+curl --location --request POST 'https://api.promptlayer.com/rest/generate-chat-prompt' \
+--header 'Content-Type: application/json' \
+--data-raw '{
+    "messages": [
+        {"role": "system", "content": "You are a helpful AI assistant that helps people bake."},
+        {"role": "user", "content": "How do you make a layer cake?"}
+    ]
+}'
+```
+</CodeGroup>
+
+### Anthropic
+
+We can also use models from Anthropic natively with the PromptLayer Python SDK:
 
 ```python
 anthropic = promptlayer.anthropic
@@ -196,7 +823,9 @@ response = client.completions.create(
 print(response.completion)
 ```
 
-And here's an example of using the Falcon-7b model from LangChain:
+### Falcon-7b & HuggingFaceHub
+
+Here's an example of using the Falcon-7b model from HuggingFaceHub. By using LangChain with the `PromptLayerCallbackHandler`, you can access tons of LLMs.
 
 ```python
 from langchain.callbacks import PromptLayerCallbackHandler

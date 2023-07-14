@@ -14,7 +14,7 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart"]
+      "pages": ["introduction", "quickstart", "getting_started"]
     },
     {
       "group": "Languages & Environments",
