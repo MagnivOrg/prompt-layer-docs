@@ -28,20 +28,4 @@ response = requests.post(
 <ParamField body="metadata" type="object">
 </ParamField>
 
-<RequestExample>
-
-```python Python
-import requests
-response = requests.post(
-  "https://api.promptlayer.com/rest/track-metadata",
-  json={
-      "api_key": "<YOUR_API_KEY>",
-      "request_id": "<REQUEST_ID>",
-      "metadata": {"session_id": "abc123", "user_id": "user123"}
-  },
-)
-```
-
-</RequestExample>
-
 👋 Contact us at hello@magniv.io if you run into any problems.

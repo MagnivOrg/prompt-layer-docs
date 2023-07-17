@@ -35,21 +35,3 @@ response = requests.post(
 </ParamField>
 <ParamField body="version" type="string" optional="true">
 </ParamField>
-
-<RequestExample>
-
-```python Python
-import requests
-response = requests.post(
-  "https://api.promptlayer.com/rest/track-prompt",
-  json={
-      "api_key": "<YOUR_API_KEY>",
-      "prompt_name": "<PROMPT_NAME>",
-      "prompt_input_variables": {"variable1": "value1", "variable2": "value2"},
-      "request_id": "<REQUEST_ID>",
-      "version": "<VERSION>"
-  },
-)
-```
-
-</RequestExample>

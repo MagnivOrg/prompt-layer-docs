@@ -114,17 +114,16 @@ llm.call("My name is").then(response => console.log(response));
 ```
 
 ```bash REST
-curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
---header 'Content-Type: application/json' \
---data-raw '{
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-request \
+  --data '{
     "function_name": "openai.Completion.create",
     "kwargs": {"engine": "text-davinci-003", "prompt": "My name is"},
-    "tags": ["promptlayer-test"],
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
     "api_key": "pl_<YOUR API KEY>"
-}'
+  }'
 ```
 </CodeGroup>
 
@@ -181,16 +180,19 @@ llm.call("My name is").then(response => console.log(response));
 ```
 
 ```bash REST
-curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
---header 'Content-Type: application/json' \
---data-raw '{
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-request \
+  --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "My name is", "tags": ["getting_started_example"]},
+    "kwargs": {"engine": "text-davinci-003", "prompt": "My name is"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
+    "tags": [
+        "getting_started_example"
+    ],
     "api_key": "pl_<YOUR API KEY>"
-}'
+  }'
 ```
 
 </CodeGroup>
@@ -304,24 +306,28 @@ llm.generate(["What is the capital of New York? \\n\\nThe capital of New York is
 
 ```bash REST
 # Create a request
-curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
---header 'Content-Type: application/json' \
---data-raw '{
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-request \
+  --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "What is the capital of New York? \\n\\nThe capital of New York is", "tags": ["getting_started_example"]},
+    "kwargs": {"engine": "text-davinci-003", "prompt": "What is the capital of New York? \\n\\nThe capital of New York is"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
+    "tags": [
+        "getting_started_example"
+    ],
     "api_key": "pl_<YOUR API KEY>"
-}'
+  }'
 
 # Score the request
-curl --location --request POST 'https://api.promptlayer.com/rest/score-request' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "request_id": <YOUR REQUEST ID>,
-    "score": <YOUR SCORE>
-}'
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-score \
+  --data '{
+    "request_id": "<YOUR REQUEST ID>",
+    "score": <YOUR SCORE>,
+    "api_key": "pl_<YOUR API KEY>"
+  }'
 ```
 
 </CodeGroup>
@@ -531,37 +537,42 @@ llm.generate([replacedPromptTemplate]).then(response => {
 
 ```bash REST
 # Create a request
-curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
---header 'Content-Type: application/json' \
---data-raw '{
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-request \
+  --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "<YOUR PROMPT>", "tags": ["getting_started_example"]},
+    "kwargs": {"engine": "text-davinci-003", "prompt": "<YOUR_PROMPT>"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
+    "tags": [
+        "getting_started_example"
+    ],
     "api_key": "pl_<YOUR API KEY>"
-}'
+  }'
 
 # Score the request
-curl --location --request POST 'https://api.promptlayer.com/rest/score-request' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "request_id": <YOUR REQUEST ID>,
-    "score": <YOUR SCORE>
-}'
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-score \
+  --data '{
+    "request_id": "<YOUR REQUEST ID>",
+    "score": <YOUR SCORE>,
+    "api_key": "pl_<YOUR API KEY>"
+  }'
 
 # Add metadata to the request
-curl --location --request POST 'https://api.promptlayer.com/rest/add-metadata' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "request_id": <YOUR REQUEST ID>,
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-metadata \
+  --data '{
+    "request_id": "<YOUR REQUEST ID>",
+    "api_key": "pl_<YOUR API KEY>",
     "metadata": {
         "referrer": "getting_started.ipynb",
         "origin": "NYC, USA",
         "user_id": "sdf328",
         "error_message": "<YOUR ERROR MESSAGE>"
     }
-}'
+  }'
 ```
 </CodeGroup>
 
@@ -644,19 +655,14 @@ axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
 
 ```bash REST
 # Get a prompt by its name
-curl --location --request GET 'https://api.promptlayer.com/rest/get-prompt-template' \
---header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>' \
---data-raw '{
-    "prompt_name": "city_choice"
-}'
+curl --request GET \
+  --url 'https://api.promptlayer.com/rest/get-prompt-template?prompt_name=<PROMPT_NAME>' \
+  --header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>'
 
 # Get a prompt by its name and version
-curl --location --request GET 'https://api.promptlayer.com/rest/get-prompt-template' \
---header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>' \
---data-raw '{
-    "prompt_name": "city_choice",
-    "version": 1
-}'
+curl --request GET \
+  --url 'https://api.promptlayer.com/rest/get-prompt-template?prompt_name=<PROMPT_NAME>&version=<VERSION_NUM>' \
+  --header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>'
 ```
 </CodeGroup>
 
@@ -765,12 +771,15 @@ axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
 ```
 
 ```bash REST
-# Send a request using the PromptLayer API
-curl --location --request POST 'https://api.promptlayer.com/rest/get-prompt-template' \
---header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>' \
---data-raw '{
-    "prompt_name": "city_choice"
-}'
+# Associate a previous request with a prompt template
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-prompt \
+  --data '{
+    "prompt_name": "city_choice",
+    "prompt_input_variables": `{"city": "Washington, D.C.", "interests": "resorts, museums, beaches"}`,
+    "api_key": "pl_<YOUR API KEY>",
+    "request_id": "<YOUR REQUEST ID>"
+  }'
 ```
 </CodeGroup>
 
@@ -834,14 +843,22 @@ chat.call([
 ```
 
 ```bash REST
-curl --location --request POST 'https://api.promptlayer.com/rest/generate-chat-prompt' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "messages": [
-        {"role": "system", "content": "You are a helpful AI assistant that helps people bake."},
-        {"role": "user", "content": "How do you make a layer cake?"}
-    ]
-}'
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-request \
+  --data '{
+    "function_name": "openai.Completion.create",
+    "kwargs": {
+        "engine": "gpt-3.5-turbo",
+        "messages": [
+            {"role": "system", "content": "You are a helpful AI assistant that helps people bake."},
+            {"role": "user", "content": "How do you make a layer cake?"}
+        ]
+    },
+    "request_response": {...},
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "api_key": "pl_<YOUR API KEY>"
+  }'
 ```
 </CodeGroup>
 
