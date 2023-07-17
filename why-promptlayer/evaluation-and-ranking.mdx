@@ -5,13 +5,21 @@ icon: "ranking-star"
 
 One of the biggest challenges in prompt engineering is understanding if Prompt A performs better than Prompt B. PromptLayer helps you solve this.
 
-The best way to understand your prompts is by analyzing them in production. Below are some ways you can use PromptLayer to answer the following key questions:
+Testing in development can only get you so far. We believe the best way to understand your prompts is by analyzing them in production. 
+
+Below are some ways you can use PromptLayer to answer the following key questions:
 
 - How much does PromptA vs PromptB cost?
 - How often is PromptA used?
 - Is PromptA working better than PromptB?
 - Which prompts are receiving the most negative user feedback?
 - How do I synthetically evaluate my prompts using LLMs?
+
+## A/B Testing
+
+PromptLayer is best used as an orchestration & data layer of your prompts.
+
+That means A/B testing is easy. Use the [Prompt Registry](/features/prompt-registry) to version templates build different tests, and store segmentation information in request [metadata](/features/prompt-history/metadata).
 
 ## Scoring
 
@@ -36,11 +44,12 @@ The three most common ways to Score to rank your prompts are:
     
     --
     
-    We are worried that the chatbot is being rude. How rude is the chat on a scale of 0 to 100?
+    We are worried that the chatbot is being rude. 
+    How rude is the chat on a scale of 0 to 100?
     ```
     
 
-## Evaluation
+## Analytics
 
 After populating Scores as described above, navigate to the Prompt Template page to see how each template stacks up.
 
