@@ -74,6 +74,23 @@ Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read 
 
 You can also use Langchain to create a template, either by pulling it from LangchainHub, creating a custom template, or providing a Python dictionary directly.
 
+## Tracking templates
+
+The power of the Prompt Registry comes from associating requests with the template they used. This allows you to track average score, latency, and cost of each prompt template. You can also see the individual requests using the template.
+
+![Prompt registry states](/images/getting-started-prompt-registry-stats.png)
+
+To associate a request with a prompt template and some input variables, use the code below with the [pl_request_id](/features/prompt-history/request-id) for the request.
+
+```python Python SDK
+promptlayer.track.prompt(request_id=pl_request_id, 
+    prompt_name='<PROMPT_NAME>', prompt_input_variables={...})
+```
+
+Alternatively, use the REST API endpoint `/rest/track-prompt` ([read more](/reference/track-prompt)).
+
+Learn more about tracking templates [here](/features/prompt-history/tracking-templates)
+
 ## A/B Testing
 
 The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing. 
