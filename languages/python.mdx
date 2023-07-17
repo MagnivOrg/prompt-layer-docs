@@ -69,11 +69,11 @@ import os
 import promptlayer
 import anthropic
 
+# Instead of `import anthropic` ->
 anthropic = promptlayer.anthropic
+
 promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
-anthropic_client = anthropic.Client(
-	os.environ.get("ANTHROPIC_API_KEY")   
-)
+anthropic_client = anthropic.Client(os.environ.get("ANTHROPIC_API_KEY"))
 
 response = anthropic_client.completion(
 	prompt=f"{anthropic.HUMAN_PROMPT} How many toes do dogs have? more information more information more{anthropic.AI_PROMPT}",
@@ -92,4 +92,4 @@ Here is how it would look like on the dashbaord:
 
 ---
 
-Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@magniv.io)
+Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
