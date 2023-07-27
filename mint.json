@@ -1,5 +1,8 @@
 {
   "$schema": "https://mintlify.com/schema.json",
+  "api": {
+    "baseUrl": "https://api.promptlayer.com"
+  },
   "name": "PromptLayer",
   "logo": {
     "dark": "/logo/logo.png",
@@ -18,7 +21,12 @@
     },
     {
       "group": "Languages & Environments",
-      "pages": ["languages/python", "languages/javascript", "languages/langchain", "languages/rest-api"]
+      "pages": [
+        "languages/python",
+        "languages/javascript",
+        "languages/langchain",
+        "languages/rest-api"
+      ]
     },
     {
       "group": "Usage Documentation",
@@ -36,16 +44,30 @@
           ],
           "icon": "folder"
         },
-        "features/faq"  
+        "features/faq"
       ]
     },
     {
       "group": "Why PromptLayer?",
-      "pages": ["why-promptlayer/advanced-search", "why-promptlayer/evaluation-page", "why-promptlayer/analytics", "why-promptlayer/evaluation-and-ranking", "why-promptlayer/how-it-works"]
+      "pages": [
+        "why-promptlayer/advanced-search",
+        "why-promptlayer/evaluation-page",
+        "why-promptlayer/analytics",
+        "why-promptlayer/evaluation-and-ranking",
+        "why-promptlayer/how-it-works"
+      ]
     },
     {
       "group": "Reference",
-      "pages": ["reference/rest-api-reference", "reference/track-request", "reference/get-prompt-template", "reference/publish-prompt-template", "reference/track-score", "reference/track-prompt", "reference/track-metadata"]
+      "pages": [
+        "reference/rest-api-reference",
+        "reference/track-request",
+        "reference/get-prompt-template",
+        "reference/publish-prompt-template",
+        "reference/track-score",
+        "reference/track-prompt",
+        "reference/track-metadata"
+      ]
     }
   ],
   "footerSocials": {
@@ -54,8 +76,10 @@
     "discord": "https://discord.gg/DBAhQbW39S"
   },
   "backgroundImage": "/background.png",
-  "topbarLinks": [{
-    "name": "Contact Us",
-    "url": "mailto:hello@promptlayer.com"
-  }]
+  "topbarLinks": [
+    {
+      "name": "Contact Us",
+      "url": "mailto:hello@promptlayer.com"
+    }
+  ]
 }

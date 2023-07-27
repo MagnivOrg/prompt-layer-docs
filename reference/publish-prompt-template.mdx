@@ -1,40 +1,6 @@
 ---
 title: "Publish Prompt Template"
-api: "POST https://api.promptlayer.com/rest/publish-prompt-template"
+openapi: "POST /rest/publish-prompt-template"
 ---
 
-Publish Prompt Template allows you to programmatically create a new version of a prompt 
-
-## Example Code
-
-```python
-import requests
-request_response = requests.post(
-  "https://api.promptlayer.com/rest/publish-prompt-template",
-  json={
-      "prompt_name": "<PROMPTNAME>",
-      "prompt_template": "<PROMPTEMPLATE>",
-      "tags": "<TAGS>",
-      "api_key": "pl_<YOUR API KEY>",
-  },
-)
-```
-
-
-## Request Parameters
-
-<ParamField body="prompt_name" type="string">
-    Prompt name has to be less than 128 characters and can only contain letters, numbers, and underscores. If a prompt exists with this name it will be pushed into an older version
-</ParamField>
-
-<ParamField body="prompt_template" type="string">
-    A JSON formatted prompt template [following the langchain format](https://langchain.readthedocs.io/en/latest/modules/prompts/examples/prompt_serialization.html#loading-from-json).
-</ParamField>
-
-<ParamField body="tags" type="array" optional="true">
-    Array of string tags for a template
-</ParamField>
-
-<ParamField body="api_key" type="string">
-    Your PromptLayer API Key
-</ParamField>
+Publish Prompt Template allows you to programmatically create a new version of a prompt
