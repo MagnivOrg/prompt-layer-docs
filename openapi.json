@@ -1,6 +1,9 @@
 {
   "openapi": "3.1.0",
-  "info": { "title": "FastAPI", "version": "0.1.0" },
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
   "paths": {
     "/rest/publish-prompt-template": {
       "post": {
@@ -9,7 +12,9 @@
         "requestBody": {
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/Publish" }
+              "schema": {
+                "$ref": "#/components/schemas/Publish"
+              }
             }
           },
           "required": true
@@ -19,7 +24,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/Response" }
+                "schema": {
+                  "$ref": "#/components/schemas/Response"
+                }
               }
             }
           },
@@ -27,7 +34,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -39,66 +48,90 @@
     "schemas": {
       "BaseChatMessagePromptTemplate": {
         "properties": {
-          "prompt": { "$ref": "#/components/schemas/PromptTemplate" },
+          "prompt": {
+            "$ref": "#/components/schemas/PromptTemplate"
+          },
           "additional_kwargs": {
             "type": "object",
             "title": "Additional Kwargs"
           },
-          "role": { "type": "string", "title": "Role" }
+          "role": {
+            "type": "string",
+            "title": "Role"
+          }
         },
         "type": "object",
-        "required": ["prompt", "role"],
+        "required": [
+          "prompt",
+          "role"
+        ],
         "title": "BaseChatMessagePromptTemplate",
         "description": "Chat message prompt template."
-      },
-      "BaseOutputParser": {
-        "properties": {},
-        "type": "object",
-        "title": "BaseOutputParser",
-        "description": "Base class to parse the output of an LLM call.\n\nOutput parsers help structure language model responses.\n\nExample:\n    .. code-block:: python\n\n        class BooleanOutputParser(BaseOutputParser[bool]):\n            true_val: str = \"YES\"\n            false_val: str = \"NO\"\n\n            def parse(self, text: str) -> bool:\n                cleaned_text = text.strip().upper()\n                if cleaned_text not in (self.true_val.upper(), self.false_val.upper()):\n                    raise OutputParserException(\n                        f\"BooleanOutputParser expected output value to either be \"\n                        f\"{self.true_val} or {self.false_val} (case-insensitive). \"\n                        f\"Received {cleaned_text}.\"\n                    )\n                return cleaned_text == self.true_val.upper()\n\n                @property\n                def _type(self) -> str:\n                        return \"boolean_output_parser\""
       },
       "ChatPromptTemplate": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables"
           },
-          "output_parser": { "$ref": "#/components/schemas/BaseOutputParser" },
           "messages": {
             "items": {
               "anyOf": [
                 {
                   "$ref": "#/components/schemas/BaseChatMessagePromptTemplate"
                 },
-                { "$ref": "#/components/schemas/Message" }
+                {
+                  "$ref": "#/components/schemas/Message"
+                }
               ]
             },
             "type": "array",
             "title": "Messages"
           },
           "functions": {
-            "items": { "$ref": "#/components/schemas/Function" },
+            "items": {
+              "$ref": "#/components/schemas/Function"
+            },
             "type": "array",
             "title": "Functions"
           },
           "function_call": {
             "anyOf": [
-              { "type": "string", "enum": ["none", "auto"] },
-              { "additionalProperties": { "type": "string" }, "type": "object" }
+              {
+                "type": "string",
+                "enum": [
+                  "none",
+                  "auto"
+                ]
+              },
+              {
+                "additionalProperties": {
+                  "type": "string"
+                },
+                "type": "object"
+              }
             ],
             "title": "Function Call",
             "default": "none"
           }
         },
         "type": "object",
-        "required": ["input_variables", "messages"],
+        "required": [
+          "input_variables",
+          "messages"
+        ],
         "title": "ChatPromptTemplate",
-        "description": "Chat prompt template. This is a prompt that is sent to the user."
+        "description": "Chat Prompt Template"
       },
       "Function": {
         "properties": {
-          "name": { "type": "string", "title": "Name" },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
           "description": {
             "type": "string",
             "title": "Description",
@@ -107,26 +140,42 @@
           "parameters": {
             "type": "object",
             "title": "Parameters",
-            "default": { "type": "object", "properties": {} }
+            "default": {
+              "type": "object",
+              "properties": {}
+            }
           }
         },
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "Function"
       },
       "FunctionCall": {
         "properties": {
-          "name": { "type": "string", "title": "Name" },
-          "arguments": { "type": "string", "title": "Arguments" }
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "arguments": {
+            "type": "string",
+            "title": "Arguments"
+          }
         },
         "type": "object",
-        "required": ["name", "arguments"],
+        "required": [
+          "name",
+          "arguments"
+        ],
         "title": "FunctionCall"
       },
       "HTTPValidationError": {
         "properties": {
           "detail": {
-            "items": { "$ref": "#/components/schemas/ValidationError" },
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
             "type": "array",
             "title": "Detail"
           }
@@ -138,26 +187,46 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": ["system", "user", "assistant", "function"],
+            "enum": [
+              "system",
+              "user",
+              "assistant",
+              "function"
+            ],
             "title": "Role"
           },
-          "function_call": { "$ref": "#/components/schemas/FunctionCall" },
-          "content": { "type": "string", "title": "Content", "default": "" },
-          "name": { "type": "string", "title": "Name" }
+          "function_call": {
+            "$ref": "#/components/schemas/FunctionCall"
+          },
+          "content": {
+            "type": "string",
+            "title": "Content",
+            "default": ""
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
         },
         "type": "object",
-        "required": ["role"],
+        "required": [
+          "role"
+        ],
         "title": "Message"
       },
       "PromptTemplate": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables"
           },
-          "output_parser": { "$ref": "#/components/schemas/BaseOutputParser" },
-          "template": { "type": "string", "title": "Template" },
+          "template": {
+            "type": "string",
+            "title": "Template"
+          },
           "template_format": {
             "type": "string",
             "title": "Template Format",
@@ -170,9 +239,12 @@
           }
         },
         "type": "object",
-        "required": ["input_variables", "template"],
+        "required": [
+          "input_variables",
+          "template"
+        ],
         "title": "PromptTemplate",
-        "description": "Schema to represent a prompt for an LLM.\n\nExample:\n    .. code-block:: python\n\n        from langchain import PromptTemplate\n        prompt = PromptTemplate(input_variables=[\"foo\"], template=\"Say {foo}\")"
+        "description": "Completion Prompt Template"
       },
       "Publish": {
         "properties": {
@@ -183,13 +255,19 @@
           },
           "prompt_template": {
             "anyOf": [
-              { "$ref": "#/components/schemas/ChatPromptTemplate" },
-              { "$ref": "#/components/schemas/SafePromptTemplate" }
+              {
+                "$ref": "#/components/schemas/ChatPromptTemplate"
+              },
+              {
+                "$ref": "#/components/schemas/SafePromptTemplate"
+              }
             ],
             "title": "Prompt Template"
           },
           "tags": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Tags",
             "description": "Array of string tags for a template",
@@ -202,27 +280,44 @@
           }
         },
         "type": "object",
-        "required": ["prompt_name", "prompt_template", "api_key"],
+        "required": [
+          "prompt_name",
+          "prompt_template",
+          "api_key"
+        ],
         "title": "Publish"
       },
       "Response": {
         "properties": {
-          "id": { "type": "integer", "title": "Id" },
-          "success": { "type": "boolean", "title": "Success" }
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          }
         },
         "type": "object",
-        "required": ["id", "success"],
+        "required": [
+          "id",
+          "success"
+        ],
         "title": "Response"
       },
       "SafePromptTemplate": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables"
           },
-          "output_parser": { "$ref": "#/components/schemas/BaseOutputParser" },
-          "template": { "type": "string", "title": "Template" },
+          "template": {
+            "type": "string",
+            "title": "Template"
+          },
           "template_format": {
             "type": "string",
             "title": "Template Format",
@@ -235,22 +330,44 @@
           }
         },
         "type": "object",
-        "required": ["input_variables", "template"],
+        "required": [
+          "input_variables",
+          "template"
+        ],
         "title": "SafePromptTemplate",
-        "description": "Schema to represent a prompt for an LLM.\n\nExample:\n    .. code-block:: python\n\n        from langchain import PromptTemplate\n        prompt = PromptTemplate(input_variables=[\"foo\"], template=\"Say {foo}\")"
+        "description": "Completion Prompt Template"
       },
       "ValidationError": {
         "properties": {
           "loc": {
-            "items": { "anyOf": [{ "type": "string" }, { "type": "integer" }] },
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
             "type": "array",
             "title": "Location"
           },
-          "msg": { "type": "string", "title": "Message" },
-          "type": { "type": "string", "title": "Error Type" }
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
         },
         "type": "object",
-        "required": ["loc", "msg", "type"],
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError"
       }
     }
