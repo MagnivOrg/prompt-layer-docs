@@ -96,3 +96,114 @@ Learn more about tracking templates [here](/features/prompt-history/tracking-tem
 The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing. 
 
 CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better. This can help you optimize your prompts and improve user engagement.
+
+
+## OpenAI Functions
+
+The Prompt Registry supports [OpenAI functions](https://openai.com/blog/function-calling-and-other-api-updates) format. You can create a prompt using functions both visually and programmatically.
+
+Be sure to read [this OpenAI guide](https://platform.openai.com/docs/guides/gpt/function-calling) for more context.
+
+### Publishing Visually
+First you need to define your functions by clicking on the functions button
+<img src='/images/create-function.png' />
+
+Then you can use the functions in your prompt template
+<img src='/images/use-function.png' />
+
+### Publishing Programmatically
+To publish a prompt template with functions programatically is very similar to how you would publish a regular prompt template. To add functions you can pass `functions` and `function_call`.
+
+For example
+```python
+promptlayer.prompts.publish(
+    prompt_name="test_chat_functions",
+    prompt_template={
+    "function_call": {
+      "name": "get_current_weather"
+    },
+    "input_variables": [],
+    "messages": [
+      {
+        "role": "system",
+        "prompt": {
+          "input_variables": [],
+          "template": "You are a helpful assistant",
+          "template_format": "f-string",
+          "validate_template": True,
+          "_type": "prompt"
+        }
+      },
+      {
+        "role": "user",
+        "prompt": {
+          "input_variables": [],
+          "template": "What is the weather in Boston?",
+          "template_format": "f-string",
+          "validate_template": True,
+          "_type": "prompt"
+        }
+      },
+      {
+        "role": "assistant",
+        "function_call": {
+          "name": "get_current_weather",
+          "arguments": "{\"location\": \"Boston\"}"
+        },
+        "content": "",
+        "name": None
+      },
+      {
+        "role": "function",
+        "function_call": None,
+        "content": "{\"location\": \"Boston\", \"temperature\": \"72\"}",
+        "name": "get_current_weather"
+      }
+    ],
+    "functions": [
+      {
+        "name": "get_current_weather",
+        "description": "",
+        "parameters": {
+          "properties": {
+            "location": {
+              "description": "The city and state, e.g. San Francisco, CA",
+              "type": "string"
+            },
+            "unit": { "enum": ["celsius", "fahrenheit"], "type": "string" }
+          },
+          "required": ["location"],
+          "type": "object"
+        }
+      }
+    ],
+    "_type": "chat_promptlayer_langchain"
+  }
+)
+```
+
+
+### Getting a Prompt Programmatically
+To get a prompt template that uses OpenAI functions programatically you will need to parse the template from the Prompt Registry format to what OpenAI expects. 
+
+The following code snippet shows you how to do this:
+```python
+def get_message(chat_message):
+    if "prompt" in chat_message:
+        return {"role": chat_message.get("role"), "content":chat_message.get("prompt", {}).get("template", "")}
+    return chat_message
+
+prompt = promptlayer.prompts.get(
+    prompt_name="my_prompt_with_functions"
+)
+messages = [get_message(message) for message in prompt.get("messages", [])]
+functions = prompt.get("functions", [])
+function_call = prompt.get("function_call")
+
+response = openai.ChatCompletion.create(
+    model="gpt-3.5-turbo",
+    messages=messages,
+    functions=functions,
+    function_call=function_call
+)
+```
