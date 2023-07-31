@@ -31,17 +31,22 @@ openai.Completion.create(
 
 ```python Python with LangChain
 # Make sure to `pip install promptlayer`
+import promptlayer
+from langchain.callbacks import PromptLayerCallbackHandler
 
 # Using OpenAI completions
-from langchain.llms import PromptLayerOpenAI
-llm = PromptLayerOpenAI(pl_tags=["langchain"])
+from langchain.llms import OpenAI
+llm = OpenAI(
+    model_name="text-davinci-003",
+    callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])]
+)
 llm("My name is")
 
 # Using OpenAI chat
-from langchain.chat_models import PromptLayerChatOpenAI
+from langchain.chat_models import ChatOpenAI
 from langchain.schema import (SystemMessage, HumanMessage)
-chat = PromptLayerChatOpenAI(pl_tags=["langchain"])
-chat([
+chat = ChatOpenAI(callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])])
+chat_llm([
   SystemMessage(content="You are an AI assistant."),
   HumanMessage(content="What's your name?")
 ])
