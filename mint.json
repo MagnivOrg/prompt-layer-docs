@@ -81,5 +81,8 @@
       "name": "Contact Us",
       "url": "mailto:hello@promptlayer.com"
     }
-  ]
+  ],
+  "feedback": {
+    "thumbsRating": true
+  }
 }
