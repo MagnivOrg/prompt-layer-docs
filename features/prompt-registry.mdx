@@ -187,6 +187,61 @@ promptlayer.prompts.publish(
 )
 ```
 
+Or, if you're already calling OpenAI API, you can bundle it and publish it into the Prompt Registry.
+
+Like this
+
+```python
+messages = [{"role": "user", "content": "What's the weather like in Boston?"}]
+functions = [
+  {
+    "name": "get_current_weather",
+    "description": "Get the current weather in a given location",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "The city and state, e.g. San Francisco, CA",
+        },
+        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
+      },
+      "required": ["location"],
+    },
+  }
+]
+
+promptlayer.prompts.publish(
+  prompt_name="test_chat_functions",
+  prompt_template={
+    "function_call": "auto", # or {"name": function_name} if you want to make sure the function gets called.
+    "input_variables": [], # list them here if it has any
+    "messages": [ 
+      {
+        "role": role,
+        "prompt": {
+          "input_variables": [], # list them here if it has any
+          "template": content,
+          "template_format": "f-string", # or "jinja"
+          "validate_template": True, # optional
+          "_type": "prompt",
+        },
+      } for (role, content) in map(lambda x: x.values(), messages) 
+    ],
+    "functions": functions,
+    "_type": "chat_promptlayer_langchain", # important if using gpt-3.5-turbo or gpt-4
+  },
+)
+
+response = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=messages,
+  functions=functions,
+  function_call="auto",
+)
+```
+
+
 
 ### Getting a Prompt Programmatically
 To get a prompt template that uses OpenAI functions programatically you will need to parse the template from the Prompt Registry format to what OpenAI expects. 
