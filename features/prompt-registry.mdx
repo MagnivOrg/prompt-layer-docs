@@ -117,76 +117,60 @@ Then you can use the functions in your prompt template
 <img src='/images/use-function.png' />
 
 ### Publishing Programmatically
+
 To publish a prompt template with functions programatically is very similar to how you would publish a regular prompt template. To add functions you can add the arguments `functions` and `function_call` to your `prompt_template` object.
 
-For example
+If you’re already calling OpenAI API, you can bundle the functions and publish it into the Prompt Registry, like this:
+
 ```python
-promptlayer.prompts.publish(
-    prompt_name="test_chat_functions",
-    prompt_template={
-    "function_call": {
-      "name": "get_current_weather"
-    },
-    "input_variables": [],
-    "messages": [
-      {
-        "role": "system",
-        "prompt": {
-          "input_variables": [],
-          "template": "You are a helpful assistant",
-          "template_format": "f-string",
-          "validate_template": True,
-          "_type": "prompt"
-        }
-      },
-      {
-        "role": "user",
-        "prompt": {
-          "input_variables": [],
-          "template": "What is the weather in Boston?",
-          "template_format": "f-string",
-          "validate_template": True,
-          "_type": "prompt"
-        }
-      },
-      {
-        "role": "assistant",
-        "function_call": {
-          "name": "get_current_weather",
-          "arguments": "{\"location\": \"Boston\"}"
+messages = [{"role": "user", "content": "What's the weather like in Boston?"}]
+functions = [
+  {
+    "name": "get_current_weather",
+    "description": "Get the current weather in a given location",
+    "parameters": {
+      "type": "object",
+      "properties": {
+        "location": {
+          "type": "string",
+          "description": "The city and state, e.g. San Francisco, CA",
         },
-        "content": "",
-        "name": None
+        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
       },
-      {
-        "role": "function",
-        "function_call": None,
-        "content": "{\"location\": \"Boston\", \"temperature\": \"72\"}",
-        "name": "get_current_weather"
-      }
-    ],
-    "functions": [
-      {
-        "name": "get_current_weather",
-        "description": "",
-        "parameters": {
-          "properties": {
-            "location": {
-              "description": "The city and state, e.g. San Francisco, CA",
-              "type": "string"
-            },
-            "unit": { "enum": ["celsius", "fahrenheit"], "type": "string" }
-          },
-          "required": ["location"],
-          "type": "object"
-        }
-      }
-    ],
-    "_type": "chat_promptlayer_langchain"
+      "required": ["location"],
+    },
   }
+]
+
+promptlayer.prompts.publish(
+  prompt_name="test_chat_functions",
+  prompt_template={
+    "function_call": "auto", # or {"name": function_name} if you want to make sure the function gets called.
+    "input_variables": [], # list them here if it has any
+    "messages": [ 
+      {
+        "role": role,
+        "prompt": {
+          "input_variables": [], # list them here if it has any
+          "template": content,
+          "template_format": "f-string", # or "jinja"
+          "validate_template": True, # optional
+          "_type": "prompt",
+        },
+      } for (role, content) in map(lambda x: x.values(), messages) 
+    ],
+    "functions": functions,
+    "_type": "chat_promptlayer_langchain", # important if using gpt-3.5-turbo or gpt-4
+  },
+)
+
+response = openai.ChatCompletion.create(
+  model="gpt-3.5-turbo",
+  messages=messages,
+  functions=functions,
+  function_call="auto",
 )
 ```
-
 
 ### Getting a Prompt Programmatically
 To get a prompt template that uses OpenAI functions programatically you will need to parse the template from the Prompt Registry format to what OpenAI expects. 
