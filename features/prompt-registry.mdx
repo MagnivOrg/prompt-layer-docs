@@ -212,3 +212,20 @@ response = openai.ChatCompletion.create(
     function_call=function_call
 )
 ```
+
+### Getting all prompts
+To get all prompts from prompt registry you can use the following code snippet: 
+```python
+from promptlayer import prompts
+
+all_prompts = prompts.all()
+```
+By default this returns 30 prompts. You can change this by passing in the `per_page` argument. For example, to get 100 prompts you can do the following:
+```python
+all_prompts = prompts.all(per_page=100)
+```
+You can also define the page you want to get by passing in the `page` argument. For example, to get the second page of prompts you can do the following:
+```python
+all_prompts = prompts.all(page=2)
+```
+Alternatively, use the REST API endpoint `/rest/prompts` ([read more](/reference/get-prompts)).
