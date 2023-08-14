@@ -42,10 +42,71 @@
           }
         }
       }
+    },
+    "/rest/prompts": {
+      "get": {
+        "tags": ["prompts"],
+        "summary": "List",
+        "operationId": "list_rest_prompts__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" },
+            "name": "X-API-KEY",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/Base" }
+            }
+          },
+          "required": true
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/api__schemas__pagination__Response"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "Base": {
+        "properties": {
+          "page": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Page",
+            "default": 1
+          },
+          "per_page": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Per Page",
+            "default": 30
+          }
+        },
+        "type": "object",
+        "title": "Base"
+      },
       "BaseChatMessagePromptTemplate": {
         "properties": {
           "prompt": {
@@ -369,6 +430,40 @@
           "type"
         ],
         "title": "ValidationError"
+      },
+      "api__schemas__pagination__Response": {
+        "properties": {
+          "page": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Page",
+            "default": 1
+          },
+          "per_page": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Per Page",
+            "default": 30
+          },
+          "total": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Total"
+          },
+          "pages": {
+            "type": "integer",
+            "exclusiveMinimum": 0.0,
+            "title": "Pages"
+          },
+          "items": {
+            "items": { "$ref": "#/components/schemas/Publish" },
+            "type": "array",
+            "title": "Items"
+          }
+        },
+        "type": "object",
+        "required": ["total", "pages", "items"],
+        "title": "Response"
       }
     }
   }
