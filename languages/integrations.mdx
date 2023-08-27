@@ -1,0 +1,50 @@
+---
+title: 'Integrations'
+icon: 'handshake'
+---
+
+PromptLayer works seamlessly with many popular LLM frameworks and abstractions.
+
+Don't see the integration you are looking for? [Email us!](mailto:hello@promptlayer.com) 👋
+
+## LangChain
+
+Please read out [LangChain documentation page](/languages/langchain).
+
+## LiteLLM
+
+[LiteLLM](https://github.com/BerriAI/litellm) allows you to call any LLM API all using the OpenAI format. This is the easiest way to swap in and out new models and see which one works best for your prompts. Works with models such as Anthropic, HuggingFace, Cohere, PaLM, Replicate, Azure.
+
+
+Similar to our LangChain integration, LiteLLM provides a simple PromptLayer callback.
+
+It takes just 2 lines of code to instantly log your responses **across all providers** with PromptLayer:
+
+
+```python
+litellm.success_callback = ["promptlayer"]
+```
+
+Complete code
+
+```python
+from litellm import completion
+
+## Set up your env vars
+os.environ["PROMPTLAYER_API_KEY"] = "<YOUR PromptLayer API KEY pl_xxxxxx>"
+os.environ["OPENAI_API_KEY"], os.environ["COHERE_API_KEY"] = "", ""
+
+# Set up PromptLayer Callback 🍰
+litellm.success_callback = ["promptlayer"]
+
+# OpenAI call
+response = completion(model="gpt-3.5-turbo", messages=[{"role": "user", "content": "Hi 👋 - I'm openai"}])
+
+# Cohere call
+response = completion(model="command-nightly", messages=[{"role": "user", "content": "Hi 👋 - I'm cohere"}])
+```
+
+## LlamaIndex (coming soon)
+
+We are currently working on integrating with [LlamaIndex](https://www.llamaindex.ai/). Stay tuned for more updates.
+

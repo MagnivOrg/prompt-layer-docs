@@ -5,10 +5,10 @@
   },
   "name": "PromptLayer",
   "logo": {
-    "dark": "/logo/logo.png",
-    "light": "/logo/logo.png"
+    "light": "/logo/logo.png",
+    "dark": "/logo/dark.png"
   },
-  "favicon": "/logo/logo.png",
+  "favicon": "/logo/favicon.ico",
   "colors": {
     "primary": "#12A7D3",
     "light": "#81D7F7",
@@ -25,7 +25,8 @@
         "languages/python",
         "languages/javascript",
         "languages/langchain",
-        "languages/rest-api"
+        "languages/rest-api",
+        "languages/integrations"
       ]
     },
     {
