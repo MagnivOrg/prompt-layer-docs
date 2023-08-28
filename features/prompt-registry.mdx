@@ -3,15 +3,15 @@ title: "Prompt Registry"
 icon: "notebook"
 ---
 
-The Prompt Registry allows you to easily manage your prompt templates, which are customizable prompt strings with placeholders for variables. 
+The Prompt Registry allows you to easily manage your prompt templates, which are customizable prompt strings with placeholders for variables.
 
 Specifically, a prompt template is your prompt string with variables indicated in curly brackets (`This is a prompt by {author_name}`). Prompt templates can have tags and are uniquely named.
 
-You can use this tool to programmatically retrieve and publish prompts (even at runtime!). That is, this registry makes it easy to start A/B testing your prompts. Viewed as a "**Prompt Management System**”, this registry allows your org to pull out and organize the prompts that are currently dispersed throughout your codebase. 
+You can use this tool to programmatically retrieve and publish prompts (even at runtime!). That is, this registry makes it easy to start A/B testing your prompts. Viewed as a "**Prompt Management System**”, this registry allows your org to pull out and organize the prompts that are currently dispersed throughout your codebase.
 
 <video controls="controls">
-    <source src="/videos/registrytrimmed.mp4" type="video/mp4" />
-</video> 
+  <source src="/videos/registrytrimmed.mp4" type="video/mp4" />
+</video>
 
 ## Collaboration
 
@@ -19,9 +19,9 @@ The Prompt Registry is perfect for engineering teams looking to organize & track
 
 ... but the **real** power of the registry is collaboration. Engineering teams waste cycles deploying prompts and content teams are often blocked waiting on these deploys.
 
- By programmatically pulling down prompt templates at runtime, product and content teams can visually update & deploy prompt templates without waiting on eng deploys. 
- 
- We know quick feedback loops are important, but the Prompt Registry also makes those annoying last-minute prompt updates easy.
+By programmatically pulling down prompt templates at runtime, product and content teams can visually update & deploy prompt templates without waiting on eng deploys.
+
+We know quick feedback loops are important, but the Prompt Registry also makes those annoying last-minute prompt updates easy.
 
 ## Getting a Template
 
@@ -41,7 +41,7 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
-Optionally, to return a Langchain `PromptTemplate` type include **************langchain=True************** as an optional argument as shown below.
+Optionally, to return a Langchain `PromptTemplate` type include **\*\***\*\***\*\***langchain=True**\*\***\*\***\*\*** as an optional argument as shown below.
 
 ```python Python SDK
 prompt_template_obj = promptlayer.prompts.get("my_template", langchain=True)
@@ -49,22 +49,23 @@ prompt_template_obj = promptlayer.prompts.get("my_template", langchain=True)
 
 ## Publishing a Template
 
-You can use the UI or API to create a template. 
+You can use the UI or API to create a template.
 
 Templates are unique by name, which means that publishing a template with the same name will overwrite old templates.
 
 ### Visually
 
-<img src='/images/prompt-template.png' />
+<img src="/images/prompt-template.png" />
 
 To create a template using the UI, simply navigate to the Registry and click "Create Template". This will allow you to create the template visually. You can also edit old templates from the UI.
 
 Rename a template by triple-clicking on its name. It’s best practice to keep template names unique and lowercase.
 
 ### Template Formats
+
 You may choose to select from one of the two supported template formats (`f-string, jinja2`) to declare variables. (`f-string`) allows you to declare variables using curly brackets (`{variable_name}`) while (`jinja2`) allows you to declare variables using double curly brackets (`{{variable_name}}`).
 
-<img src='/images/template-format.png' />
+<img src="/images/template-format.png" />
 
 ### Programmatically
 
@@ -88,7 +89,7 @@ The power of the Prompt Registry comes from associating requests with the templa
 To associate a request with a prompt template and some input variables, use the code below with the [pl_request_id](/features/prompt-history/request-id) for the request.
 
 ```python Python SDK
-promptlayer.track.prompt(request_id=pl_request_id, 
+promptlayer.track.prompt(request_id=pl_request_id,
     prompt_name='<PROMPT_NAME>', prompt_input_variables={...})
 ```
 
@@ -98,10 +99,25 @@ Learn more about tracking templates [here](/features/prompt-history/tracking-tem
 
 ## A/B Testing
 
-The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing. 
+The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing.
 
 CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better. This can help you optimize your prompts and improve user engagement.
 
+## Prompt Labels
+
+Prompt labels are a way to put a label on your prompt template to help you organize and search for them. This enables you to get a specific version of prompt using the label. You can add as many labels as you want to a prompt template with one restriction - the label must be unique across all versions. This means that you cannot have a label called `is_prod` on both version 1 and version 2 of a prompt template. This restriction is in place to prevent confusion when searching for prompt templates.
+
+<video controls="controls">
+  <source src="/videos/prompt-label.mp4" type="video/mp4" />
+</video>
+
+Later, in your code, you can use the following snippet to get the version of a prompt template with a specific label:
+
+```python Python SDK
+promptlayer.prompts.get("my_template", label="is_prod")
+```
+
+You can also use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
 
 ## OpenAI Functions
 
@@ -110,11 +126,14 @@ The Prompt Registry supports [OpenAI functions](https://openai.com/blog/function
 Be sure to read [this OpenAI guide](https://platform.openai.com/docs/guides/gpt/function-calling) for more context.
 
 ### Publishing Visually
+
 First you need to define your functions by clicking on the functions button
-<img src='/images/create-function.png' />
+
+<img src="/images/create-function.png" />
 
 Then you can use the functions in your prompt template
-<img src='/images/use-function.png' />
+
+<img src="/images/use-function.png" />
 
 ### Publishing Programmatically
 
@@ -147,7 +166,7 @@ promptlayer.prompts.publish(
   prompt_template={
     "function_call": "auto", # or {"name": function_name} if you want to make sure the function gets called.
     "input_variables": [], # list them here if it has any
-    "messages": [ 
+    "messages": [
       {
         "role": role,
         "prompt": {
@@ -157,7 +176,7 @@ promptlayer.prompts.publish(
           "validate_template": True, # optional
           "_type": "prompt",
         },
-      } for (role, content) in map(lambda x: x.values(), messages) 
+      } for (role, content) in map(lambda x: x.values(), messages)
     ],
     "functions": functions,
     "_type": "chat_promptlayer_langchain", # important if using gpt-3.5-turbo or gpt-4
@@ -173,9 +192,11 @@ response = openai.ChatCompletion.create(
 ```
 
 ### Getting a Prompt Programmatically
-To get a prompt template that uses OpenAI functions programatically you will need to parse the template from the Prompt Registry format to what OpenAI expects. 
+
+To get a prompt template that uses OpenAI functions programatically you will need to parse the template from the Prompt Registry format to what OpenAI expects.
 
 The following code snippet shows you how to do this:
+
 ```python
 def get_message(chat_message):
     if "prompt" in chat_message:
@@ -198,20 +219,27 @@ response = openai.ChatCompletion.create(
 ```
 
 ### Getting all prompts
-To get all prompts from prompt registry you can use the following code snippet: 
+
+To get all prompts from prompt registry you can use the following code snippet:
+
 ```python
 from promptlayer import prompts
 
 all_prompts = prompts.all()
 ```
+
 By default this returns 30 prompts. You can change this by passing in the `per_page` argument. For example, to get 100 prompts you can do the following:
+
 ```python
 all_prompts = prompts.all(per_page=100)
 ```
+
 You can also define the page you want to get by passing in the `page` argument. For example, to get the second page of prompts you can do the following:
+
 ```python
 all_prompts = prompts.all(page=2)
 ```
-It is important to note that `prompt_template` represents the latest version of the prompt template. 
+
+It is important to note that `prompt_template` represents the latest version of the prompt template.
 
 Alternatively, use the REST API endpoint `/rest/prompts` ([read more](/reference/get-prompts)).

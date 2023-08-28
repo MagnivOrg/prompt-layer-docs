@@ -85,6 +85,51 @@
           }
         }
       }
+    },
+    "/rest/get-prompt-template": {
+      "get": {
+        "summary": "Get Prompt Template",
+        "operationId": "get_prompt_template_rest_get_prompt_template_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" },
+            "name": "X-API-KEY",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/GetByName"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPrompt"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -122,10 +167,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "prompt",
-          "role"
-        ],
+        "required": ["prompt", "role"],
         "title": "BaseChatMessagePromptTemplate",
         "description": "Chat message prompt template."
       },
@@ -163,10 +205,7 @@
             "anyOf": [
               {
                 "type": "string",
-                "enum": [
-                  "none",
-                  "auto"
-                ]
+                "enum": ["none", "auto"]
               },
               {
                 "additionalProperties": {
@@ -180,10 +219,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "input_variables",
-          "messages"
-        ],
+        "required": ["input_variables", "messages"],
         "title": "ChatPromptTemplate",
         "description": "Chat Prompt Template"
       },
@@ -208,9 +244,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "Function"
       },
       "FunctionCall": {
@@ -225,10 +259,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
+        "required": ["name", "arguments"],
         "title": "FunctionCall"
       },
       "HTTPValidationError": {
@@ -248,12 +279,7 @@
         "properties": {
           "role": {
             "type": "string",
-            "enum": [
-              "system",
-              "user",
-              "assistant",
-              "function"
-            ],
+            "enum": ["system", "user", "assistant", "function"],
             "title": "Role"
           },
           "function_call": {
@@ -270,9 +296,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "role"
-        ],
+        "required": ["role"],
         "title": "Message"
       },
       "PromptTemplate": {
@@ -300,14 +324,11 @@
           }
         },
         "type": "object",
-        "required": [
-          "input_variables",
-          "template"
-        ],
+        "required": ["input_variables", "template"],
         "title": "PromptTemplate",
         "description": "Completion Prompt Template"
       },
-      "Publish": {
+      "Prompt": {
         "properties": {
           "prompt_name": {
             "type": "string",
@@ -333,20 +354,78 @@
             "title": "Tags",
             "description": "Array of string tags for a template",
             "default": []
-          },
-          "api_key": {
-            "type": "string",
-            "title": "Api Key",
-            "description": "Your PromptLayer API Key"
           }
         },
         "type": "object",
-        "required": [
-          "prompt_name",
-          "prompt_template",
-          "api_key"
-        ],
-        "title": "Publish"
+        "required": ["prompt_name", "prompt_template", "id"],
+        "title": "Prompt"
+      },
+      "GetPrompt": {
+        "allOf": [
+          {
+            "properties": {
+              "id": {
+                "type": "integer",
+                "title": "Id",
+                "description": "The id of the prompt"
+              },
+              "version": {
+                "type": "integer",
+                "title": "Version",
+                "description": "The version of the prompt"
+              }
+            },
+            "type": "object",
+            "required": ["id"],
+            "title": "GetPrompt"
+          },
+          {
+            "$ref": "#/components/schemas/Prompt"
+          }
+        ]
+      },
+      "ListPrompt": {
+        "allOf": [
+          {
+            "properties": {
+              "id": {
+                "type": "integer",
+                "title": "Id",
+                "description": "The id of the prompt"
+              },
+              "version_number": {
+                "type": "integer",
+                "title": "Version Number",
+                "description": "The version number of the prompt"
+              }
+            },
+            "type": "object",
+            "required": ["id"],
+            "title": "ListPrompt"
+          },
+          {
+            "$ref": "#/components/schemas/Prompt"
+          }
+        ]
+      },
+      "Publish": {
+        "allOf": [
+          {
+            "properties": {
+              "api_key": {
+                "type": "string",
+                "title": "Api Key",
+                "description": "Your PromptLayer API Key"
+              }
+            },
+            "type": "object",
+            "required": ["api_key"],
+            "title": "Publish"
+          },
+          {
+            "$ref": "#/components/schemas/Prompt"
+          }
+        ]
       },
       "Response": {
         "properties": {
@@ -360,10 +439,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "success"
-        ],
+        "required": ["id", "success"],
         "title": "Response"
       },
       "SafePromptTemplate": {
@@ -391,10 +467,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "input_variables",
-          "template"
-        ],
+        "required": ["input_variables", "template"],
         "title": "SafePromptTemplate",
         "description": "Completion Prompt Template"
       },
@@ -424,11 +497,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError"
       },
       "api__schemas__pagination__Response": {
@@ -456,7 +525,7 @@
             "title": "Pages"
           },
           "items": {
-            "items": { "$ref": "#/components/schemas/Publish" },
+            "items": { "$ref": "#/components/schemas/ListPrompt" },
             "type": "array",
             "title": "Items"
           }
@@ -464,6 +533,28 @@
         "type": "object",
         "required": ["total", "pages", "items"],
         "title": "Response"
+      },
+      "GetByName": {
+        "properties": {
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "The name of the prompt to get"
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "description": "The version of the prompt to get"
+          },
+          "label": {
+            "type": "string",
+            "title": "Label",
+            "description": "The label of the prompt to get. This will supercede the version if both are provided"
+          }
+        },
+        "type": "object",
+        "required": ["prompt_name"],
+        "title": "GetByName"
       }
     }
   }
