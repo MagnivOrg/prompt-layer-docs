@@ -18,15 +18,15 @@ To add a tag, add the keyword argument `pl_tags` into your OpenAI request like s
 
 ```python Python SDK
 openai.Completion.create(
-  engine="text-davinci-003", 
-  prompt="My name is", 
+  engine="text-davinci-003",
+  prompt="My name is",
   pl_tags=["pipeline3", "world"] # 🍰 PromptLayer tags
 )
 ```
 
 ```python Python (LangChain)
 llm = OpenAI(
-    model_name="text-davinci-003", 
+    model_name="text-davinci-003",
     callbacks=[
         PromptLayerCallbackHandler(
             pl_tags=["pipeline3", "world"] # 🍰 PromptLayer tags
@@ -52,12 +52,10 @@ Alternatively, use the REST API endpoint `/rest/track-request` ([read more](/ref
 
 This will then show up on your PromptLayer dashboard:
 
-<img src="/images/tags.png" alt="" srcset="" width="50%" />
+<img src="/images/tags.png" alt="" srcSet="" width="50%" />
 
 And can be filtered by clicking on the tags button by the search-bar:
 
-<img src="/images/tag-filter.png" alt="" srcset="" width="50%" />
----
+## <img src="/images/tag-filter.png" alt="" srcSet="" width="50%" />
 
 Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@magniv.io)
-
