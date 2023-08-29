@@ -354,6 +354,11 @@
             "title": "Tags",
             "description": "Array of string tags for a template",
             "default": []
+          },
+          "commit_message": {
+            "type": "string",
+            "title": "Commit Message",
+            "description": "Commit message for the prompt version"
           }
         },
         "type": "object",
