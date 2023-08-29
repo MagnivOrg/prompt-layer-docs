@@ -119,6 +119,40 @@ promptlayer.prompts.get("my_template", label="is_prod")
 
 You can also use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
 
+## Prompt Version Commit Messages
+
+Prompt commit messages allow you to set a brief 72 characters-long description on each of your prompt template version to help you keep track of changes. 
+
+<video controls="controls">
+  <source src="/videos/prompt-version-commit-message.mp4" type="video/mp4" />
+</video>
+
+You can also retrieve the commit messages through code. You'll see them when you list all templates.
+
+```python Python SDK
+promptlayer.prompts.all()
+```
+
+Or set them, by specifing a commit_message arg to prompts.publish, like this:
+
+```python Python SDK
+pt = promptlayer.prompts.get("demo-template")
+
+promptlayer.prompts.publish(
+    "demo-template",
+    commit_message="This is a test",
+    prompt_template=pt,
+)
+```
+They are also available in the following REST API endpoints 
+
+`/rest/get-prompt-template` ([read more](/reference/get-prompt-template))
+
+`/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template))
+
+
+
+
 ## OpenAI Functions
 
 The Prompt Registry supports [OpenAI functions](https://openai.com/blog/function-calling-and-other-api-updates) format. You can create a prompt using functions both visually and programmatically.
