@@ -6,25 +6,133 @@ api: "POST https://api.promptlayer.com/rest/track-request"
 Track request allows you to send your LLM request to our platform. On success, this request will return a `request_id` which is necessary for `track-score`
 
 ## Example Code
-```jsx
+
+<CodeGroup>
+
+```python Chat
 import requests
-request_response = requests.post(
-  "https://api.promptlayer.com/rest/track-request",
-  json={
-  "function_name": "openai.Completion.create",
-    // kwargs will need messages if using chat-based completion
-  "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
-  "tags": ["hello", "world"],
-  "request_response": {"id": "cmpl-6TEeJCRVlqQSQqhD8CYKd1HdCcFxM", "object": "text_completion", "created": 1672425843, "model": "text-ada-001", "choices": [{"text": " advocacy\"\n\nMy name is advocacy.", "index": 0, "logprobs": None, "finish_reason": "stop"}]},
-  "request_start_time": 1673987077.463504,
-  "request_end_time": 1673987077.463504,
-  "prompt_id": "<PROMPT ID>",
-  "prompt_input_variables": "<Dictionary of variables for prompt>"
-  "prompt_version":<Integer of prompt version>
-  "api_key": "pl_<YOUR API KEY>",
-  },
-)
+
+# URL and headers
+url = "http://api.promptlayer.com/track-request"
+headers = {
+    "Content-Type": "application/json",
+}
+
+# Data payload
+data_payload = {
+    "function_name": "openai.ChatCompletion.create",
+    "kwargs": {
+        "messages": [
+            {
+              "content": "You are a helpful AI assistant.",
+              "role": "system"
+            },
+            {
+              "content": "What's the weather like in Boston?",
+              "role": "user"
+            }
+        ],
+        "model": "gpt-3.5-turbo-16k",
+        "function_call": "auto",
+        "functions": [
+          {
+            "description": "Get the current weather in a given location",
+            "name": "get_current_weather",
+            "parameters": {
+              "properties": {
+                "location": {
+                  "description": "The city and state, e.g. San Francisco, CA",
+                  "type": "string"
+                },
+                "unit": {
+                  "enum": [
+                    "celsius",
+                    "fahrenheit"
+                  ],
+                  "type": "string"
+                }
+              },
+              "required": [
+                "location"
+              ],
+              "type": "object"
+            }
+          }
+        ]
+    },
+    "request_response": {
+        "choices": [
+            {
+                "index": 0,
+                "message": {
+                      "content": "",
+                      "function_call": {
+                        "arguments": "{\n\"location\": \"Boston, MA\"\n}",
+                        "name": "get_current_weather"
+                      },
+                      "role": "assistant"
+                    },
+                "finish_reason": "function_call"
+            }
+        ],
+        "usage": {
+            "prompt_tokens": 778,
+            "completion_tokens": 28,
+            "total_tokens": 806
+        }
+    },
+    "tags": [
+        "docs"
+    ],
+    "request_start_time": 1693505089.21,
+    "request_end_time": 1693505093.572,
+    "api_key": "pl_<YOUR_API_KEY>"
+}
+
+# Making the request
+response = requests.post(url, headers=headers, json=data_payload)
+print(response.json())
 ```
+
+```python Completion
+import requests
+
+# URL and headers
+url = "http://api.promptlayer.com/track-request"
+headers = {
+    "Content-Type": "application/json",
+}
+
+# Data payload
+data_payload = {
+    "function_name": "openai.Completion.create",
+    "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
+    "tags": ["hello", "world"],
+    "request_response": {
+        "id": "cmpl-6TEeJCRVlqQSQqhD8CYKd1HdCcFxM", 
+        "object": "text_completion", 
+        "created": 1672425843, 
+        "model": "text-ada-001", 
+        "choices": [
+            {
+                "text": " PromptLayer\"\n\nI'm a great prompt engineering tool.", 
+                "index": 0, 
+                "logprobs": None, 
+                "finish_reason": "stop"
+            }
+        ]
+    },
+    "request_start_time": 1673987077.463504,
+    "request_end_time": 1673987077.463504,
+    "api_key": "pl_<YOUR_API_KEY>",
+}
+
+# Making the request
+response = requests.post("https://api.promptlayer.com/rest/track-request", json=data_payload)
+print(response.json())
+```
+
+</CodeGroup>
 
 ## Request Parameters
 <ParamField body="function_name" type="string">
