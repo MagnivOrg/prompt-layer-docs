@@ -136,7 +136,7 @@ print(response.json())
 
 ## Request Parameters
 <ParamField body="function_name" type="string">
-    The name of the function. For example, if you are using OpenAI it should be either `openai.Completion.create` or `openai.ChatCompletion.create`. These are specific function signatures that PromptLayer uses to parse the `request_response`.
+    The name of the function. For example, if you are using OpenAI it should be either `openai.Completion.create` or `openai.ChatCompletion.create`. These are specific function signatures that PromptLayer uses to parse the `request_response`. Some integration libraries use special `function_name`'s such as `langchain.PromptLayerChatOpenAI`.
 </ParamField>
 <ParamField body="kwargs" type="object">
     Keyword arguments that are passed into the LLM (such as OpenAI's API). Normally it should include `engine` and `prompt` at the very least. If you are using a chat completion or GPT-4, it should include `messages` instead of `prompt`.
