@@ -35,13 +35,25 @@ template_dict = promptlayer.prompts.get("my_template")
 
 Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
 
+### By Release Label
+
+Release labels like `prod` and `staging` can be optionally applied to template versions and used to retrieve the template.
+
+```python Python SDK
+promptlayer.prompts.get("my_template", label="prod")
+```
+
+### By Version
+
 You can also optionally pass `version` to get an older version of a prompt. By default the newest version of a prompt is returned
 
 ```python Python SDK
 template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
-Optionally, to return a Langchain `PromptTemplate` type include **\*\***\*\***\*\***langchain=True**\*\***\*\***\*\*** as an optional argument as shown below.
+### With LangChain
+
+Optionally, to return a LangChain `PromptTemplate` type include `langchain=True` as an optional argument as shown below.
 
 ```python Python SDK
 prompt_template_obj = promptlayer.prompts.get("my_template", langchain=True)
@@ -53,6 +65,12 @@ You can use the UI or API to create a template.
 
 Templates are unique by name, which means that publishing a template with the same name will overwrite old templates.
 
+### String Formats
+
+You may choose to select from one of the two supported template formats (`f-string, jinja2`) to declare variables. (`f-string`) allows you to declare variables using curly brackets (`{variable_name}`) while (`jinja2`) allows you to declare variables using double curly brackets (`{{variable_name}}`).
+
+<img src="/images/template-format.png" />
+
 ### Visually
 
 <img src="/images/prompt-template.png" />
@@ -60,12 +78,6 @@ Templates are unique by name, which means that publishing a template with the sa
 To create a template using the UI, simply navigate to the Registry and click "Create Template". This will allow you to create the template visually. You can also edit old templates from the UI.
 
 Rename a template by triple-clicking on its name. It’s best practice to keep template names unique and lowercase.
-
-### Template Formats
-
-You may choose to select from one of the two supported template formats (`f-string, jinja2`) to declare variables. (`f-string`) allows you to declare variables using curly brackets (`{variable_name}`) while (`jinja2`) allows you to declare variables using double curly brackets (`{{variable_name}}`).
-
-<img src="/images/template-format.png" />
 
 ### Programmatically
 
@@ -76,50 +88,15 @@ promptlayer.prompts.publish(
     "my_template", prompt_template=my_template, tags=["my_tag"])
 ```
 
-Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template)).
+### Release Labels
 
-You can also use Langchain to create a template, either by pulling it from LangchainHub, creating a custom template, or providing a Python dictionary directly.
-
-## Tracking templates
-
-The power of the Prompt Registry comes from associating requests with the template they used. This allows you to track average score, latency, and cost of each prompt template. You can also see the individual requests using the template.
-
-![Prompt registry states](/images/getting-started-prompt-registry-stats.png)
-
-To associate a request with a prompt template and some input variables, use the code below with the [pl_request_id](/features/prompt-history/request-id) for the request.
-
-```python Python SDK
-promptlayer.track.prompt(request_id=pl_request_id,
-    prompt_name='<PROMPT_NAME>', prompt_input_variables={...})
-```
-
-Alternatively, use the REST API endpoint `/rest/track-prompt` ([read more](/reference/track-prompt)).
-
-Learn more about tracking templates [here](/features/prompt-history/tracking-templates)
-
-## A/B Testing
-
-The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing.
-
-CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better. This can help you optimize your prompts and improve user engagement.
-
-## Prompt Labels
-
-Prompt labels are a way to put a label on your prompt template to help you organize and search for them. This enables you to get a specific version of prompt using the label. You can add as many labels as you want to a prompt template with one restriction - the label must be unique across all versions. This means that you cannot have a label called `is_prod` on both version 1 and version 2 of a prompt template. This restriction is in place to prevent confusion when searching for prompt templates.
+Prompt labels are a way to put a label on your prompt template to help you organize and search for them. This enables you to get a specific version of prompt using the label. You can add as many labels as you want to a prompt template with one restriction - the label must be unique across all versions. This means that you cannot have a label called `prod` on both version 1 and version 2 of a prompt template. This restriction is in place to prevent confusion when searching for prompt templates.
 
 <video controls="controls">
   <source src="/videos/prompt-label.mp4" type="video/mp4" />
 </video>
 
-Later, in your code, you can use the following snippet to get the version of a prompt template with a specific label:
-
-```python Python SDK
-promptlayer.prompts.get("my_template", label="is_prod")
-```
-
-You can also use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
-
-## Prompt Version Commit Messages
+### Commit Messages
 
 Prompt commit messages allow you to set a brief 72 characters-long description on each of your prompt template version to help you keep track of changes. 
 
@@ -150,8 +127,32 @@ They are also available in the following REST API endpoints
 
 `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template))
 
+Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template)).
 
+You can also use Langchain to create a template, either by pulling it from LangchainHub, creating a custom template, or providing a Python dictionary directly.
 
+## Tracking templates
+
+The power of the Prompt Registry comes from associating requests with the template they used. This allows you to track average score, latency, and cost of each prompt template. You can also see the individual requests using the template.
+
+![Prompt registry states](/images/getting-started-prompt-registry-stats.png)
+
+To associate a request with a prompt template and some input variables, use the code below with the [pl_request_id](/features/prompt-history/request-id) for the request.
+
+```python Python SDK
+promptlayer.track.prompt(request_id=pl_request_id,
+    prompt_name='<PROMPT_NAME>', prompt_input_variables={...})
+```
+
+Alternatively, use the REST API endpoint `/rest/track-prompt` ([read more](/reference/track-prompt)).
+
+Learn more about tracking templates [here](/features/prompt-history/tracking-templates)
+
+## A/B Testing
+
+The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing.
+
+CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better. This can help you optimize your prompts and improve user engagement.
 
 ## OpenAI Functions
 
@@ -161,13 +162,9 @@ Be sure to read [this OpenAI guide](https://platform.openai.com/docs/guides/gpt/
 
 ### Publishing Visually
 
-First you need to define your functions by clicking on the functions button
+Functions can be defined, called, and set up visually through the Prompt Registry.
 
-<img src="/images/create-function.png" />
-
-Then you can use the functions in your prompt template
-
-<img src="/images/use-function.png" />
+<img src="/images/create-function.gif" />
 
 ### Publishing Programmatically
 
@@ -252,7 +249,7 @@ response = openai.ChatCompletion.create(
 )
 ```
 
-### Getting all prompts
+## Getting All Prompts Programmatically
 
 To get all prompts from prompt registry you can use the following code snippet:
 

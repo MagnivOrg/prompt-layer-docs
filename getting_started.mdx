@@ -611,6 +611,7 @@ The Prompt Registry handles versioning, just visually edit the prompt in the das
 ```python Python
 city_choice_prompt = promptlayer.prompts.get("city_choice")
 city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1)
+city_choice_prompt_prod = promptlayer.prompts.get("city_choice", label="prod")
 print(city_choice_prompt_v1['template'])
 ```
 
