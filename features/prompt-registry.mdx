@@ -51,6 +51,14 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
+### Model Parameters
+
+When you fetch a prompt template, you can get the model parameters that were used by passing in the `include_parameters=True` argument. This returns a tuple with the prompt template and the model parameters. For example:
+
+```python Python SDK
+prompt, model = promptlayer.prompts.get("my_template", include_parameters=True)
+```
+
 ### With LangChain
 
 Optionally, to return a LangChain `PromptTemplate` type include `langchain=True` as an optional argument as shown below.
@@ -98,7 +106,7 @@ Prompt labels are a way to put a label on your prompt template to help you organ
 
 ### Commit Messages
 
-Prompt commit messages allow you to set a brief 72 characters-long description on each of your prompt template version to help you keep track of changes. 
+Prompt commit messages allow you to set a brief 72 characters-long description on each of your prompt template version to help you keep track of changes.
 
 <video controls="controls">
   <source src="/videos/prompt-version-commit-message.mp4" type="video/mp4" />
@@ -121,11 +129,35 @@ promptlayer.prompts.publish(
     prompt_template=pt,
 )
 ```
-They are also available in the following REST API endpoints 
+
+They are also available in the following REST API endpoints
 
 `/rest/get-prompt-template` ([read more](/reference/get-prompt-template))
 
 `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template))
+
+### Model Parameters
+
+You can also add model parameters to your prompt templates. This allows you to set the provider, model, temperature, max_tokens, and other parameters for each prompt template. This is useful if you want to use different parameters for different prompts.
+
+<img src="/images/model-parameters.png" />
+
+You can also use our python SDK to publish a prompt template with model parameters. For example:
+
+```python Python SDK
+promptlayer.prompts.publish(
+    "my_template",
+    prompt_template=my_template,
+    model={
+        "provider": "openai",
+        "name": "gpt-3.5-turbo",
+        "parameters": {
+            "temperature": 0.5,
+            "max_tokens": 100,
+        },
+    },
+)
+```
 
 Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template)).
 
