@@ -53,10 +53,10 @@ template_dict = promptlayer.prompts.get("my_template", version=3)
 
 ### Model Parameters
 
-When you fetch a prompt template, you can get the model parameters that were used by passing in the `include_parameters=True` argument. This returns a tuple with the prompt template and the model parameters. For example:
+When fetching a prompt template, you can optionally retrieve model parameters by using `include_parameters=True`. This will provide you with a tuple containing both the prompt template and the model parameters. For example:
 
 ```python Python SDK
-prompt, model = promptlayer.prompts.get("my_template", include_parameters=True)
+template, model_params = promptlayer.prompts.get("my_template", include_parameters=True)
 ```
 
 ### With LangChain
@@ -138,7 +138,7 @@ They are also available in the following REST API endpoints
 
 ### Model Parameters
 
-You can also add model parameters to your prompt templates. This allows you to set the provider, model, temperature, max_tokens, and other parameters for each prompt template. This is useful if you want to use different parameters for different prompts.
+Custom model parameters can be associated with individual prompt templates versions. This allows you to set the provider, model, temperature... etc for each prompt template.
 
 <img src="/images/model-parameters.png" />
 
