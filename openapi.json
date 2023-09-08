@@ -382,8 +382,7 @@
               "model_provider": {
                 "type": "string",
                 "title": "Model Provider",
-                "description": "The model provider of the prompt",
-                "enum": ["openai", "anthropic"]
+                "description": "The model provider of the prompt"
               },
               "model": {
                 "type": "string",
@@ -392,14 +391,9 @@
               },
               "parameters": {
                 "title": "Parameters",
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/app__schemas__openai__ModelParameter"
-                  },
-                  {
-                    "$ref": "#/components/schemas/app__schemas__anthropic__ModelParameter"
-                  }
-                ]
+                "default": {},
+                "type": "object",
+                "description": "The parameters of the prompt"
               }
             },
             "type": "object",
@@ -444,17 +438,7 @@
                 "title": "Api Key",
                 "description": "Your PromptLayer API Key"
               },
-              "model": {
-                "title": "Model",
-                "anyOf": [
-                  {
-                    "$ref": "#/components/schemas/app__schemas__openai__Model"
-                  },
-                  {
-                    "$ref": "#/components/schemas/app__schemas__anthropic__Model"
-                  }
-                ]
-              }
+              "model": { "$ref": "#/components/schemas/Model" }
             },
             "type": "object",
             "required": ["api_key"],
@@ -594,144 +578,19 @@
         "required": ["prompt_name"],
         "title": "GetByName"
       },
-      "app__schemas__openai__Model": {
+      "Model": {
         "title": "Model",
         "type": "object",
         "properties": {
-          "provider": {
-            "title": "Provider",
-            "default": "openai",
-            "enum": ["openai"],
-            "type": "string"
-          },
+          "provider": { "title": "Provider", "type": "string" },
           "name": { "title": "Name", "type": "string" },
           "parameters": {
             "title": "Parameters",
-            "default": {
-              "temperature": 1.0,
-              "max_tokens": 256,
-              "top_p": 1.0,
-              "frequency_penalty": 0.0,
-              "presence_penalty": 0.0,
-              "best_of": 1
-            },
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/app__schemas__openai__ModelParameter"
-              }
-            ]
+            "default": {},
+            "type": "object"
           }
         },
-        "required": ["name"]
-      },
-      "app__schemas__anthropic__Model": {
-        "title": "Model",
-        "type": "object",
-        "properties": {
-          "provider": {
-            "title": "Provider",
-            "default": "anthropic",
-            "enum": ["anthropic"],
-            "type": "string"
-          },
-          "name": { "title": "Name", "type": "string" },
-          "parameters": {
-            "title": "Parameters",
-            "default": {
-              "max_tokens_to_sample": 256,
-              "temperature": 1.0,
-              "top_p": 1.0,
-              "top_k": 0
-            },
-            "allOf": [
-              {
-                "$ref": "#/components/schemas/app__schemas__anthropic__ModelParameter"
-              }
-            ]
-          }
-        },
-        "required": ["name"]
-      },
-      "app__schemas__openai__ModelParameter": {
-        "title": "ModelParameter",
-        "type": "object",
-        "properties": {
-          "temperature": {
-            "title": "Temperature",
-            "default": 1.0,
-            "minimum": 0.0,
-            "maximum": 2.0,
-            "type": "number"
-          },
-          "max_tokens": {
-            "title": "Max Tokens",
-            "default": 256,
-            "minimum": 1,
-            "type": "integer"
-          },
-          "top_p": {
-            "title": "Top P",
-            "default": 1.0,
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "type": "number"
-          },
-          "frequency_penalty": {
-            "title": "Frequency Penalty",
-            "default": 0.0,
-            "minimum": 0.0,
-            "maximum": 2.0,
-            "type": "number"
-          },
-          "presence_penalty": {
-            "title": "Presence Penalty",
-            "default": 0.0,
-            "minimum": 0.0,
-            "maximum": 2.0,
-            "type": "number"
-          },
-          "best_of": {
-            "title": "Best Of",
-            "default": 1,
-            "minimum": 1,
-            "maximum": 20,
-            "type": "integer"
-          }
-        }
-      },
-      "app__schemas__anthropic__ModelParameter": {
-        "title": "ModelParameter",
-        "type": "object",
-        "properties": {
-          "max_tokens_to_sample": {
-            "title": "Max Tokens To Sample",
-            "default": 256,
-            "minimum": 1,
-            "maximum": 2048,
-            "type": "integer"
-          },
-          "temperature": {
-            "title": "Temperature",
-            "default": 1.0,
-            "minimum": 0.0,
-            "maximum": 2.0,
-            "type": "number"
-          },
-          "top_p": {
-            "title": "Top P",
-            "default": 1.0,
-            "minimum": 0.0,
-            "maximum": 1.0,
-            "type": "number"
-          },
-          "top_k": {
-            "title": "Top K",
-            "default": 0,
-            "minimum": 0,
-            "maximum": 2048,
-            "type": "integer"
-          }
-        }
+        "required": ["provider", "name"]
       }
     }
   }
