@@ -51,12 +51,12 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
-### Model Parameters
+### Metadata
 
-When fetching a prompt template, you can optionally retrieve model parameters by using `include_parameters=True`. This will provide you with a tuple containing both the prompt template and the model parameters. For example:
+When fetching a prompt template, you can optionally retrieve metadata by using `include_metadata=True`. This will provide you with a tuple containing both the prompt template and the metadata. For example:
 
 ```python Python SDK
-template, model_params = promptlayer.prompts.get("my_template", include_parameters=True)
+template, metadata = promptlayer.prompts.get("my_template", include_metadata=True)
 ```
 
 ### With LangChain
@@ -136,25 +136,24 @@ They are also available in the following REST API endpoints
 
 `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template))
 
-### Model Parameters
+### Metadata
 
-Custom model parameters can be associated with individual prompt templates versions. This allows you to set the provider, model, temperature... etc for each prompt template.
+Custom metadata can be associated with individual prompt templates versions. This allows you to set the provider, model, temperature... etc for each prompt template. It is important to note here that `model` attribute is reserved for the model parameters.
 
 <img src="/images/model-parameters.png" />
 
-You can also use our python SDK to publish a prompt template with model parameters. For example:
+You can also use our python SDK to publish a prompt template with metadata. For example:
 
 ```python Python SDK
 promptlayer.prompts.publish(
     "my_template",
     prompt_template=my_template,
-    model={
-        "provider": "openai",
-        "name": "gpt-3.5-turbo",
-        "parameters": {
-            "temperature": 0.5,
-            "max_tokens": 100,
-        },
+    metadata={
+        "model": {
+            "provider": "openai",
+            "name": "gpt-3.5-turbo",
+            "parameters": {"temperature": 0.5, "max_tokens": 100},
+        }
     },
 )
 ```

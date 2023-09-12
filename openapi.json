@@ -359,7 +359,8 @@
             "type": "string",
             "title": "Commit Message",
             "description": "Commit message for the prompt version"
-          }
+          },
+          "metadata": { "$ref": "#/components/schemas/Metadata" }
         },
         "type": "object",
         "required": ["prompt_name", "prompt_template", "id"],
@@ -378,22 +379,6 @@
                 "type": "integer",
                 "title": "Version",
                 "description": "The version of the prompt"
-              },
-              "model_provider": {
-                "type": "string",
-                "title": "Model Provider",
-                "description": "The model provider of the prompt"
-              },
-              "model": {
-                "type": "string",
-                "title": "Model",
-                "description": "The model of the prompt"
-              },
-              "parameters": {
-                "title": "Parameters",
-                "default": {},
-                "type": "object",
-                "description": "The parameters of the prompt"
               }
             },
             "type": "object",
@@ -438,7 +423,7 @@
                 "title": "Api Key",
                 "description": "Your PromptLayer API Key"
               },
-              "model": { "$ref": "#/components/schemas/Model" }
+              "metadata": { "$ref": "#/components/schemas/Metadata" }
             },
             "type": "object",
             "required": ["api_key"],
@@ -591,6 +576,27 @@
           }
         },
         "required": ["provider", "name"]
+      },
+      "Metadata": {
+        "title": "Metadata",
+        "type": "object",
+        "properties": { "model": { "$ref": "#/components/schemas/Model" } },
+        "definitions": {
+          "Model": {
+            "title": "Model",
+            "type": "object",
+            "properties": {
+              "provider": { "title": "Provider", "type": "string" },
+              "name": { "title": "Name", "type": "string" },
+              "parameters": {
+                "title": "Parameters",
+                "default": {},
+                "type": "object"
+              }
+            },
+            "required": ["provider", "name"]
+          }
+        }
       }
     }
   }
