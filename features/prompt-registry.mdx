@@ -106,7 +106,7 @@ Prompt labels are a way to put a label on your prompt template to help you organ
 
 ### Commit Messages
 
-Prompt commit messages allow you to set a brief 72 characters-long description on each of your prompt template version to help you keep track of changes.
+Prompt commit messages allow you to set a brief 72 character-long description on each of your prompt template version to help you keep track of changes.
 
 <video controls="controls">
   <source src="/videos/prompt-version-commit-message.mp4" type="video/mp4" />
@@ -130,7 +130,7 @@ promptlayer.prompts.publish(
 )
 ```
 
-They are also available in the following REST API endpoints
+They are also available through the following REST API endpoints
 
 `/rest/get-prompt-template` ([read more](/reference/get-prompt-template))
 
@@ -138,11 +138,11 @@ They are also available in the following REST API endpoints
 
 ### Metadata
 
-Custom metadata can be associated with individual prompt templates versions. This allows you to set the provider, model, temperature... etc for each prompt template. It is important to note here that `model` attribute is reserved for the model parameters.
+Custom metadata can be associated with individual prompt template versions. This allows you to set values such as provider, model, or temperature for each prompt template. It is important to note here that `model` attribute is reserved for the model parameters.
 
 <img src="/images/model-parameters.png" />
 
-You can also use our python SDK to publish a prompt template with metadata. For example:
+You can also use our Python SDK to publish a prompt template with metadata. For example:
 
 ```python Python SDK
 promptlayer.prompts.publish(
