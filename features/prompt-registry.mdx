@@ -51,6 +51,14 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
+### Metadata
+
+When fetching a prompt template, you can optionally retrieve metadata by using `include_metadata=True`. This will provide you with a tuple containing both the prompt template and the metadata. For example:
+
+```python Python SDK
+template, metadata = promptlayer.prompts.get("my_template", include_metadata=True)
+```
+
 ### With LangChain
 
 Optionally, to return a LangChain `PromptTemplate` type include `langchain=True` as an optional argument as shown below.
@@ -98,7 +106,7 @@ Prompt labels are a way to put a label on your prompt template to help you organ
 
 ### Commit Messages
 
-Prompt commit messages allow you to set a brief 72 characters-long description on each of your prompt template version to help you keep track of changes. 
+Prompt commit messages allow you to set a brief 72 character-long description on each of your prompt template version to help you keep track of changes.
 
 <video controls="controls">
   <source src="/videos/prompt-version-commit-message.mp4" type="video/mp4" />
@@ -121,11 +129,34 @@ promptlayer.prompts.publish(
     prompt_template=pt,
 )
 ```
-They are also available in the following REST API endpoints 
+
+They are also available through the following REST API endpoints
 
 `/rest/get-prompt-template` ([read more](/reference/get-prompt-template))
 
 `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template))
+
+### Metadata
+
+Custom metadata can be associated with individual prompt template versions. This allows you to set values such as provider, model, or temperature for each prompt template. It is important to note here that `model` attribute is reserved for the model parameters.
+
+<img src="/images/model-parameters.png" />
+
+You can also use our Python SDK to publish a prompt template with metadata. For example:
+
+```python Python SDK
+promptlayer.prompts.publish(
+    "my_template",
+    prompt_template=my_template,
+    metadata={
+        "model": {
+            "provider": "openai",
+            "name": "gpt-3.5-turbo",
+            "parameters": {"temperature": 0.5, "max_tokens": 100},
+        }
+    },
+)
+```
 
 Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template)).
 
