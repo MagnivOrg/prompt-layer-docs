@@ -41,6 +41,7 @@
             "features/prompt-history/request-id",
             "features/prompt-history/scoring-requests",
             "features/prompt-history/tracking-templates",
+            "features/prompt-history/tracking-groups",
             "features/prompt-history/metadata"
           ],
           "icon": "folder"
@@ -67,6 +68,7 @@
         "reference/publish-prompt-template",
         "reference/track-score",
         "reference/track-prompt",
+        "reference/track-group",
         "reference/track-metadata",
         "reference/get-prompts"
       ]

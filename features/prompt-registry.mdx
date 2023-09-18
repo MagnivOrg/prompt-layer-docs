@@ -97,6 +97,27 @@ Alternatively, use the REST API endpoint `/rest/track-prompt` ([read more](/refe
 
 Learn more about tracking templates [here](/features/prompt-history/tracking-templates)
 
+
+## Tracking Groups
+
+The Prompt Registry also allows you to track groups of requests. This is particularly useful when you want to analyze the performance of a group of prompts that were used in a specific context or during a specific period of time. 
+
+For example, you might want to track all the prompts used during a promotional campaign, or all the prompts used by a specific version of your application. By grouping these prompts together, you can analyze their performance as a whole and make informed decisions about their effectiveness.
+
+To associate a group of requests with a specific identifier, you can use the `group_id` parameter when tracking the prompt. Here's an example:
+
+```python Python SDK
+pl_group_id - promptlayer.group.create()
+
+promptlayer.track.group(
+    request_id=pl_request_id, group_id=pl_group_id
+)
+```
+
+Alternatively, use the REST API endpoint `/rest/track-group` ([read more](/reference/track-group)).
+
+Learn more about tracking groups [here](/features/prompt-history/tracking-groups)
+
 ## A/B Testing
 
 The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing.
