@@ -1,0 +1,34 @@
+---
+title: "Groups"
+icon: "ball-pile"
+---
+
+[Endpoint Reference](/reference/track-group)
+
+It is helpful to link requests to eachother when building workflows with chains and agents. PromptLayer allows you to create a group and add individual request IDs into the group. You will then be able to visually inspect groups through the dashboard.
+
+<CodeGroup>
+
+```python Python
+pl_group_id = promptlayer.group.create()
+
+promptlayer.track.group(
+  request_id=pl_request_id, 
+  group_id=pl_group_id
+)
+```
+
+```bash REST
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-group \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "api_key": "pl_<YOUR API KEY>",
+    "request_id": "<REQUEST ID>",
+    "group_id": "<GROUP ID>",
+}'
+```
+
+</CodeGroup>
+
+Request group information will appear on the dashboard.

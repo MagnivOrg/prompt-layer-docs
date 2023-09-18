@@ -1,0 +1,34 @@
+---
+title: "Track Group"
+api: "POST https://api.promptlayer.com/rest/track-group"
+---
+
+Associate a group with a request.
+
+## Example Code
+```python
+pl_group_id = promptlayer.group.create()
+
+import requests
+response = requests.post(
+  "https://api.promptlayer.com/rest/track-group",
+  json={
+      "api_key": "<YOUR_API_KEY>",
+      "request_id": "<REQUEST_ID>",
+      "group_id": pl_group_id,
+  },
+)
+```
+
+## Request Parameters
+
+<ParamField body="api_key" type="string">
+    Your PromptLayer API Key
+</ParamField>
+
+<ParamField body="request_id" type="string">
+</ParamField>
+
+<ParamField body="group_id" type="string">
+</ParamField>
+
