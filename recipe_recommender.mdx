@@ -3,9 +3,11 @@ title: Recipe Recommender
 icon: "hat-chef"
 ---
 
-The "Recipe-Recommender" is your digital chef's assistant, helping you find the perfect recipe based on what you're in
-the mood for. Think of it as a search engine, but instead of searching the entire web, it dives deep into a collection
-of delicious recipes to suggest the best match for you.
+## TODO: Data files
+
+Welcome to the Recipe Recommender - your culinary sidekick! Think of this system as a gourmet-focused search tool.
+Rather than scouring the vast expanse of the internet, it narrows down your options to offer the most delectable
+recipe suggestions tailored to your preferences.
 
 Here's how it works:
 
@@ -31,7 +33,7 @@ Before getting started, we need to set up the API keys for the services we will 
 1. Create an API key at https://promptlayer.com/home
 2. Save as environment variable under `PROMPTLAYER_API_KEY`
 
-First let's create a `settings.py` file to store our application level constants.
+Start by creating a `settings.py` file for our application level constants.
 <CodeGroup>
 ```python settings.py
 from pathlib import Path
@@ -43,8 +45,8 @@ PINECONE_INDEX_NAME = 'recipes'  # name of our Pinecone index
 ```
 </CodeGroup>
 
-Next we will create a `openai_utils.py` file. This includes a `get_vector_for_text` function that will allow us to pass
-in text and will respond with a vector. We will later store these vectors in Pinecone.
+Next, create a `openai_utils.py` file. This includes a `get_vector_for_text` function that allow us to pass in text
+and responds with a vector. We will later store these vectors in Pinecone.
 
 <CodeGroup>
 ```python openai_utils.py
@@ -61,8 +63,8 @@ def get_vector_for_text(text):
 ```
 </CodeGroup>
 
-After this, create a new file called `io_utils.py`. Here we will create a helper function called `get_recipe_filepaths`
-that will retrieve a list of recipe file paths.
+Now create a new file called `io_utils.py`. Here we include a helper function called `get_recipe_filepaths` to retrieve
+a list of recipe file paths.
 
 <CodeGroup>
 ```python io_utils.py
@@ -82,8 +84,8 @@ def get_recipe_filepaths():
 ```
 </CodeGroup>
 
-Next, create a `files.py` file that will contain the functionality used to parse file names and read text files. The
-file name (without the extension) will be used as the unique ID for each recipe vector that we store in Pinecone.
+Next, create a `files.py` file that contains the functionality used to parse file names and read text files. The
+file name (without the extension) acts as the unique ID for each recipe vector stored in Pinecone.
 
 <CodeGroup>
 ```python files.py
@@ -104,8 +106,8 @@ def read_txt_file(filepath):
 ```
 </CodeGroup>
 
-Create a `pinecone_populate.py` file next. This file will first create a Pinecone index. Once created, it will read
-each of our recipes, generate a vector from it, and lastly insert it as a new record in our Pinecone index.
+Create a `pinecone_populate.py` file next. This file first creates a Pinecone index. Once created, it reads each of
+our recipes, generates a vector from it, and then inserts it as a new record in our Pinecone index.
 
 <CodeGroup>
 ```python pinecone_populate.py
@@ -143,9 +145,9 @@ if __name__ == '__main__':
 ```
 </CodeGroup>
 
-Before we query our index, let's first create a `suggestion.py` file. This logic will allow us to create a prompt which
+Before we query our index, let's first create a `suggestion.py` file. This logic allows us to create a prompt which
 is text that includes:
-1. user input indicating food they are interested in (eg. "I like chicken")
+1. an indication of food we are interested in (eg. "I like chicken")
 2. a list of recipes based on the query results from Pinecone
 
 <CodeGroup>
@@ -186,10 +188,11 @@ def suggest_final_recipe(prompt, recipes_list):
 ```
 </CodeGroup>
 
-Lastly, we will create a `pinecone_query.py` file. In this file we will provide a text snippet of food that we are
-interested in. Using that text, we will query our Pinecone index to find the nearest vector matches (closely related
-recipe IDs). Using those IDs, we can retrieve the original recipe text from our data. With these, we can generate our
-final prompt which will be sent to OpenAI, using the `suggest_final_recipe` function created in the previous step.
+Lastly, we create a `pinecone_query.py` file. In this file we provide a text snippet of food that we are interested
+in. Using that text, we will query our Pinecone index to find the nearest vector matches (closely related
+recipe IDs). Using those IDs, we can retrieve the original recipe text from our data. Using that recipe text, we
+generate our final prompt which is sent to OpenAI, using the `suggest_final_recipe` function created in the previous
+step.
 
 <CodeGroup>
 ```python pinecone_query.py
@@ -241,7 +244,7 @@ if __name__ == '__main__':
 ![Recipe Request Log Screenshot](images/recipe-request-log.png)
 
 Things are working, but let's tweak our prompt a bit to see if we can get some better results. Instead of `I like
-{food}`, we'll try using the text `My favorite food is {food}` instead.
+{food}`, try using the text `My favorite food is {food}`.
 
 This is a simple example of **prompt engineering**. The input we feed into OpenAI often needs to be tinkered with in
 order to get the best results. And once we find an input that works well, we don't want to lose it, even as we continue
