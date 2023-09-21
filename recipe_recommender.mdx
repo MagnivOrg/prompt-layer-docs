@@ -1,0 +1,361 @@
+---
+title: Recipe Recommender
+icon: "hat-chef"
+---
+
+The "Recipe-Recommender" is your digital chef's assistant, helping you find the perfect recipe based on what you're in
+the mood for. Think of it as a search engine, but instead of searching the entire web, it dives deep into a collection
+of delicious recipes to suggest the best match for you.
+
+Here's how it works:
+
+1. **OpenAI**: Used for generating embeddings, or vector representations, of recipe texts. These embeddings capture the
+essence and nuances of each recipe, enabling the system to understand and compare them.
+2. **Pinecone**: A vector database service that efficiently stores and retrieves these embeddings. Its role is pivotal in
+serving the recommendations quickly and accurately.
+3. **PromptLayer**: INSERT SNAZZY DESCRIPTION HERE
+
+# Project setup
+
+Before getting started, we need to set up the API keys for the services we will be using.
+
+### OpenAI setup
+1. Create an API key at https://platform.openai.com/account/api-keys
+2. Save as environment variable under `OPENAI_API_KEY`
+
+### Pinecone setup
+1. Create an API key at https://app.pinecone.io/
+2. Save as environment variable under `PINECONE_API_KEY`
+
+### PromptLayer setup
+1. Create an API key at https://promptlayer.com/home
+2. Save as environment variable under `PROMPTLAYER_API_KEY`
+
+First let's create a `settings.py` file to store our application level constants.
+<CodeGroup>
+```python settings.py
+from pathlib import Path
+
+BASE_DIR = Path(__file__).resolve().parent
+DATA_DIR = BASE_DIR / 'data'  # directory to store our recipe text files
+EMBEDDING_MODEL = 'text-similarity-ada-001'  # OpenAI embedding model
+PINECONE_INDEX_NAME = 'recipes'  # name of our Pinecone index
+```
+</CodeGroup>
+
+Next we will create a `openai_utils.py` file. This includes a `get_vector_for_text` function that will allow us to pass
+in text and will respond with a vector. We will later store these vectors in Pinecone.
+
+<CodeGroup>
+```python openai_utils.py
+import openai
+
+from settings import EMBEDDING_MODEL
+
+def get_vector_for_text(text):
+    response = openai.Embedding.create(
+        input=text,
+        engine=EMBEDDING_MODEL,
+    )
+    return response['data'][0]['embedding']
+```
+</CodeGroup>
+
+After this, create a new file called `io_utils.py`. Here we will create a helper function called `get_recipe_filepaths`
+that will retrieve a list of recipe file paths.
+
+<CodeGroup>
+```python io_utils.py
+import os
+
+from files import read_txt_file
+from settings import DATA_DIR
+
+def get_recipe_filepaths():
+    results = []
+
+    for file in os.listdir(DATA_DIR):
+        if file.endswith('.txt'):
+            results.append(DATA_DIR / file)
+
+    return results
+```
+</CodeGroup>
+
+Next, create a `files.py` file that will contain the functionality used to parse file names and read text files. The
+file name (without the extension) will be used as the unique ID for each recipe vector that we store in Pinecone.
+
+<CodeGroup>
+```python files.py
+import os
+
+def extract_filename_without_extension(path):
+    """Extracts the filename without its extension from a given path"""
+    base_name = os.path.basename(path)
+    file_name_without_extension, _ = os.path.splitext(base_name)
+    return file_name_without_extension
+
+def read_txt_file(filepath):
+    """Reads the content of a text file and returns it as a string"""
+    with open(filepath, 'r') as file:
+        content = file.read()
+
+    return content
+```
+</CodeGroup>
+
+Create a `pinecone_populate.py` file next. This file will first create a Pinecone index. Once created, it will read
+each of our recipes, generate a vector from it, and lastly insert it as a new record in our Pinecone index.
+
+<CodeGroup>
+```python pinecone_populate.py
+import os
+
+import pinecone
+
+from files import extract_filename_without_extension, read_txt_file
+from io_utils import get_recipe_filepaths
+from openai_utils import get_vector_for_text
+from settings import PINECONE_INDEX_NAME
+
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+
+def create_index_if_not_exists():
+    """Create the given index if it does not already exist"""
+    indexes = pinecone.list_indexes()
+
+    if PINECONE_INDEX_NAME not in indexes:
+        pinecone.create_index(PINECONE_INDEX_NAME, dimension=1024, metric='euclidean')
+
+def main():
+    create_index_if_not_exists()
+    index = pinecone.Index(PINECONE_INDEX_NAME)
+
+    for filepath in get_recipe_filepaths():
+        recipe_id = extract_filename_without_extension(filepath)
+        recipe_content = read_txt_file(filepath)
+        vector = get_vector_for_text(recipe_content)
+        index.upsert([(recipe_id, vector)])
+
+if __name__ == '__main__':
+    pinecone.init(api_key=PINECONE_API_KEY, environment='gcp-starter')
+    main()
+```
+</CodeGroup>
+
+Before we query our index, let's first create a `suggestion.py` file. This logic will allow us to create a prompt which
+is text that includes:
+1. user input indicating food they are interested in (eg. "I like chicken")
+2. a list of recipes based on the query results from Pinecone
+
+<CodeGroup>
+```python suggestion.py
+import os
+
+import promptlayer
+
+openai = promptlayer.openai
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+def add_recipes_to_prompt(prompt, recipes_list):
+    """Combines the given prompt with the list of recipes to form a single string"""
+    recipes_string = '\n\n'.join(recipes_list)
+    results = prompt + '\n\n' + recipes_string
+    return results
+
+def suggest_final_recipe(prompt, recipes_list):
+    """Given a prompt and a list of recipes, use GPT to suggest one of the recipes"""
+    prompt_with_recipes = add_recipes_to_prompt(prompt, recipes_list)
+    response = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        messages=[
+            {
+                'role': 'system',
+                'content': (
+                    'You are a helpful assistant. '
+                    'Given some user input and a list of recipes, suggest one of the recipes. '
+                    'The final output should be the full recipe.'
+                )
+            },
+            {'role': 'user', 'content': prompt_with_recipes},
+        ],
+        temperature=0.5,
+        max_tokens=1024
+    )
+    print(response.choices[0].message.content)
+```
+</CodeGroup>
+
+Lastly, we will create a `pinecone_query.py` file. In this file we will provide a text snippet of food that we are
+interested in. Using that text, we will query our Pinecone index to find the nearest vector matches (closely related
+recipe IDs). Using those IDs, we can retrieve the original recipe text from our data. With these, we can generate our
+final prompt which will be sent to OpenAI, using the `suggest_final_recipe` function created in the previous step.
+
+<CodeGroup>
+```python pinecone_query.py
+import os
+
+import pinecone
+
+from files import read_txt_file
+from openai_utils import get_vector_for_text
+from settings import DATA_DIR, PINECONE_INDEX_NAME
+from suggestion import suggest_final_recipe
+
+PINECONE_API_KEY = os.environ.get('PINECONE_API_KEY')
+
+def get_recipes_from_ids(recipe_ids):
+    """Retrieve recipe contents for a given list of recipe IDs"""
+    results = []
+    filepaths = {DATA_DIR / f'{recipe_id}.txt' for recipe_id in recipe_ids}
+
+    for filepath in filepaths:
+        content = read_txt_file(filepath)
+        results.append(content)
+
+    return results
+
+def get_related_recipe_ids_for_text(text):
+    """Fetch IDs of recipes related to the given text using Pinecone"""
+    index = pinecone.Index(PINECONE_INDEX_NAME)
+    vector = get_vector_for_text(text)
+    query_results = index.query(
+        vector=vector,
+        top_k=2,
+        include_values=True
+    )
+    return {i['id'] for i in query_results['matches']}
+
+def main():
+    prompt = 'I like chicken.'
+    recipe_ids = get_related_recipe_ids_for_text(prompt)
+    recipes_list = get_recipes_from_ids(recipe_ids)
+    suggest_final_recipe(prompt, recipes_list)
+
+if __name__ == '__main__':
+    pinecone.init(api_key=PINECONE_API_KEY, environment='gcp-starter')
+    main()
+```
+</CodeGroup>
+
+![Recipe Request Log Screenshot](images/recipe-request-log.png)
+
+Things are working, but let's tweak our prompt a bit to see if we can get some better results. Instead of `I like
+{food}`, we'll try using the text `My favorite food is {food}` instead.
+
+This is a simple example of **prompt engineering**. The input we feed into OpenAI often needs to be tinkered with in
+order to get the best results. And once we find an input that works well, we don't want to lose it, even as we continue
+trying different prompts. Wouldn't it be nice if there was an easy way to keep track of all these prompts? Well lucky
+for us, there is.
+
+The Prompt Registry allows you to easily manage your prompt templates, which are customizable prompt strings with
+placeholders for variables. Specifically, a prompt template is your prompt string with variables indicated in curly
+brackets (`This is a prompt by {author_name}`).
+
+Let's create a prompt template for our recipe app.
+
+```python
+import os
+
+import promptlayer
+
+openai = promptlayer.openai
+openai.api_key = os.getenv('OPENAI_API_KEY')
+promptlayer.api_key = os.environ.get('PROMPTLAYER_API_KEY')
+
+template = {
+    'input_variables': ['food', 'recipes_string'],
+    'template': 'I like {food}\n\n{recipes_string}',
+    'template_format': 'f-string',
+}
+
+promptlayer.prompts.publish("recipe_template", prompt_template=template)
+```
+
+![Recipe Prompt Registry Screenshot](images/recipe-prompt-registry.png)
+
+Here is an example of how you would create it in the UI.
+
+<video controls="controls">
+  <source src="/videos/registry.mp4" type="video/mp4" />
+</video>
+
+Now let's update our application to use our new prompt template.
+
+<CodeGroup>
+```python suggestion.py
+import os
+
+import promptlayer
+
+openai = promptlayer.openai
+openai.api_key = os.getenv('OPENAI_API_KEY')
+
+
+def suggest_final_recipe(prompt, recipes_list):
+    """Given a prompt and a list of recipes, use GPT to suggest one of the recipes"""
+
+    # Fetch our template from PromptLayer
+    recipe_template = promptlayer.prompts.get('recipe_template')
+    recipe_template_template = recipe_template['template']
+
+    # Set our template variables
+    variables = {
+        'user_prompt': prompt,
+        'recipes_string': '\n\n'.join(recipes_list)
+    }
+
+    response, pl_request_id = openai.ChatCompletion.create(
+        model='gpt-3.5-turbo',
+        messages=[
+            {
+                'role': 'system',
+                'content': (
+                    'You are a helpful assistant. '
+                    'Given some user input and a list of recipes, suggest one of the recipes. '
+                    'The final output should be the full recipe.'
+                )
+            },
+            {'role': 'user', 'content': recipe_template_template.format(**variables)},
+        ],
+        temperature=0.5,
+        max_tokens=1024,
+        return_pl_id=True
+    )
+    print(response.choices[0].message.content)
+
+    # Associate request with a prompt template
+    promptlayer.track.prompt(
+        request_id=pl_request_id,
+        prompt_name='recipe_template',
+        prompt_input_variables=variables
+    )
+```
+</CodeGroup>
+
+![Recipe Prompt Template Screenshot](images/recipe-prompt-template.png)
+
+Great! Now any requests made using that prompt template are all in one location. Now let's try improving our prompt a
+bit. Let's change `I like {food}` to `My favorite food is {food}`.
+
+```python
+import os
+
+import promptlayer
+
+openai = promptlayer.openai
+openai.api_key = os.getenv('OPENAI_API_KEY')
+promptlayer.api_key = os.environ.get('PROMPTLAYER_API_KEY')
+
+template = {
+    'input_variables': ['food', 'recipes_string'],
+    'template': 'My favorite food is {food}\n\n{recipes_string}',
+    'template_format': 'f-string',
+}
+
+promptlayer.prompts.publish("recipe_template", prompt_template=template)
+```
+
+When we publish a template with the same name, PromptLayer will create a new version for us.
+
+![Recipe Prompt Versions Screenshot](images/recipe-prompt-versions.png)
