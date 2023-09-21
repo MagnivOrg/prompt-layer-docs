@@ -106,8 +106,9 @@ def read_txt_file(filepath):
 ```
 </CodeGroup>
 
-Create a `pinecone_populate.py` file next. This file first creates a Pinecone index. Once created, it reads each of
-our recipes, generates a vector from it, and then inserts it as a new record in our Pinecone index.
+Create a `pinecone_populate.py` file next. Once created, run the script. During execution, the script first creates a
+Pinecone index. It then reads each of our recipes, generates a vector from it, and then inserts the vector as a new
+record in our Pinecone index.
 
 <CodeGroup>
 ```python pinecone_populate.py
