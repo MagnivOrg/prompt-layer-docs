@@ -54,16 +54,18 @@
             "schema": { "type": "string", "title": "X-Api-Key" },
             "name": "X-API-KEY",
             "in": "header"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": { "type": "integer", "title": "Page" }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": { "type": "integer", "title": "Per Page" }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": { "$ref": "#/components/schemas/Base" }
-            }
-          },
-          "required": true
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -96,17 +98,24 @@
             "schema": { "type": "string", "title": "X-Api-Key" },
             "name": "X-API-KEY",
             "in": "header"
+          },
+          {
+            "in": "query",
+            "name": "prompt_name",
+            "required": true,
+            "schema": { "type": "string", "title": "Prompt Name" }
+          },
+          {
+            "in": "query",
+            "name": "version",
+            "schema": { "type": "integer", "title": "Version" }
+          },
+          {
+            "in": "query",
+            "name": "label",
+            "schema": { "type": "string", "title": "Label" }
           }
         ],
-        "requestBody": {
-          "content": {
-            "application/json": {
-              "schema": {
-                "$ref": "#/components/schemas/GetByName"
-              }
-            }
-          }
-        },
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -540,28 +549,6 @@
         "type": "object",
         "required": ["total", "pages", "items"],
         "title": "Response"
-      },
-      "GetByName": {
-        "properties": {
-          "prompt_name": {
-            "type": "string",
-            "title": "Prompt Name",
-            "description": "The name of the prompt to get"
-          },
-          "version": {
-            "type": "integer",
-            "title": "Version",
-            "description": "The version of the prompt to get"
-          },
-          "label": {
-            "type": "string",
-            "title": "Label",
-            "description": "The label of the prompt to get. This will supercede the version if both are provided"
-          }
-        },
-        "type": "object",
-        "required": ["prompt_name"],
-        "title": "GetByName"
       },
       "Model": {
         "title": "Model",
