@@ -3,35 +3,41 @@ title: Recipe Recommender
 icon: "hat-chef"
 ---
 
-## TODO: Data files
+# Introduction
 
 Welcome to the Recipe Recommender - your culinary sidekick! Think of this system as a gourmet-focused search tool.
 Rather than scouring the vast expanse of the internet, it narrows down your options to offer the most delectable
 recipe suggestions tailored to your preferences.
 
-Here's how it works:
+# Core Components
 
-1. **OpenAI**: Used for generating embeddings, or vector representations, of recipe texts. These embeddings capture the
-essence and nuances of each recipe, enabling the system to understand and compare them.
-2. **Pinecone**: A vector database service that efficiently stores and retrieves these embeddings. Its role is pivotal in
-serving the recommendations quickly and accurately.
-3. **PromptLayer**: INSERT SNAZZY DESCRIPTION HERE
+1. **OpenAI**: Used for generating embeddings, or vector representations, of recipe texts.
+2. **Pinecone**: A vector database service that efficiently stores these embeddings. Storing recipes as vectors will
+allow us to easily query the database for related recipes based on our food preferences.
+3. **PromptLayer**: A platform that enables collaborative prompt engineering by allowing teams and individuals to
+systematically track, debug, and optimize prompts for language models
 
-# Project setup
+# Setting Up the Environment
 
-Before getting started, we need to set up the API keys for the services we will be using.
+To get started, visit the [GitHub repo](https://github.com/buckyroberts/Recipe-Recommender) for this project and
+download the [data files](https://github.com/buckyroberts/Recipe-Recommender/tree/main/data). Each one contains a
+recipe that we will use throughout the project.
+
+Next, we need to set up the API keys for the services we will be using.
 
 ### OpenAI setup
 1. Create an API key at https://platform.openai.com/account/api-keys
-2. Save as environment variable under `OPENAI_API_KEY`
+2. Save it as environment variable under `OPENAI_API_KEY`
 
 ### Pinecone setup
 1. Create an API key at https://app.pinecone.io/
-2. Save as environment variable under `PINECONE_API_KEY`
+2. Save it as environment variable under `PINECONE_API_KEY`
 
 ### PromptLayer setup
 1. Create an API key at https://promptlayer.com/home
-2. Save as environment variable under `PROMPTLAYER_API_KEY`
+2. Save it as environment variable under `PROMPTLAYER_API_KEY`
+
+# Diving into the Code
 
 Start by creating a `settings.py` file for our application level constants.
 <CodeGroup>
@@ -45,7 +51,7 @@ PINECONE_INDEX_NAME = 'recipes'  # name of our Pinecone index
 ```
 </CodeGroup>
 
-Next, create a `openai_utils.py` file. This includes a `get_vector_for_text` function that allow us to pass in text
+Next, create a `openai_utils.py` file. This includes a `get_vector_for_text` function that allows us to pass in text
 and responds with a vector. We will later store these vectors in Pinecone.
 
 <CodeGroup>
@@ -63,8 +69,8 @@ def get_vector_for_text(text):
 ```
 </CodeGroup>
 
-Now create a new file called `io_utils.py`. Here we include a helper function called `get_recipe_filepaths` to retrieve
-a list of recipe file paths.
+Now create a new file called `io_utils.py`. This file includes a helper function called `get_recipe_filepaths` to
+retrieve a list of recipe file paths.
 
 <CodeGroup>
 ```python io_utils.py
@@ -145,6 +151,8 @@ if __name__ == '__main__':
     main()
 ```
 </CodeGroup>
+
+# Building the Recommender
 
 Before we query our index, let's first create a `suggestion.py` file. This logic allows us to create a prompt which
 is text that includes:
@@ -244,6 +252,8 @@ if __name__ == '__main__':
 
 ![Recipe Request Log Screenshot](images/recipe-request-log.png)
 
+# Improving Results with Prompt Engineering
+
 Things are working, but let's tweak our prompt a bit to see if we can get some better results. Instead of `I like
 {food}`, try using the text `My favorite food is {food}`.
 
@@ -255,6 +265,8 @@ for us, there is.
 The Prompt Registry allows you to easily manage your prompt templates, which are customizable prompt strings with
 placeholders for variables. Specifically, a prompt template is your prompt string with variables indicated in curly
 brackets (`This is a prompt by {author_name}`).
+
+### Creating prompt templates
 
 Let's create a prompt template for our recipe app.
 
@@ -283,6 +295,8 @@ Here is an example of how you would create it in the UI.
 <video controls="controls">
   <source src="/videos/registry.mp4" type="video/mp4" />
 </video>
+
+### Using prompt templates
 
 Now let's update our application to use our new prompt template.
 
@@ -338,6 +352,8 @@ def suggest_final_recipe(prompt, recipes_list):
 </CodeGroup>
 
 ![Recipe Prompt Template Screenshot](images/recipe-prompt-template.png)
+
+### Creating new versions
 
 Great! Now any requests made using that prompt template are all in one location. Now let's try improving our prompt a
 bit. Let's change `I like {food}` to `My favorite food is {food}`.
