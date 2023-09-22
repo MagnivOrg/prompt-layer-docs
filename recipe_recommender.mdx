@@ -15,7 +15,7 @@ recipe suggestions tailored to your preferences.
 2. **Pinecone**: A vector database service that efficiently stores these embeddings. Storing recipes as vectors will
 allow us to easily query the database for related recipes based on our food preferences.
 3. **PromptLayer**: A platform that enables collaborative prompt engineering by allowing teams and individuals to
-systematically track, debug, and optimize prompts for language models
+systematically track, debug, and optimize prompts for language models.
 
 # Setting Up the Environment
 
@@ -76,7 +76,6 @@ retrieve a list of recipe file paths.
 ```python io_utils.py
 import os
 
-from files import read_txt_file
 from settings import DATA_DIR
 
 def get_recipe_filepaths():
@@ -197,9 +196,9 @@ def suggest_final_recipe(prompt, recipes_list):
 ```
 </CodeGroup>
 
-Lastly, we create a `pinecone_query.py` file. In this file we provide a text snippet of food that we are interested
+Lastly, create a `pinecone_query.py` file. In this file we provide a text snippet of food that we are interested
 in. Using that text, we will query our Pinecone index to find the nearest vector matches (closely related
-recipe IDs). Using those IDs, we can retrieve the original recipe text from our data. Using that recipe text, we
+recipe IDs). Using those IDs, we can retrieve the original recipe text from our data. With that recipe text, we
 generate our final prompt which is sent to OpenAI, using the `suggest_final_recipe` function created in the previous
 step.
 
@@ -250,6 +249,8 @@ if __name__ == '__main__':
 ```
 </CodeGroup>
 
+After running this script you will be able to see the results in PromptLayer.
+
 ![Recipe Request Log Screenshot](images/recipe-request-log.png)
 
 # Improving Results with Prompt Engineering
@@ -268,7 +269,7 @@ brackets (`This is a prompt by {author_name}`).
 
 ### Creating prompt templates
 
-Let's create a prompt template for our recipe app.
+Let's create a prompt template for our recipe app. In a new python file run the following script.
 
 ```python
 import os
@@ -309,7 +310,6 @@ import promptlayer
 openai = promptlayer.openai
 openai.api_key = os.getenv('OPENAI_API_KEY')
 
-
 def suggest_final_recipe(prompt, recipes_list):
     """Given a prompt and a list of recipes, use GPT to suggest one of the recipes"""
 
@@ -319,7 +319,7 @@ def suggest_final_recipe(prompt, recipes_list):
 
     # Set our template variables
     variables = {
-        'user_prompt': prompt,
+        'food': prompt,
         'recipes_string': '\n\n'.join(recipes_list)
     }
 
@@ -376,6 +376,18 @@ template = {
 promptlayer.prompts.publish("recipe_template", prompt_template=template)
 ```
 
-When we publish a template with the same name, PromptLayer will create a new version for us.
+Run the script to publish the updated template. When we publish a template with the same name, PromptLayer will create
+a new version for us.
 
 ![Recipe Prompt Versions Screenshot](images/recipe-prompt-versions.png)
+
+# Conclusion
+
+Congratulations on completing the Recipe Recommender tutorial! Congratulations on completing the Recipe Recommender
+tutorial! You've successfully built a sophisticated system that offers personalized recipe suggestions using the
+combined capabilities of OpenAI, Pinecone, and PromptLayer. Through this tutorial, you've mastered generating vector
+representations of recipes with OpenAI, efficiently storing and querying these vectors with Pinecone, and
+systematically optimizing language model prompts using PromptLayer. This integration has empowered you to create a
+robust recipe recommendation system. Whether you're exploring culinary inspirations or delving deep into AI
+technology, this guide has provided a rich blend of insights. Dive deeper, experiment, and relish the limitless
+flavors of knowledge you can uncover. Bon appétit! 🍴🥘
