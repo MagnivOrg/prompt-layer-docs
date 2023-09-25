@@ -204,6 +204,58 @@ PromptLayer provides useful tools for prompt engineering. By centralizing prompt
 
 This iterative process of refining prompts is crucial for getting the most out of AI systems. Even small tweaks can sometimes lead to significant improvements. Prompt engineering combines art and science to unlock the full potential of language models like GPT-3.
 
+# Scoring Requests
+
+PromptLayer also provides the ability to score the responses generated from each request. This allows tracking how well different prompt variations are performing over time. After making a request, you can assign it an integer score from 0 to 100 based on the quality of the response, where 100 is the best possible response and 0 is the worst.
+
+By scoring the results of recipe recommendations, developers can measure the effectiveness of the prompts and the relevance of returned recipes. Higher scores can indicate that the recipes are closely aligned with user preferences, while lower scores can highlight the need for prompt optimization.
+
+There are two ways to add scores to requests in PromptLayer:
+
+**Via the Dashboard**
+
+In the PromptLayer dashboard, you can view the log of all requests made. For each request, there is a score field that defaults to 0. You can manually update this to any value from 0 to 100 based on your assessment of the response quality.
+
+**INSERT VIDEO HERE**
+
+**Programmatically**
+
+You can also add scoring programmatically by calling the `score()` method after making a request:
+
+```python
+response, pl_request_id = openai.Completion.create(...)
+
+promptlayer.track.score(
+   request_id=pl_request_id,
+   score=90
+)
+```
+
+Scoring requests provides helpful analytics over time on how your prompts are performing. It enables sorting and filtering requests to surface the most effective prompts.
+
+# Tracking Metadata
+
+In addition to scoring, PromptLayer allows you to attach arbitrary metadata to each request. This metadata can be used to tag requests with contextual information like user IDs, session IDs, error codes, etc.
+
+Metadata is helpful for advanced analysis and debugging of your prompt performance. You can quickly lookup requests associated with a specific user or error case. The analytics tabs also allow filtering and segmentation based on metadata values. Metadata can also provide additional context for each recommendation request, making it easier to debug issues or anomalies. For instance, if certain users consistently receive low-scoring recommendations, the associated metadata can help identify potential causes.
+
+By attaching user-specific metadata (e.g., user ID, dietary preferences, geographical region), the system can further tailor recommendations to individual users, enhancing the personalization of recipe suggestions.
+
+To add metadata to a request, use the `metadata()` method:
+
+```python
+promptlayer.track.metadata(
+  request_id=pl_request_id,
+  metadata={
+     "user_id": "1abf2345f",
+     "session_id": "xyz1234",
+     "is_vegetarian": False,
+  }
+)
+```
+
+The metadata will then appear in the PromptLayer dashboard for each request. You can click on any request to see its full metadata.
+
 # Conclusion
 
 Congratulations on completing the Recipe Recommender tutorial! You've successfully built a sophisticated system that
