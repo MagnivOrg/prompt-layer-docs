@@ -44,11 +44,11 @@ Next, we need to set up the API keys for the services we will be using.
 1. Create an API key at https://promptlayer.com/home
 2. Save it as environment variable under `PROMPTLAYER_API_KEY`
 
-# Creating and Storing Recipe Embeddings
+# Generating Recipe Embeddings
 
-Now that we have our environment set up, our first goal will be to generate embeddings (vector representations) for each of our recipes. This process is done using OpenAI's embedding API. Before we jump into that though, let's get some housekeeping items out of the way.
+With our environment ready, our initial task is to produce embeddings (vector representations) for each recipe, leveraging OpenAI's embedding API. But before diving into that, there are a few preparatory steps to handle.
 
-This code imports necessary libraries, initializes OpenAI through PromptLayer. By initializing OpenAPI in this way, PromptLayer will act as a wrapper and will automatically log all requests to OpenAI.
+Let's start by first pulling in the necessary libraries and initializing OpenAI through PromptLayer. This setup ensures that every OpenAI request we make is automatically logged by PromptLayer.
 
 ```python
 import os
@@ -126,24 +126,24 @@ recipe_ids = {i['id'] for i in query_results['matches']}
 recipes_list = [open(DATA_DIR / f'{recipe_id}.txt', 'r').read() for recipe_id in recipe_ids]
 ```
 
+Now that we have user input referencing their food preference along with two related recipes, we can craft a prompt from these to feed into OpenAI!
+
 # Creating a Prompt Template
 
-Now that we have user input referencing their food interest ("chicken") and two related recipes, we can craft a prompt from these to feed into OpenAI. Our goal is to obtain a single final recipe to recommend to the user.
+The final goal of this project is to obtain a single final recipe to recommend to the user. To accomplish this, we will first create a prompt template using PromptLayer. A prompt template is a customizable prompt strings with placeholders for variables. When it comes to crafting prompts, prompt templates provide many benefits including reusability, built-in versioning, enhanced collaboration, and much more.
 
-To accomplish this, we will first create a prompt template using PromptLayer. When it comes to crafting prompts, prompt templates offer many benefits including ease of reuse, built-in versioning, improved organization, collaboration support, and more.
-
-The video below will show you how to create a prompt template using the UI. We will structure our template to accept two variables, one for the users food preference and the other for the recipes.
+The Prompt Registry is where we can easily manage all of our prompt templates. The video below will show you how to create a prompt template via the Prompt Registry. We will structure our template to accept two variables, one for the users food preference and the other for the recipes.
 
 **INSERT VIDEO HERE**
 
-Once created, we can then retrieve our prompt template from PromptLayer.
+Once our prompt template has been created, we can retrieve it from PromptLayer.
 
 ```python
 recipe_template = promptlayer.prompts.get('recipe_template')
 recipe_template_template = recipe_template['template']
 ```
 
-To use our template, we will create a variables dictionary containing the values we want to pass in. With these values, we'll construct the full prompt and pass it to GPT-3.5-turbo to obtain a recipe suggestion.
+To use our template, we'll create a `variables` dictionary containing the values we want to pass in. Using these values, we'll construct the full prompt then pass it to GPT-3.5-turbo to obtain a recipe suggestion.
 
 ```python
 variables = {
@@ -184,119 +184,25 @@ promptlayer.track.prompt(
 )
 ```
 
-After running this script you will be able to see the results in PromptLayer.
+After running this script you will be able to see the final recipe suggestion in PromptLayer!
 
 ![Recipe Request Log Screenshot](images/recipe-request-log.png)
 
 # Improving Results with Prompt Engineering
 
-Things are working, but let's tweak our prompt a bit to see if we can get some better results. Instead of `I like
-{food}`, try using the text `My favorite food is {food}`.
+Things are working, but let's tweak our prompt a bit to see if we can get some better results. Instead of `I like {food}`, try using the text `My favorite food is {food}`.
 
-This is a simple example of **prompt engineering**. The input we feed into OpenAI often needs to be tinkered with in
-order to get the best results. And once we find an input that works well, we don't want to lose it, even as we continue
-trying different prompts. Wouldn't it be nice if there was an easy way to keep track of all these prompts? Well lucky
-for us, there is.
+This simple change in the phrasing of the prompt can significantly alter the response from the AI. Using more affirmative language like "My favorite food is" rather than just "I like" puts more emphasis on the user's preference. This signals to the AI that it should pay close attention to tailoring the suggestion to that specific food.
 
-The Prompt Registry allows you to easily manage your prompt templates, which are customizable prompt strings with
-placeholders for variables. Specifically, a prompt template is your prompt string with variables indicated in curly
-brackets (`This is a prompt by {author_name}`).
+**Prompt engineering** involves systematically experimenting with different ways of phrasing the input prompt to find what works best. Some key aspects to tweak can include:
+- Using more natural conversational language
+- Providing additional context to guide the AI
+- Emphasizing key information through wording
+- Adjusting the tone, perspective, and personality
 
-### Creating prompt templates
+PromptLayer provides useful tools for prompt engineering. By centralizing prompt templates in the Prompt Registry, it makes it easy to track different versions of a prompt. The testing interface allows quickly trying variations. And the analytics provide visibility into how well different prompts are performing.
 
-Let's create a prompt template for our recipe app.
-
-![Recipe Prompt Registry Screenshot](images/recipe-prompt-registry.png)
-
-Here is an example of how you would create it in the UI.
-
-<video controls="controls">
-  <source src="/videos/registry.mp4" type="video/mp4" />
-</video>
-
-### Using prompt templates
-
-Now let's update our application to use our new prompt template.
-
-<CodeGroup>
-```python suggestion.py
-import os
-
-import promptlayer
-
-openai = promptlayer.openai
-openai.api_key = os.getenv('OPENAI_API_KEY')
-
-def suggest_final_recipe(prompt, recipes_list):
-    """Given a prompt and a list of recipes, use GPT to suggest one of the recipes"""
-
-    # Fetch our template from PromptLayer
-    recipe_template = promptlayer.prompts.get('recipe_template')
-    recipe_template_template = recipe_template['template']
-
-    # Set our template variables
-    variables = {
-        'food': prompt,
-        'recipes_string': '\n\n'.join(recipes_list)
-    }
-
-    response, pl_request_id = openai.ChatCompletion.create(
-        model='gpt-3.5-turbo',
-        messages=[
-            {
-                'role': 'system',
-                'content': (
-                    'You are a helpful assistant. '
-                    'Given some user input and a list of recipes, suggest one of the recipes. '
-                    'The final output should be the full recipe.'
-                )
-            },
-            {'role': 'user', 'content': recipe_template_template.format(**variables)},
-        ],
-        temperature=0.5,
-        max_tokens=1024,
-        return_pl_id=True
-    )
-    print(response.choices[0].message.content)
-
-    # Associate request with a prompt template
-    promptlayer.track.prompt(
-        request_id=pl_request_id,
-        prompt_name='recipe_template',
-        prompt_input_variables=variables
-    )
-```
-</CodeGroup>
-
-![Recipe Prompt Template Screenshot](images/recipe-prompt-template.png)
-
-### Creating new versions
-
-Great! Now any requests made using that prompt template are all in one location. Now let's try improving our prompt a
-bit. Let's change `I like {food}` to `My favorite food is {food}`.
-
-```python
-import os
-
-import promptlayer
-
-openai = promptlayer.openai
-openai.api_key = os.getenv('OPENAI_API_KEY')
-promptlayer.api_key = os.environ.get('PROMPTLAYER_API_KEY')
-
-template = {
-    'input_variables': ['food', 'recipes_string'],
-    'template': 'My favorite food is {food}\n\n{recipes_string}',
-    'template_format': 'f-string',
-}
-
-promptlayer.prompts.publish("recipe_template", prompt_template=template)
-```
-
-Run the script to publish the updated template. When we publish a template with the same name, PromptLayer will create
-a new version for us.
-
-![Recipe Prompt Versions Screenshot](images/recipe-prompt-versions.png)
+This iterative process of refining prompts is crucial for getting the most out of AI systems. Even small tweaks can sometimes lead to significant improvements. Prompt engineering combines art and science to unlock the full potential of language models like GPT-3.
 
 # Conclusion
 
