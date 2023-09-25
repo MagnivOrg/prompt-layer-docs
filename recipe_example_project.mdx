@@ -20,7 +20,7 @@ To enable personalized recipe recommendations, we will utilize two key technolog
 
 Creating a personalized recipe recommendation engine requires assembling the right combination of technologies to enable understanding user tastes, searching recipes effectively, and generating creative suggestions. We will leverage three key building blocks that each provide the necessary capabilities:
 
-1. **OpenAI**: Used for generating vector representations (also referred to as "embeddings") of recipe texts. Additionally, OpenAI is also used to craft the final recipe suggestion for the user based on a list of recipes that match the user's query.
+1. **OpenAI**: Used for generating vector representations (also referred to as "embeddings") of recipe texts. Additionally, OpenAI is used to craft the final recipe suggestion for the user based on a list of recipes that match the user's query.
 2. **Pinecone**: A vector database service that efficiently stores these embeddings.
 3. **PromptLayer**: A platform that enables collaborative prompt engineering by allowing teams and individuals to systematically track, debug, and optimize prompts for language models.
 
@@ -34,19 +34,19 @@ Next, we need to set up the API keys for the services we will be using.
 
 ### OpenAI setup
 1. Create an API key at https://platform.openai.com/account/api-keys
-2. Save it as environment variable under `OPENAI_API_KEY`
+2. Save it as an environment variable under `OPENAI_API_KEY`
 
 ### Pinecone setup
 1. Create an API key at https://app.pinecone.io/
-2. Save it as environment variable under `PINECONE_API_KEY`
+2. Save it as an environment variable under `PINECONE_API_KEY`
 
 ### PromptLayer setup
 1. Create an API key at https://promptlayer.com/home
-2. Save it as environment variable under `PROMPTLAYER_API_KEY`
+2. Save it as an environment variable under `PROMPTLAYER_API_KEY`
 
 # Generating Recipe Embeddings
 
-With our environment ready, our initial task is to produce embeddings (vector representations) for each recipe, leveraging OpenAI's embedding API. But before diving into that, there are a few preparatory steps to handle.
+With our environment set up, our first task is to generate embeddings (vector representations) for each recipe using OpenAI's embedding API. But before diving into that, there are a few preparatory steps to handle.
 
 Let's start by first pulling in the necessary libraries and initializing OpenAI through PromptLayer. This setup ensures that every OpenAI request we make is automatically logged by PromptLayer.
 
@@ -226,13 +226,13 @@ promptlayer.track.score(
 )
 ```
 
-Scoring requests provides helpful analytics over time on how your prompts are performing. It enables sorting and filtering requests to surface the most effective prompts.
+Scoring requests provide helpful analytics over time on how your prompts are performing. It enables sorting and filtering requests to surface the most effective prompts.
 
 # Tracking Metadata
 
 In addition to scoring, PromptLayer allows you to attach arbitrary metadata to each request. This metadata can be used to tag requests with contextual information like user IDs, session IDs, error codes, etc.
 
-Metadata is helpful for advanced analysis and debugging of your prompt performance. You can quickly lookup requests associated with a specific user or error case. The analytics tabs also allow filtering and segmentation based on metadata values. Metadata can also provide additional context for each recommendation request, making it easier to debug issues or anomalies. For instance, if certain users consistently receive low-scoring recommendations, the associated metadata can help identify potential causes.
+Metadata is helpful for advanced analysis and debugging of your prompt performance. You can quickly lookup requests associated with a specific user or error case. The analytics tab also allows for filtering and segmentation based on metadata values. Metadata can also provide additional context for each recommendation request, making it easier to debug issues or anomalies. For instance, if certain users consistently receive low-scoring recommendations, the associated metadata can help identify potential causes.
 
 By attaching user-specific metadata (e.g., user ID, dietary preferences, geographical region), the system can further tailor recommendations to individual users, enhancing the personalization of recipe suggestions.
 
@@ -262,4 +262,4 @@ Through this tutorial, you've mastered generating vector representations of reci
 and querying these vectors with Pinecone, and systematically optimizing language model prompts using PromptLayer.
 This integration has empowered you to create a robust recipe recommendation system. Whether you're exploring culinary
 inspirations or delving deep into AI technology, this guide has provided a rich blend of insights. Dive deeper,
-experiment, and relish the limitless flavors of knowledge you can uncover. Bon appétit! 🍴🥘
+experiment, and savor the limitless flavors of knowledge awaiting you. Bon appétit! 🍴🥘
