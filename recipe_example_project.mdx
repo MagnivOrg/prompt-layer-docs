@@ -22,8 +22,7 @@ Creating a personalized recipe recommendation engine requires assembling the rig
 
 1. **OpenAI**: Used for generating vector representations (also referred to as "embeddings") of recipe texts. Additionally, OpenAI is also used to craft the final recipe suggestion for the user based on a list of recipes that match the user's query.
 2. **Pinecone**: A vector database service that efficiently stores these embeddings.
-3. **PromptLayer**: A platform that enables collaborative prompt engineering by allowing teams and individuals to
-systematically track, debug, and optimize prompts for language models.
+3. **PromptLayer**: A platform that enables collaborative prompt engineering by allowing teams and individuals to systematically track, debug, and optimize prompts for language models.
 
 # Setting Up the Environment
 
@@ -81,7 +80,7 @@ if PINECONE_INDEX_NAME not in indexes:
 index = pinecone.Index(PINECONE_INDEX_NAME)
 ```
 
-With our index established, the code identifies all recipe files in the data directory and uses their filenames (minus the extension) as unique identifiers in Pinecone. Each recipe's content is read, converted into a vector representation using the OpenAI API, and then upserted into the Pinecone index, using the filename as its unique key.
+With our index established, let's now retrieve a list of all recipe text files from the data directory. For each recipe, we'll read its content, convert it into a vector representation using the OpenAI API, and then upsert it into the Pinecone index using the filename (without the extension) as its unique ID.
 
 ```python
 recipe_filepaths = [DATA_DIR / file for file in os.listdir(DATA_DIR) if file.endswith('.txt')]
@@ -102,9 +101,9 @@ for filepath in recipe_filepaths:
 
 Now that our database has been populated with recipes, we are ready to move onto the next step of building the recommendation engine!
 
-# Building the Recommendation Engine
+# Querying Pinecone
 
-The code assigns the word 'chicken' to a variable named 'food' and then generates a vector representation of the word using OpenAI's embedding API.
+The recommendation logic will operate by initially converting a food item the user is interested in into a vector. For the time being, to get things up and running, we can simply hardcode the value 'chicken'.
 
 ```python
 food = 'chicken'
@@ -115,7 +114,7 @@ food_embedding_response = openai.Embedding.create(
 vector = food_embedding_response['data'][0]['embedding']
 ```
 
-The code queries the Pinecone index to find the two most similar recipes to the 'chicken' vector and then retrieves the content of those recipes from the corresponding text files.
+Using our “chicken” vector, we can now query the Pinecone index to find the two most related recipes. For each result, we will extract the ID (filename) and then retrieve the content of the corresponding recipe from the text file.
 
 ```python
 query_results = index.query(
@@ -127,13 +126,26 @@ recipe_ids = {i['id'] for i in query_results['matches']}
 recipes_list = [open(DATA_DIR / f'{recipe_id}.txt', 'r').read() for recipe_id in recipe_ids]
 ```
 
-The code retrieves a pre-defined prompt template from PromptLayer, populates it with the user's food preference and a list of matching recipes, sends this prompt to GPT-3.5-turbo to obtain a recipe suggestion.
+# Creating a Prompt Template
+
+Now that we have user input referencing their food interest ("chicken") and two related recipes, we can craft a prompt from these to feed into OpenAI. Our goal is to obtain a single final recipe to recommend to the user.
+
+To accomplish this, we will first create a prompt template using PromptLayer. When it comes to crafting prompts, prompt templates offer many benefits including ease of reuse, built-in versioning, improved organization, collaboration support, and more.
+
+The video below will show you how to create a prompt template using the UI. We will structure our template to accept two variables, one for the users food preference and the other for the recipes.
+
+**INSERT VIDEO HERE**
+
+Once created, we can then retrieve our prompt template from PromptLayer.
 
 ```python
 recipe_template = promptlayer.prompts.get('recipe_template')
 recipe_template_template = recipe_template['template']
+```
 
-# Set our template variables
+To use our template, we will create a variables dictionary containing the values we want to pass in. With these values, we'll construct the full prompt and pass it to GPT-3.5-turbo to obtain a recipe suggestion.
+
+```python
 variables = {
     'food': food,
     'recipes_string': '\n\n'.join(recipes_list)
@@ -162,7 +174,7 @@ response, pl_request_id = openai.ChatCompletion.create(
 print(response.choices[0].message.content)
 ```
 
-Associates the generated response with the specific prompt template in PromptLayer for tracking.
+Lastly, we will associate the generated response with this specific prompt template in PromptLayer for tracking.
 
 ```python
 promptlayer.track.prompt(
