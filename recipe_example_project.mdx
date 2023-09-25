@@ -5,7 +5,7 @@ icon: "hat-chef"
 
 # Introduction
 
-Have you ever spent way too long browsing recipes trying to find one that actually sounds good to you? Many of us have been there - endlessly scrolling through lists of recipes, hoping to chance upon one that matches our personal tastes. Unfortunately, most recipe sites take a one-size-fits-all approach, showing the same recipes to everyone without tailoring recommendations to individual preferences. This can make the process of finding a recipe you're excited to cook feel like finding a needle in a haystack.
+Have you ever spent way too long browsing recipes trying to find one that actually sounds good to you? We've all been there - endlessly scrolling through lists of recipes, hoping to stumble upon one that matches our personal tastes. Unfortunately, most recipe sites take a one-size-fits-all approach, showing the same recipes to everyone without tailoring recommendations to individual preferences. This can make the process of finding a recipe you're excited to cook feel like finding a needle in a haystack.
 
 The recipe recommendation engine described in this guide aims to solve these problems. By learning about each user's unique tastes, it can suggest recipes that are specifically tailored for that individual. No more wasting time manually searching through irrelevant recipes. This guide will walk through how to build an intelligent system that takes the effort out of recipe selection by providing personalized recommendations. With the right recommendation engine, discovering your next culinary masterpiece is merely a request away.
 
@@ -13,7 +13,7 @@ The recipe recommendation engine described in this guide aims to solve these pro
 
 To enable personalized recipe recommendations, we will utilize two key technologies:
 
-1. **Vector Database**: A vector is an array or list of numerical values representing a point in multi-dimensional space. We can represent recipes and ingredients as vectors capturing their attributes. A vector database will store these vectors, allowing quickly finding recipes that match a user's preferences based on vector similarity.
+1. **Vector Database**: A vector is an array or list of numerical values that represents a point in multi-dimensional space. Recipes and ingredients can be represented as vectors to capture their attributes. A vector database stores these vectors and enables quick searches for recipes that align with a user's preferences, based on vector similarity.
 2. **Retrieval-Augmented Generation (RAG)**: This is a method that first fetches relevant data from a large database and then uses a language model to craft suitable responses or recommendations. For our recipe engine, RAG helps find the best recipes for a user and then presents tailored suggestions.
 
 # Building Blocks
@@ -103,7 +103,7 @@ Now that our database has been populated with recipes, we are ready to move onto
 
 # Querying Pinecone
 
-The recommendation logic will operate by initially converting a food item the user is interested in into a vector. For the time being, to get things up and running, we can simply hardcode the value 'chicken'.
+The recommendation logic will operate by initially converting a food item the user is interested in into a vector. For the time being, to get things up and running, we can simply hardcode the value "chicken".
 
 ```python
 food = 'chicken'
@@ -126,11 +126,11 @@ recipe_ids = {i['id'] for i in query_results['matches']}
 recipes_list = [open(DATA_DIR / f'{recipe_id}.txt', 'r').read() for recipe_id in recipe_ids]
 ```
 
-Now that we have user input referencing their food preference along with two related recipes, we can craft a prompt from these to feed into OpenAI!
+Now that we have user input referencing their food preference along with two related recipes, we can craft a prompt from these to feed into OpenAI.
 
 # Creating a Prompt Template
 
-The final goal of this project is to obtain a single final recipe to recommend to the user. To accomplish this, we will first create a prompt template using PromptLayer. A prompt template is a customizable prompt strings with placeholders for variables. When it comes to crafting prompts, prompt templates provide many benefits including reusability, built-in versioning, enhanced collaboration, and much more.
+The final goal of this project is to obtain a single recipe to recommend to the user. To accomplish this, we will first create a prompt template using PromptLayer. A prompt template is a customizable prompt strings with placeholders for variables. When it comes to crafting prompts, prompt templates provide many benefits including reusability, built-in versioning, enhanced collaboration, and much more.
 
 The Prompt Registry is where we can easily manage all of our prompt templates. The video below will show you how to create a prompt template via the Prompt Registry. We will structure our template to accept two variables, one for the users food preference and the other for the recipes.
 
@@ -139,11 +139,12 @@ The Prompt Registry is where we can easily manage all of our prompt templates. T
 Once our prompt template has been created, we can retrieve it from PromptLayer.
 
 ```python
-recipe_template = promptlayer.prompts.get('recipe_template')
-recipe_template_template = recipe_template['template']
+recipe_template = promptlayer.prompts.get("recipe_template")
+system_content = recipe_template['messages'][0]['prompt']['template']
+user_content_template = recipe_template['messages'][1]['prompt']['template']
 ```
 
-To use our template, we'll create a `variables` dictionary containing the values we want to pass in. Using these values, we'll construct the full prompt then pass it to GPT-3.5-turbo to obtain a recipe suggestion.
+To use our template, we'll create a `variables` dictionary containing the values we want to pass in. Using these values, we'll construct the full prompt then pass it to OpenAI to obtain a recipe suggestion.
 
 ```python
 variables = {
@@ -156,15 +157,11 @@ response, pl_request_id = openai.ChatCompletion.create(
     messages=[
         {
             'role': 'system',
-            'content': (
-                'You are a helpful assistant. '
-                'Given some user input and a list of recipes, suggest one of the recipes. '
-                'The final output should be the full recipe.'
-            )
+            'content': system_content
         },
         {
             'role': 'user',
-            'content': recipe_template_template.format(**variables)
+            'content': user_content_template.format(**variables)
         },
     ],
     temperature=0.5,
@@ -174,7 +171,7 @@ response, pl_request_id = openai.ChatCompletion.create(
 print(response.choices[0].message.content)
 ```
 
-Lastly, we will associate the generated response with this specific prompt template in PromptLayer for tracking.
+Lastly, we'll associate the generated response with this specific prompt template in PromptLayer for tracking.
 
 ```python
 promptlayer.track.prompt(
@@ -184,7 +181,7 @@ promptlayer.track.prompt(
 )
 ```
 
-After running this script you will be able to see the final recipe suggestion in PromptLayer!
+After running this script you'll be able to see the final recipe suggestion in PromptLayer!
 
 ![Recipe Request Log Screenshot](images/recipe-request-log.png)
 
@@ -200,7 +197,7 @@ This simple change in the phrasing of the prompt can significantly alter the res
 - Emphasizing key information through wording
 - Adjusting the tone, perspective, and personality
 
-PromptLayer provides useful tools for prompt engineering. By centralizing prompt templates in the Prompt Registry, it makes it easy to track different versions of a prompt. The testing interface allows quickly trying variations. And the analytics provide visibility into how well different prompts are performing.
+PromptLayer provides useful tools for prompt engineering. By centralizing prompt templates in the Prompt Registry, it makes it easy to track different versions of a prompt. And the analytics provide visibility into how well different prompts are performing.
 
 This iterative process of refining prompts is crucial for getting the most out of AI systems. Even small tweaks can sometimes lead to significant improvements. Prompt engineering combines art and science to unlock the full potential of language models like GPT-3.
 
@@ -214,7 +211,7 @@ There are two ways to add scores to requests in PromptLayer:
 
 **Via the Dashboard**
 
-In the PromptLayer dashboard, you can view the log of all requests made. For each request, there is a score field that defaults to 0. You can manually update this to any value from 0 to 100 based on your assessment of the response quality.
+In the PromptLayer dashboard, you can view the log of all requests made. Here we will manually update the score field with a value ranging from 0 to 100 based on our assessment of the response quality.
 
 **INSERT VIDEO HERE**
 
@@ -223,8 +220,6 @@ In the PromptLayer dashboard, you can view the log of all requests made. For eac
 You can also add scoring programmatically by calling the `score()` method after making a request:
 
 ```python
-response, pl_request_id = openai.Completion.create(...)
-
 promptlayer.track.score(
    request_id=pl_request_id,
    score=90
@@ -247,14 +242,16 @@ To add metadata to a request, use the `metadata()` method:
 promptlayer.track.metadata(
   request_id=pl_request_id,
   metadata={
-     "user_id": "1abf2345f",
-     "session_id": "xyz1234",
-     "is_vegetarian": False,
+     "user_id": "abc123",
+     "session_id": "xyz456",
+     "is_vegetarian": "false",
   }
 )
 ```
 
 The metadata will then appear in the PromptLayer dashboard for each request. You can click on any request to see its full metadata.
+
+![Metadata screenshot](images/metadata-recipes.png)
 
 # Conclusion
 
