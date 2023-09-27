@@ -232,9 +232,9 @@ promptlayer.track.score(
 
 Scoring requests provide helpful analytics over time on how your prompts are performing. It enables sorting and filtering requests to surface the most effective prompts.
 
-### Prompt Template Model Parameters
+### Setting Template Parameters
 
-When editing a template from the UI, you can click on "Parameters" > "Set Parameters" to set values such as provider, model, and temperature on your prompt template.
+When editing a template, you can click on "Parameters" > "Set Parameters" to set values such as provider, model, and temperature on your prompt template.
 
 ![Set parameters screenshot](images/recipe-set-parameters.png)
 
@@ -247,7 +247,7 @@ recipe_template, metadata = promptlayer.prompts.get(
 )
 ```
 
-### Prompt Template Labels
+### Adding Labels
 
 To help organize and find prompt templates, we can add labels to them. Let's tag our latest template with a "prod" label to show that it is ready to use in production.
 
