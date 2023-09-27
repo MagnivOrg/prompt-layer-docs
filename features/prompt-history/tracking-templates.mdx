@@ -40,3 +40,31 @@ Where `prompt_name` is a prompt in your prompt registry, `prompt_input_variables
 This information will appear on your dashboard under your request and prompt template pages.
 
 ![score](/images/tracking-template-ui.png)
+
+You can also use prompt [template release labels](/features/prompt-registry#release-labels) instead of a version number.
+
+<CodeGroup>
+
+```python Python
+promptlayer.track.prompt(
+  request_id=pl_request_id, 
+  prompt_name="example-2",
+  prompt_input_variables=input_variables,
+  label="prod"
+)
+```
+
+```bash REST
+curl --request POST \
+  --url https://api.promptlayer.com/rest/track-prompt \
+  --header 'Content-Type: application/json' \
+  --data '{
+    "api_key": "pl_<YOUR API KEY>",
+    "request_id": "<REQUEST ID>",
+    "prompt_name": "<PROMPT TEMPLATE NAME>",
+    "prompt_input_variables": <PROMPT TEMPLATE INPUT VARIABLES>,
+    "label": "<YOUR PROMPT VERSION LABEL>"
+  }'
+```
+
+</CodeGroup>
