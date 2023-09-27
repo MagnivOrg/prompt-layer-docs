@@ -17,7 +17,12 @@
   "navigation": [
     {
       "group": "Get Started",
-      "pages": ["introduction", "quickstart", "getting_started"]
+      "pages": [
+        "introduction",
+        "quickstart",
+        "getting_started",
+        "recipe_example_project"
+      ]
     },
     {
       "group": "Languages & Environments",
