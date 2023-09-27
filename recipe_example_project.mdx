@@ -130,7 +130,7 @@ Now that we have user input referencing their food preference along with two rel
 
 # Creating a Prompt Template
 
-The final goal of this project is to obtain a single recipe to recommend to the user. To accomplish this, we will first create a prompt template using PromptLayer. A prompt template is a customizable prompt strings with placeholders for variables. When it comes to crafting prompts, prompt templates provide many benefits including reusability, built-in versioning, enhanced collaboration, and much more.
+The final goal of this project is to obtain a single recipe to recommend to the user. To accomplish this, we will first create a prompt template using PromptLayer. A prompt template is a customizable prompt string with placeholders for variables. When it comes to crafting prompts, prompt templates provide many benefits including reusability, built-in versioning, enhanced collaboration, and much more.
 
 The Prompt Registry is where we can easily manage all of our prompt templates. The video below will show you how to create a prompt template via the Prompt Registry. We will structure our template to accept two variables, one for the users food preference and the other for the recipes.
 
@@ -203,7 +203,7 @@ PromptLayer provides useful tools for prompt engineering. By centralizing prompt
 
 This iterative process of refining prompts is crucial for getting the most out of AI systems. Even small tweaks can sometimes lead to significant improvements. Prompt engineering combines art and science to unlock the full potential of language models like GPT-3.
 
-# Scoring Requests
+### Scoring Requests
 
 PromptLayer also provides the ability to score the responses generated from each request. This allows tracking how well different prompt variations are performing over time. After making a request, you can assign it an integer score from 0 to 100 based on the quality of the response, where 100 is the best possible response and 0 is the worst.
 
@@ -226,13 +226,34 @@ You can also add scoring programmatically by calling the `score()` method after 
 ```python
 promptlayer.track.score(
    request_id=pl_request_id,
-   score=90
+   score=(100 if food in response.choices[0].message.content else 0)
 )
 ```
 
 Scoring requests provide helpful analytics over time on how your prompts are performing. It enables sorting and filtering requests to surface the most effective prompts.
 
-# Tracking Metadata
+### Prompt Template Model Parameters
+
+When editing a template from the UI, you can click on "Parameters" > "Set Parameters" to set values such as provider, model, and temperature on your prompt template.
+
+![Set parameters screenshot](images/recipe-set-parameters.png)
+
+You can now retrieve that metadata by using `include_metadata=True`. The function will then return a tuple containing both the prompt template and the metadata.
+
+```python
+recipe_template, metadata = promptlayer.prompts.get(
+    "recipe_template",
+    include_metadata=True
+)
+```
+
+### Prompt Template Labels
+
+To help organize and find prompt templates, we can add labels to them. Let's tag our latest template with a "prod" label to show that it is ready to use in production.
+
+**INSERT_VIDEO_HERE**
+
+### Tracking Metadata
 
 In addition to scoring, PromptLayer allows you to attach arbitrary metadata to each request. This metadata can be used to tag requests with contextual information like user IDs, session IDs, error codes, etc.
 
