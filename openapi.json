@@ -567,7 +567,12 @@
       "Metadata": {
         "title": "Metadata",
         "type": "object",
-        "properties": { "model": { "$ref": "#/components/schemas/Model" } },
+        "properties": {
+          "model": { "$ref": "#/components/schemas/Model" },
+          "customField": {
+            "type": "string"
+          }
+        },
         "definitions": {
           "Model": {
             "title": "Model",

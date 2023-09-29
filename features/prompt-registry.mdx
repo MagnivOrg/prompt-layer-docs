@@ -138,11 +138,15 @@ They are also available through the following REST API endpoints
 
 ### Metadata
 
-Custom metadata can be associated with individual prompt template versions. This allows you to set values such as provider, model, or temperature for each prompt template. It is important to note here that `model` attribute is reserved for the model parameters.
+Custom metadata can be associated with individual prompt template versions. This allows you to set values such as provider, model, temperature, or any other key-value pair for each prompt template version. Please note that the `model` attribute is reserved for model parameters, avoid putting custom metadata here.
 
 <img src="/images/model-parameters.png" />
 
-You can also use our Python SDK to publish a prompt template with metadata. For example:
+Custom non-model related metadata can be seen and edited through the Prompt Template Version edit page.
+
+<img src="/images/template-metadata.png" />
+
+You can use our Python SDK to publish a prompt template with metadata. For example, here's how you can set the `model` metadata along with a custom `category` metadata:
 
 ```python Python SDK
 promptlayer.prompts.publish(
@@ -152,9 +156,10 @@ promptlayer.prompts.publish(
         "model": {
             "provider": "openai",
             "name": "gpt-3.5-turbo",
-            "parameters": {"temperature": 0.5, "max_tokens": 100},
-        }
-    },
+            "parameters": {"temperature": 0.5, "max_tokens": 256},
+        },
+        "category": "weather",
+    }
 )
 ```
 
