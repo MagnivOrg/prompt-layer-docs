@@ -1,19 +1,88 @@
 ---
-title: 'JavaScript'
-icon: 'square-js'
+title: "JavaScript"
+icon: "square-js"
 ---
 
+To get started, create an account by clicking “_Log in_” on [PromptLayer](https://promptlayer.com/). Once logged in, click the button to create an API key and save this in a secure location ([Guide to Using Env Vars](https://nodejs.dev/en/learn/how-to-read-environment-variables-from-nodejs/)).
 
-<Warning> Javascript support is experimental and will not be updated as frequently as the Python one. Follow [@promptlayer](https://twitter.com/promptlayer) for updates and check back here for Javascript requirements.</Warning>
+Once you have that all set up, install PromptLayer using `npm`.
 
-## LangChain for Javascript
+```bash
+npm install promptlayer
+```
 
-PromptLayer is available through LangChain’s Javascript library: [https://github.com/hwchase17/langchainjs](https://github.com/hwchase17/langchainjs)
+PromptLayer JavaScript library has support for OpenAI.
 
-Learn more at: [https://js.langchain.com/docs/modules/models/llms/integrations#promptlayeropenai](https://js.langchain.com/docs/modules/models/llms/integrations#promptlayeropenai)
+## OpenAI
 
-## Using without LangChain
+In the JavaScript file where you use OpenAI APIs, add the following. This allows us to keep track of your requests without needing any other code changes.
 
-To get started, create an account by clicking “*Log in*” on [PromptLayer](https://promptlayer.com/). Once logged in, click the button to create an API key and save this in a secure location.
+```js
+import promptlayer from "promptlayer";
 
-We do not have an `npm` library yet, but in the meantime we have a wrapper function to our API. You can find it in our github repo under [MagnivOrg/promptlayer-js-helper](https://github.com/MagnivOrg/promptlayer-js-helper)
+const OpenAI = promptlayer.OpenAI;
+const openai = new OpenAI();
+```
+
+**You can then use `openai` as you would if you had imported it directly.**
+
+<Info>
+  Your OpenAI API Key is **never** sent to our servers. All OpenAI requests are
+  made locally from your machine, PromptLayer just logs the request.
+</Info>
+
+### Adding PromptLayer tags: `pl_tags`
+
+PromptLayer allows you to add tags through the `pl_tags` argument. This allows you to track and group requests in the dashboard.
+
+**Tags are not required but we recommend them!**
+
+```js
+openai.chat.completions.create({
+  messages: [{ role: "user", content: "Say this is a test" }],
+  model: "gpt-3.5-turbo",
+  pl_tags: ["test"],
+});
+```
+
+### Returning request id: `return_pl_id`
+
+PromptLayer allows you to return the request id through the `return_pl_id` argument. When you set this to `true`, a tuple is returned with the request id as the second element.
+
+```js
+openai.chat.completions.create({
+  messages: [{ role: "user", content: "Say this is a test" }],
+  model: "gpt-3.5-turbo",
+  return_pl_id: true,
+});
+```
+
+### TypeScript
+
+PromptLayer has support for TypeScript. You can type cast the `OpenAI` class to `typeof BaseOpenAI` to get the correct typings.
+
+```ts
+import BaseOpenAI from "openai";
+import promptlayer from "promptlayer";
+
+const OpenAI: typeof BaseOpenAI = promptlayer.OpenAI;
+
+const openai = new OpenAI();
+```
+
+You can also use our custom attributes `pl_tags` and `return_pl_id` with TypeScript. You will need to add the `@ts-ignore` comment to ignore the TypeScript error.
+
+```ts
+openai.chat.completions.create({
+  messages: [{ role: "user", content: "Say this is a test" }],
+  model: "gpt-3.5-turbo",
+  // @ts-ignore
+  return_pl_id: true,
+});
+```
+
+This is because the `pl_tags` and `return_pl_id` arguments are not part of the OpenAI API. We are working on a way to make this more seamless.
+
+---
+
+Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
