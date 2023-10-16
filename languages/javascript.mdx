@@ -3,6 +3,13 @@ title: "JavaScript"
 icon: "square-js"
 ---
 
+<Warning>
+  {" "}
+  Javascript support is experimental and will not be updated as frequently as the
+  Python one. Follow [@promptlayer](https://twitter.com/promptlayer) for updates
+  and check back here for Javascript requirements.
+</Warning>
+
 To get started, create an account by clicking “_Log in_” on [PromptLayer](https://promptlayer.com/). Once logged in, click the button to create an API key and save this in a secure location ([Guide to Using Env Vars](https://nodejs.dev/en/learn/how-to-read-environment-variables-from-nodejs/)).
 
 Once you have that all set up, install PromptLayer using `npm`.
@@ -11,11 +18,9 @@ Once you have that all set up, install PromptLayer using `npm`.
 npm install promptlayer
 ```
 
-PromptLayer JavaScript library has support for OpenAI.
-
 ## OpenAI
 
-In the JavaScript file where you use OpenAI APIs, add the following. This allows us to keep track of your requests without needing any other code changes.
+In the JavaScript file where the OpenAI APIs are integrated, include the following lines. They enable PromptLayer to track your requests without additional code modifications.
 
 ```js
 import promptlayer from "promptlayer";
@@ -47,7 +52,7 @@ openai.chat.completions.create({
 
 ### Returning request id: `return_pl_id`
 
-PromptLayer allows you to return the request id through the `return_pl_id` argument. When you set this to `true`, a tuple is returned with the request id as the second element.
+PromptLayer provides an option to retrieve the request id using the `return_pl_id` argument. When set to true, it returns a tuple where the second element is the request id.
 
 ```js
 openai.chat.completions.create({
@@ -59,7 +64,7 @@ openai.chat.completions.create({
 
 ### TypeScript
 
-PromptLayer has support for TypeScript. You can type cast the `OpenAI` class to `typeof BaseOpenAI` to get the correct typings.
+The PromptLayer JavaScript library also supports TypeScript. You can type cast the `OpenAI` class to `typeof BaseOpenAI` to get the correct typings.
 
 ```ts
 import BaseOpenAI from "openai";
@@ -81,7 +86,7 @@ openai.chat.completions.create({
 });
 ```
 
-This is because the `pl_tags` and `return_pl_id` arguments are not part of the OpenAI API. We are working on a way to make this more seamless.
+This is because the `pl_tags` and `return_pl_id` arguments are not part of the OpenAI API.
 
 ---
 
