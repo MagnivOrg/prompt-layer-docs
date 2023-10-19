@@ -21,9 +21,13 @@ The Evaluations page allows users to run a prompt template from the [Prompt Regi
 
 The evaluation run output provides various statistics, including latency, cost, average latency, average cost, and distributions. Each request can be viewed as a normal PromptLayer request, and retries are available if needed. The output can be shared with your team and exported as a CSV file for further analysis.
 
+## Setting up Datasets
+
+The Evaluations page let users create new datasets or select from the previous used ones to run their prompts against. A name should be assigned to each dataset, which will enable searching by name later. A dataset can be created from a JSON or CSV file. These files should contain the test cases that will be used as input variables for the prompt template. Here's an explanation of each format:
+
 ## Test Cases File Formats
 
-JSON or CSV files are accepted for the test cases file. These files contain the test cases that will be used as input variables for the prompt template. Here's an explanation of each format:
+JSON or CSV files are accepted for the dataset input file.
 
 ### JSON Format
 
