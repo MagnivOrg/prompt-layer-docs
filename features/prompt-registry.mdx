@@ -29,9 +29,17 @@ The Prompt Registry is designed to be used at runtime to pull the latest prompt 
 
 It’s simple.
 
+<CodeGroup>
+
 ```python Python SDK
 template_dict = promptlayer.prompts.get("my_template")
 ```
+
+```js JavaScript
+const template_dict = promptlayer.prompts.get({ prompt_name: "my_template" });
+```
+
+</CodeGroup>
 
 Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
 
@@ -39,25 +47,58 @@ Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more
 
 Release labels like `prod` and `staging` can be optionally applied to template versions and used to retrieve the template.
 
+<CodeGroup>
+
 ```python Python SDK
 promptlayer.prompts.get("my_template", label="prod")
 ```
+
+```js JavaScript
+const template_dict = promptlayer.prompts.get({
+  prompt_name: "my_template",
+  label: "prod"
+});
+```
+
+</CodeGroup>
 
 ### By Version
 
 You can also optionally pass `version` to get an older version of a prompt. By default the newest version of a prompt is returned
 
+<CodeGroup>
+
 ```python Python SDK
 template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
+```js JavaScript
+const template_dict = promptlayer.prompts.get({
+  prompt_name: "my_template", version: 3
+});
+```
+
+</CodeGroup>
+
 ### Metadata
 
-When fetching a prompt template, you can optionally retrieve metadata by using `include_metadata=True`. This will provide you with a tuple containing both the prompt template and the metadata. For example:
+When fetching a prompt template, you can optionally retrieve metadata by using `include_metadata=True` in Python SDK. This will provide you with a tuple containing both the prompt template and the metadata. For example:
+
+<CodeGroup>
 
 ```python Python SDK
 template, metadata = promptlayer.prompts.get("my_template", include_metadata=True)
 ```
+
+```js JavaScript
+const template = promptlayer.prompts.get({
+  prompt_name: "my_template"
+});
+```
+
+</CodeGroup>
+
+Notice you don't need to specify `include_metadata=True` in JavaScript SDK, as metadata is always included.
 
 ### With LangChain
 
@@ -91,10 +132,22 @@ Rename a template by triple-clicking on its name. It’s best practice to keep t
 
 While it's easiest to publish prompt templates visually through the dashboard, some users prefer the programatic interface detailed below.
 
+<CodeGroup>
+
 ```python Python SDK
 promptlayer.prompts.publish(
     "my_template", prompt_template=my_template, tags=["my_tag"])
 ```
+
+```js JavaScript
+promptlayer.prompts.publish({
+  prompt_name: "my_template",
+  prompt_template: my_template,
+  tags: ["my_tag"],
+});
+```
+
+</CodeGroup>
 
 ### Release Labels
 
@@ -114,11 +167,21 @@ Prompt commit messages allow you to set a brief 72 character-long description on
 
 You can also retrieve the commit messages through code. You'll see them when you list all templates.
 
+<CodeGroup>
+
 ```python Python SDK
 promptlayer.prompts.all()
 ```
 
+```js JavaScript
+promptlayer.prompts.all()
+```
+
+</CodeGroup>
+
 Or set them, by specifing a commit_message arg to prompts.publish, like this:
+
+<CodeGroup>
 
 ```python Python SDK
 pt = promptlayer.prompts.get("demo-template")
@@ -129,6 +192,20 @@ promptlayer.prompts.publish(
     prompt_template=pt,
 )
 ```
+
+```js JavaScript
+const pt = promptlayer.prompts.get({
+  prompt_name: "demo-template"
+});
+
+promptlayer.prompts.publish({
+  prompt_name: "demo-template",
+  commit_message: "This is a test",
+  prompt_template: pt,
+});
+```
+
+</CodeGroup>
 
 They are also available through the following REST API endpoints
 
@@ -148,6 +225,8 @@ Custom non-model related metadata can be seen and edited through the Prompt Temp
 
 You can use our Python SDK to publish a prompt template with metadata. For example, here's how you can set the `model` metadata along with a custom `category` metadata:
 
+<CodeGroup>
+
 ```python Python SDK
 promptlayer.prompts.publish(
     "my_template",
@@ -163,6 +242,23 @@ promptlayer.prompts.publish(
 )
 ```
 
+```js JavaScript
+promptlayer.prompts.publish({
+  prompt_name: "my_template",
+  prompt_template: my_template,
+  metadata: {
+    model: {
+      provider: "openai",
+      name: "gpt-3.5-turbo",
+      parameters: { temperature: 0.5, max_tokens: 256 },
+    },
+    category: "weather",
+  },
+});
+```
+
+</CodeGroup>
+
 Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template)).
 
 You can also use Langchain to create a template, either by pulling it from LangchainHub, creating a custom template, or providing a Python dictionary directly.
@@ -175,10 +271,22 @@ The power of the Prompt Registry comes from associating requests with the templa
 
 To associate a request with a prompt template and some input variables, use the code below with the [pl_request_id](/features/prompt-history/request-id) for the request.
 
+<CodeGroup>
+
 ```python Python SDK
 promptlayer.track.prompt(request_id=pl_request_id,
     prompt_name='<PROMPT_NAME>', prompt_input_variables={...})
 ```
+
+```js JavaScript
+promptlayer.track.prompt({
+  request_id: pl_request_id,
+  prompt_name: '<PROMPT_NAME>',
+  prompt_input_variables: {...} 
+})
+```
+
+</CodeGroup>
 
 Alternatively, use the REST API endpoint `/rest/track-prompt` ([read more](/reference/track-prompt)).
 
@@ -208,7 +316,9 @@ To publish a prompt template with functions programatically is very similar to h
 
 If you’re already calling OpenAI API, you can bundle the functions and publish it into the Prompt Registry, like this:
 
-```python
+<CodeGroup>
+
+```python Python SDK
 messages = [{"role": "user", "content": "What's the weather like in Boston?"}]
 functions = [
   {
@@ -258,13 +368,67 @@ response = openai.ChatCompletion.create(
 )
 ```
 
+```js JavaScript
+const messages = [
+  { role: "user", content: "What's the weather like in Boston?" },
+];
+const functions = [
+  {
+    name: "get_current_weather",
+    description: "Get the current weather in a given location",
+    parameters: {
+      type: "object",
+      properties: {
+        location: {
+          type: "string",
+          description: "The city and state, e.g. San Francisco, CA",
+        },
+        unit: { type: "string", enum: ["celsius", "fahrenheit"] },
+      },
+      required: ["location"],
+    },
+  },
+];
+
+promptlayer.prompts.publish({
+  prompt_name: "test_chat_functions",
+  prompt_template: {
+    function_call: "auto", // or {"name": function_name} if you want to make sure the function gets called.
+    input_variables: [], // list them here if it has any
+    messages: messages.map(({ role, content }) => ({
+      role,
+      prompt: {
+        input_variables: [], // list them here if it has any
+        template: content,
+        template_format: "f-string", // or "jinja"
+        validate_template: true, // optional
+        _type: "prompt",
+      },
+    })),
+    functions,
+    _type: "chat_promptlayer_langchain", // important if using gpt-3.5-turbo or gpt-4
+  },
+});
+
+const response = await openai.completions.create({
+  model: "gpt-3.5-turbo",
+  messages,
+  functions,
+  function_call: "auto",
+});
+```
+
+</CodeGroup>
+
 ### Getting a Prompt Programmatically
 
 To get a prompt template that uses OpenAI functions programatically you will need to parse the template from the Prompt Registry format to what OpenAI expects.
 
 The following code snippet shows you how to do this:
 
-```python
+<CodeGroup>
+
+```python Python SDK
 def get_message(chat_message):
     if "prompt" in chat_message:
         return {"role": chat_message.get("role"), "content":chat_message.get("prompt", {}).get("template", "")}
@@ -285,27 +449,80 @@ response = openai.ChatCompletion.create(
 )
 ```
 
+```js JavaScript
+const get_message = (chat_message) => {
+  if ("prompt" in chat_message) {
+    return {
+      role: chat_message.role,
+      content: chat_message.prompt.template,
+    };
+  }
+  return chat_message;
+};
+
+const prompt = promptlayer.prompts.get({
+  prompt_name: "my_prompt_with_functions",
+});
+
+const messages = prompt.messages.map(get_message);
+const functions = prompt.functions;
+const function_call = prompt.function_call;
+
+const response = await openai.completions.create({
+  model: "gpt-3.5-turbo",
+  messages,
+  functions,
+  function_call,
+});
+```
+
+</CodeGroup>
+
 ## Getting All Prompts Programmatically
 
 To get all prompts from prompt registry you can use the following code snippet:
 
-```python
+<CodeGroup>
+
+```python Python SDK
 from promptlayer import prompts
 
 all_prompts = prompts.all()
 ```
 
+```js JavaScript
+const all_prompts = promptlayer.prompts.all()
+```
+
+</CodeGroup>
+
 By default this returns 30 prompts. You can change this by passing in the `per_page` argument. For example, to get 100 prompts you can do the following:
 
-```python
+<CodeGroup>
+
+```python Python SDK
 all_prompts = prompts.all(per_page=100)
 ```
 
+```js JavaScript
+const all_prompts = promptlayer.prompts.all({ per_page: 100 })
+```
+
+</CodeGroup>
+
 You can also define the page you want to get by passing in the `page` argument. For example, to get the second page of prompts you can do the following:
 
-```python
+<CodeGroup>
+
+```python Python SDK
 all_prompts = prompts.all(page=2)
 ```
+
+```js JavaScript
+const all_prompts = promptlayer.prompts.all({ page: 2 })
+```
+
+</CodeGroup>
 
 It is important to note that `prompt_template` represents the latest version of the prompt template.
 

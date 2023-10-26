@@ -81,6 +81,20 @@ response = openai.Completion.create(
 print(response.choices[0].text)
 ```
 
+```js JavaScript
+// Instead of `import openai` we will use
+const OpenAI = promptlayer.OpenAI;
+const openai = new OpenAI();
+
+// Make a completion to OpenAI
+const response = await openai.completions.create({
+  model: "text-davinci-003",
+  prompt: "My name is",
+});
+
+console.log(response.choices[0].text);
+```
+
 ```python Python (LangChain)
 from langchain.callbacks import PromptLayerCallbackHandler
 
@@ -98,7 +112,7 @@ response = llm("My name is")
 print(response)
 ```
 
-```js Javascript
+```js Javascript (LangChain)
 // Install with `npm install langchain`
 
 // Use OpenAI completion LLMs with PromptLayer
@@ -154,6 +168,16 @@ response = openai.Completion.create(
 print(response.choices[0].text)
 ```
 
+```js JavaScript
+const response = await openai.completions.create({
+  model: "text-davinci-003",
+  prompt: "My name is",
+  pl_tags = ["getting_started_example"], // 🍰 PromptLayer tags
+});
+
+console.log(response.choices[0].text)
+```
+
 ```python Python (LangChain)
 llm = OpenAI(
     model_name="text-davinci-003", 
@@ -168,7 +192,7 @@ response = llm("My name is")
 print(response)
 ```
 
-```js Javascript
+```js Javascript (LangChain)
 const llm = new PromptLayerOpenAI({
   temperature: 0.9,
   openAIApiKey: process.env.OPENAI_API_KEY,
@@ -234,6 +258,25 @@ promptlayer.track.score(
 )
 ```
 
+```js JavaScript
+const [response, pl_request_id] = await openai.completions.create({
+  model: "text-davinci-003",
+  prompt: "What is the capital of New York? \\n\\nThe capital of New York is",
+  pl_tags: ["getting_started_example"],
+  return_pl_id: true, // Make sure to set this to True
+});
+
+const answer = response.choices[0].text;
+console.log(answer);
+const correct_answer = "albany" in answer.lower();
+
+// Log score to 🍰 PromptLayer
+promptlayer.track.score({
+  request_id: pl_request_id,
+  score: correct_answer ? 100 : 0,
+});
+```
+
 ```python Python (LangChain)
 """
 To retrieve the pl_request_id using LangChain, we
@@ -267,7 +310,7 @@ promptlayer.track.score(
 )
 ```
 
-```js Javascript
+```js Javascript (LangChain)
 const axios = require('axios');
 const { PromptLayerOpenAI } = require("langchain/llms/openai");
 
@@ -399,6 +442,70 @@ promptlayer.track.metadata(
 )
 ```
 
+```js JavaScript
+const prompt_template =
+  "You are an AI assistant that helps travelers pick a city to travel to. \
+You do this by rating how much a person would enjoy a city based on their interests. \
+Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least. \
+ \
+Sample city: New York City \
+Sample interests: food, museums, hiking \
+Sample answer: 8 \
+ \
+City: {city} \
+Interests: {interests} \
+Answer: ";
+
+const inputVariables = {
+  city: "Washington, D.C.",
+  interests: "resorts, museums, beaches",
+};
+let replacedPromptTemplate = prompt_template;
+Object.entries(inputVariables).forEach(([key, value]) => {
+  replacedPromptTemplate = replacedPromptTemplate.replace(`{${key}}`, value);
+});
+
+const [response, pl_request_id] = openai.completions.create({
+  model: "text-davinci-003",
+  prompt: replacedPromptTemplate,
+  pl_tags: ["getting_started_example"],
+  return_pl_id: true,
+});
+
+const answer = response.choices[0].text;
+console.log(answer);
+
+// Let's convert the answer to an int
+let numeric_answer = null;
+let error_message = null;
+
+try {
+  numeric_answer = parseInt(answer.strip());
+} catch (e) {
+  error_message = String(e);
+}
+
+// Use score in 🍰 PromptLayer to track if answer was an int
+promptlayer.track.score({
+  request_id: pl_request_id,
+  score: numeric_answer ? 100 : 0,
+});
+
+console.log("Numeric answer:", numeric_answer);
+
+// Log metadata for request in 🍰 PromptLayer
+promptlayer.track.metadata({
+  request_id: pl_request_id,
+  metadata: {
+    referrer: "getting_started.ipynb",
+    origin: "NYC, USA",
+    user_id: "sdf328",
+    error_message: "No error", // if numeric_answer else error_message,
+  },
+});
+
+```
+
 ```python Python (LangChain)
 pl_request_id = None
 def save_pl_id(pl_id):
@@ -457,7 +564,7 @@ promptlayer.track.metadata(
 )
 ```
 
-```js Javascript
+```js Javascript (LangChain)
 const promptTemplate = `You are an AI assistant that helps travelers pick a city to travel to. 
 You do this by rating how much a person would enjoy a city based on their interests.
 Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least.
@@ -615,13 +722,28 @@ city_choice_prompt_prod = promptlayer.prompts.get("city_choice", label="prod")
 print(city_choice_prompt_v1['template'])
 ```
 
+```js JavaScript
+const city_choice_prompt = promptlayer.prompts.get({
+  prompt_name: "city_choice",
+});
+const city_choice_prompt_v1 = promptlayer.prompts.get({
+  prompt_name: "city_choice",
+  version: 1,
+});
+const city_choice_prompt_prod = promptlayer.prompts.get({
+  prompt_name: "city_choice",
+  label: "prod",
+});
+console.log(city_choice_prompt_v1["template"]);
+```
+
 ```python Python (LangChain)
 city_choice_prompt = promptlayer.prompts.get("city_choice", langchain=True)
 city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1, langchain=True)
 print(city_choice_prompt_v1.template)
 ```
 
-```js Javascript
+```js Javascript (REST)
 axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
     headers: {
       'X-API-KEY': process.env.PROMPTLAYER_API_KEY
@@ -697,6 +819,42 @@ promptlayer.track.prompt(request_id=pl_request_id,
     prompt_name='city_choice', prompt_input_variables=input_variables)
 ```
 
+```js JavaScript
+// Grab the prompt template
+const city_choice_prompt = promptlayer.prompts.get({
+  prompt_name: "city_choice",
+});
+const prompt_template = city_choice_prompt["template"];
+
+const input_variables = {
+  city: "Washington, D.C.",
+  interests: "resorts, museums, beaches",
+};
+let replaced_prompt_template = prompt_template;
+Object.entries(input_variables).forEach(([key, value]) => {
+  replaced_prompt_template = replaced_prompt_template.replace(
+    `{${key}}`,
+    value
+  );
+});
+
+const [response, pl_request_id] = await openai.completions.create({
+  model: "text-davinci-003",
+  prompt: replaced_prompt_template,
+  pl_tags: ["getting_started_example"],
+  return_pl_id: true,
+});
+console.log("Answer:", response.choices[0].text);
+
+// Associate the request with the prompt template we used
+promptlayer.track.prompt({
+  request_id: pl_request_id,
+  prompt_name: "city_choice",
+  prompt_input_variables: input_variables,
+});
+
+```
+
 
 ```python Python (LangChain)
 # Grab the prompt template in a LangChain-friendly format
@@ -713,7 +871,7 @@ promptlayer.track.prompt(request_id=pl_request_id,
     prompt_name='city_choice', prompt_input_variables=input_variables)
 ```
 
-```js Javascript
+```js Javascript (REST)
 
 // Getting the template from 🍰 PromptLayer
 axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
@@ -814,6 +972,20 @@ response = openai.ChatCompletion.create(
 print(response.choices[0].message.content)
 ```
 
+```js JavaScript
+const response = await openai.chat.completions.create({
+  model: "gpt-3.5-turbo",
+  messages: [
+    {
+      role: "system",
+      content: "You are a helpful AI assistant that helps people bake.",
+    },
+    { role: "user", content: "How do you make a layer cake?" },
+  ],
+});
+console.log(response.choices[0].message.content);
+```
+
 ```python Python (LangChain)
 from langchain.chat_models import ChatOpenAI
 from langchain.schema import AIMessage, HumanMessage, SystemMessage
@@ -829,7 +1001,7 @@ response = llm(
 print(response)
 ```
 
-```js Javascript
+```js Javascript (LangChain)
 const { PromptLayerChatOpenAI } = require("langchain/chat_models/openai");
 const { SystemMessage, HumanMessage } = require("langchain/schema");
 const chat = new PromptLayerChatOpenAI({
@@ -867,7 +1039,9 @@ curl --request POST \
 
 We can also use models from Anthropic natively with the PromptLayer Python SDK:
 
-```python
+<CodeGroup>
+
+```python Python
 anthropic = promptlayer.anthropic
 client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
 
@@ -880,6 +1054,22 @@ response = client.completions.create(
 )
 print(response.completion)
 ```
+
+```js JavaScript
+const Anthropic = promptlayer.Anthropic;
+const anthropic = new Anthropic();
+
+const response = await anthropic.completions.create({
+  prompt: `${Anthropic.HUMAN_PROMPT} How many toes do dogs have? ${Anthropic.AI_PROMPT}`,
+  stop_sequences: [Anthropic.HUMAN_PROMPT],
+  model: "claude-2",
+  max_tokens_to_sample: 100,
+  pl_tags: ["claude"],
+});
+console.log(response.completion);
+```
+
+</CodeGroup>
 
 ### HuggingFaceHub
 

@@ -24,6 +24,14 @@ openai.Completion.create(
 )
 ```
 
+```js JavaScript
+openai.completions.create({
+  model: "text-davinci-003",
+  prompt: "My name is",
+  pl_tags: ["pipeline3", "world"], // 🍰 PromptLayer tags
+});
+```
+
 ```python Python (LangChain)
 llm = OpenAI(
     model_name="text-davinci-003",
@@ -36,7 +44,7 @@ llm = OpenAI(
 response = llm("My name is")
 ```
 
-```js Javascript
+```js Javascript (LangChain)
 const llm = new PromptLayerOpenAI({
   temperature: 0.9,
   openAIApiKey: process.env.OPENAI_API_KEY,

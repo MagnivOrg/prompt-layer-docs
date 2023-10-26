@@ -28,6 +28,21 @@ openai.Completion.create(
 )
 ```
 
+```js JavaScript
+// Make sure to `npm install promptlayer`
+import promptlayer from "promptlayer";
+
+// Swap out your 'import openai'
+const OpenAI = promptlayer.OpenAI;
+const openai = new OpenAI();
+
+// Do something fun 🚀
+openai.completions.create({
+  model: "text-davinci-003"
+  prompt: "My name is",
+})
+```
+
 
 ```python Python with LangChain
 # Make sure to `pip install promptlayer`

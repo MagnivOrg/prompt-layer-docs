@@ -87,6 +87,36 @@ openai.chat.completions.create({
 
 This is because the `pl_tags` and `return_pl_id` arguments are not part of the OpenAI API.
 
+## Anthropic
+
+Using Anthropic with PromptLayer is very similar to how to one would use OpenAI. 
+
+Below is an example code snippet of the one line replacement:
+
+```js
+import promptlayer from "promptlayer";
+
+// Instead of `import Anthropic from "@anthropic-ai/sdk";` ->
+const Anthropic = promptlayer.Anthropic;
+const anthropic = new Anthropic();
+
+promptlayer.api_key = process.env.PROMPTLAYER_API_KEY;
+
+const response = anthropic.completions.create({
+  prompt: `${Anthropic.HUMAN_PROMPT} How many toes do dogs have? more information more information more${Anthropic.AI_PROMPT}`,
+  stop_sequences: [Anthropic.HUMAN_PROMPT],
+  model: "claude-v1-100k",
+  max_tokens_to_sample: 100,
+  pl_tags: ["test-anthropic-1"],
+  return_pl_id: true,
+});
+console.log(response);
+```
+
+Here is how it would look like on the dashbaord:
+
+<img src="/images/anthropic-test.png" />
+
 ---
 
 Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)

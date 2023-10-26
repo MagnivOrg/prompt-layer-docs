@@ -18,6 +18,15 @@ promptlayer.track.group(
 )
 ```
 
+```js JavaScript
+const pl_group_id = await promptlayer.group.create()
+
+await promptlayer.track.group({
+  request_id: pl_request_id, 
+  group_id: pl_group_id
+})
+```
+
 ```bash REST
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-group \

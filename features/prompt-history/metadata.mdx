@@ -21,6 +21,19 @@ promptlayer.track.metadata(
 )
 ```
 
+```js JavaScript
+promptlayer.track.metadata({
+  request_id: pl_request_id,
+  metadata: {
+      "user_id":"1abf2345f",
+      "post_id": "2cef2345f"
+  }
+})
+```
+
+```java Java
+```
+
 ```bash REST
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-metadata \

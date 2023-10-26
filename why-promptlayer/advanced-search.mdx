@@ -19,7 +19,9 @@ Use the metadata search filter to search for specific metadata within the Prompt
 
 PromptLayer allows you to attach multiple key value pairs as metadata to a request. In the dashboard, you can look up requests and analyze analytics using metadata. The method for adding metadata to a request can be found in our documentation [here](/features/prompt-history/tracking-metadata-and-request-ids.mdx).
 
-```python
+<CodeGroup>
+
+```python Python
 promptlayer.track.metadata(
   request_id=pl_request_id,
   metadata={
@@ -29,6 +31,19 @@ promptlayer.track.metadata(
   }
 )
 ```
+
+```js JavaScript
+promptlayer.track.metadata({
+  request_id:pl_request_id,
+  metadata:{
+      "user_id":"1abf2345f",
+      "session_id": "2cef2345f",
+      "error_message": "None"
+  }
+})
+```
+
+</CodeGroup>
 
 The metadata search filter works by clicking on "Key" in the advanced search filter, selecting the desired metadata key (in this case, user_id), selecting the relevant value under "Value", and clicking "Add filter".
 
@@ -52,6 +67,14 @@ openai.Completion.create(
   prompt="My name is", 
   pl_tags=["mytag1", "mytag2"]
 )
+```
+
+```js JavaScript
+openai.completions.create({
+  model:"text-ada-001", 
+  prompt:"My name is", 
+  pl_tags:["mytag1", "mytag2"]
+})
 ```
 
 
