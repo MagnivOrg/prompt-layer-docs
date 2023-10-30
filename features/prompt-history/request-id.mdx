@@ -33,6 +33,23 @@ response, pl_request_id = openai.Completion.create(
 )
 ```
 
+## Javascript
+
+To retrieve the `pl_request_id` using OpenAI in JavaScript (through `promptlayer.OpenAI`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream: true`, then only the last `pl_request_id` will be the id; otherwise, it will be `undefined`.
+
+The same is true for Anthropic.
+        
+```js
+const OpenAI = promptlayer.OpenAI;
+const openai = new OpenAI();
+
+const [response, pl_request_id] = await openai.completions.create({
+    model: "text-davinci-003",
+    prompt: "hi my name is ",
+    return_pl_id: true
+});
+```
+
 ## LangChain
 
 ### With Callback (newer)

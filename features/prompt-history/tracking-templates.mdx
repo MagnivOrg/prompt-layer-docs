@@ -20,6 +20,15 @@ promptlayer.track.prompt(
 )
 ```
 
+```js JavaScript
+promptlayer.track.prompt({
+  request_id: pl_request_id, 
+  prompt_name: "example-2",
+  prompt_input_variables: input_variables,
+  version: 2
+})
+```
+
 ```bash REST
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-prompt \
@@ -52,6 +61,15 @@ promptlayer.track.prompt(
   prompt_input_variables=input_variables,
   label="prod"
 )
+```
+
+```js JavaScript
+promptlayer.track.prompt({
+  request_id: pl_request_id, 
+  prompt_name: "example-2",
+  prompt_input_variables: input_variables,
+  label: "prod"
+})
 ```
 
 ```bash REST
