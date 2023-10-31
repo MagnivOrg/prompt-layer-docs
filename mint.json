@@ -58,6 +58,7 @@
       "group": "Why PromptLayer?",
       "pages": [
         "why-promptlayer/advanced-search",
+        "why-promptlayer/fine-tuning",
         "why-promptlayer/evaluation-page",
         "why-promptlayer/analytics",
         "why-promptlayer/evaluation-and-ranking",
