@@ -33,11 +33,17 @@ Alternatively, you can use PromptLayer to generate these training requests. Visi
 
 For example, to generate fine-tuning data you can run a prompt template from the [Prompt Registry](/features/prompt-registry) against 200 test cases on `gpt-4`. Then just filter the sidebar based its specific test run tag.
 
+![Generate Training Data](/images/fine-tuning/generate.png)
+
 ## Select training data
 
 Use the sidebar search area to filter for your training data. All the data that appears from that search query will be used to fine-tune.
 
 [Learn more about search filters](/why-promptlayer/advanced-search)
+
+<div style={{width: '70%'}}>
+![Select Training Data](/images/fine-tuning/select-training.gif)
+</div>
 
 ## Start the fine-tune job
 
@@ -51,6 +57,12 @@ Success! Now you have a new fine-tuned model. Let's see if it's any good...
 
 Copy the model name and navigate to the PromptLayer Playground. There you can run an arbitrary request on the new model. See how it does!
 
+<div style={{width: '70%'}}>
+![Try out Fine-Tuned Model](/images/fine-tuning/request.png)
+</div>
+
 ### Try it in Evaluations
 
 It's important to test your fine-tune model a little more rigorously than one-off Playground requests. Navigate to the [Evaluations page](/why-promptlayer/evaluation-page) and run some batch tests. See how the fine-tuned candidate compares to a standard `gpt-4` candidate.
+
+![Evaluate fine-tuned model](/images/fine-tuning/evaluate.png)
