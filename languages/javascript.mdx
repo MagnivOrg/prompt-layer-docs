@@ -16,7 +16,7 @@ npm install promptlayer
 In the JavaScript file where the OpenAI APIs are integrated, include the following lines. They enable PromptLayer to track your requests without additional code modifications.
 
 ```js
-import promptlayer from "promptlayer";
+import { promptlayer } from "promptlayer";
 
 const OpenAI = promptlayer.OpenAI;
 const openai = new OpenAI();
@@ -61,7 +61,7 @@ The PromptLayer JavaScript library also supports TypeScript. You can type cast t
 
 ```ts
 import BaseOpenAI from "openai";
-import promptlayer from "promptlayer";
+import { promptlayer } from "promptlayer";
 
 const OpenAI: typeof BaseOpenAI = promptlayer.OpenAI;
 
@@ -88,7 +88,7 @@ Using Anthropic with PromptLayer is very similar to how to one would use OpenAI.
 Below is an example code snippet of the one line replacement:
 
 ```js
-import promptlayer from "promptlayer";
+import { promptlayer } from "promptlayer";
 
 // Instead of `import Anthropic from "@anthropic-ai/sdk";` ->
 const Anthropic = promptlayer.Anthropic;
