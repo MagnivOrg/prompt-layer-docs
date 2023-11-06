@@ -36,7 +36,7 @@ template_dict = promptlayer.prompts.get("my_template")
 ```
 
 ```js JavaScript
-const template_dict = promptlayer.prompts.get({ prompt_name: "my_template" });
+const template_dict = await promptlayer.prompts.get({ prompt_name: "my_template" });
 ```
 
 </CodeGroup>
@@ -54,7 +54,7 @@ promptlayer.prompts.get("my_template", label="prod")
 ```
 
 ```js JavaScript
-const template_dict = promptlayer.prompts.get({
+const template_dict = await promptlayer.prompts.get({
   prompt_name: "my_template",
   label: "prod"
 });
@@ -73,7 +73,7 @@ template_dict = promptlayer.prompts.get("my_template", version=3)
 ```
 
 ```js JavaScript
-const template_dict = promptlayer.prompts.get({
+const template_dict = await promptlayer.prompts.get({
   prompt_name: "my_template", version: 3
 });
 ```
@@ -91,7 +91,7 @@ template, metadata = promptlayer.prompts.get("my_template", include_metadata=Tru
 ```
 
 ```js JavaScript
-const template = promptlayer.prompts.get({
+const template = await promptlayer.prompts.get({
   prompt_name: "my_template"
 });
 ```
@@ -194,7 +194,7 @@ promptlayer.prompts.publish(
 ```
 
 ```js JavaScript
-const pt = promptlayer.prompts.get({
+const pt = await promptlayer.prompts.get({
   prompt_name: "demo-template"
 });
 
@@ -460,7 +460,7 @@ const get_message = (chat_message) => {
   return chat_message;
 };
 
-const prompt = promptlayer.prompts.get({
+const prompt = await promptlayer.prompts.get({
   prompt_name: "my_prompt_with_functions",
 });
 

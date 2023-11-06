@@ -723,14 +723,14 @@ print(city_choice_prompt_v1['template'])
 ```
 
 ```js JavaScript
-const city_choice_prompt = promptlayer.prompts.get({
+const city_choice_prompt = await promptlayer.prompts.get({
   prompt_name: "city_choice",
 });
-const city_choice_prompt_v1 = promptlayer.prompts.get({
+const city_choice_prompt_v1 = await promptlayer.prompts.get({
   prompt_name: "city_choice",
   version: 1,
 });
-const city_choice_prompt_prod = promptlayer.prompts.get({
+const city_choice_prompt_prod = await promptlayer.prompts.get({
   prompt_name: "city_choice",
   label: "prod",
 });
@@ -821,7 +821,7 @@ promptlayer.track.prompt(request_id=pl_request_id,
 
 ```js JavaScript
 // Grab the prompt template
-const city_choice_prompt = promptlayer.prompts.get({
+const city_choice_prompt = await promptlayer.prompts.get({
   prompt_name: "city_choice",
 });
 const prompt_template = city_choice_prompt["template"];
