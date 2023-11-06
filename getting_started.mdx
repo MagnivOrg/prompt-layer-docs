@@ -443,18 +443,18 @@ promptlayer.track.metadata(
 ```
 
 ```js JavaScript
-const prompt_template =
-  "You are an AI assistant that helps travelers pick a city to travel to. \
-You do this by rating how much a person would enjoy a city based on their interests. \
-Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least. \
- \
-Sample city: New York City \
-Sample interests: food, museums, hiking \
-Sample answer: 8 \
- \
-City: {city} \
-Interests: {interests} \
-Answer: ";
+const prompt_template = `
+  You are an AI assistant that helps travelers pick a city to travel to.
+  You do this by rating how much a person would enjoy a city based on their interests.
+  Given a city and interests, you respond with an integer 1-10 where 10 is the most enjoyment and 0 is the least.
+  
+  Sample city: New York City
+  Sample interests: food, museums, hiking
+  Sample answer: 8
+  
+  City: {city}
+  Interests: {interests}
+  Answer: `;
 
 const inputVariables = {
   city: "Washington, D.C.",
