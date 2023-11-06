@@ -465,7 +465,7 @@ Object.entries(inputVariables).forEach(([key, value]) => {
   replacedPromptTemplate = replacedPromptTemplate.replace(`{${key}}`, value);
 });
 
-const [response, pl_request_id] = openai.completions.create({
+const [response, pl_request_id] = await openai.completions.create({
   model: "text-davinci-003",
   prompt: replacedPromptTemplate,
   pl_tags: ["getting_started_example"],
