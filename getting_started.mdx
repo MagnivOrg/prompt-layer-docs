@@ -172,7 +172,7 @@ print(response.choices[0].text)
 const response = await openai.completions.create({
   model: "text-davinci-003",
   prompt: "My name is",
-  pl_tags = ["getting_started_example"], // 🍰 PromptLayer tags
+  pl_tags: ["getting_started_example"], // 🍰 PromptLayer tags
 });
 
 console.log(response.choices[0].text)
