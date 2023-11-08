@@ -23,12 +23,11 @@ That means A/B testing is easy. Use the [Prompt Registry](/features/prompt-regis
 
 ## Scoring
 
-*Every request in PromptLayer has a “Score”. This score is an integer 0-100.*
+*Every PromptLayer request can have multiple "Scores". A score is an integer from 0-100.*
 
 <img src="/images/evaluation-score.png" />
 
-Ranking in PromptLayer revolves around this Score value. You can update it through the UI (see screenshot above) or programmatically ([More details here](/features/prompt-history/tracking-metadata-and-request-ids)).
-
+In PromptLayer, ranking is based on Score values. Scores can be updated via the UI or programmatically, allowing for the creation of named or unnamed scores. For further details, refer to the provided documentation on prompt history, metadata, and request IDs.
 The three most common ways to Score to rank your prompts are:
 
 1. **User feedback**: Present a 👍 and 👎 to your users after the completion. A user press of one of those buttons fills in a score of [100, 0] respectively.

@@ -8,14 +8,23 @@ Every PromptLayer request can be given an integer score 0-100.
 ![score](/images/score.png)
 
 To associate a score with a prompt, you can either do this visually from the dashboard or programmatically.
-
+By default, an individual score is named default. You can enrich a request with multiple scores using "named scores" as shown below.
 [Endpoint Reference](/reference/track-score)
 
 <CodeGroup>
 
 ```python Python
+# named score
 promptlayer.track.score(
   request_id=pl_request_id, 
+  name="summarization",
+  score=100
+)
+
+# default score
+promptlayer.track.score(
+  request_id=pl_request_id, 
+  # name="default",
   score=100
 )
 ```
@@ -34,7 +43,8 @@ curl --request POST \
   --data '{
     "api_key": "pl_<YOUR API KEY>",
     "request_id": "<REQUEST ID>",
-    "score": <YOUR SCORE>
+    "score": <YOUR SCORE>,
+    "name": <YOUR SCORE NAME>,
   }'
 ```
 

@@ -13,6 +13,7 @@ request_response = requests.post(
   json={
       "request_id": "<PL_REQUEST_ID>",
       "score": "<NUMBER>",
+      "name": "<SCORE_NAME>", # optional
       "api_key": "pl_<YOUR API KEY>",
   },
 )
@@ -27,6 +28,10 @@ request_response = requests.post(
 
 <ParamField body="score" type="integer">
     The score you would like to give to this request (0 - 100)
+</ParamField>
+
+<ParamField body="name" type="string">
+    A name for this request score.
 </ParamField>
 
 <ParamField body="api_key" type="string">
