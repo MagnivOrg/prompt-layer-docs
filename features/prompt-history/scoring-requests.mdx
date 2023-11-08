@@ -8,8 +8,7 @@ Every PromptLayer request can be given an integer score 0-100.
 ![score](/images/score.png)
 
 To associate a score with a prompt, you can either do this visually from the dashboard or programmatically.
-Setting a name will allow you to set a named-score.
-Not setting it, or setting it as "default" will allow you to set the unnamed score.
+By default, an individual score is named default. You can enrich a request with multiple scores using "named scores" as shown below.
 [Endpoint Reference](/reference/track-score)
 
 <CodeGroup>
@@ -22,7 +21,7 @@ promptlayer.track.score(
   score=100
 )
 
-# unnamed score
+# default score
 promptlayer.track.score(
   request_id=pl_request_id, 
   # name="default",
