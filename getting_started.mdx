@@ -68,7 +68,7 @@ In this step we'll make a simple request to the OpenAI GPT-3 engine to generate 
 
 <CodeGroup>
 
-```python Python
+```python Python openai < 1.0.0
 # Instead of `import openai` we will use
 openai = promptlayer.openai
 openai.api_key = os.environ.get("OPENAI_API_KEY")
@@ -76,6 +76,19 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 # Make a completion to OpenAI
 response = openai.Completion.create(
   engine="text-davinci-003", 
+  prompt="My name is",
+)
+print(response.choices[0].text)
+```
+
+```python Python openai >= 1.0.0
+# Instead of `import openai` we will use
+OpenAI = promptlayer.openai.OpenAI
+openai = OpenAI()
+
+# Make a completion to OpenAI
+response = openai.completions.create(
+  model="text-davinci-003", 
   prompt="My name is",
 )
 print(response.choices[0].text)

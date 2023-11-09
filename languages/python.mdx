@@ -17,11 +17,21 @@ PromptLayer python library has support for both OpenAI and Anthropic LLMs!
 
 In the Python file where you use OpenAI APIs, add the following. This allows us to keep track of your requests without needing any other code changes.
 
-```python
+<CodeGroup>
+
+```python openai < 1.0.0
 import promptlayer
 promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
 openai = promptlayer.openai
 ```
+
+```python openai >= 1.0.0
+import promptlayer
+promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
+OpenAI = promptlayer.openai.OpenAI
+```
+
+</CodeGroup>
 
 **You can then use `openai` as you would if you had imported it directly.**
 
