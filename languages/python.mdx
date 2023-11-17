@@ -19,16 +19,16 @@ In the Python file where you use OpenAI APIs, add the following. This allows us 
 
 <CodeGroup>
 
-```python openai < 1.0.0
-import promptlayer
-promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
-openai = promptlayer.openai
-```
-
 ```python openai >= 1.0.0
 import promptlayer
 promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
 OpenAI = promptlayer.openai.OpenAI
+```
+
+```python openai < 1.0.0
+import promptlayer
+promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
+openai = promptlayer.openai
 ```
 
 </CodeGroup>
