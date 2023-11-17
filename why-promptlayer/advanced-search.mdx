@@ -3,7 +3,7 @@ title: "Advanced Search"
 icon: "magnifying-glass"
 ---
 
-PromptLayer advanced search capabilities allows you to find exactly what you want using tags, search queries, metadata, and favorites.
+PromptLayer advanced search capabilities allows you to find exactly what you want using tags, search queries, metadata, favorites, and score filtering.
 
 ## Using the Search Bar
 
@@ -48,6 +48,36 @@ promptlayer.track.metadata({
 The metadata search filter works by clicking on "Key" in the advanced search filter, selecting the desired metadata key (in this case, user_id), selecting the relevant value under "Value", and clicking "Add filter".
 
 <img src="/images/metadata-search.gif" width="80%"/>
+
+#### Score Filtering
+
+Use the score filtering feature to search for prompts based on their scores. You can filter prompts by selecting the score range in the "Score" dropdown.
+
+Score filtering is a powerful tool for analyzing the performance of your prompts. You can use it to identify high-performing prompts, or to find prompts that may need improvement.
+
+<img src="/images/score-filter.gif" width="80%"/>
+
+Below is an example of how you can score a request programmatically. It can also be done through the dashboard as shown [here](/features/prompt-history/scoring-requests).
+
+
+<CodeGroup>
+
+```python Python
+promptlayer.track.score(
+  request_id=pl_request_id, 
+  score_name="summarization", # optional score name
+  score=100
+)
+```
+
+```js JavaScript
+promptlayer.track.score({
+  request_id: pl_request_id,
+  score: 100
+})
+```
+
+</CodeGroup>
 
 
 #### Tags Search
