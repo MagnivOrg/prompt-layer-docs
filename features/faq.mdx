@@ -42,3 +42,34 @@ Yes, we do support on-premises deployment for a select few of our enterprise cus
 
 If you are interested in onprem, please [contact us](mailto:hello@promptlayer.com) for more information.
 
+## Does AsyncOpenAI work with PromptLayer?
+
+Yes, AsyncOpenAI is compatible with PromptLayer. Use them together as demonstrated in example below.
+
+```python
+import asyncio
+# from openai import AsyncOpenAI
+import promptlayer
+promptlayer.api_key = "pl_*****"
+AsyncOpenAI = promptlayer.openai.AsyncOpenAI
+
+client = AsyncOpenAI(
+    api_key="sk-***",
+)
+
+
+async def main() -> None:
+    chat_completion = await client.chat.completions.create(
+        messages=[
+            {
+                "role": "user",
+                "content": "Say this is a test",
+            }
+        ],
+        model="gpt-3.5-turbo",
+    )
+    print(chat_completion)
+
+asyncio.run(main())
+```
+

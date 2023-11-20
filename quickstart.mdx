@@ -13,21 +13,6 @@ __Get started with the code below!__
 
 <CodeGroup>
 
-```python Python openai < 1.0.0
-# Make sure to `pip install promptlayer`
-import promptlayer
-
-# Swap out your 'import openai'
-openai = promptlayer.openai
-
-# Do something fun 🚀
-openai.Completion.create(
-  engine="text-davinci-003", 
-  prompt="My name is", 
-  pl_tags=["name-guessing", "pipeline-2"]
-)
-```
-
 ```python Python openai >= 1.0.0
 # Make sure to `pip install promptlayer`
 import promptlayer
@@ -39,6 +24,21 @@ openai = OpenAI()
 # Do something fun 🚀
 openai.completions.create(
   model="text-davinci-003", 
+  prompt="My name is", 
+  pl_tags=["name-guessing", "pipeline-2"]
+)
+```
+
+```python Python openai < 1.0.0
+# Make sure to `pip install promptlayer`
+import promptlayer
+
+# Swap out your 'import openai'
+openai = promptlayer.openai
+
+# Do something fun 🚀
+openai.Completion.create(
+  engine="text-davinci-003", 
   prompt="My name is", 
   pl_tags=["name-guessing", "pipeline-2"]
 )
