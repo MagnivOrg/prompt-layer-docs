@@ -478,7 +478,7 @@ const response = await openai.completions.create({
 
 </CodeGroup>
 
-## Getting All Prompts Programmatically
+## Getting all Prompts Programmatically
 
 To get all prompts from prompt registry you can use the following code snippet:
 
@@ -527,3 +527,42 @@ const all_prompts = promptlayer.prompts.all({ page: 2 })
 It is important to note that `prompt_template` represents the latest version of the prompt template.
 
 Alternatively, use the REST API endpoint `/rest/prompts` ([read more](/reference/get-prompts)).
+
+## Setting Up a Webhook
+
+Webhooks can be set up to receive notifications about changes to prompt templates.
+
+### Event Payload Format
+When an event occurs, we send a payload with this structure:
+```json
+{
+  "event_type": "string",
+  "details": "object",
+  "user_id": "integer",
+  "workspace_id": "integer",
+  "timestamp": "ISO 8601 format timestamp"
+}
+```
+
+### Supported Event Types
+We notify you for these events:
+
+| Event Type                           | Description                                                     | Example Payload                         |
+|--------------------------------------|-----------------------------------------------------------------|-----------------------------------------|
+| `prompt_template_created`            | When a new prompt template is created.                          | `{ "event_type": "prompt_template_created", "details": {"prompt_template_name": "Example Template", "prompt_template_version_number": 1, "prompt_template_id": 1001}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:00:00Z" }` |
+| `prompt_template_version_created`    | When a new version of a prompt template is created.             | `{ "event_type": "prompt_template_version_created", "details": {"prompt_template_name": "Example Template", "prompt_template_version_number": 2, "prompt_template_id": 1001}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:05:00Z" }` |
+| `prompt_template_name_changed`       | When a prompt template's name is changed.                       | `{ "event_type": "prompt_template_name_changed", "details": {"prompt_template_id": 1001, "prompt_template_name": "New Template", "old_prompt_template_name": "Old Template"}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:10:00Z" }` |
+| `prompt_template_deleted`            | When a prompt template is deleted.                              | `{ "event_type": "prompt_template_deleted", "details": {"prompt_template_id": 1001, "prompt_template_name": "Deleted Template"}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:15:00Z" }` |
+| `prompt_template_label_created`      | When a new release label for a prompt template is created.      | `{ "event_type": "prompt_template_label_created", "details": {"prompt_template_id": 1001, "prompt_template_name": "Example Template", "prompt_template_version_number": 2, "prompt_template_label": "Stable"}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:20:00Z" }` |
+| `prompt_template_label_deleted`      | When a release label for a prompt template is deleted.          | `{ "event_type": "prompt_template_label_deleted", "details": {"prompt_template_id": 1001, "prompt_template_name": "Example Template", "prompt_template_version_number": 2, "prompt_template_label": "Deprecated"}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:25:00Z" }` |
+| `prompt_template_label_moved`        | When a release label is moved between prompt template versions. | `{ "event_type": "prompt_template_label_moved", "details": {"prompt_template_id": 1001, "prompt_template_name": "Example Template", "prompt_template_version_number": 3, "old_prompt_template_version_number": 2, "prompt_template_label": "Beta"}, "user_id": 123, "workspace_id": 456, "timestamp": "2023-11-30T12:30:00Z" }` |
+
+
+*Note:* Creating a new prompt template also creates its first version. However, only the `prompt_template_created` event is triggered.
+
+### Configuring a Webhook
+To configure a webhook:
+1. Go to your workspace settings.
+2. Click on 'Webhook'.
+3. Enter the URL for the POST request.
+4. Optionally, set a webhook secret. It will be sent in the header of the POST request as `X-Webhook-Secret`.
