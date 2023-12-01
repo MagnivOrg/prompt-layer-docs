@@ -1,0 +1,133 @@
+---
+title: "Webhooks"
+icon: "link"
+---
+
+# Overview
+
+Webhooks notify external applications of specific real-time events in our app, useful for caching or initiating processes. They trigger when a prompt template is created, updated, or deleted, sending a JSON payload with the template details and change type.
+
+## Setting Up Webhooks
+
+To set up a webhook, go to the **Webhook** section in the **Settings** page. Enter the URL of the endpoint you want to send the webhook to and click **Submit**.
+
+![Creating Webhook](/images/webhooks-form.png)
+
+## Events
+
+Below is a list of all events that will be sent to your webhook, along with the JSON payload for each event.
+
+### Prompt Template Created
+
+```json
+{
+  "event_type":"prompt_template_created",
+  "details":{
+    "prompt_template_name":"New template name",
+    "prompt_template_version_number":1,
+    "prompt_template_id":15
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:06:35.653720"
+}
+```
+
+### Prompt Template Name Changed
+
+```json
+{
+  "event_type": "prompt_template_name_changed",
+  "details": {
+    "prompt_template_id": 14,
+    "prompt_template_name": "New name",
+    "old_prompt_template_name": "Old name"
+  },
+  "user_id": 1,
+  "workspace_id": 1,
+  "timestamp": "2023-12-01T21:59:11.619862"
+}
+```
+
+### Prompt Template Deleted
+
+```json
+{
+  "event_type":"prompt_template_deleted",
+  "details":{
+    "prompt_template_id":8,
+    "prompt_template_name":"2"
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:03:59.826147"
+}
+```
+
+### Prompt Template Label Created
+
+```json
+{
+  "event_type":"prompt_template_label_created",
+  "details":{
+    "prompt_template_id":11,
+    "prompt_template_name":"Hello",
+    "prompt_template_version_number":1,
+    "prompt_template_label":"prod"
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:04:43.323784"
+}
+```
+
+### Prompt Template Label Deleted
+
+```json
+{
+  "event_type":"prompt_template_label_deleted",
+  "details":{
+    "prompt_template_id":11,
+    "prompt_template_name":"Hello",
+    "prompt_template_version_number":1,
+    "prompt_template_label":"prod"
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:05:14.752975"
+}
+```
+
+### Prompt Template Label Moved
+
+```json
+{
+  "event_type":"prompt_template_label_moved",
+  "details":{
+    "prompt_template_id":12,
+    "prompt_template_name":"Hello",
+    "prompt_template_version_number":9,
+    "old_prompt_template_version_number":8,
+    "prompt_template_label":"prod"
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:05:57.924833"
+}
+```
+
+### Prompt Template Version Created
+
+```json
+{
+  "event_type":"prompt_template_version_created",
+  "details":{
+    "prompt_template_name":"New template name",
+    "prompt_template_version_number":2,
+    "prompt_template_id":15
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:07:02.243636"
+}
+```
