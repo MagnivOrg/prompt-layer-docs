@@ -57,15 +57,20 @@ Here is a complete code snippet:
 
 ```python
 import promptlayer
-import os
-promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
-openai=promptlayer.openai
-openai.api_key = os.environ.get("OPENAI_API_KEY")
-openai.Completion.create(
-	engine="text-ada-001", 
-	prompt="My name is", 
-	pl_tags=["name-guessing", "pipeline-2"]
+
+# Swap out 'from openai import OpenAI'
+OpenAI = promptlayer.openai.OpenAI
+
+client = OpenAI()
+completion = client.chat.completions.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "system", "content": "You are an AI."},
+    {"role": "user", "content": "Compose a poem please."}
+  ],
+  pl_tags=["getting-started"]
 )
+print(completion.choices[0].message)
 ```
 
 ## Anthropic
@@ -75,25 +80,21 @@ Using Anthropic with PromptLayer is very similar to how to one would use OpenAI.
 Below is an example code snippet of the one line replacement:
 
 ```python
-import os
 import promptlayer
-import anthropic
 
-# Instead of `import anthropic` ->
-anthropic = promptlayer.anthropic
+# Swap out 'from openai import OpenAI'
+OpenAI = promptlayer.openai.OpenAI
 
-promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
-anthropic_client = anthropic.Client(os.environ.get("ANTHROPIC_API_KEY"))
-
-response = anthropic_client.completion(
-	prompt=f"{anthropic.HUMAN_PROMPT} How many toes do dogs have? more information more information more{anthropic.AI_PROMPT}",
-	stop_sequences=[anthropic.HUMAN_PROMPT],
-	model="claude-v1-100k",
-	max_tokens_to_sample=100,
-	pl_tags=["test-anthropic-1"],
-	return_pl_id=True,
+client = OpenAI()
+completion = client.chat.completions.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "system", "content": "You are an AI."},
+    {"role": "user", "content": "Compose a poem please."}
+  ],
+  pl_tags=["getting-started"]
 )
-print(response)
+print(completion.choices[0].message)
 ```
 
 Here is how it would look like on the dashbaord:

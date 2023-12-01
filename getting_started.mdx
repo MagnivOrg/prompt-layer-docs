@@ -1055,17 +1055,17 @@ We can also use models from Anthropic natively with the PromptLayer Python SDK:
 <CodeGroup>
 
 ```python Python
-anthropic = promptlayer.anthropic
-client = anthropic.Anthropic(api_key=os.environ.get("ANTHROPIC_API_KEY"))
+# Swap out 'from anthropic import Anthropic'
+Anthropic = promptlayer.anthropic.Anthropic
 
-response = client.completions.create(
-    prompt=f"{anthropic.HUMAN_PROMPT} How many toes do dogs have? {anthropic.AI_PROMPT}",
-    stop_sequences=[anthropic.HUMAN_PROMPT],
+anthropic = Anthropic()
+completion = anthropic.completions.create(
     model="claude-2",
-    max_tokens_to_sample=100,
-    pl_tags=["claude"]
+    max_tokens_to_sample=300,
+    prompt=f"{anthropic.HUMAN_PROMPT} Compose a poem please.{anthropic.AI_PROMPT}",
+    pl_tags=["getting-started"]
 )
-print(response.completion)
+print(completion.completion)
 ```
 
 ```js JavaScript
