@@ -292,6 +292,65 @@ Alternatively, use the REST API endpoint `/rest/track-prompt` ([read more](/refe
 
 Learn more about tracking templates [here](/features/prompt-history/tracking-templates)
 
+## Setting Up a Webhook
+
+Webhooks can be set up to receive notifications about changes to prompt templates.
+
+### Event Payload Format
+
+When an event occurs, we send a POST request with a payload in this structure:
+
+```json
+{
+  "event_type": "string",
+  "details": "object",
+  "user_id": "number",
+  "workspace_id": "number",
+  "timestamp": "ISO 8601 format timestamp",
+}
+```
+
+### Supported Event Types
+We notify you for these events:
+
+| Event Type                           | Description                                                     | Details                                                                 |
+|--------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------|
+| `prompt_template_created`            | When a new prompt template is created.                          | <ul><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_id` (number)</li></ul> |
+| `prompt_template_version_created`    | When a new version of a prompt template is created.             | <ul><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_id` (number)</li></ul> |
+| `prompt_template_name_changed`       | When a prompt template's name is changed.                       | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`old_prompt_template_name` (string)</li></ul> |
+| `prompt_template_deleted`            | When a prompt template is deleted.                              | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li></ul> |
+| `prompt_template_label_created`      | When a new release label for a prompt template is created.      | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
+| `prompt_template_label_deleted`      | When a release label for a prompt template is deleted.          | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
+| `prompt_template_label_moved`        | When a release label is moved between prompt template versions. | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`old_prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
+
+
+*Note:* Creating a new prompt template also creates its first version. However, only the `prompt_template_created` event is triggered.
+
+### Example Payload
+
+```json
+{
+  "event_type":"prompt_template_label_moved",
+  "details":{
+    "prompt_template_id":12,
+    "prompt_template_name":"Hello",
+    "prompt_template_version_number":9,
+    "old_prompt_template_version_number":8,
+    "prompt_template_label":"prod"
+  },
+  "user_id":1,
+  "workspace_id":1,
+  "timestamp":"2023-12-01T22:05:57.924833"
+}
+```
+
+### Configuring a Webhook
+
+To set up a webhook, go to the **Webhook** section in the **Settings** page. Enter the URL of the endpoint you want to send the webhook to and click **Submit**.
+
+![Creating Webhook](/images/webhooks-form.png)
+
+
 ## A/B Testing
 
 The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing.
@@ -478,7 +537,7 @@ const response = await openai.completions.create({
 
 </CodeGroup>
 
-## Getting All Prompts Programmatically
+## Getting all Prompts Programmatically
 
 To get all prompts from prompt registry you can use the following code snippet:
 
