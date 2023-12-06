@@ -75,7 +75,7 @@ openai = OpenAI()
 
 # Make a completion to OpenAI
 response = openai.completions.create(
-  model="text-davinci-003", 
+  model="gpt-3.5-turbo-instruct", 
   prompt="My name is",
 )
 print(response.choices[0].text)
@@ -88,7 +88,7 @@ openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Make a completion to OpenAI
 response = openai.Completion.create(
-  engine="text-davinci-003", 
+  engine="gpt-3.5-turbo-instruct", 
   prompt="My name is",
 )
 print(response.choices[0].text)
@@ -101,7 +101,7 @@ const openai = new OpenAI();
 
 // Make a completion to OpenAI
 const response = await openai.completions.create({
-  model: "text-davinci-003",
+  model: "gpt-3.5-turbo-instruct",
   prompt: "My name is",
 });
 
@@ -116,7 +116,7 @@ from langchain.llms import OpenAI
 
 # Set up OpenAI model with PromptLayer callback
 llm = OpenAI(
-    model_name="text-davinci-003", 
+    model_name="gpt-3.5-turbo-instruct", 
     callbacks=[PromptLayerCallbackHandler()],
 )
 
@@ -145,7 +145,7 @@ curl --request POST \
   --url https://api.promptlayer.com/rest/track-request \
   --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "My name is"},
+    "kwargs": {"engine": "gpt-3.5-turbo-instruct", "prompt": "My name is"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
@@ -173,7 +173,7 @@ We can also add tags (`pl_tags`) to our requests to make it easier to search thr
 
 ```python Python
 response = openai.Completion.create(
-  engine="text-davinci-003", 
+  engine="gpt-3.5-turbo-instruct", 
   prompt="My name is",
   pl_tags=["getting_started_example"] # 🍰 PromptLayer tags
 )
@@ -183,7 +183,7 @@ print(response.choices[0].text)
 
 ```js JavaScript
 const response = await openai.completions.create({
-  model: "text-davinci-003",
+  model: "gpt-3.5-turbo-instruct",
   prompt: "My name is",
   pl_tags: ["getting_started_example"], // 🍰 PromptLayer tags
 });
@@ -193,7 +193,7 @@ console.log(response.choices[0].text)
 
 ```python Python (LangChain)
 llm = OpenAI(
-    model_name="text-davinci-003", 
+    model_name="gpt-3.5-turbo-instruct", 
     callbacks=[
         PromptLayerCallbackHandler(
             pl_tags=["getting_started_example"] # 🍰 PromptLayer tags
@@ -221,7 +221,7 @@ curl --request POST \
   --url https://api.promptlayer.com/rest/track-request \
   --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "My name is"},
+    "kwargs": {"engine": "gpt-3.5-turbo-instruct", "prompt": "My name is"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
@@ -254,7 +254,7 @@ To set the score, we make a second request to the PromptLayer API with the `requ
 
 ```python Python
 response, pl_request_id = openai.Completion.create(
-  engine="text-davinci-003", 
+  engine="gpt-3.5-turbo-instruct", 
   prompt="What is the capital of New York? \\n\\nThe capital of New York is",
   pl_tags=["getting_started_example"],
   return_pl_id=True # Make sure to set this to True
@@ -273,7 +273,7 @@ promptlayer.track.score(
 
 ```js JavaScript
 const [response, pl_request_id] = await openai.completions.create({
-  model: "text-davinci-003",
+  model: "gpt-3.5-turbo-instruct",
   prompt: "What is the capital of New York? \\n\\nThe capital of New York is",
   pl_tags: ["getting_started_example"],
   return_pl_id: true, // Make sure to set this to True
@@ -305,7 +305,7 @@ def save_pl_id(pl_id):
     pl_request_id = pl_id
 
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[PromptLayerCallbackHandler(
             pl_id_callback=save_pl_id, # Here is where we set our callback func
             pl_tags=["getting_started_example"])],
@@ -366,7 +366,7 @@ curl --request POST \
   --url https://api.promptlayer.com/rest/track-request \
   --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "What is the capital of New York? \\n\\nThe capital of New York is"},
+    "kwargs": {"engine": "gpt-3.5-turbo-instruct", "prompt": "What is the capital of New York? \\n\\nThe capital of New York is"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
@@ -417,7 +417,7 @@ Interests: {interests}
 Answer: """
 
 response, pl_request_id = openai.Completion.create(
-  engine="text-davinci-003", 
+  engine="gpt-3.5-turbo-instruct", 
   prompt=prompt_template.format(city="Washington, D.C.", interests="resorts, museums, beaches"),
   pl_tags=["getting_started_example"],
   return_pl_id=True
@@ -479,7 +479,7 @@ Object.entries(inputVariables).forEach(([key, value]) => {
 });
 
 const [response, pl_request_id] = await openai.completions.create({
-  model: "text-davinci-003",
+  model: "gpt-3.5-turbo-instruct",
   prompt: replacedPromptTemplate,
   pl_tags: ["getting_started_example"],
   return_pl_id: true,
@@ -538,7 +538,7 @@ Interests: {interests}
 Answer: """
 
 llm = OpenAI(
-    model_name="text-davinci-003", 
+    model_name="gpt-3.5-turbo-instruct", 
     callbacks=[PromptLayerCallbackHandler(
             pl_id_callback=save_pl_id, 
             pl_tags=["getting_started_example"])],
@@ -661,7 +661,7 @@ curl --request POST \
   --url https://api.promptlayer.com/rest/track-request \
   --data '{
     "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-davinci-003", "prompt": "<YOUR_PROMPT>"},
+    "kwargs": {"engine": "gpt-3.5-turbo-instruct", "prompt": "<YOUR_PROMPT>"},
     "request_response": {...},
     "request_start_time": 1673987077.463504,
     "request_end_time": 1673987077.463504,
@@ -820,7 +820,7 @@ input_variables = {
     "interests": "resorts, museums, beaches"
 }
 response, pl_request_id = openai.Completion.create(
-  engine="text-davinci-003", 
+  engine="gpt-3.5-turbo-instruct", 
   prompt=prompt_template.format(**input_variables),
   pl_tags=["getting_started_example"],
   return_pl_id=True
@@ -852,7 +852,7 @@ Object.entries(input_variables).forEach(([key, value]) => {
 });
 
 const [response, pl_request_id] = await openai.completions.create({
-  model: "text-davinci-003",
+  model: "gpt-3.5-turbo-instruct",
   prompt: replaced_prompt_template,
   pl_tags: ["getting_started_example"],
   return_pl_id: true,

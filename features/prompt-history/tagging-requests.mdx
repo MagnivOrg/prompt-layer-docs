@@ -18,7 +18,7 @@ To add a tag, add the keyword argument `pl_tags` into your OpenAI request like s
 
 ```python Python SDK
 openai.Completion.create(
-  engine="text-davinci-003",
+  engine="gpt-3.5-turbo-instruct",
   prompt="My name is",
   pl_tags=["pipeline3", "world"] # 🍰 PromptLayer tags
 )
@@ -26,7 +26,7 @@ openai.Completion.create(
 
 ```js JavaScript
 openai.completions.create({
-  model: "text-davinci-003",
+  model: "gpt-3.5-turbo-instruct",
   prompt: "My name is",
   pl_tags: ["pipeline3", "world"], // 🍰 PromptLayer tags
 });
@@ -34,7 +34,7 @@ openai.completions.create({
 
 ```python Python (LangChain)
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[
         PromptLayerCallbackHandler(
             pl_tags=["pipeline3", "world"] # 🍰 PromptLayer tags

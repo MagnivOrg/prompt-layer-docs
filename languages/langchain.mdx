@@ -32,7 +32,7 @@ Now, when instantiating a model, just include the `PromptLayerCallbackHandler` i
 
 ```python
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])],
 )
 ```
@@ -54,7 +54,7 @@ from langchain.callbacks import PromptLayerCallbackHandler
 from langchain.llms import OpenAI
 
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[
         PromptLayerCallbackHandler(pl_tags=["langchain"])
     ],
@@ -157,7 +157,7 @@ def pl_id_callback(pl_request_id):
     print(pl_request_id)
 
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[
         PromptLayerCallbackHandler(
             pl_id_callback=pl_id_callback, 
@@ -190,7 +190,7 @@ def pl_id_scoring_callback(pl_id):
     )
 
 openai_llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[PromptLayerCallbackHandler(
             pl_id_callback=pl_id_scoring_callback, 
             pl_tags=["langchain"])],

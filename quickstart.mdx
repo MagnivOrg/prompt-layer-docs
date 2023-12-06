@@ -41,7 +41,7 @@ openai = promptlayer.openai
 
 # Do something fun 🚀
 openai.Completion.create(
-  engine="text-davinci-003", 
+  engine="gpt-3.5-turbo-instruct", 
   prompt="My name is", 
   pl_tags=["name-guessing", "pipeline-2"]
 )
@@ -57,7 +57,7 @@ const openai = new OpenAI();
 
 // Do something fun 🚀
 openai.completions.create({
-  model: "text-davinci-003"
+  model: "gpt-3.5-turbo-instruct"
   prompt: "My name is",
 })
 ```
@@ -71,7 +71,7 @@ from langchain.callbacks import PromptLayerCallbackHandler
 # Using OpenAI completions
 from langchain.llms import OpenAI
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])]
 )
 llm("My name is")
