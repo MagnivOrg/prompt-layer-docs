@@ -27,7 +27,7 @@ The same is true for Anthropic.
 ```python
 from promptlayer import openai
 response, pl_request_id = openai.Completion.create(
-    engine="text-davinci-003", 
+    engine="gpt-3.5-turbo-instruct", 
     prompt="hi my name is ", 
     return_pl_id=True
 )
@@ -44,7 +44,7 @@ const OpenAI = promptlayer.OpenAI;
 const openai = new OpenAI();
 
 const [response, pl_request_id] = await openai.completions.create({
-    model: "text-davinci-003",
+    model: "gpt-3.5-turbo-instruct",
     prompt: "hi my name is ",
     return_pl_id: true
 });
@@ -61,7 +61,7 @@ def pl_id_callback(pl_request_id):
     print(pl_request_id)
 
 llm = OpenAI(
-    model_name="text-davinci-003",
+    model_name="gpt-3.5-turbo-instruct",
     callbacks=[
         PromptLayerCallbackHandler(
             pl_id_callback=pl_id_callback, 
