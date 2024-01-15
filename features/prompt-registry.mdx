@@ -32,16 +32,30 @@ It’s simple.
 <CodeGroup>
 
 ```python Python SDK
+template_dict = promptlayer.templates.get(prompt_name="my_template")
+```
+
+```python Python SDK (Legacy)
 template_dict = promptlayer.prompts.get("my_template")
 ```
 
 ```js JavaScript
+const template_dict = await promptlayer.templates.get("my_template");
+```
+
+```js JavaScript (Legacy)
+
+```js JavaScript (Legacy)
 const template_dict = await promptlayer.prompts.get({ prompt_name: "my_template" });
 ```
 
 </CodeGroup>
 
 Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
+
+_Note:_ We have a new prompt template schema that is more flexible and powerful. If you are using the new schema, you can use the `promptlayer.templates.get` method to get a template. If you are using the old schema, you can use the `promptlayer.prompts.get` method to get a template. Notice how `promptlayer.prompts.get` will always return templates in legacy shape, while `promptlayer.templates.get` will always return templates in the new shape.
+
+For REST API of fetching a prompt template in new schema, please refer to `/prompt-templates` ([read more](/reference/templates-get)).
 
 ### By Release Label
 
@@ -487,7 +501,38 @@ The following code snippet shows you how to do this:
 
 <CodeGroup>
 
+```python Python SDK (Metadata)
+template = promptlayer.templates.get(
+  prompt_name="my_prompt_with_functions",
+  params={
+    "provider": "openai",
+    "input_variables": {
+      "location": "Boston, MA",
+      "unit": "fahrenheit",
+    }
+  }
+)
+response = openai.chat.completions.create(**template["llm_kwargs"])
+```
+
 ```python Python SDK
+template = promptlayer.templates.get(
+  prompt_name="my_prompt_with_functions",
+  params={
+    "provider": "openai",
+    "input_variables": {
+      "location": "Boston, MA",
+      "unit": "fahrenheit",
+    }
+  }
+)
+response = openai.chat.completions.create(
+  **template["llm_kwargs"],
+  model="gpt-3.5-turbo",
+)
+```
+
+```python Python SDK (Legacy)
 def get_message(chat_message):
     if "prompt" in chat_message:
         return {"role": chat_message.get("role"), "content":chat_message.get("prompt", {}).get("template", "")}
@@ -508,7 +553,38 @@ response = openai.ChatCompletion.create(
 )
 ```
 
+```js JavaScript (Metadata)
+const prompt = await promptlayer.templates.get(
+  "my_prompt_with_functions",
+  {
+    provider: "openai",
+    input_variables: {
+      location: "Boston, MA",
+      unit: "fahrenheit",
+    },
+  }
+)
+const response = await openai.completions.create(prompt.llm_kwargs)
+```
+
 ```js JavaScript
+const prompt = await promptlayer.templates.get(
+  "my_prompt_with_functions",
+  {
+    provider: "openai",
+    input_variables: {
+      location: "Boston, MA",
+      unit: "fahrenheit",
+    },
+  }
+);
+const response = await openai.completions.create({
+  ...prompt.llm_kwargs,
+  model: "gpt-3.5-turbo",
+});
+```
+
+```js JavaScript (Legacy)
 const get_message = (chat_message) => {
   if ("prompt" in chat_message) {
     return {

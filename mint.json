@@ -78,7 +78,8 @@
         "reference/track-prompt",
         "reference/track-group",
         "reference/track-metadata",
-        "reference/get-prompts"
+        "reference/get-prompts",
+        "reference/templates-get"
       ]
     }
   ],
