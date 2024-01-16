@@ -43,9 +43,9 @@ const template_dict = await promptlayer.templates.get("my_template");
 
 Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
 
-*Note:* We have deprecated the legacy prompt template schema. Use `promptlayer.templates.get` to retrieve prompt templates. Notice how `promptlayer.prompts.get` will always return templates in legacy shape. 
+*Note*: Please use `promptlayer.templates.get` to access prompt templates. `The promptlayer.prompts.get` function is deprecated and returns templates in the legacy format.
 
-For REST API of fetching a prompt template, please refer to `/prompt-templates` ([read more](/reference/templates-get)).
+To fetch a prompt template using the REST API, refer to the endpoint endpoint `/prompt-templates` ([read more](/reference/templates-get)).
 
 ### By Release Label
 
@@ -54,21 +54,11 @@ Release labels like `prod` and `staging` can be optionally applied to template v
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.templates.get(
-  "my_template",
-  {
-    "label": "prod"
-  }
-)
+promptlayer.templates.get("my_template", { "label": "prod" })
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.templates.get(
-  "my_template",
-  {
-    label: "prod"
-  }
-);
+const template_dict = await promptlayer.templates.get("my_template", { label: "prod" });
 ```
 
 </CodeGroup>
@@ -80,21 +70,11 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 <CodeGroup>
 
 ```python Python SDK
-template_dict = promptlayer.templates.get(
-  "my_template",
-  {
-    "version": 3
-  }
-)
+template_dict = promptlayer.templates.get("my_template", { "version": 3 })
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.templates.get(
-  "my_template",
-  {
-    version: 3
-  }
-);
+const template_dict = await promptlayer.templates.get("my_template", { version: 3 });
 
 ```
 
