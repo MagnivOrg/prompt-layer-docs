@@ -32,30 +32,20 @@ It’s simple.
 <CodeGroup>
 
 ```python Python SDK
-template_dict = promptlayer.templates.get(prompt_name="my_template")
-```
-
-```python Python SDK (Legacy)
-template_dict = promptlayer.prompts.get("my_template")
+template_dict = promptlayer.templates.get("my_template")
 ```
 
 ```js JavaScript
 const template_dict = await promptlayer.templates.get("my_template");
 ```
 
-```js JavaScript (Legacy)
-
-```js JavaScript (Legacy)
-const template_dict = await promptlayer.prompts.get({ prompt_name: "my_template" });
-```
-
 </CodeGroup>
 
 Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
 
-_Note:_ We have a new prompt template schema that is more flexible and powerful. If you are using the new schema, you can use the `promptlayer.templates.get` method to get a template. If you are using the old schema, you can use the `promptlayer.prompts.get` method to get a template. Notice how `promptlayer.prompts.get` will always return templates in legacy shape, while `promptlayer.templates.get` will always return templates in the new shape.
+*Note:* We have deprecated the legacy prompt template schema. Use `promptlayer.templates.get` to retrieve prompt templates. Notice how `promptlayer.prompts.get` will always return templates in legacy shape. 
 
-For REST API of fetching a prompt template in new schema, please refer to `/prompt-templates` ([read more](/reference/templates-get)).
+For REST API of fetching a prompt template, please refer to `/prompt-templates` ([read more](/reference/templates-get)).
 
 ### By Release Label
 
@@ -64,14 +54,21 @@ Release labels like `prod` and `staging` can be optionally applied to template v
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.prompts.get("my_template", label="prod")
+promptlayer.templates.get(
+  "my_template",
+  {
+    "label": "prod"
+  }
+)
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.prompts.get({
-  prompt_name: "my_template",
-  label: "prod"
-});
+const template_dict = await promptlayer.templates.get(
+  "my_template",
+  {
+    label: "prod"
+  }
+);
 ```
 
 </CodeGroup>
@@ -83,13 +80,22 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 <CodeGroup>
 
 ```python Python SDK
-template_dict = promptlayer.prompts.get("my_template", version=3)
+template_dict = promptlayer.templates.get(
+  "my_template",
+  {
+    "version": 3
+  }
+)
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.prompts.get({
-  prompt_name: "my_template", version: 3
-});
+const template_dict = await promptlayer.templates.get(
+  "my_template",
+  {
+    version: 3
+  }
+);
+
 ```
 
 </CodeGroup>
@@ -101,13 +107,13 @@ When fetching a prompt template, you can optionally retrieve metadata by using `
 <CodeGroup>
 
 ```python Python SDK
-template, metadata = promptlayer.prompts.get("my_template", include_metadata=True)
+template = promptlayer.templates.get("my_template")
+print(template["metadata"])
 ```
 
 ```js JavaScript
-const template = await promptlayer.prompts.get({
-  prompt_name: "my_template"
-});
+const template = await promptlayer.templates.get("my_template");
+console.log(template.metadata);
 ```
 
 </CodeGroup>
@@ -503,8 +509,8 @@ The following code snippet shows you how to do this:
 
 ```python Python SDK (Metadata)
 template = promptlayer.templates.get(
-  prompt_name="my_prompt_with_functions",
-  params={
+  "my_prompt_with_functions",
+  {
     "provider": "openai",
     "input_variables": {
       "location": "Boston, MA",
@@ -517,8 +523,8 @@ response = openai.chat.completions.create(**template["llm_kwargs"])
 
 ```python Python SDK
 template = promptlayer.templates.get(
-  prompt_name="my_prompt_with_functions",
-  params={
+  "my_prompt_with_functions",
+  {
     "provider": "openai",
     "input_variables": {
       "location": "Boston, MA",
