@@ -498,7 +498,7 @@ template = promptlayer.templates.get(
     }
   }
 )
-response = openai.chat.completions.create(**template["llm_kwargs"])
+response = client.chat.completions.create(**template["llm_kwargs"])
 ```
 
 ```python Python SDK
@@ -512,7 +512,7 @@ template = promptlayer.templates.get(
     }
   }
 )
-response = openai.chat.completions.create(
+response = client.chat.completions.create(
   **template["llm_kwargs"],
   model="gpt-3.5-turbo",
 )
