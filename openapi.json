@@ -140,19 +140,19 @@
         }
       }
     },
-    "/prompt-templates/{identifier}": {
+    "/prompt-templates/{prompt_name}": {
       "post": {
         "tags": ["prompt-templates"],
         "summary": "Get Prompt Template by ID",
-        "operationId": "get_prompt_templates__identifier__post",
+        "operationId": "get_prompt_templates__prompt_name__post",
         "parameters": [
           {
-            "name": "identifier",
+            "name": "prompt_name",
             "in": "path",
             "required": true,
             "schema": {
               "anyOf": [{ "type": "string" }, { "type": "integer" }],
-              "title": "Identifier"
+              "title": "prompt_name"
             }
           }
         ],

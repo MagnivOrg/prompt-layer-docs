@@ -729,25 +729,17 @@ The Prompt Registry handles versioning, just visually edit the prompt in the das
 <CodeGroup>
 
 ```python Python
-city_choice_prompt = promptlayer.prompts.get("city_choice")
-city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1)
-city_choice_prompt_prod = promptlayer.prompts.get("city_choice", label="prod")
-print(city_choice_prompt_v1['template'])
+city_choice_prompt = promptlayer.templates.get("city_choice")
+city_choice_prompt_v1 = promptlayer.templates.get("city_choice", { "version": 1 })
+city_choice_prompt_prod = promptlayer.templates.get("city_choice", { "label": "prod" })
+print(city_choice_prompt_v1['prompt_template'])
 ```
 
 ```js JavaScript
-const city_choice_prompt = await promptlayer.prompts.get({
-  prompt_name: "city_choice",
-});
-const city_choice_prompt_v1 = await promptlayer.prompts.get({
-  prompt_name: "city_choice",
-  version: 1,
-});
-const city_choice_prompt_prod = await promptlayer.prompts.get({
-  prompt_name: "city_choice",
-  label: "prod",
-});
-console.log(city_choice_prompt_v1["template"]);
+const city_choice_prompt = await promptlayer.templates.get("city_choice");
+const city_choice_prompt_v1 = await promptlayer.templates.get("city_choice",{ version: 1 });
+const city_choice_prompt_prod = await promptlayer.templates.get("city_choice", { label: "prod" });
+console.log(city_choice_prompt_v1["prompt_template"]);
 ```
 
 ```python Python (LangChain)
@@ -757,48 +749,55 @@ print(city_choice_prompt_v1.template)
 ```
 
 ```js Javascript (REST)
-axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
-    headers: {
-      'X-API-KEY': process.env.PROMPTLAYER_API_KEY
-    },
-    params: {
-      'prompt_name': 'city_choice',
-    }
-  })
-  .then(function (response) {
-    console.log(response.data.prompt_template);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+axios
+    .post(
+      "https://api.promptlayer.com/prompt-templates/city_choice",
+      {
+        headers: {
+          "X-API-KEY": process.env.PROMPTLAYER_API_KEY,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 
-axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
-    headers: {
-      'X-API-KEY': process.env.PROMPTLAYER_API_KEY
-    },
-    params: {
-      'prompt_name': 'city_choice',
-      'version': 1, // This time, let's specify the version
-    }
-  })
-  .then(function (response) {
-    console.log(response.data.prompt_template);
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
+  axios
+    .post(
+      "https://api.promptlayer.com/prompt-templates/city_choice",
+      {
+        version: 1,
+      },
+      {
+        headers: {
+          "X-API-KEY": process.env.PROMPTLAYER_API_KEY,
+        },
+      }
+    )
+    .then(function (response) {
+      console.log(response.data);
+    })
+    .catch(function (error) {
+      console.log(error);
+    });
 ```
 
 ```bash REST
 # Get a prompt by its name
-curl --request GET \
-  --url 'https://api.promptlayer.com/rest/get-prompt-template?prompt_name=<PROMPT_NAME>' \
+curl --request POST \
+  --url 'https://api.promptlayer.com/prompt-templates/<PROMPT_NAME>' \
   --header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>'
 
 # Get a prompt by its name and version
-curl --request GET \
-  --url 'https://api.promptlayer.com/rest/get-prompt-template?prompt_name=<PROMPT_NAME>&version=<VERSION_NUM>' \
+curl --request POST \
+  --url 'https://api.promptlayer.com/prompt-templates/<PROMPT_NAME>' \
   --header 'X-API-KEY: <YOUR PROMPTLAYER API KEY>'
+  --data '{
+    "version": <VERSION_NUM>
+  }'
 ```
 </CodeGroup>
 
@@ -812,16 +811,20 @@ Once a prompt is in the registry, we can link it to a request ([learn more](feat
 
 ```python Python
 # Grab the prompt template
-city_choice_prompt = promptlayer.prompts.get("city_choice")
-prompt_template = city_choice_prompt['template']
-
 input_variables = {
     "city": "Washington, D.C.", 
     "interests": "resorts, museums, beaches"
 }
-response, pl_request_id = openai.Completion.create(
-  engine="gpt-3.5-turbo-instruct", 
-  prompt=prompt_template.format(**input_variables),
+
+city_choice_prompt = promptlayer.templates.get("city_choice",
+{
+  "provider": "openai",
+  "input_variables": input_variables
+})
+
+response, pl_request_id = client.completions.create(
+  **city_choice_prompt['llm_kwargs'],
+  model="gpt-3.5-turbo-instruct", 
   pl_tags=["getting_started_example"],
   return_pl_id=True
 )
@@ -834,26 +837,19 @@ promptlayer.track.prompt(request_id=pl_request_id,
 
 ```js JavaScript
 // Grab the prompt template
-const city_choice_prompt = await promptlayer.prompts.get({
-  prompt_name: "city_choice",
-});
-const prompt_template = city_choice_prompt["template"];
-
+  
 const input_variables = {
   city: "Washington, D.C.",
   interests: "resorts, museums, beaches",
 };
-let replaced_prompt_template = prompt_template;
-Object.entries(input_variables).forEach(([key, value]) => {
-  replaced_prompt_template = replaced_prompt_template.replace(
-    `{${key}}`,
-    value
-  );
+const city_choice_prompt = await promptlayer.templates.get("city_choice", {
+  provider: "openai",
+  input_variables,
 });
 
 const [response, pl_request_id] = await openai.completions.create({
+  ...city_choice_prompt.llm_kwargs,
   model: "gpt-3.5-turbo-instruct",
-  prompt: replaced_prompt_template,
   pl_tags: ["getting_started_example"],
   return_pl_id: true,
 });
@@ -865,81 +861,6 @@ promptlayer.track.prompt({
   prompt_name: "city_choice",
   prompt_input_variables: input_variables,
 });
-
-```
-
-
-```python Python (LangChain)
-# Grab the prompt template in a LangChain-friendly format
-city_choice_prompt = promptlayer.prompts.get("city_choice", langchain=True)
-input_variables = {
-    "city": "Washington, D.C.", 
-    "interests": "resorts, museums, beaches"
-}
-answer = llm(prompt_template.format(**input_variables))
-print("Answer:", answer)
-
-# Associate the request with the prompt template we used
-promptlayer.track.prompt(request_id=pl_request_id, 
-    prompt_name='city_choice', prompt_input_variables=input_variables)
-```
-
-```js Javascript (REST)
-
-// Getting the template from 🍰 PromptLayer
-axios.get("https://api.promptlayer.com/rest/get-prompt-template", {
-    headers: {
-      'X-API-KEY': process.env.PROMPTLAYER_API_KEY
-    },
-    params: {
-      'prompt_name': 'city_choice',
-      'langchain': true,
-    }
-  })
-  .then(function (response) {
-    let promptTemplate = response.data.prompt_template.template;
-    const inputVariables = {
-        city: "Washington, D.C.",
-        interests: "resorts, museums, beaches"
-    };
-    let replacedPromptTemplate = promptTemplate;
-    Object.entries(inputVariables).forEach(([key, value]) => {
-      replacedPromptTemplate = replacedPromptTemplate.replace(`{${key}}`, value);
-    });
-    
-    const llm = new PromptLayerOpenAI({
-      temperature: 0.9,
-      openAIApiKey: process.env.OPENAI_API_KEY,
-      promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
-      plTags: ["getting_started_example"],
-      returnPromptLayerId: true,
-    });
-    
-    // Generating an answer
-    llm.generate([replacedPromptTemplate]).then(response => {
-        const promptLayerRequestId = response.generations[0][0].generationInfo.promptLayerRequestId;
-        const answer = response.generations[0][0].text;
-        console.log("Answer:", answer);
-
-        // Associate the request with the prompt template we used in 🍰 PromptLayer
-        axios
-        .post('https://api.promptlayer.com/rest/track-prompt', {
-            request_id: promptLayerRequestId,
-            prompt_name: 'city_choice',
-            prompt_input_variables: inputVariables,
-            api_key: process.env.PROMPTLAYER_API_KEY,
-        })
-        .then(_ => {
-            console.log("Successfully tracked prompt");
-        })
-        .catch(error => {
-            console.error(error);
-        });
-    });
-  })
-  .catch(function (error) {
-    console.log(error);
-  });
 ```
 
 ```bash REST

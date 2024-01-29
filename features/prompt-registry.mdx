@@ -41,11 +41,9 @@ const template_dict = await promptlayer.templates.get("my_template");
 
 </CodeGroup>
 
-Alternatively, use the REST API endpoint `/rest/get-prompt-template` ([read more](/reference/get-prompt-template)).
+Alternatively, use the REST API endpoint `/prompte-templates/{prompt_name}` ([read more](/reference/templates-get)).
 
 *Note*: Please use `promptlayer.templates.get` to access prompt templates. `The promptlayer.prompts.get` function is deprecated and returns templates in the legacy format.
-
-To fetch a prompt template using the REST API, refer to the endpoint endpoint `/prompt-templates` ([read more](/reference/templates-get)).
 
 ### By Release Label
 
@@ -184,24 +182,24 @@ Or set them, by specifing a commit_message arg to prompts.publish, like this:
 <CodeGroup>
 
 ```python Python SDK
-pt = promptlayer.prompts.get("demo-template")
+pt = promptlayer.templates.get("demo-template")
 
 promptlayer.prompts.publish(
     "demo-template",
     commit_message="This is a test",
-    prompt_template=pt,
+    prompt_template=pt["prompt_template"],
 )
 ```
 
 ```js JavaScript
-const pt = await promptlayer.prompts.get({
+const pt = await promptlayer.templates.get({
   prompt_name: "demo-template"
 });
 
 promptlayer.prompts.publish({
   prompt_name: "demo-template",
   commit_message: "This is a test",
-  prompt_template: pt,
+  prompt_template: pt.prompt_template,
 });
 ```
 
@@ -518,27 +516,6 @@ response = client.chat.completions.create(
 )
 ```
 
-```python Python SDK (Legacy)
-def get_message(chat_message):
-    if "prompt" in chat_message:
-        return {"role": chat_message.get("role"), "content":chat_message.get("prompt", {}).get("template", "")}
-    return chat_message
-
-prompt = promptlayer.prompts.get(
-    prompt_name="my_prompt_with_functions"
-)
-messages = [get_message(message) for message in prompt.get("messages", [])]
-functions = prompt.get("functions", [])
-function_call = prompt.get("function_call")
-
-response = openai.ChatCompletion.create(
-    model="gpt-3.5-turbo",
-    messages=messages,
-    functions=functions,
-    function_call=function_call
-)
-```
-
 ```js JavaScript (Metadata)
 const prompt = await promptlayer.templates.get(
   "my_prompt_with_functions",
@@ -567,33 +544,6 @@ const prompt = await promptlayer.templates.get(
 const response = await openai.completions.create({
   ...prompt.llm_kwargs,
   model: "gpt-3.5-turbo",
-});
-```
-
-```js JavaScript (Legacy)
-const get_message = (chat_message) => {
-  if ("prompt" in chat_message) {
-    return {
-      role: chat_message.role,
-      content: chat_message.prompt.template,
-    };
-  }
-  return chat_message;
-};
-
-const prompt = await promptlayer.prompts.get({
-  prompt_name: "my_prompt_with_functions",
-});
-
-const messages = prompt.messages.map(get_message);
-const functions = prompt.functions;
-const function_call = prompt.function_call;
-
-const response = await openai.completions.create({
-  model: "gpt-3.5-turbo",
-  messages,
-  functions,
-  function_call,
 });
 ```
 
