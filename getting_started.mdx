@@ -742,12 +742,6 @@ const city_choice_prompt_prod = await promptlayer.templates.get("city_choice", {
 console.log(city_choice_prompt_v1["prompt_template"]);
 ```
 
-```python Python (LangChain)
-city_choice_prompt = promptlayer.prompts.get("city_choice", langchain=True)
-city_choice_prompt_v1 = promptlayer.prompts.get("city_choice", version=1, langchain=True)
-print(city_choice_prompt_v1.template)
-```
-
 ```js Javascript (REST)
 axios
     .post(
