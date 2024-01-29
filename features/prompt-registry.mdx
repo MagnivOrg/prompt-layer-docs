@@ -80,7 +80,7 @@ const template_dict = await promptlayer.templates.get("my_template", { version: 
 
 ### Metadata
 
-When fetching a prompt template, you can optionally retrieve metadata by using `include_metadata=True` in Python SDK. This will provide you with a tuple containing both the prompt template and the metadata. For example:
+When fetching a prompt template, you can view your `metadata` using the following code snippet:
 
 <CodeGroup>
 
@@ -95,8 +95,6 @@ console.log(template.metadata);
 ```
 
 </CodeGroup>
-
-Notice you don't need to specify `include_metadata=True` in JavaScript SDK, as metadata is always included.
 
 ### With LangChain
 
