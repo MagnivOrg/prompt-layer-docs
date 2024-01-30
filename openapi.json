@@ -151,7 +151,7 @@
             "in": "path",
             "required": true,
             "schema": {
-              "anyOf": [{ "type": "string" }, { "type": "integer" }],
+              "type": "string",
               "title": "prompt_name"
             }
           }
@@ -714,18 +714,6 @@
             "const": "completion",
             "title": "Type",
             "default": "completion"
-          },
-          "prefill": {
-            "anyOf": [
-              { "$ref": "#/components/schemas/TextContent" },
-              { "type": "null" }
-            ]
-          },
-          "system": {
-            "anyOf": [
-              { "$ref": "#/components/schemas/TextContent" },
-              { "type": "null" }
-            ]
           }
         },
         "additionalProperties": true,
@@ -1040,7 +1028,8 @@
           },
           "llm_kwargs": {
             "anyOf": [{ "type": "object" }, { "type": "null" }],
-            "title": "Llm Kwargs"
+            "title": "Llm Kwargs",
+            "description": "When you optionally specify `provider` in the body, `llm_kwargs` will be returned for that specific provider and you can pass these kwargs to the provider's API directly."
           }
         },
         "type": "object",

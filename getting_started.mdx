@@ -804,12 +804,12 @@ Once a prompt is in the registry, we can link it to a request ([learn more](feat
 <CodeGroup>
 
 ```python Python
-# Grab the prompt template
 input_variables = {
     "city": "Washington, D.C.", 
     "interests": "resorts, museums, beaches"
 }
 
+# Grab the prompt template
 city_choice_prompt = promptlayer.templates.get("city_choice",
 {
   "provider": "openai",

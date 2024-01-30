@@ -43,7 +43,7 @@ const template_dict = await promptlayer.templates.get("my_template");
 
 Alternatively, use the REST API endpoint `/prompte-templates/{prompt_name}` ([read more](/reference/templates-get)).
 
-*Note*: Please use `promptlayer.templates.get` to access prompt templates. `The promptlayer.prompts.get` function is deprecated and returns templates in the legacy format.
+*Note*: Please use `promptlayer.templates.get` to access prompt templates. The `promptlayer.prompts.get` function is deprecated and returns templates in the legacy format.
 
 ### By Release Label
 
@@ -172,12 +172,12 @@ Or set them, by specifing a commit_message arg to prompts.publish, like this:
 <CodeGroup>
 
 ```python Python SDK
-pt = promptlayer.templates.get("demo-template")
+pt = promptlayer.prompts.get("demo-template")
 
 promptlayer.prompts.publish(
     "demo-template",
     commit_message="This is a test",
-    prompt_template=pt["prompt_template"],
+    prompt_template=pt,
 )
 ```
 
