@@ -172,6 +172,7 @@ Or set them, by specifing a commit_message arg to prompts.publish, like this:
 <CodeGroup>
 
 ```python Python SDK
+# prompts.get is deprecated in favor of templates.get
 pt = promptlayer.prompts.get("demo-template")
 
 promptlayer.prompts.publish(
