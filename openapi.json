@@ -139,6 +139,57 @@
           }
         }
       }
+    },
+    "/prompt-templates/{prompt_name}": {
+      "post": {
+        "tags": ["prompt-templates"],
+        "summary": "Get Prompt Template by ID",
+        "operationId": "get_prompt_templates__prompt_name__post",
+        "parameters": [
+          {
+            "name": "prompt_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "prompt_name"
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  { "$ref": "#/components/schemas/GetPromptTemplate" },
+                  { "type": "null" }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -589,6 +640,401 @@
             "required": ["provider", "name"]
           }
         }
+      },
+      "GetPromptTemplate": {
+        "properties": {
+          "version": {
+            "anyOf": [
+              { "type": "integer", "exclusiveMinimum": 0.0 },
+              { "type": "null" }
+            ],
+            "title": "Version"
+          },
+          "workspace_id": {
+            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "title": "Workspace Id"
+          },
+          "label": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Label"
+          },
+          "provider": {
+            "anyOf": [
+              { "type": "string", "enum": ["openai", "anthropic"] },
+              { "type": "null" }
+            ],
+            "title": "Provider"
+          },
+          "input_variables": {
+            "anyOf": [
+              {
+                "additionalProperties": { "type": "string" },
+                "type": "object"
+              },
+              { "type": "null" }
+            ],
+            "title": "Input Variables"
+          }
+        },
+        "type": "object",
+        "title": "GetPromptTemplate"
+      },
+      "CompletionPrompt": {
+        "properties": {
+          "content": {
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ImageContent" }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "image_url": "#/components/schemas/ImageContent",
+                  "text": "#/components/schemas/TextContent"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Content"
+          },
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "type": {
+            "const": "completion",
+            "title": "Type",
+            "default": "completion"
+          }
+        },
+        "additionalProperties": true,
+        "type": "object",
+        "required": ["content"],
+        "title": "CompletionPrompt"
+      },
+      "TextContent": {
+        "properties": {
+          "type": { "const": "text", "title": "Type", "default": "text" },
+          "text": { "type": "string", "title": "Text" }
+        },
+        "type": "object",
+        "required": ["text"],
+        "title": "TextContent"
+      },
+      "ImageURL": {
+        "properties": {
+          "url": { "type": "string", "title": "Url" },
+          "detail": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": ["url"],
+        "title": "ImageURL"
+      },
+      "ImageContent": {
+        "properties": {
+          "type": {
+            "const": "image_url",
+            "title": "Type",
+            "default": "image_url"
+          },
+          "image_url": { "$ref": "#/components/schemas/ImageURL" }
+        },
+        "type": "object",
+        "required": ["image_url"],
+        "title": "ImageContent"
+      },
+      "SystemMessage": {
+        "properties": {
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "content": {
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ImageContent" }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "image_url": "#/components/schemas/ImageContent",
+                  "text": "#/components/schemas/TextContent"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Content"
+          },
+          "role": { "const": "system", "title": "Role", "default": "system" },
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["content"],
+        "title": "SystemMessage"
+      },
+      "UserMessage": {
+        "properties": {
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "content": {
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ImageContent" }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "image_url": "#/components/schemas/ImageContent",
+                  "text": "#/components/schemas/TextContent"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Content"
+          },
+          "role": { "const": "user", "title": "Role", "default": "user" },
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["content"],
+        "title": "UserMessage"
+      },
+      "AssistantMessage": {
+        "properties": {
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "items": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/TextContent" },
+                    { "$ref": "#/components/schemas/ImageContent" }
+                  ],
+                  "discriminator": {
+                    "propertyName": "type",
+                    "mapping": {
+                      "image_url": "#/components/schemas/ImageContent",
+                      "text": "#/components/schemas/TextContent"
+                    }
+                  }
+                },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "const": "assistant",
+            "title": "Role",
+            "default": "assistant"
+          },
+          "function_call": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/FunctionCall" },
+              { "type": "null" }
+            ]
+          },
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "title": "AssistantMessage"
+      },
+      "FunctionMessage": {
+        "properties": {
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "content": {
+            "anyOf": [
+              {
+                "items": {
+                  "oneOf": [
+                    { "$ref": "#/components/schemas/TextContent" },
+                    { "$ref": "#/components/schemas/ImageContent" }
+                  ],
+                  "discriminator": {
+                    "propertyName": "type",
+                    "mapping": {
+                      "image_url": "#/components/schemas/ImageContent",
+                      "text": "#/components/schemas/TextContent"
+                    }
+                  }
+                },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Content"
+          },
+          "role": {
+            "const": "function",
+            "title": "Role",
+            "default": "function"
+          },
+          "name": { "type": "string", "title": "Name" }
+        },
+        "type": "object",
+        "required": ["name"],
+        "title": "FunctionMessage"
+      },
+      "MessageFunctionCall": {
+        "properties": { "name": { "type": "string", "title": "Name" } },
+        "type": "object",
+        "required": ["name"],
+        "title": "MessageFunctionCall"
+      },
+      "ChatPrompt": {
+        "properties": {
+          "messages": {
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/SystemMessage" },
+                { "$ref": "#/components/schemas/UserMessage" },
+                { "$ref": "#/components/schemas/AssistantMessage" },
+                { "$ref": "#/components/schemas/FunctionMessage" }
+              ],
+              "discriminator": {
+                "propertyName": "role",
+                "mapping": {
+                  "assistant": "#/components/schemas/AssistantMessage",
+                  "function": "#/components/schemas/FunctionMessage",
+                  "system": "#/components/schemas/SystemMessage",
+                  "user": "#/components/schemas/UserMessage"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Messages"
+          },
+          "functions": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/Function" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Functions"
+          },
+          "function_call": {
+            "anyOf": [
+              { "type": "string" },
+              { "$ref": "#/components/schemas/MessageFunctionCall" },
+              { "type": "null" }
+            ],
+            "title": "Function Call"
+          },
+          "type": { "const": "chat", "title": "Type", "default": "chat" },
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": ["messages"],
+        "title": "ChatPrompt"
+      },
+      "GetPromptTemplateResponse": {
+        "properties": {
+          "id": { "type": "integer", "title": "Id" },
+          "prompt_name": { "type": "string", "title": "Prompt Name" },
+          "prompt_template": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/CompletionPrompt" },
+              { "$ref": "#/components/schemas/ChatPrompt" }
+            ],
+            "title": "Prompt Template",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "chat": "#/components/schemas/ChatPrompt",
+                "completion": "#/components/schemas/CompletionPrompt"
+              }
+            }
+          },
+          "metadata": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Metadata" },
+              { "type": "null" }
+            ]
+          },
+          "commit_message": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Commit Message"
+          },
+          "llm_kwargs": {
+            "anyOf": [{ "type": "object" }, { "type": "null" }],
+            "title": "Llm Kwargs",
+            "description": "When you optionally specify `provider` in the body, `llm_kwargs` will be returned for that specific provider and you can pass these kwargs to the provider's API directly."
+          }
+        },
+        "type": "object",
+        "required": ["id", "prompt_name", "prompt_template"],
+        "title": "GetPromptTemplateResponse"
       }
     }
   }

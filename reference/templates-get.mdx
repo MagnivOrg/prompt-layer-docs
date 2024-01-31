@@ -1,0 +1,8 @@
+---
+title: "Get Prompt Template"
+openapi: "POST /prompt-templates/{prompt_name}"
+---
+
+Retrieve a prompt template using it's `prompt_name`. Optionally, specify `version` (version number) or `label` (release label like "prod") to retrieve a specific version. If not specified, the latest version is returned.
+
+You can also specify a `provider` to return LLM-specific arguments that can be passed directly into your LLM client. To format the template with input variables, use `input_variables`.

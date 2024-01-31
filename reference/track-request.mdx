@@ -154,7 +154,7 @@ print(response.json())
     An array of string tags to tag this request on the PromptLayer dashboard.
 </ParamField>
 <ParamField body="prompt_id" type="string" optional="true">
-    The ID of the prompt in the PromptLayer Registry that you used for this request (see `get-prompt-template` on how to get this id or you can get it from the URL in the dashboard).
+    The ID of the prompt in the PromptLayer Registry that you used for this request (see `/prompt-templates/{prompt_name}` on how to get this id or you can get it from the URL in the dashboard).
 </ParamField>
 <ParamField body="prompt_input_variables" type="object" optional="true">
     The input variables you used for a template. This is used for syntax highlighting and, more importantly used, for backtesting when you want to iterate a prompt.

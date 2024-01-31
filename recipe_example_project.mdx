@@ -141,31 +141,24 @@ The Prompt Registry is where we can easily manage all of our prompt templates. T
 Once our prompt template has been created, we can retrieve it from PromptLayer.
 
 ```python
-recipe_template = promptlayer.prompts.get("recipe_template")
-system_content = recipe_template['messages'][0]['prompt']['template']
-user_content_template = recipe_template['messages'][1]['prompt']['template']
-```
-
-To use our template, we'll create a `variables` dictionary containing the values we want to pass in. Using these values, we'll construct the full prompt then pass it to OpenAI to obtain a recipe suggestion.
-
-```python
 variables = {
     'food': food,
     'recipes_string': '\n\n'.join(recipes_list)
 }
 
-response, pl_request_id = openai.ChatCompletion.create(
+recipe_template = promptlayer.templates.get("recipe_template", {
+    "provider": "openai",
+    "input_variables": variables
+})
+```
+
+To use our template, we'll create a `variables` dictionary containing the values we want to pass in. Using these values, we'll construct the full prompt then pass it to OpenAI to obtain a recipe suggestion.
+
+```python
+
+response, pl_request_id = openai.chat.completions.create(
+    **recipe_template["llm_kwargs"],
     model='gpt-3.5-turbo',
-    messages=[
-        {
-            'role': 'system',
-            'content': system_content
-        },
-        {
-            'role': 'user',
-            'content': user_content_template.format(**variables)
-        },
-    ],
     temperature=0.5,
     max_tokens=1024,
     return_pl_id=True
@@ -238,13 +231,13 @@ When editing a template, you can click on "Parameters" > "Set Parameters" to set
 
 ![Set parameters screenshot](images/recipe-set-parameters.png)
 
-You can now retrieve that metadata by using `include_metadata=True`. The function will then return a tuple containing both the prompt template and the metadata.
+You can now retrieve that metadata by using the following code:
 
 ```python
-recipe_template, metadata = promptlayer.prompts.get(
-    "recipe_template",
-    include_metadata=True
+recipe_template = promptlayer.templates.get(
+    "recipe_template"
 )
+metadata = recipe_template["metadata"]
 ```
 
 ### Adding Labels
