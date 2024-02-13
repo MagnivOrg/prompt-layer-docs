@@ -80,7 +80,8 @@
         "reference/track-group",
         "reference/track-metadata",
         "reference/get-prompts",
-        "reference/dataset-from-filter-params"
+        "reference/dataset-from-filter-params",
+        "reference/reports"
       ]
     }
   ],
