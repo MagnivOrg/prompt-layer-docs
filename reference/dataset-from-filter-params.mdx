@@ -1,0 +1,83 @@
+---
+title: "Dataset From Filter Params"
+api: "POST https://api.promptlayer.com/dataset-from-filter-params"
+---
+
+This endpoint allows you to create a dataset based on a specific search query. This dataset is then stored under a given workspace, associated with specified tags, metadata, and other criteria such as time range and scores.
+
+## Example Code
+```python
+import requests
+
+response = requests.post(
+    "https://api.promptlayer.com/dataset-from-filter-params",
+    json={
+        "name": "Dataset Name",
+        "workspace_id": 1,
+        "q": "javascript",
+        "start_time": "2023-11-17 20:14:31.874642",
+        "end_time": "2024-11-18 20:14:31.874642",
+        "tags": ["beans", "beef"],
+        "metadata": [
+            {"key": "name", "value": "bucky"},
+            {"key": "is_vegetarian", "value": "false"}
+        ],
+        "scores": [
+            {"name": "default", "operator": ">", "value": 20}
+        ],
+        "prompt_template": {
+            "name": "recipe_template",
+            "version_numbers": [50, 51]
+        },
+        "limit": 5,
+        "api_key": "pl_<YOUR API KEY>",
+    }
+)
+```
+
+
+## Request Parameters
+
+<ParamField body="name" type="string">
+    The name of the dataset to be created.
+</ParamField>
+
+<ParamField body="workspace_id" type="integer">
+    The ID of the workspace under which the dataset will be stored.
+</ParamField>
+
+<ParamField body="q" type="string">
+    The search query for filtering the data.
+</ParamField>
+
+<ParamField body="start_time" type="string">
+    The start time for the dataset's time range filter.
+</ParamField>
+
+<ParamField body="end_time" type="string">
+    The end time for the dataset's time range filter.
+</ParamField>
+
+<ParamField body="tags" type="array">
+    A list of tags to associate with the dataset.
+</ParamField>
+
+<ParamField body="metadata" type="array">
+    A list of metadata key-value pairs to associate with the dataset.
+</ParamField>
+
+<ParamField body="scores" type="array">
+    Score thresholds and conditions for filtering entries.
+</ParamField>
+
+<ParamField body="prompt_template" type="object">
+    The template for generating prompts, including name and version numbers.
+</ParamField>
+
+<ParamField body="limit" type="integer">
+    The maximum number of rows that will be included in the dataset.
+</ParamField>
+
+<ParamField body="api_key" type="string">
+    Your PromptLayer API Key.
+</ParamField>
