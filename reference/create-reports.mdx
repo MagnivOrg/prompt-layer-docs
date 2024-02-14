@@ -14,7 +14,6 @@ response = requests.post(
     json={
         "name": "<REPORT_NAME>",
         "test_dataset_id": <TEST_DATASET_ID>,
-        "api_key": "pl_<YOUR API KEY>",
     }
 )
 ```
@@ -28,8 +27,4 @@ response = requests.post(
 
 <ParamField body="test_dataset_id" type="integer">
     The ID of the test dataset on which the report will be based. The dataset must be within an accessible workspace.
-</ParamField>
-
-<ParamField body="api_key" type="string">
-    Your PromptLayer API Key.
 </ParamField>

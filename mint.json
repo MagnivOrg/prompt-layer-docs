@@ -81,7 +81,7 @@
         "reference/track-metadata",
         "reference/get-prompts",
         "reference/dataset-from-filter-params",
-        "reference/reports"
+        "reference/create-reports"
       ]
     }
   ],
