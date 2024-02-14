@@ -1,0 +1,46 @@
+---
+title: "Continuous Integration"
+icon: "question"
+---
+
+BACKTESTING
+CONTINUOUS INTEGRATION
+REGRESSION TESTING
+
+The new Evaluations page is a versatile platform designed to meet the diverse needs of prompt evaluation in production environments. Inspired by the flexibility of tools like Microsoft Excel, this page offers a visual pipeline builder that allows users to construct complex evaluation workflows tailored to their specific requirements. Whether you're scoring prompts, running bulk jobs, or conducting regression testing, the Evaluations page provides the tools needed to assess prompt quality effectively.
+
+[something about nontechnical]
+
+## Key Features
+
+- **Visual Pipeline Builder**: Design and execute evaluation pipelines, whether they are chains or one-off batches. We believe evaluation engineering is half the challenge of getting your prompt right.
+- **Continuous Integration for Prompt Templates**: Automatically trigger evaluations with new prompt versions, providing immediate feedback on performance changes. Use historical request data to see how the new version changes output on previous runs.
+- **Extensible for Various Applications**: Whether it's for chatbots, RAG systems, or SQL bots, the Evaluations will meet you and your AI or Human evaluators.
+- **Flexible Evaluation Strategies**: Support for a wide range of evaluation methods including scoring prompts with golden datasets, bulk job processing, and regression testing.
+
+
+## Use Cases
+
+1. **Scoring Prompts**
+- Utilize golden datasets to compare prompt outputs against ground truths.
+- Incorporate human or AI evaluators to assess prompt quality.
+
+2. **One-off Batch Jobs**
+- Ideal for experimenting and iterating on prompts, the Evaluations page excels in processing large volumes of input data efficiently.
+
+3. **Regression Testing**
+- Connect evaluation pipelines to prompt templates for automatic testing with each new version, using historical request data to identify improvements or regressions.
+
+## Examples of Applications
+
+- **Chatbot Enhancements**: Improve chatbot interactions by evaluating responses to user requests against semantic criteria.
+- **RAG System Testing**: Build a RAG pipeline and validate responses against a golden dataset.
+- **SQL Bot Optimization**: Test Natural Language to SQL generation prompts by _actually_ running generated queries against a database (using the API Endpoint column), followed by an evaluation of the results' accuracy.
+
+## Setting up Continuous Integration
+
+Continuous integration in the context of prompt evaluations involves automatically running evaluations whenever there's a change or update to prompt templates. This ensures that new versions are rigorously tested against historical data, maintaining high standards of prompt performance and functionality. Here's how to set it up:
+
+To facilitate Continuous Integration, the Evaluations page allows you to link prompt templates with evaluations, automatically running tests on new versions using datasets created from historical data. This integration empowers non-technical team members to monitor prompt performance through the dashboard, enabling them to easily interpret results and make informed decisions without delving into complex technical details.
+
+BACKTESTING

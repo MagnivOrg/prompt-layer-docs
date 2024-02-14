@@ -58,8 +58,19 @@
       "group": "Why PromptLayer?",
       "pages": [
         "why-promptlayer/advanced-search",
+        {
+          "group": "Evaluations",
+          "pages": [
+            "features/evaluations/overview",
+            "features/evaluations/continuous-integration",
+            "features/evaluations/examples",
+            "features/evaluations/building-pipelines",
+            "features/evaluations/datasets",
+            "features/evaluations/programmatic"
+          ],
+          "icon": "question"
+        },
         "why-promptlayer/fine-tuning",
-        "why-promptlayer/evaluation-page",
         "why-promptlayer/analytics",
         "why-promptlayer/evaluation-and-ranking",
         "why-promptlayer/playground",
