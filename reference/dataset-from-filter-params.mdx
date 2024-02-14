@@ -25,12 +25,12 @@ response = requests.post(
         "scores": [
             {"name": "default", "operator": ">", "value": 20}
         ],
+        "starred": True,
         "prompt_template": {
             "name": "recipe_template",
             "version_numbers": [50, 51]
         },
         "limit": 5,
-        "api_key": "pl_<YOUR API KEY>",
     }
 )
 ```
@@ -70,14 +70,14 @@ response = requests.post(
     Score thresholds and conditions for filtering entries.
 </ParamField>
 
+<ParamField body="starred" type="boolean">
+    Only include starred requests.
+</ParamField>
+
 <ParamField body="prompt_template" type="object">
     The template for generating prompts, including name and version numbers.
 </ParamField>
 
 <ParamField body="limit" type="integer">
     The maximum number of rows that will be included in the dataset.
-</ParamField>
-
-<ParamField body="api_key" type="string">
-    Your PromptLayer API Key.
 </ParamField>
