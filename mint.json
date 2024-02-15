@@ -68,7 +68,7 @@
             "features/evaluations/datasets",
             "features/evaluations/programmatic"
           ],
-          "icon": "question"
+          "icon": "vial-circle-check"
         },
         "why-promptlayer/fine-tuning",
         "why-promptlayer/analytics",

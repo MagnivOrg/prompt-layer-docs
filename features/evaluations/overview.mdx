@@ -1,34 +1,25 @@
 ---
 title: "Evals Overview"
-icon: "question"
+icon: "book"
 ---
 
-The new Evaluations page is a versatile platform designed to meet the diverse needs of prompt evaluation in production environments. Inspired by the flexibility of tools like Microsoft Excel, this page offers a visual pipeline builder that allows users to construct complex evaluation workflows tailored to their specific requirements. Whether you're scoring prompts, running bulk jobs, or conducting regression testing, the Evaluations page provides the tools needed to assess prompt quality effectively.
+**We believe that evaluation engineering is half the challenge of building a good prompt.** The Evaluations page is designed to help you iterate, build, and run batch evaluations on top of your prompts. Every prompt and every use case is different.
 
-[something about nontechnical]
+Inspired by the flexibility of tools like Excel, we offer a visual pipeline builder that allows users to construct complex evaluation batches tailored to their specific requirements. Whether you're scoring prompts, running bulk jobs, or conducting regression testing, the Evaluations page provides the tools needed to assess prompt quality effectively. Made for both engineers and subject-matter experts.
 
-## Key Features
+## Common Tasks
 
-- **Visual Pipeline Builder**: Design and execute evaluation pipelines, whether they are chains or one-off batches. We believe evaluation engineering is half the challenge of getting your prompt right.
-- **Continuous Integration for Prompt Templates**: Automatically trigger evaluations with new prompt versions, providing immediate feedback on performance changes. Use historical request data to see how the new version changes output on previous runs.
-- **Extensible for Various Applications**: Whether it's for chatbots, RAG systems, or SQL bots, the Evaluations will meet you and your AI or Human evaluators.
-- **Flexible Evaluation Strategies**: Support for a wide range of evaluation methods including scoring prompts with golden datasets, bulk job processing, and regression testing.
+- **Scoring Prompts**: Utilize golden datasets for comparing prompt outputs with ground truths and incorporate human or AI evaluators for quality assessment.
+- **One-off Bulk Jobs**: Ideal for prompt experimentation and iteration.
+- **Backtesting**: Use historical data to build datasets and compare how a new prompt version performs against real production examples.
+- **Regression Testing**: Build evaluation pipelines and datasets to prevent edge-case regression on prompt template updates.
+- **Continuous Integration**: Connect evaluation pipelines to prompt templates to automatically run an eval with each new version (and catologue the results). Think of it like a Github action.
 
-
-## Use Cases
-
-1. **Scoring Prompts**
-- Utilize golden datasets to compare prompt outputs against ground truths.
-- Incorporate human or AI evaluators to assess prompt quality.
-
-2. **One-off Batch Jobs**
-- Ideal for experimenting and iterating on prompts, the Evaluations page excels in processing large volumes of input data efficiently.
-
-3. **Regression Testing**
-- Connect evaluation pipelines to prompt templates for automatic testing with each new version, using historical request data to identify improvements or regressions.
-
-## Examples of Applications
+## Examples Use-Cases
 
 - **Chatbot Enhancements**: Improve chatbot interactions by evaluating responses to user requests against semantic criteria.
 - **RAG System Testing**: Build a RAG pipeline and validate responses against a golden dataset.
 - **SQL Bot Optimization**: Test Natural Language to SQL generation prompts by _actually_ running generated queries against a database (using the API Endpoint column), followed by an evaluation of the results' accuracy.
+- **Improving Summaries**: Combine AI evaluating prompts and human graders to help improve prompts without a ground truth.
+
+[See detailed examples.](/features/evaluations/examples)
