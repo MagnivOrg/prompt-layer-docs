@@ -762,7 +762,8 @@
         "additionalProperties": true,
         "type": "object",
         "required": ["content"],
-        "title": "CompletionPrompt"
+        "title": "CompletionPrompt",
+        "description": "Completion Prompt Template"
       },
       "TextContent": {
         "properties": {
