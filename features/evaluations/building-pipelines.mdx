@@ -1,0 +1,44 @@
+---
+title: "Getting Started"
+icon: "flag-checkered"
+---
+
+<iframe width="560" height="315" src="https://www.youtube.com/embed/8hW-OjwpwMk" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" allowfullscreen></iframe>
+
+The overall process of building an evaluation pipeline looks like this:
+
+1. **Select Your Dataset**: Choose or upload datasets to serve as the basis for your evaluations, whether for scoring, regression testing, or bulk job processing.
+2. **Build Your Pipeline**: Start by visually constructing your evaluation pipeline, defining each step from input data processing to final evaluation.
+3. **Run Evaluations**: Execute your pipeline, observe the results in a spreadsheet-like interface, and make informed decisions based on comprehensive metrics and scores.
+
+## Creating a Pipeline Preview
+
+1. **Initiate a Batch Run**: Start by creating a new batch run, which requires specifying a name and selecting a dataset.
+2. **Dataset Selection**: Upload a CSV/JSON dataset, or create a dataset from historical data using filters like time range, prompt template logs, scores, and metadata. [Learn more here.](/features/evaluations/datasets)
+
+You now have a preview. Preview mode allows you to iterate with live feedback, allowing for adjustments in real-time.
+
+## Setting up the Pipeline
+
+### Adding Columns
+
+Click 'Add Column' to start building your pipeline, with each column representing a step in the evaluation process.
+
+Columns execute in order left to right. That means that if a column depends on a previous column, make sure it appears to the right of the dependency.
+
+#### Common Column Types
+
+- **Prompt Template**: Select a prompt template from the registry, set model parameters, LLM, arguments, and template version.
+- **Custom API Endpoint**: Define a URL to send and receive data, suitable for custom evaluators or external systems.
+- **Human Input**: Engage human graders by adding a column that allows for textual input.
+- **String Comparison**: Use this column to compare the outputs of two previous columns, showing a visual diff when relevant.
+
+#### Scoring
+
+If the last column (or step) of your evaluation pipeline contains all booleans or numeric values, that will be consider the score for the row. Your full evaluation report will have a scorecard of the average of this last column.
+
+_NOTE: All cells in the last column must be boolean or all must be numeric. If any cell deviates, the score will not be calculated_
+
+## Executing Full Batch Runs
+
+Transition from preview to full batch run to apply your pipeline across the entire dataset for comprehensive evaluation.
