@@ -63,10 +63,10 @@
           "pages": [
             "features/evaluations/overview",
             "features/evaluations/continuous-integration",
-            "features/evaluations/examples",
+            
             "features/evaluations/building-pipelines",
-            "features/evaluations/datasets",
-            "features/evaluations/programmatic"
+            "features/evaluations/datasets"
+            
           ],
           "icon": "vial-circle-check"
         },
