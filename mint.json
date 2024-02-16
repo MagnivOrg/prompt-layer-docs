@@ -65,8 +65,8 @@
             "features/evaluations/continuous-integration",
             
             "features/evaluations/building-pipelines",
-            "features/evaluations/datasets"
-            
+            "features/evaluations/datasets",
+            "features/evaluations/programmatic"
           ],
           "icon": "vial-circle-check"
         },
