@@ -85,6 +85,7 @@
         "reference/track-request",
         "reference/templates-get",
         "reference/get-prompt-template",
+        "reference/templates-publish",
         "reference/publish-prompt-template",
         "reference/track-score",
         "reference/track-prompt",
