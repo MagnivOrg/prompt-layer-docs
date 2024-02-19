@@ -123,12 +123,15 @@ While it's easiest to publish prompt templates visually through the dashboard, s
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.prompts.publish(
-    "my_template", prompt_template=my_template, tags=["my_tag"])
+promptlayer.templates.publish({
+  "prompt_name": "my_template", 
+  "prompt_template": my_template,
+  "tags": ["my_tag"]   
+})
 ```
 
 ```js JavaScript
-promptlayer.prompts.publish({
+promptlayer.templates.publish({
   prompt_name: "my_template",
   prompt_template: my_template,
   tags: ["my_tag"],
@@ -167,19 +170,18 @@ promptlayer.prompts.all()
 
 </CodeGroup>
 
-Or set them, by specifing a commit_message arg to prompts.publish, like this:
+Or set them, by specifing a commit_message arg to templates.publish, like this:
 
 <CodeGroup>
 
 ```python Python SDK
-# prompts.get is deprecated in favor of templates.get
-pt = promptlayer.prompts.get("demo-template")
+pt = promptlayer.templates.get("demo-template")
 
-promptlayer.prompts.publish(
-    "demo-template",
-    commit_message="This is a test",
-    prompt_template=pt,
-)
+promptlayer.templates.publish({
+    "prompt_name": "demo-template",
+    "commit_message": "This is a test",
+    "prompt_template": pt["prompt_template"],
+})
 ```
 
 ```js JavaScript
@@ -187,7 +189,7 @@ const pt = await promptlayer.templates.get({
   prompt_name: "demo-template"
 });
 
-promptlayer.prompts.publish({
+promptlayer.templates.publish({
   prompt_name: "demo-template",
   commit_message: "This is a test",
   prompt_template: pt.prompt_template,
@@ -200,7 +202,7 @@ They are also available through the following REST API endpoints
 
 `/prompt-templates/{prompt_name}` ([read more](/reference/templates-get))
 
-`/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template))
+`/rest/prompt-templates` ([read more](/reference/templates-publish))
 
 ### Metadata
 
@@ -217,10 +219,10 @@ You can use our Python SDK to publish a prompt template with metadata. For examp
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.prompts.publish(
-    "my_template",
-    prompt_template=my_template,
-    metadata={
+promptlayer.templates.publish({
+    "prompt_name": "my_template",
+    "prompt_template": my_template,
+    "metadata": {
         "model": {
             "provider": "openai",
             "name": "gpt-3.5-turbo",
@@ -228,11 +230,11 @@ promptlayer.prompts.publish(
         },
         "category": "weather",
     }
-)
+})
 ```
 
 ```js JavaScript
-promptlayer.prompts.publish({
+promptlayer.templates.publish({
   prompt_name: "my_template",
   prompt_template: my_template,
   metadata: {
@@ -248,7 +250,7 @@ promptlayer.prompts.publish({
 
 </CodeGroup>
 
-Alternatively, use the REST API endpoint `/rest/publish-prompt-template` ([read more](/reference/publish-prompt-template)).
+Alternatively, use the REST API endpoint `/rest/prompt-templates` ([read more](/reference/templates-publish)).
 
 You can also use Langchain to create a template, either by pulling it from LangchainHub, creating a custom template, or providing a Python dictionary directly.
 
@@ -386,27 +388,26 @@ functions = [
   }
 ]
 
-promptlayer.prompts.publish(
-  prompt_name="test_chat_functions",
-  prompt_template={
-    "function_call": "auto", # or {"name": function_name} if you want to make sure the function gets called.
-    "input_variables": [], # list them here if it has any
-    "messages": [
-      {
-        "role": role,
-        "prompt": {
-          "input_variables": [], # list them here if it has any
-          "template": content,
-          "template_format": "f-string", # or "jinja"
-          "validate_template": True, # optional
-          "_type": "prompt",
-        },
-      } for (role, content) in map(lambda x: x.values(), messages)
-    ],
-    "functions": functions,
-    "_type": "chat_promptlayer_langchain", # important if using gpt-3.5-turbo or gpt-4
-  },
-)
+promptlayer.templates.publish({
+    "prompt_name": "test_chat_functions",
+    "prompt_template": {
+        "type": "chat",
+        "function_call": "auto",
+        "messages": [
+            {
+                "role": role,
+                "content": [
+                    {
+                        "type": "text",
+                        "text": content,
+                    }
+                ],
+            }
+            for (role, content) in map(lambda x: x.values(), messages)
+        ],
+        "functions": functions,
+    }
+  })
 
 response = openai.ChatCompletion.create(
   model="gpt-3.5-turbo",
@@ -438,23 +439,21 @@ const functions = [
   },
 ];
 
-promptlayer.prompts.publish({
+promptlayer.templates.publish({
   prompt_name: "test_chat_functions",
   prompt_template: {
-    function_call: "auto", // or {"name": function_name} if you want to make sure the function gets called.
-    input_variables: [], // list them here if it has any
+    type: "chat",
+    function_call: "auto",
     messages: messages.map(({ role, content }) => ({
       role,
-      prompt: {
-        input_variables: [], // list them here if it has any
-        template: content,
-        template_format: "f-string", // or "jinja"
-        validate_template: true, // optional
-        _type: "prompt",
-      },
+      content: [
+        {
+          type: "text",
+          text: content,
+        },
+      ],
     })),
     functions,
-    _type: "chat_promptlayer_langchain", // important if using gpt-3.5-turbo or gpt-4
   },
 });
 

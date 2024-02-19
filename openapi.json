@@ -190,6 +190,49 @@
           }
         }
       }
+    },
+    "/rest/prompt-templates": {
+      "post": {
+        "tags": ["rest", "prompt-templates"],
+        "summary": "Publish Prompt Template",
+        "operationId": "publish_prompt_template_rest_prompt_templates_post",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": { "$ref": "#/components/schemas/CreatePromptTemplate" }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -719,7 +762,8 @@
         "additionalProperties": true,
         "type": "object",
         "required": ["content"],
-        "title": "CompletionPrompt"
+        "title": "CompletionPrompt",
+        "description": "Completion Prompt Template"
       },
       "TextContent": {
         "properties": {
@@ -1035,6 +1079,108 @@
         "type": "object",
         "required": ["id", "prompt_name", "prompt_template"],
         "title": "GetPromptTemplateResponse"
+      },
+      "BasePromptTemplate": {
+        "properties": {
+          "prompt_name": {
+            "type": "string",
+            "maxLength": 512,
+            "minLength": 1,
+            "title": "Prompt Name"
+          },
+          "tags": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Tags",
+            "default": []
+          }
+        },
+        "type": "object",
+        "required": ["prompt_name"],
+        "title": "BasePromptTemplate"
+      },
+      "PromptVersion": {
+        "properties": {
+          "prompt_template": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/CompletionPrompt" },
+              { "$ref": "#/components/schemas/ChatPromptTemplate" }
+            ],
+            "title": "Prompt Template",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "chat": "#/components/schemas/ChatPromptTemplate",
+                "completion": "#/components/schemas/CompletionPrompt"
+              }
+            }
+          },
+          "commit_message": {
+            "anyOf": [
+              { "type": "string", "maxLength": 72 },
+              { "type": "null" }
+            ],
+            "title": "Commit Message"
+          },
+          "metadata": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Metadata" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["prompt_template"],
+        "title": "PromptVersion"
+      },
+      "CreatePromptTemplate": {
+        "properties": {
+          "prompt_template": {
+            "$ref": "#/components/schemas/BasePromptTemplate"
+          },
+          "prompt_version": { "$ref": "#/components/schemas/PromptVersion" }
+        },
+        "type": "object",
+        "required": ["prompt_template", "prompt_version"],
+        "title": "CreatePromptTemplate"
+      },
+      "CreatePromptTemplateResponse": {
+        "properties": {
+          "id": { "type": "integer", "title": "Id" },
+          "prompt_name": { "type": "string", "title": "Prompt Name" },
+          "tags": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Tags"
+          },
+          "prompt_template": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/CompletionPrompt" },
+              { "$ref": "#/components/schemas/ChatPromptTemplate" }
+            ],
+            "title": "Prompt Template",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "chat": "#/components/schemas/ChatPromptTemplate",
+                "completion": "#/components/schemas/CompletionPrompt"
+              }
+            }
+          },
+          "metadata": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Metadata" },
+              { "type": "null" }
+            ]
+          },
+          "commit_message": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Commit Message"
+          }
+        },
+        "type": "object",
+        "required": ["id", "prompt_name", "tags", "prompt_template"],
+        "title": "CreatePromptTemplateResponse"
       }
     }
   }
