@@ -39,7 +39,15 @@
       "pages": [
         "features/prompt-history/tagging-requests",
         "features/prompt-history/sharing-prompts",
-        "features/prompt-registry",
+        {
+          "group": "Prompt Registry",
+          "pages": [
+            "features/prompt-registry/overview",
+            "features/prompt-registry/function-calling",
+            "features/prompt-registry/webhooks"
+          ],
+          "icon": "notebook"
+        },
         {
           "group": "Advanced Logging",
           "pages": [
