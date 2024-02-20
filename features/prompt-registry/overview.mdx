@@ -96,6 +96,54 @@ console.log(template.metadata);
 
 </CodeGroup>
 
+### Formatting
+
+PromptLayer can format and convert your prompt to the correct LLM format. You can do this by passing the arguments `provider` and `input_variables`.
+
+Currently we support `provider` type of either `openai` or `anthropic`
+
+<CodeGroup>
+
+```python Python SDK
+input_variables = {
+    "city": "Washington, D.C.", 
+    "interests": "resorts, museums, beaches"
+}
+
+city_choice_prompt = promptlayer.templates.get("city_choice",
+{
+  "provider": "openai",
+  "input_variables": input_variables
+})
+
+response, pl_request_id = client.completions.create(
+  **city_choice_prompt['llm_kwargs'],
+  model="gpt-3.5-turbo-instruct", 
+  pl_tags=["getting_started_example"],
+  return_pl_id=True
+)
+```
+
+```js JavaScript
+const input_variables = {
+  city: "Washington, D.C.",
+  interests: "resorts, museums, beaches",
+};
+const city_choice_prompt = await promptlayer.templates.get("city_choice", {
+  provider: "openai",
+  input_variables,
+});
+
+const [response, pl_request_id] = await openai.completions.create({
+  ...city_choice_prompt.llm_kwargs,
+  model: "gpt-3.5-turbo-instruct",
+  pl_tags: ["getting_started_example"],
+  return_pl_id: true,
+});
+```
+
+</CodeGroup>
+
 ## Publishing a Template
 
 You can use the UI or API to create a template.
