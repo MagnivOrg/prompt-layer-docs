@@ -188,6 +188,13 @@ promptlayer.templates.publish({
 
 </CodeGroup>
 
+### Composable Templates
+
+Use a prompt template as a reference snippet in your template. The prompt template will be pulled in at runtime.
+Only completion prompts can be used as snippets, and you can reference by template version, label, or just the template name and get the latest version each time.
+
+<img src="/images/composables-30fps.gif" />
+
 ### Release Labels
 
 Prompt labels are a way to put a label on your prompt template to help you organize and search for them. This enables you to get a specific version of prompt using the label. You can add as many labels as you want to a prompt template with one restriction - the label must be unique across all versions. This means that you cannot have a label called `prod` on both version 1 and version 2 of a prompt template. This restriction is in place to prevent confusion when searching for prompt templates.
