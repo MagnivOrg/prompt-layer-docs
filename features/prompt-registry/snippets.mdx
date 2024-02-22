@@ -1,0 +1,47 @@
+---
+title: "Snippets"
+icon: "link"
+---
+
+Snippets in PromptLayer allow you to modularize and reuse pieces of your prompt templates, much like using building blocks to create a larger structure. This feature enables you to compose complex templates by referencing other prompt template versions within a parent template.
+
+## How Snippets Work
+
+A snippet is a reference to a prompt template that can be inserted into another template. You can reference templates in three ways:
+
+1. **By Template Name**: `@@@template_name@@@` - This will automatically use the latest version of the referenced template.
+2. **By Template Version Number**: `@@@template_name@version_number:{number}@@@` - This points to a specific version of the template.
+3. **By Template Label**: `@@@template_name@label:{label_name}@@@` - This uses the version of the template that has the specified label.
+
+The system is designed to encourage iterative development, allowing you to test and refine smaller components of your prompts before integrating them into larger templates.
+
+#### Restrictions
+
+It's important to note that only completion templates can be used as snippets.
+
+## Evaluating Snippets
+
+When you evaluate a parent template that contains snippets, the system 'renders' the template, replacing the snippet references with their actual content. This transpilation occurs whether you run the template from the Playground, use the Evaluation functionality, or retrieve it through the SDKs, providing you with a fully realized version of your prompt.
+
+![Evaluating snippets](/images/playground-snippets.gif)
+
+*Evaluating snippets from the Playground*
+
+## Adding Snippets via the Dashboard
+
+To add a new snippet while writing a template in the Dashboard:
+
+1. Tap the `@` symbol.
+2. A dialog box will appear, guiding you through the insertion of your snippet.
+
+![Inserting a snippet](/images/snippet-modal.gif)
+
+*Inserting a snippet from the Dashboard*
+
+## Visualizing Snippets in Templates
+
+When editing a prompt that contains snippets, you'll see the snippet references as strings in the format described above, depending on how you've chosen to reference them.
+
+## Why snippets?
+
+By leveraging snippets, you can create a more maintainable and scalable prompt management system, allowing for greater flexibility and efficiency in your prompt template creation process.

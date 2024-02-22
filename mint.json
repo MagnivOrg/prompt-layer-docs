@@ -44,7 +44,8 @@
           "pages": [
             "features/prompt-registry/overview",
             "features/prompt-registry/function-calling",
-            "features/prompt-registry/webhooks"
+            "features/prompt-registry/webhooks",
+            "features/prompt-registry/snippets"
           ],
           "icon": "notebook"
         },
