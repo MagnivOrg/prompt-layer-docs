@@ -43,8 +43,10 @@
           "group": "Prompt Registry",
           "pages": [
             "features/prompt-registry/overview",
+            "features/prompt-registry/snippets",
             "features/prompt-registry/function-calling",
             "features/prompt-registry/webhooks"
+            
           ],
           "icon": "notebook"
         },
