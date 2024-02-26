@@ -101,7 +101,9 @@
         "reference/track-prompt",
         "reference/track-group",
         "reference/track-metadata",
-        "reference/get-prompts"
+        "reference/get-prompts",
+        "reference/dataset-from-filter-params",
+        "reference/create-reports"
       ]
     }
   ],
