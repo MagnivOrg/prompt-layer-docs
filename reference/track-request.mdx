@@ -34,8 +34,9 @@ data_payload = {
         ],
         "model": "gpt-3.5-turbo-16k",
         "function_call": "auto",
-        "functions": [
-          {
+        "tools": [{
+          "type": "function",
+          "function": {
             "description": "Get the current weather in a given location",
             "name": "get_current_weather",
             "parameters": {
@@ -58,7 +59,7 @@ data_payload = {
               "type": "object"
             }
           }
-        ]
+        }]
     },
     "request_response": {
         "choices": [
