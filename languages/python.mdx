@@ -23,6 +23,7 @@ In the Python file where you use OpenAI APIs, add the following. This allows us 
 import promptlayer
 promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
 OpenAI = promptlayer.openai.OpenAI
+client = OpenAI()
 ```
 
 ```python openai < 1.0.0
@@ -42,10 +43,13 @@ There is only one difference… PromptLayer allows you to add tags through the `
 ************Tags are not required but we recommend them!************
 
 ```python
-openai.Completion.create(
-	engine="text-ada-001", 
-	prompt="My name is", 
-	pl_tags=["name-guessing", "pipeline-2"]
+completion = client.chat.completions.create(
+  model="gpt-3.5-turbo",
+  messages=[
+    {"role": "system", "content": "You are an AI."},
+    {"role": "user", "content": "Compose a poem please."}
+  ],
+  pl_tags=["getting-started"]
 )
 ```
 

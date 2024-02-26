@@ -7,10 +7,26 @@ Frequently Asked Questions
 
 Don't see your question here? Send a message in [Discord](https://discord.gg/DBAhQbW39S) or email us at hello@promptlayer.com
 
- 
-## I'm having trouble with the LangChain integration.
+## Does PromptLayer support multi-modal image models like `gpt-4-vision`?
 
-Try updating both LangChain and PromptLayer to their most recent versions.
+Yes, PromptLayer supports multi-modal image models, including `gpt-4-vision-preview`. They are used in a similar way to normal LLMs.
+
+To use `gpt-4-vision-preview` with PromptLayer, follow these steps:
+
+1. Ensure you have the PromptLayer and OpenAI Python libraries installed.
+2. Replace the standard OpenAI import with the [PromptLayer SDK client](/languages/python) (or use the REST API).
+3. Make your request to `gpt-4-vision-preview` with the necessary image inputs, either through image URLs or base64 encoded images.
+4. Check the PromptLayer dashboard to see your request logged!
+
+![gpt-4-vision request](/images/gpt-4-vision-preview.png)
+
+Multi-modal models are also supported in the Prompt Registry, Playground, and Evaluations pages.
+ 
+## What does response 413 mean in PromptLayer requests?
+
+Response 413 from PromptLayer indicates that the request payload exceeds the maximum allowed size of 0.5MB. This limit is in place to ensure efficient processing and management of data within the PromptLayer system.
+
+To prevent a 413 response for request payloads, it's advisable to use image URLs for image-based requests rather than embedding large base64-encoded images. If base64-encoded images are necessary, try optimizing and compressing the image size.
 
 ## Do you support OpenAI function calling?
 
@@ -25,6 +41,10 @@ Streaming requests are supported on the PromptLayer Python SDK (both with OpenAI
 If you are using [LangChain](/languages/langchain), streaming is only supported when you use the `PromptLayerCallbackHandler`. Streaming is not supported through the PromptLayer-specific LLMs (the old way to use LangChain).
 
 Finally, if you are interacting with PromptLayer through our [REST API](/languages/rest-api) you will need to store the whole output and log it to PromptLayer (`track-request`) only after it is finished.
+
+## I'm having trouble with the LangChain integration.
+
+Try updating both LangChain and PromptLayer to their most recent versions.
 
 ## Can I export my data from PromptLayer?
 
