@@ -74,7 +74,7 @@ response = requests.post(
 </ParamField>
 
 <ParamField body="prompt_template" type="object">
-    Only include requests related to the specified prompt template(s).
+    Filters requests by the specified prompt template, defaulting to its latest version if no versions are specified.
 </ParamField>
 
 <ParamField body="limit" type="integer">
