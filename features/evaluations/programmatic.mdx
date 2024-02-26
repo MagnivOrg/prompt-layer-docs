@@ -1,0 +1,93 @@
+---
+title: "Programmatic Evals"
+icon: "terminal"
+---
+
+PromptLayer offers a few options for configuring and creating evaluation pipelines programmatically in your workflows. This is ideal for users who require the flexibility to run evaluations from code, enabling seamless integration with existing CI/CD pipelines or custom automation scripts.
+
+## Building a Dataset
+
+To run evaluations, you'll need a dataset against which to test your prompts. Luckily, you can create datasets from your request history programmatically via the API.
+
+- **Endpoint**: `/dataset-from-filter-params`
+- **Description**: Create a dataset in PromptLayer programmatically. Datasets are built from request history.
+- **Payload Filters**: When specifying search query filters, include the required `name` parameter and the `workspace_id`. Optionally, you can define a `start_time` and an `end_time` to filter requests within a specific timeframe, both given as datetime objects. The `metadata` parameter allows for a list of objects, each with a `key` and a `value`. For more granular control, use the `prompt_template` to filter for requests using a specific template, a query string `q` for additional filtering, and `scores`. Tags can be added through the `tags` parameter as a list of strings, and the number of requests returned can be limited with the `limit` parameter.
+
+### Example Payload
+
+```json
+{
+    "name": "my-dataset",
+    "workspace_id": 32,
+    "tags": ["prod"],
+    "metadata": [
+        {
+            "key": "name",
+            "value": "bucky"
+        },
+    ],
+    "prompt_template": {
+        "name": "my_prompt_template",
+        "version_numbers": [
+            11,
+            12
+        ]
+    }
+}
+```
+## Creating a Pipeline
+
+You can create and configure a pipeline programmatically.
+
+To create an evaluation pipeline, also known as a report, make a POST request to `/reports` with a name and dataset ID (`test_dataset_id`).
+
+### Configuring Steps
+
+The evaluation pipeline consists of steps, each referred to as a "report column". To configure these steps, you will need to make POST requests to add each desired step to your pipeline.
+
+#### Example Payload 1
+
+For example, to add a step that runs the newest version of your prompt template, make a POST request to `/report-columns` with the following configuration:
+
+```json
+{
+    "column_type": "PROMPT_TEMPLATE",
+    "name": "prompt response",
+    "configuration": {
+        "engine": {
+            "provider": "openai",
+            "model": "gpt-3.5-turbo",
+            "parameters": {
+                "temperature": 0.5,
+                "max_tokens": 256
+            }
+        },
+        "template": {
+            "name": "my_prompt_template",
+            "version_number": None # This means grab the latest version
+        },
+        "prompt_template_variable_mappings": {
+            "food": "variable.food", # The dataset will expose context variables as "variable.[variable_name]"
+            "ingredients": "variable.ingredients"
+        }
+    },
+    "position": 100, # Column position
+    "report_id": report_id
+}
+```
+
+#### Example Payload 2
+
+Another example where we add an API endpoint column afterwards:
+
+```json
+{
+    "column_type": "ENDPOINT",
+    "name": "RAG-Step",
+    "configuration": {
+        "url": "https://api.example.com/recipe",
+    },
+    "position": 101,
+    "report_id": report_id
+}
+```

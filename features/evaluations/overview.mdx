@@ -1,0 +1,25 @@
+---
+title: "Evals Overview"
+icon: "book"
+---
+
+**We believe that evaluation engineering is half the challenge of building a good prompt.** The Evaluations page is designed to help you iterate, build, and run batch evaluations on top of your prompts. Every prompt and every use case is different.
+
+Inspired by the flexibility of tools like Excel, we offer a visual pipeline builder that allows users to construct complex evaluation batches tailored to their specific requirements. Whether you're scoring prompts, running bulk jobs, or conducting regression testing, the Evaluations page provides the tools needed to assess prompt quality effectively. Made for both engineers and subject-matter experts.
+
+## Common Tasks
+
+- **Scoring Prompts**: Utilize golden datasets for comparing prompt outputs with ground truths and incorporate human or AI evaluators for quality assessment.
+- **One-off Bulk Jobs**: Ideal for prompt experimentation and iteration.
+- **Backtesting**: Use historical data to build datasets and compare how a new prompt version performs against real production examples.
+- **Regression Testing**: Build evaluation pipelines and datasets to prevent edge-case regression on prompt template updates.
+- **Continuous Integration**: Connect evaluation pipelines to prompt templates to automatically run an eval with each new version (and catologue the results). Think of it like a Github action.
+
+## Examples Use-Cases
+
+- **Chatbot Enhancements**: Improve chatbot interactions by evaluating responses to user requests against semantic criteria.
+- **RAG System Testing**: Build a RAG pipeline and validate responses against a golden dataset.
+- **SQL Bot Optimization**: Test Natural Language to SQL generation prompts by _actually_ running generated queries against a database (using the API Endpoint step), followed by an evaluation of the results' accuracy.
+- **Improving Summaries**: Combine AI evaluating prompts and human graders to help improve prompts without a ground truth.
+
+[Click here to see in-depth examples.](/features/evaluations/examples)

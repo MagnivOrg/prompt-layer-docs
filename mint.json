@@ -39,7 +39,17 @@
       "pages": [
         "features/prompt-history/tagging-requests",
         "features/prompt-history/sharing-prompts",
-        "features/prompt-registry",
+        {
+          "group": "Prompt Registry",
+          "pages": [
+            "features/prompt-registry/overview",
+            "features/prompt-registry/snippets",
+            "features/prompt-registry/function-calling",
+            "features/prompt-registry/webhooks"
+            
+          ],
+          "icon": "notebook"
+        },
         {
           "group": "Advanced Logging",
           "pages": [
@@ -58,8 +68,19 @@
       "group": "Why PromptLayer?",
       "pages": [
         "why-promptlayer/advanced-search",
+        {
+          "group": "Evaluations",
+          "pages": [
+            "features/evaluations/overview",
+            "features/evaluations/continuous-integration",
+            "features/evaluations/examples",
+            "features/evaluations/building-pipelines",
+            "features/evaluations/datasets",
+            "features/evaluations/programmatic"
+          ],
+          "icon": "vial-circle-check"
+        },
         "why-promptlayer/fine-tuning",
-        "why-promptlayer/evaluation-page",
         "why-promptlayer/analytics",
         "why-promptlayer/evaluation-and-ranking",
         "why-promptlayer/playground",
@@ -74,6 +95,7 @@
         "reference/track-request",
         "reference/templates-get",
         "reference/get-prompt-template",
+        "reference/templates-publish",
         "reference/publish-prompt-template",
         "reference/track-score",
         "reference/track-prompt",
