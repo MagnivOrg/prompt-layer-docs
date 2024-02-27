@@ -5,6 +5,104 @@
     "version": "0.1.0"
   },
   "paths": {
+    "/rest/track-request": {
+      "post": {
+        "summary": "Track Request",
+        "operationId": "trackRequest",
+        "tags": ["request"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "function_name": {
+                    "type": "string",
+                    "description": "The name of the function. For example, if you are using OpenAI it should be either `openai.Completion.create` or `openai.ChatCompletion.create`. These are specific function signatures that PromptLayer uses to parse the `request_response`. Some integration libraries use special `function_name`'s such as `langchain.PromptLayerChatOpenAI`."
+                  },
+                  "kwargs": {
+                    "type": "object",
+                    "description": "Keyword arguments that are passed into the LLM (such as OpenAI's API). Normally it should include `engine` and `prompt` at the very least. If you are using a chat completion or GPT-4, it should include `messages` instead of `prompt`."
+                  },
+                  "request_response": {
+                    "type": "object",
+                    "description": "The LLM response. This response must be formatted exactly in OpenAI's response format."
+                  },
+                  "request_start_time": {
+                    "type": "integer",
+                    "description": "The time at which the LLM request was initiated."
+                  },
+                  "request_end_time": {
+                    "type": "integer",
+                    "description": "The time at which the LLM request was completed."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "An array of string tags to tag this request on the PromptLayer dashboard.",
+                    "optional": true
+                  },
+                  "prompt_id": {
+                    "type": "string",
+                    "description": "The ID of the prompt in the PromptLayer Registry that you used for this request (see `/prompt-templates/{prompt_name}` on how to get this id or you can get it from the URL in the dashboard).",
+                    "optional": true
+                  },
+                  "prompt_input_variables": {
+                    "type": "object",
+                    "description": "The input variables you used for a template. This is used for syntax highlighting and, more importantly used, for backtesting when you want to iterate a prompt.",
+                    "optional": true
+                  },
+                  "prompt_version": {
+                    "type": "integer",
+                    "description": "It is the version of the prompt that you are trying to track. This should be an integer of a prompt that you are tracking.",
+                    "optional": true
+                  },
+                  "api_key": {
+                    "type": "string",
+                    "description": "The API key for authentication."
+                  }
+                },
+                "required": ["function_name", "kwargs", "request_response", "request_start_time", "request_end_time", "api_key"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "request_id": {
+                      "type": "string",
+                      "description": "The unique identifier for the tracked request."
+                    }
+                  },
+                  "required": ["success", "message", "request_id"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
     "/rest/publish-prompt-template": {
       "post": {
         "summary": "Publish Prompt Template",
@@ -230,6 +328,272 @@
                 "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
               }
             }
+          }
+        }
+      }
+    },
+    "/rest/track-metadata": {
+      "post": {
+        "summary": "Track Metadata",
+        "operationId": "trackMetadata",
+        "tags": ["metadata"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "api_key": {
+                    "type": "string",
+                    "description": "Your PromptLayer API Key."
+                  },
+                  "request_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the request to which the metadata is associated."
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": true,
+                    "description": "A dictionary of metadata items to associate with the request. Can include session_ids, user_ids, location, etc."
+                  }
+                },
+                "required": ["api_key", "request_id", "metadata"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rest/track-group": {
+      "post": {
+        "summary": "Track Group",
+        "operationId": "trackGroup",
+        "tags": ["group"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "api_key": {
+                    "type": "string",
+                    "description": "Your PromptLayer API Key."
+                  },
+                  "request_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the request."
+                  },
+                  "group_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the group to be associated with the request."
+                  }
+                },
+                "required": ["api_key", "request_id", "group_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Group tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rest/track-prompt": {
+      "post": {
+        "summary": "Track Prompt",
+        "operationId": "trackPrompt",
+        "tags": ["prompt"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "api_key": {
+                    "type": "string",
+                    "description": "Your PromptLayer API Key.",
+                    "minLength": 1
+                  },
+                  "prompt_name": {
+                    "type": "string",
+                    "description": "The name of the prompt template.",
+                    "minLength": 1
+                  },
+                  "prompt_input_variables": {
+                    "type": "object",
+                    "description": "Input variables for the prompt template.",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "optional": true
+                  },
+                  "request_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the request."
+                  },
+                  "version": {
+                    "type": "integer",
+                    "description": "The version of the prompt template. Both version and label cannot be specified. Only one or none.",
+                    "optional": true
+                  },
+                  "label": {
+                    "type": "string",
+                    "description": "The label of the prompt template version. Both version and label cannot be specified. Only one or none.",
+                    "minLength": 1,
+                    "maxLength": 512,
+                    "optional": true
+                  }
+                },
+                "required": ["api_key", "prompt_name", "request_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prompt tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/rest/track-score": {
+      "post": {
+        "summary": "Track Score",
+        "operationId": "trackScore",
+        "tags": ["score"],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "request_id": {
+                    "type": "integer",
+                    "description": "The `request_id` from `track-request`."
+                  },
+                  "score": {
+                    "type": "integer",
+                    "description": "The score you would like to give to this request (0 - 100).",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "A name for this request score. If not provided, the score will be tracked as `default`.",
+                    "optional": true
+                  },
+                  "api_key": {
+                    "type": "string",
+                    "description": "Your PromptLayer API Key."
+                  }
+                },
+                "required": ["request_id", "score", "api_key"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Score tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
           }
         }
       }
@@ -491,7 +855,7 @@
                           "type": "string"
                         },
                         "value": {
-                          "type": "number"
+                          "type": "integer"
                         }
                       }
                     },
