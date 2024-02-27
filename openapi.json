@@ -233,6 +233,331 @@
           }
         }
       }
+    },
+    "/datasets/name/{dataset_name}": {
+      "delete": {
+        "summary": "Delete Datasets by Name",
+        "operationId": "deleteDatasetsByName",
+        "tags": ["datasets"],
+        "parameters": [
+          {
+            "name": "dataset_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the dataset to delete."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Dataset not found"
+          }
+        }
+      }
+    },
+    "/reports/name/{report_name}": {
+      "delete": {
+        "summary": "Delete Reports by Name",
+        "operationId": "deleteReportsByName",
+        "tags": ["reports"],
+        "parameters": [
+          {
+            "name": "report_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the report to archive."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": ["success", "message"]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Report not found"
+          }
+        }
+      }
+    },
+    "/reports": {
+      "post": {
+        "summary": "Create Evaluation Pipeline",
+        "operationId": "createEvaluationPipeline",
+        "tags": ["reports"],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the report to be created. Must be between 1 and 255 characters in length.",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "test_dataset_id": {
+                    "type": "integer",
+                    "description": "The ID of the dataset on which the report will be based. The dataset must be within an accessible workspace to the user."
+                  }
+                },
+                "required": ["name", "test_dataset_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Evaluation Pipeline created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "report_id": {
+                      "type": "integer",
+                      "description": "The ID of the created report."
+                    }
+                  },
+                  "required": ["success", "message", "report_id"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
+    },
+    "/dataset-from-filter-params": {
+      "post": {
+        "summary": "Create Dataset from History",
+        "operationId": "createDatasetFromFilterParams",
+        "tags": ["dataset"],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the dataset to be created."
+                  },
+                  "workspace_id": {
+                    "type": "integer",
+                    "description": "The ID of the workspace under which the dataset will be stored."
+                  },
+                  "q": {
+                    "type": "string",
+                    "description": "The search query for filtering the data."
+                  },
+                  "start_time": {
+                    "type": "string",
+                    "description": "The start time for the dataset's time range filter."
+                  },
+                  "end_time": {
+                    "type": "string",
+                    "description": "The end time for the dataset's time range filter."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "A list of tags to filter by."
+                  },
+                  "metadata": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": "A list of metadata key-value pairs to filter by."
+                  },
+                  "scores": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "operator": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "description": "Score thresholds and conditions for filtering request logs."
+                  },
+                  "starred": {
+                    "type": "boolean",
+                    "description": "Only include favorited requests."
+                  },
+                  "prompt_template": {
+                    "type": "object",
+                    "properties": {
+                      "name": {
+                        "type": "string"
+                      },
+                      "version_numbers": {
+                        "type": "array",
+                        "items": {
+                          "type": "integer"
+                        }
+                      }
+                    },
+                    "description": "Filters requests by the specified prompt template, defaulting to its latest version if no versions are specified."
+                  },
+                  "limit": {
+                    "type": "integer",
+                    "description": "The maximum number of rows that will be included in the dataset."
+                  }
+                },
+                "required": ["name", "workspace_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Dataset created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "dataset_id": {
+                      "type": "integer",
+                      "description": "The ID of the created dataset."
+                    }
+                  },
+                  "required": ["success", "message", "dataset_id"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        }
+      }
     }
   },
   "components": {

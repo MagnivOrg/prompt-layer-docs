@@ -1,6 +1,6 @@
 ---
 title: "Create Dataset from History"
-api: "POST https://api.promptlayer.com/dataset-from-filter-params"
+openapi: "POST /dataset-from-filter-params"
 ---
 
 This endpoint allows you to create a dataset based on a historical search query. Search filters can include tags, metadata, and other criteria such as time range and scores. This dataset is then stored in a given workspace.
@@ -11,6 +11,7 @@ import requests
 
 response = requests.post(
     "https://api.promptlayer.com/dataset-from-filter-params",
+    headers=headers,
     json={
         "name": "Dataset Name",
         "workspace_id": 1,
@@ -34,49 +35,3 @@ response = requests.post(
     }
 )
 ```
-
-## Request Parameters
-
-<ParamField body="name" type="string" required="true">
-    The name of the dataset to be created.
-</ParamField>
-
-<ParamField body="workspace_id" type="integer" required="true">
-    The ID of the workspace under which the dataset will be stored.
-</ParamField>
-
-<ParamField body="q" type="string">
-    The search query for filtering the data.
-</ParamField>
-
-<ParamField body="start_time" type="string">
-    The start time for the dataset's time range filter.
-</ParamField>
-
-<ParamField body="end_time" type="string">
-    The end time for the dataset's time range filter.
-</ParamField>
-
-<ParamField body="tags" type="array">
-    A list of tags to filter by.
-</ParamField>
-
-<ParamField body="metadata" type="array">
-    A list of metadata key-value pairs to filter by.
-</ParamField>
-
-<ParamField body="scores" type="array">
-    Score thresholds and conditions for filtering request logs.
-</ParamField>
-
-<ParamField body="starred" type="boolean">
-    Only include favorited requests.
-</ParamField>
-
-<ParamField body="prompt_template" type="object">
-    Filters requests by the specified prompt template, defaulting to its latest version if no versions are specified.
-</ParamField>
-
-<ParamField body="limit" type="integer">
-    The maximum number of rows that will be included in the dataset.
-</ParamField>

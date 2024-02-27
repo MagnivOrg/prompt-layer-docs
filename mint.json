@@ -103,7 +103,9 @@
         "reference/track-metadata",
         "reference/get-prompts",
         "reference/dataset-from-filter-params",
-        "reference/create-reports"
+        "reference/delete-datasets-by-name",
+        "reference/create-reports",
+        "reference/delete-reports-by-name"
       ]
     }
   ],
