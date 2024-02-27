@@ -1,6 +1,6 @@
 ---
 title: "Track Request"
-api: "POST https://api.promptlayer.com/rest/track-request"
+openapi: "POST /rest/track-request"
 ---
 
 Track request allows you to send your LLM request to our platform. On success, this request will return a `request_id` which is necessary for `track-score`
@@ -132,37 +132,3 @@ data_payload = {
 response = requests.post("https://api.promptlayer.com/rest/track-request", json=data_payload)
 print(response.json())
 ```
-
-</CodeGroup>
-
-## Request Parameters
-<ParamField body="function_name" type="string">
-    The name of the function. For example, if you are using OpenAI it should be either `openai.Completion.create` or `openai.ChatCompletion.create`. These are specific function signatures that PromptLayer uses to parse the `request_response`. Some integration libraries use special `function_name`'s such as `langchain.PromptLayerChatOpenAI`.
-</ParamField>
-<ParamField body="kwargs" type="object">
-    Keyword arguments that are passed into the LLM (such as OpenAI's API). Normally it should include `engine` and `prompt` at the very least. If you are using a chat completion or GPT-4, it should include `messages` instead of `prompt`.
-</ParamField>
-<ParamField body="request_response" type="object">
-    The LLM response. This response must be formatted exactly in OpenAI's response format.
-</ParamField>
-<ParamField body="request_start_time" type="integer">
-    The time at which the LLM request was initiated.
-</ParamField>
-<ParamField body="request_end_time" type="integer">
-    The time at which the LLM request was completed.
-</ParamField>
-<ParamField body="tags" type="array" optional="true">
-    An array of string tags to tag this request on the PromptLayer dashboard.
-</ParamField>
-<ParamField body="prompt_id" type="string" optional="true">
-    The ID of the prompt in the PromptLayer Registry that you used for this request (see `/prompt-templates/{prompt_name}` on how to get this id or you can get it from the URL in the dashboard).
-</ParamField>
-<ParamField body="prompt_input_variables" type="object" optional="true">
-    The input variables you used for a template. This is used for syntax highlighting and, more importantly used, for backtesting when you want to iterate a prompt.
-</ParamField>
-<ParamField body="prompt_version" type="integer" optional="true">
-    It is the version of the prompt that you are trying to track. This should be an integer of a prompt that you are tracking.
-</ParamField>
-<ParamField body="api_key" type="string">
-    The API key for authentication.
-</ParamField>
