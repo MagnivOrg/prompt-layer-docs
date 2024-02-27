@@ -1,16 +1,6 @@
 ---
 title: "Create Evaluation Pipeline"
-api: "POST https://api.promptlayer.com/reports"
+openapi: "POST /reports"
 ---
 
 This endpoint allows for the creation of Evaluation pipelines. These pipelines are given a name and associated with a dataset.
-
-## Request Parameters
-
-<ParamField body="name" type="string">
-    The name of the report to be created. Must be between 1 and 255 characters in length.
-</ParamField>
-
-<ParamField body="test_dataset_id" type="integer">
-    The ID of the dataset on which the report will be based. The dataset must be within an accessible workspace to the user.
-</ParamField>
