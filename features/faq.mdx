@@ -30,9 +30,9 @@ To prevent a 413 response for request payloads, it's advisable to use image URLs
 
 ## Do you support OpenAI function calling?
 
-Yes, we take great pride in staying up to date. PromptLayer is 1-to-1 with OpenAI's library. That means, if you are using PromptLayer+OpenAI through the Python libraries, [function calling](https://openai.com/blog/function-calling-and-other-api-updates) will be implicitly supported.
+Yes, we take great pride in staying up to date. PromptLayer is 1-to-1 with OpenAI's library. That means, if you are using PromptLayer+OpenAI through the Python libraries, [function calling](https://platform.openai.com/docs/guides/function-calling) will be implicitly supported.
 
-If you are using our REST library, [track-request](/reference/track-request) mirrors OpenAI's request schema. You can add `functions` into `kwargs` and use function-type messages as you would use normal messages in `gpt-4`.
+If you are using our REST library, [track-request](/reference/track-request) mirrors OpenAI's request schema. You can add `tools` into `kwargs` and use function-type messages as you would use normal messages in `gpt-4`.
 
 ## Does PromptLayer support streaming?
 
@@ -52,8 +52,8 @@ Yes. You can export your usage data with the button shown below.
 
 Filter your training data export by tags, a search query, or metadata.
 
-<video controls="controls">
-  <source src="/videos/export.mp4" type="video/mp4" />
+<video controls = "controls">
+  <source src="/videos/export.mp4" type = "video/mp4" />
 </video>
 
 ## Do you support on-premises deployment?

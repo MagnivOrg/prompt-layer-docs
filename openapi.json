@@ -926,11 +926,24 @@
             "anyOf": [
               { "$ref": "#/components/schemas/FunctionCall" },
               { "type": "null" }
-            ]
+            ],
+            "title": "Function Call",
+            "deprecated": true,
+            "description": "This field is deprecated. Please use `tool_calls` field to specify tool calls."
           },
           "name": {
             "anyOf": [{ "type": "string" }, { "type": "null" }],
             "title": "Name"
+          },
+          "tool_calls": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/ToolCall" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Tool Calls"
           }
         },
         "type": "object",
@@ -997,7 +1010,8 @@
                 { "$ref": "#/components/schemas/SystemMessage" },
                 { "$ref": "#/components/schemas/UserMessage" },
                 { "$ref": "#/components/schemas/AssistantMessage" },
-                { "$ref": "#/components/schemas/FunctionMessage" }
+                { "$ref": "#/components/schemas/FunctionMessage" },
+                { "$ref": "#/components/schemas/ToolMessage" }
               ],
               "discriminator": {
                 "propertyName": "role",
@@ -1005,7 +1019,8 @@
                   "assistant": "#/components/schemas/AssistantMessage",
                   "function": "#/components/schemas/FunctionMessage",
                   "system": "#/components/schemas/SystemMessage",
-                  "user": "#/components/schemas/UserMessage"
+                  "user": "#/components/schemas/UserMessage",
+                  "tool": "#/components/schemas/ToolMessage"
                 }
               }
             },
@@ -1020,7 +1035,9 @@
               },
               { "type": "null" }
             ],
-            "title": "Functions"
+            "title": "Functions",
+            "deprecated": true,
+            "description": "This field is deprecated. Please use `tools` to specify tools."
           },
           "function_call": {
             "anyOf": [
@@ -1028,7 +1045,9 @@
               { "$ref": "#/components/schemas/MessageFunctionCall" },
               { "type": "null" }
             ],
-            "title": "Function Call"
+            "title": "Function Call",
+            "deprecated": true,
+            "description": "This field is deprecated. Please use `tool_choice` field to specify tool choice."
           },
           "type": { "const": "chat", "title": "Type", "default": "chat" },
           "input_variables": {
@@ -1036,11 +1055,30 @@
             "type": "array",
             "title": "Input Variables",
             "default": []
+          },
+          "tools": {
+            "anyOf": [
+              {
+                "items": { "$ref": "#/components/schemas/Tool" },
+                "type": "array"
+              },
+              { "type": "null" }
+            ],
+            "title": "Tools"
+          },
+          "tool_choice": {
+            "anyOf": [
+              { "type": "string" },
+              { "$ref": "#/components/schemas/ChatToolChoice" },
+              { "type": "null" }
+            ],
+            "title": "Tool Choice"
           }
         },
         "type": "object",
         "required": ["messages"],
-        "title": "ChatPrompt"
+        "title": "ChatPrompt",
+        "description": "Chat Prompt Template"
       },
       "GetPromptTemplateResponse": {
         "properties": {
@@ -1104,13 +1142,13 @@
           "prompt_template": {
             "oneOf": [
               { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPromptTemplate" }
+              { "$ref": "#/components/schemas/ChatPrompt" }
             ],
             "title": "Prompt Template",
             "discriminator": {
               "propertyName": "type",
               "mapping": {
-                "chat": "#/components/schemas/ChatPromptTemplate",
+                "chat": "#/components/schemas/ChatPrompt",
                 "completion": "#/components/schemas/CompletionPrompt"
               }
             }
@@ -1156,13 +1194,13 @@
           "prompt_template": {
             "oneOf": [
               { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPromptTemplate" }
+              { "$ref": "#/components/schemas/ChatPrompt" }
             ],
             "title": "Prompt Template",
             "discriminator": {
               "propertyName": "type",
               "mapping": {
-                "chat": "#/components/schemas/ChatPromptTemplate",
+                "chat": "#/components/schemas/ChatPrompt",
                 "completion": "#/components/schemas/CompletionPrompt"
               }
             }
@@ -1181,6 +1219,88 @@
         "type": "object",
         "required": ["id", "prompt_name", "tags", "prompt_template"],
         "title": "CreatePromptTemplateResponse"
+      },
+      "ToolCall": {
+        "properties": {
+          "id": { "type": "string", "title": "Id" },
+          "type": {
+            "const": "function",
+            "title": "Type",
+            "default": "function"
+          },
+          "function": { "$ref": "#/components/schemas/FunctionCall" }
+        },
+        "type": "object",
+        "required": ["id", "function"],
+        "title": "ToolCall"
+      },
+      "ToolMessage": {
+        "properties": {
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "content": {
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ImageContent" }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "image_url": "#/components/schemas/ImageContent",
+                  "text": "#/components/schemas/TextContent"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Content"
+          },
+          "role": { "const": "tool", "title": "Role", "default": "tool" },
+          "tool_call_id": { "type": "string", "title": "Tool Call Id" },
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["content", "tool_call_id"],
+        "title": "ToolMessage"
+      },
+      "Tool": {
+        "properties": {
+          "type": {
+            "const": "function",
+            "title": "Type",
+            "default": "function"
+          },
+          "function": { "$ref": "#/components/schemas/Function" }
+        },
+        "type": "object",
+        "required": ["function"],
+        "title": "Tool"
+      },
+      "ChatToolChoice": {
+        "properties": {
+          "type": {
+            "const": "function",
+            "title": "Type",
+            "default": "function"
+          },
+          "function": { "$ref": "#/components/schemas/MessageFunctionCall" }
+        },
+        "type": "object",
+        "required": ["function"],
+        "title": "ChatToolChoice"
       }
     }
   }
