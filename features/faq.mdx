@@ -96,3 +96,9 @@ asyncio.run(main())
 ## Is PromptLayer SOC 2 certified?
 
 Yes, we have achieved SOC 2 Type 2 certification. Please [contact us](mailto:hello@promptlayer.com) for the report.
+
+## Why doesn't my evaluation report use the newest version of my prompt?
+
+To ensure your evaluation report reflects the newest version of your prompt template, you must configure your evaluation pipeline to use the "latest" version of the prompt template in its column step. The template is fetched at runtime, and specifying a frozen version will result in the evaluation report not reflecting your newest prompt template.
+
+![Latest FAQ Updates](/images/latest-faq.png)

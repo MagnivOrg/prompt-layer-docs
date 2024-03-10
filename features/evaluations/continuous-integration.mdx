@@ -15,6 +15,8 @@ Similar to test-driven development (TDD) in software engineering, test-driven pr
 
 Setting up automatic evaluations on a specific prompt template is easy. When creating a new version, after adding a commit message, you will be prompted to select an evaluation pipeline to run. After doing this once, every new prompt template you create will run this pipeline by default.
 
+**NOTE**: Make sure your evaluation pipeline uses the "latest" version of the prompt template in its column step. The template is fetched at runtime. If you specify a frozen version, the evaluation report won't reflect your newest prompt template.
+
 ![Scoring a Prompt](/images/explain-stocks-scoring.png)
 
 ## Testing Strategies
