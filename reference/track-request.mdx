@@ -5,9 +5,8 @@ openapi: "POST /rest/track-request"
 
 Track request allows you to send your LLM request to our platform. On success, this request will return a `request_id` which is necessary for `track-score`
 
-## Example Code
-
-<CodeGroup>
+## Logging OpenAI Requests
+You can use the following scripts to log requests made to OpenAI's API. This will help you to track the request and response of the API.
 
 ```python Chat
 import requests
@@ -132,3 +131,138 @@ data_payload = {
 response = requests.post("https://api.promptlayer.com/rest/track-request", json=data_payload)
 print(response.json())
 ```
+
+## Logging Google Requests
+You can use the following scripts to log requests made to Google's Gemini API. This will help you to track the request and response of the API.
+<CodeGroup>
+```python Python
+import os
+from datetime import datetime
+
+import google.generativeai as genai
+import httpx
+import promptlayer
+from promptlayer import utils
+
+GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
+genai.configure(api_key=GOOGLE_API_KEY)
+promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
+
+GEMINI_PRO = "gemini-pro"
+
+model = genai.GenerativeModel(GEMINI_PRO)
+template = promptlayer.templates.get(
+    "weather",
+    {
+        "provider": "google",
+    },
+)
+history = template.get("llm_kwargs", {}).get("history", [])
+
+request_start_time = datetime.now().timestamp()
+
+convo = model.start_chat(history=history[:-1])
+response = convo.send_message(history[-1])
+
+request_end_time = datetime.now().timestamp()
+
+kwargs = {
+    "history": [
+        {"role": content.role, "parts": [{"text": part.text} for part in content.parts]}
+        for content in convo.history[:-1]
+    ],
+    "model": GEMINI_PRO,
+}
+
+request_response = {
+    "candidates": [
+        {
+            "content": {
+                "role": candidate.content.role,
+                "parts": [{"text": part.text} for part in candidate.content.parts],
+            }
+        }
+        for candidate in response.candidates
+    ]
+}
+
+print(request_response)
+
+
+httpx.post(
+    "https://api.promptlayer.com/rest/track-request",
+    json={
+        "function_name": "google.convo.send_message",
+        "provider_type": "google",
+        "args": [],
+        "kwargs": kwargs,
+        "tags": [],
+        "request_response": request_response,
+        "request_start_time": request_start_time,
+        "request_end_time": request_end_time,
+        "api_key": promptlayer.api_key,
+    },
+)
+```
+
+```javascript JavaScript
+import { promptlayer } from "promptlayer";
+import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
+const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
+const GEMINI_PRO = "gemini-pro";
+
+const main = async () => {
+  const model = genAI.getGenerativeModel({ model: GEMINI_PRO });
+  const template = await promptlayer.templates.get("weather", {
+    provider: "google",
+  });
+  const history = template.llm_kwargs.history;
+  const request_start_time = Date.now().toString();
+  const convo = model.startChat({ history: history.slice(0, -1) });
+  const response = await convo.sendMessage(history.at(-1).parts);
+  const request_end_time = Date.now().toString();
+
+  const kwargs = {
+    model: GEMINI_PRO,
+    history: await (await convo.getHistory()).slice(0, -1).map((c) => ({
+      role: c.role,
+      parts: c.parts.map((p) => ({ text: p.text })),
+    })),
+  };
+
+  const request_response = {
+    candidates: response.response.candidates?.map((candidate) => ({
+      content: {
+        role: candidate.content.role,
+        parts: candidate.content.parts.map((part) => ({ text: part.text })),
+      },
+    })),
+  };
+
+  console.log(request_response);
+
+  fetch("https://api.promptlayer.com/rest/track-request", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+    },
+    body: JSON.stringify({
+      function_name: "google.convo.send_message",
+      provider_type: "google",
+      args: [],
+      kwargs,
+      tags: [],
+      request_response,
+      request_start_time,
+      request_end_time,
+      api_key: promptlayer.api_key,
+    }),
+  }).then((res) => console.log(res));
+};
+
+main();
+
+```
+</CodeGroup>
