@@ -65,7 +65,14 @@
                     "description": "The API key for authentication."
                   }
                 },
-                "required": ["function_name", "kwargs", "request_response", "request_start_time", "request_end_time", "api_key"]
+                "required": [
+                  "function_name",
+                  "kwargs",
+                  "request_response",
+                  "request_start_time",
+                  "request_end_time",
+                  "api_key"
+                ]
               }
             }
           }
@@ -244,6 +251,12 @@
         "summary": "Get Prompt Template by ID",
         "operationId": "get_prompt_templates__prompt_name__post",
         "parameters": [
+          {
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
           {
             "name": "prompt_name",
             "in": "path",
