@@ -51,13 +51,15 @@ openai.Completion.create(
 // Make sure to `npm install promptlayer`
 import { promptlayer } from "promptlayer";
 
+// This assumes you already have `openai` installed
+// If not, you can install it with `npm install openai`
 // Swap out your 'import openai'
 const OpenAI = promptlayer.OpenAI;
 const openai = new OpenAI();
 
 // Do something fun 🚀
 openai.completions.create({
-  model: "gpt-3.5-turbo-instruct"
+  model: "gpt-3.5-turbo-instruct",
   prompt: "My name is",
 })
 ```
