@@ -6,6 +6,7 @@ icon: "flag-checkered"
 PromptLayer takes less than 5 minutes to get started.
 - Sign up for an account at www.promptlayer.com
 - Grab an API key from PromptLayer.
+- Grab an API key from OpenAI.
 
 It's super easy to add PromptLayer to an existing project. Usually only takes one line.
 
@@ -51,9 +52,7 @@ openai.Completion.create(
 // Make sure to `npm install promptlayer`
 import { promptlayer } from "promptlayer";
 
-// This assumes you already have `openai` installed
-// If not, you can install it with `npm install openai`
-// Swap out your 'import openai'
+// Make sure you have openai installed with `npm install openai`
 const OpenAI = promptlayer.OpenAI;
 const openai = new OpenAI();
 
@@ -61,7 +60,7 @@ const openai = new OpenAI();
 openai.completions.create({
   model: "gpt-3.5-turbo-instruct",
   prompt: "My name is",
-})
+}).then(console.log).catch(console.error);
 ```
 
 
