@@ -344,13 +344,13 @@ To get all prompts from prompt registry you can use the following code snippet:
 <CodeGroup>
 
 ```python Python SDK
-from promptlayer import prompts
+from promptlayer import templates
 
-all_prompts = prompts.all()
+all_prompts = templates.all()
 ```
 
 ```js JavaScript
-const all_prompts = promptlayer.prompts.all()
+const all_prompts = promptlayer.templates.all()
 ```
 
 </CodeGroup>
@@ -360,11 +360,11 @@ By default this returns 30 prompts. You can change this by passing in the `per_p
 <CodeGroup>
 
 ```python Python SDK
-all_prompts = prompts.all(per_page=100)
+all_prompts = templates.all(per_page=100)
 ```
 
 ```js JavaScript
-const all_prompts = promptlayer.prompts.all({ per_page: 100 })
+const all_prompts = promptlayer.templates.all({ per_page: 100 })
 ```
 
 </CodeGroup>
@@ -374,15 +374,15 @@ You can also define the page you want to get by passing in the `page` argument. 
 <CodeGroup>
 
 ```python Python SDK
-all_prompts = prompts.all(page=2)
+all_prompts = templates.all(page=2)
 ```
 
 ```js JavaScript
-const all_prompts = promptlayer.prompts.all({ page: 2 })
+const all_prompts = promptlayer.templates.all({ page: 2 })
 ```
 
 </CodeGroup>
 
 It is important to note that `prompt_template` represents the latest version of the prompt template.
 
-Alternatively, use the REST API endpoint `/rest/prompts` ([read more](/reference/get-prompts)).
+Alternatively, use the REST API endpoint `/prompt-templates` ([read more](/reference/list-prompt-templates)).

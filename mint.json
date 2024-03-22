@@ -46,7 +46,6 @@
             "features/prompt-registry/snippets",
             "features/prompt-registry/function-calling",
             "features/prompt-registry/webhooks"
-            
           ],
           "icon": "notebook"
         },
@@ -101,6 +100,7 @@
         "reference/track-prompt",
         "reference/track-group",
         "reference/track-metadata",
+        "reference/list-prompt-templates",
         "reference/get-prompts",
         "reference/dataset-from-filter-params",
         "reference/delete-datasets-by-name",
