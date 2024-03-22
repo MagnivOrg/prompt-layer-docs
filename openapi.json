@@ -935,6 +935,41 @@
           }
         }
       }
+    },
+    "/prompt-templates": {
+      "get": {
+        "tags": ["prompt-templates"],
+        "summary": "Get All",
+        "operationId": "get_all_prompt_templates__get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "in": "query",
+            "name": "page",
+            "schema": { "type": "integer", "title": "Page" }
+          },
+          {
+            "in": "query",
+            "name": "per_page",
+            "schema": { "type": "integer", "title": "Per Page" }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": { "$ref": "#/components/schemas/ListPromptTemplates" }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -1814,7 +1849,8 @@
             "anyOf": [{ "type": "object" }, { "type": "null" }],
             "title": "Llm Kwargs",
             "description": "When you optionally specify `provider` in the body, `llm_kwargs` will be returned for that specific provider and you can pass these kwargs to the provider's API directly."
-          }
+          },
+          "version": { "type": "integer", "title": "Version" }
         },
         "type": "object",
         "required": ["id", "prompt_name", "prompt_template"],
@@ -2003,6 +2039,36 @@
         "type": "object",
         "required": ["function"],
         "title": "ChatToolChoice"
+      },
+      "ListPromptTemplates": {
+        "properties": {
+          "has_next": { "type": "boolean", "title": "Has Next" },
+          "has_prev": { "type": "boolean", "title": "Has Prev" },
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/GetPromptTemplateResponse"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "next_num": { "type": "integer", "title": "Next Num" },
+          "prev_num": { "type": "integer", "title": "Prev Num" },
+          "page": { "type": "integer", "title": "Page" },
+          "pages": { "type": "integer", "title": "Pages" },
+          "total": { "type": "integer", "title": "Total" }
+        },
+        "type": "object",
+        "required": [
+          "has_next",
+          "has_prev",
+          "items",
+          "next_num",
+          "prev_num",
+          "page",
+          "pages",
+          "total"
+        ],
+        "title": "ListPromptTemplates"
       }
     }
   }
