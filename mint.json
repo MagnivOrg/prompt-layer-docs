@@ -37,7 +37,6 @@
     {
       "group": "Usage Documentation",
       "pages": [
-        "features/prompt-history/tagging-requests",
         "features/prompt-history/sharing-prompts",
         {
           "group": "Prompt Registry",
@@ -50,15 +49,16 @@
           "icon": "notebook"
         },
         {
-          "group": "Advanced Logging",
+          "group": "Logging",
           "pages": [
             "features/prompt-history/request-id",
+            "features/prompt-history/tagging-requests",
+            "features/prompt-history/metadata",
             "features/prompt-history/scoring-requests",
             "features/prompt-history/tracking-templates",
-            "features/prompt-history/groups",
-            "features/prompt-history/metadata"
+            "features/prompt-history/groups"
           ],
-          "icon": "folder"
+          "icon": "cassette-tape"
         },
         "features/faq"
       ]

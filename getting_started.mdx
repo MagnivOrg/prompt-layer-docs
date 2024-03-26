@@ -167,7 +167,7 @@ Enriching requests often requires a [PromptLayer request ID](/features/prompt-hi
 
 We can also add tags (`pl_tags`) to our requests to make it easier to search through and organize requests on the dashboard.
 
-[Learn more about tags.](features/prompt-history/tagging-requests)
+[Learn more about tags.](/features/prompt-history/tagging-requests)
 
 <CodeGroup>
 
@@ -241,7 +241,7 @@ Filter by tags on the dashboard as seen below.
 
 Using PromptLayer we can score a request with an integer 0 - 100. This is most often used to understand how effective certain prompts are in production.
 
-Users use scores in many ways [(learn more)](features/prompt-history/scoring-requests). Below are some examples:
+Users use scores in many ways [(learn more)](/features/prompt-history/scoring-requests). Below are some examples:
 - 100 if the generated code compiles, 0 if not
 - 100 if the user denotes a thumbs-up, 0 for thumbs-down
 - LLM synthetic evaluation of how much the output matched the prompt
@@ -397,7 +397,7 @@ We can add metadata to a request to store additional information about it. Metad
 
 Metadata is used to associate requests with specific users, track rollouts, and to store things like error messages (maybe from generated code). You can then filter requests & analytics on the PromptLayer dashboard using metadata keys.
 
-[Learn more about metadata.](features/prompt-history/metadata)
+[Learn more about metadata.](/features/prompt-history/metadata)
 
 Here, we make a request to rate how much a person would enjoy a city based on their interests, and then add metadata such as the user's ID and location:
 
@@ -799,7 +799,7 @@ curl --request POST \
 
 The Prompt Registry becomes the most useful when you start linking requests with prompt template versions. This makes it easy to compare prompt templates across latency, cost, and quality. It also let's you easily understand the input variables and how they change.
 
-Once a prompt is in the registry, we can link it to a request ([learn more](features/prompt-history/tracking-templates)):
+Once a prompt is in the registry, we can link it to a request ([learn more](/features/prompt-history/tracking-templates)):
 
 <CodeGroup>
 
@@ -1001,7 +1001,7 @@ console.log(response.completion);
 
 ### HuggingFaceHub
 
-Here's an example of using the Falcon-7b model from HuggingFaceHub. By using LangChain with the `PromptLayerCallbackHandler`, you can access tons of LLMs. [Learn more.](languages/langchain#huggingface-hub)
+Here's an example of using the Falcon-7b model from HuggingFaceHub. By using LangChain with the `PromptLayerCallbackHandler`, you can access tons of LLMs. [Learn more.](/languages/langchain#huggingface-hub)
 
 ```python
 from langchain.callbacks import PromptLayerCallbackHandler
