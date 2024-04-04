@@ -110,3 +110,7 @@ While you can log LLM requests from any model and our Prompt Registry is agnosti
 ## What's the difference between tags and metadata?
 
 Both [tags](/features/prompt-history/tagging-requests) and [metadata](/features/prompt-history/metadata) enable the addition of supplementary information to your request logs, yet they serve distinct purposes. Tags are ideal for classifying requests into a limited number of predefined categories, such as "prod" or "dev". Conversely, metadata is tailored for capturing unique, request-specific details like user IDs or session IDs.
+
+## Why do I see extra input variables in my prompt template? Parsing does not seem to be working.
+
+If you see extra input variables in the Prompt Registry or when creating an evaluation, it is likely due to string parsing errors. By default every prompt template uses "f-string" string parsing (`{var}`). If your prompt includes JSON, this will cause issues. We recommend switching to "jinja2" string parsing (`{{var}}`) to avoid such issues.
