@@ -114,3 +114,5 @@ Both [tags](/features/prompt-history/tagging-requests) and [metadata](/features/
 ## Why do I see extra input variables in my prompt template? Parsing does not seem to be working.
 
 If you see extra input variables in the Prompt Registry or when creating an evaluation, it is likely due to string parsing errors. By default every prompt template uses "f-string" string parsing (`{var}`). If your prompt includes JSON, this will cause issues. We recommend switching to "jinja2" string parsing (`{{var}}`) to avoid such issues.
+
+To switch input variable string parsers, navigate to the prompt template in the Prompt Regsitry. Then, click "Edit". In the editor, on the top right, you will see a dropdown that allows you to switch between "f-string" and "jinja2".
