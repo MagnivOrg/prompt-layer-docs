@@ -302,6 +302,82 @@
         }
       }
     },
+    "/prompt-templates/{prompt_name}/labels": {
+      "get": {
+        "tags": ["prompt-templates"],
+        "summary": "Get Prompt Template Labels",
+        "operationId": "get_prompt_template_labels",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" }
+          },
+          {
+            "name": "prompt_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "prompt_name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "release_labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "release_label": {
+                            "type": "string"
+                          },
+                          "prompt_version_id": {
+                            "type": "integer"
+                          },
+                          "prompt_version_number": {
+                            "type": "integer"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prompt template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+      }
+    },
     "/rest/prompt-templates": {
       "post": {
         "tags": ["rest", "prompt-templates"],

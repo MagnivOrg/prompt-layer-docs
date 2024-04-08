@@ -96,6 +96,7 @@
         "reference/get-prompt-template",
         "reference/templates-publish",
         "reference/publish-prompt-template",
+        "reference/templates-labels-get",
         "reference/track-score",
         "reference/track-prompt",
         "reference/track-group",
