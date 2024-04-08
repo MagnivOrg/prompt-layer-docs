@@ -304,15 +304,15 @@
     },
     "/prompt-templates/{prompt_name}/labels": {
       "get": {
-        "tags": ["prompt-templates"],
+        "tags": ["prompt-templates", "release-labels"],
         "summary": "Get Prompt Template Labels",
-        "operationId": "get_prompt_template_labels",
+        "operationId": "get_prompt_templates_labels_prompt_name__post",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" }
+            "schema": { "type": "string", "title": "X-Api-Key" },
+            "name": "X-API-KEY",
+            "in": "header"
           },
           {
             "name": "prompt_name",
@@ -330,52 +330,15 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "release_labels": {
-                      "type": "array",
-                      "items": {
-                        "type": "object",
-                        "properties": {
-                          "release_label": {
-                            "type": "string"
-                          },
-                          "prompt_version_id": {
-                            "type": "integer"
-                          },
-                          "prompt_version_number": {
-                            "type": "integer"
-                          }
-                        }
-                      }
-                    }
-                  }
+                  "$ref": "#/components/schemas/GetPromptTemplateLabelResponse"
                 }
               }
             }
           },
           "404": {
-            "description": "Prompt template not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  }
-                }
-              }
-            }
+            "description": "Not Found"
           }
-        },
+        }
       }
     },
     "/rest/prompt-templates": {
@@ -1931,6 +1894,26 @@
         "type": "object",
         "required": ["id", "prompt_name", "prompt_template"],
         "title": "GetPromptTemplateResponse"
+      },
+      "GetPromptTemplateLabelResponse": {
+        "properties": {
+          "release_labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "prompt_version_id": { "type": "integer" },
+                "prompt_version_number": { "type": "integer" },
+                "release_label": { "type": "string" }
+              },
+              "required": ["prompt_version_id", "prompt_version_number", "release_label"]
+            },
+            "title": "Release Labels"
+          }
+        },
+        "type": "object",
+        "required": ["release_labels"],
+        "title": "GetPromptTemplateLabelResponse"
       },
       "BasePromptTemplate": {
         "properties": {
