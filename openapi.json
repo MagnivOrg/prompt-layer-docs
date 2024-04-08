@@ -302,6 +302,45 @@
         }
       }
     },
+    "/prompt-templates/{prompt_name}/labels": {
+      "get": {
+        "tags": ["prompt-templates", "release-labels"],
+        "summary": "Get Prompt Template Labels",
+        "operationId": "get_prompt_templates_labels_prompt_name__post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": { "type": "string", "title": "X-Api-Key" },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "prompt_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "prompt_name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptTemplateLabelResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found"
+          }
+        }
+      }
+    },
     "/rest/prompt-templates": {
       "post": {
         "tags": ["rest", "prompt-templates"],
@@ -1855,6 +1894,26 @@
         "type": "object",
         "required": ["id", "prompt_name", "prompt_template"],
         "title": "GetPromptTemplateResponse"
+      },
+      "GetPromptTemplateLabelResponse": {
+        "properties": {
+          "release_labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "prompt_version_id": { "type": "integer" },
+                "prompt_version_number": { "type": "integer" },
+                "release_label": { "type": "string" }
+              },
+              "required": ["prompt_version_id", "prompt_version_number", "release_label"]
+            },
+            "title": "Release Labels"
+          }
+        },
+        "type": "object",
+        "required": ["release_labels"],
+        "title": "GetPromptTemplateLabelResponse"
       },
       "BasePromptTemplate": {
         "properties": {
