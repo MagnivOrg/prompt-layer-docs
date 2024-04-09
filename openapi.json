@@ -1973,7 +1973,11 @@
           "prompt_template": {
             "$ref": "#/components/schemas/BasePromptTemplate"
           },
-          "prompt_version": { "$ref": "#/components/schemas/PromptVersion" }
+          "prompt_version": { "$ref": "#/components/schemas/PromptVersion" },
+          "release_label": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Release Label"
+          }
         },
         "type": "object",
         "required": ["prompt_template", "prompt_version"],
@@ -1987,6 +1991,10 @@
             "items": { "type": "string" },
             "type": "array",
             "title": "Tags"
+          },
+          "release_label": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Release Label"
           },
           "prompt_template": {
             "oneOf": [
