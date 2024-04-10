@@ -1974,9 +1974,10 @@
             "$ref": "#/components/schemas/BasePromptTemplate"
           },
           "prompt_version": { "$ref": "#/components/schemas/PromptVersion" },
-          "release_label": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
-            "title": "Release Label"
+          "release_labels": {
+            "type": ["array", "null"],
+            "items": { "type": "string" },
+            "title": "Release Labels"
           }
         },
         "type": "object",
@@ -1992,9 +1993,10 @@
             "type": "array",
             "title": "Tags"
           },
-          "release_label": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
-            "title": "Release Label"
+          "release_labels": {
+            "type": ["array", "null"],
+            "items": { "type": "string" },
+            "title": "Release Labels"
           },
           "prompt_template": {
             "oneOf": [
