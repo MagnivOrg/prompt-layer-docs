@@ -196,6 +196,35 @@ Prompt labels are a way to put a label on your prompt template to help you organ
   <source src="/videos/prompt-label.mp4" type="video/mp4" />
 </video>
 
+You can also set release labels via the SDK 
+<CodeGroup>
+
+```python Python SDK
+pt = promptlayer.templates.get("demo-template")
+
+promptlayer.templates.publish({
+    "prompt_name": "demo-template",
+    "commit_message": "This is a test",
+    "prompt_template": pt["prompt_template"],
+    "release_label": "prod",
+})
+```
+
+```js JavaScript
+const pt = await promptlayer.templates.get({
+  prompt_name: "demo-template"
+});
+
+promptlayer.templates.publish({
+  prompt_name: "demo-template",
+  commit_message: "This is a test",
+  prompt_template: pt.prompt_template,
+  "release_label": "prod",
+});
+```
+
+</CodeGroup>
+
 ### Commit Messages
 
 Prompt commit messages allow you to set a brief 72 character-long description on each of your prompt template version to help you keep track of changes.
