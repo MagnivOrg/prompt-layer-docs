@@ -66,6 +66,7 @@
     {
       "group": "Why PromptLayer?",
       "pages": [
+        "why-promptlayer/prompt-cms",
         "why-promptlayer/advanced-search",
         {
           "group": "Evaluations",
