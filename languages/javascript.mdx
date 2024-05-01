@@ -114,3 +114,28 @@ Here is how it would look like on the dashbaord:
 ## Edge
 
 PromptLayer can be used with Edge functions. Please use either our Javascript library or REST library directly.
+
+```js
+import BaseAnthropic from "@anthropic-ai/sdk";
+
+import { promptlayer } from "promptlayer";
+const Anthropic: typeof BaseAnthropic = promptlayer.Anthropic;
+const anthropic = new Anthropic();
+
+// Add this line
+export const runtime = "edge";
+
+export const POST = async () => {
+  const response = await anthropic.messages.create({
+    messages: [
+      {
+        role: "user",
+        content: "What is the capital of France?",
+      },
+    ],
+    max_tokens: 100,
+    model: "claude-3-sonnet-20240229",
+  });
+  return Response.json(response.content[0].text);
+};
+```
