@@ -3,128 +3,227 @@ title: "Quickstart"
 icon: "flag-checkered"
 ---
 
-PromptLayer takes less than 5 minutes to get started.
-- Sign up for an account at www.promptlayer.com
-- Grab an API key from PromptLayer.
-- Grab an API key from OpenAI.
+Get started using PromptLayer in minutes.
 
-It's super easy to add PromptLayer to an existing project. Usually only takes one line.
+- Create and version prompts visually
+- Programmatically retrieve and iterate on prompts
+- Log and evaulate prompt versions
 
-__Get started with the code below!__
+First, make sure you have signed up for an account at www.promptlayer.com to begin 🍰
+
+## Create your first prompt template
+
+To create your first prompt template, navigate to the prompt registry ([learn more here](/features/prompt-registry/overview)) and click "Create Template". 
+
+![Find Registry](/images/quickstart/find-registry.png)
+
+For this example, we'll create a new prompt template called "ai-poet":
+
+```
+You are a skilled poet specializing in haiku. 
+
+Your task is to write a haiku based on a topic provided by the user. 
+
+The haiku must have 17 syllables.
+Structured in three lines of 5, 7, and 5 syllables respectively. 
+```
+
+Next, add a user message with an input variable `{topic}`. This will be filled out by user input.
+![Haiku Prompt](/images/quickstart/haiku-prompt.png)
+
+## Set up PromptLayer locally
+
+### Install PromptLayer & OpenAI
+
+Use the following pip commands to install:
+
+```
+pip install promptlayer
+pip install openai
+```
+
+Make sure to download the latest versions if you already have them installed.
+
+### API Key Env Var Setup
+
+Retrieve your [OpenAI API key](https://platform.openai.com/api-keys) and your PromptLayer API key from settings (_click the cog on the top right_). Your .env file should look like this:
+
+```
+OPENAI_API_KEY=sk-<your_openai_api_key>
+PROMPTLAYER_API_KEY=<your_promptlayer_api_key>
+```
+
+For more information on setting up environment variables in Python, refer to this [guide](https://www.twilio.com/en-us/blog/environment-variables-python).
+
+We recommend using Python dot-env as well. 
+
+```
+pip install python-dotenv
+```
+
+Create a Python file and load all your envvars using dotenv.
+
+``` Python
+from dotenv import load_dotenv
+import os
+
+load_dotenv()  # Load env vars from .env file
+```
+
+### Import Everything
+
+This quickstart uses OpenAI, but we support basically every major LLM provider (e.g., Anthropic, LLama, Google, Cohere, Mistral, etc)
 
 <CodeGroup>
 
-```python Python openai >= 1.0.0
-# Make sure to `pip install promptlayer`
+```python Python
 import promptlayer
-
-# Swap out your 'from openai import OpenAI'
 OpenAI = promptlayer.openai.OpenAI
 client = OpenAI()
-
-# Do something fun 🚀
-completion = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You are an AI."},
-    {"role": "user", "content": "Compose a poem please."}
-  ],
-  pl_tags=["getting-started"]
-)
 ```
 
-```python Python openai < 1.0.0
-# Make sure to `pip install promptlayer`
-import promptlayer
-
-# Swap out your 'import openai'
-openai = promptlayer.openai
-
-# Do something fun 🚀
-openai.Completion.create(
-  engine="gpt-3.5-turbo-instruct", 
-  prompt="My name is", 
-  pl_tags=["name-guessing", "pipeline-2"]
-)
-```
 
 ```js JavaScript
-// Make sure to `npm install promptlayer`
 import { promptlayer } from "promptlayer";
-
-// Make sure you have openai installed with `npm install openai`
 const OpenAI = promptlayer.OpenAI;
-const openai = new OpenAI();
-
-// Do something fun 🚀
-openai.completions.create({
-  model: "gpt-3.5-turbo-instruct",
-  prompt: "My name is",
-}).then(console.log).catch(console.error);
+const client = new OpenAI();
 ```
 
-
-```python Python with LangChain
-# Make sure to `pip install promptlayer`
-import promptlayer
-from langchain.callbacks import PromptLayerCallbackHandler
-
-# Using OpenAI completions
-from langchain.llms import OpenAI
-llm = OpenAI(
-    model_name="gpt-3.5-turbo-instruct",
-    callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])]
-)
-llm("My name is")
-
-# Using OpenAI chat
-from langchain.chat_models import ChatOpenAI
-from langchain.schema import (SystemMessage, HumanMessage)
-chat = ChatOpenAI(callbacks=[PromptLayerCallbackHandler(pl_tags=["langchain"])])
-chat_llm([
-  SystemMessage(content="You are an AI assistant."),
-  HumanMessage(content="What's your name?")
-])
-```
-
-```js JS/TS with Langchain
-// Install with `npm install langchain`
-
-// Using OpenAI completions
-const { PromptLayerOpenAI } = require("langchain/llms/openai");
-const llm = new PromptLayerOpenAI({
-  temperature: 0.9,
-  openAIApiKey: "YOUR-API-KEY", // Replace with your OpenAI API key
-  promptLayerApiKey: "YOUR-API-KEY", // Replace with your PromptLayer API key
-});
-llm.call("How do I use PromptLayer with OpenAIChat?").then(console.log);
-
-// Using OpenAI chat
-const { PromptLayerChatOpenAI } = require("langchain/chat_models/openai");
-const { SystemChatMessage } = require("langchain/schema");
-const chat = new PromptLayerChatOpenAI({
-    returnPromptLayerId: true,
-    openAIApiKey: "YOUR-API-KEY", // Replace with your OpenAI API key
-    promptLayerApiKey: "YOUR-API-KEY", // Replace with your PromptLayer API key
-    });
-chat.generate([
-  [new SystemChatMessage("You are a helpful AI assistant."),],
-]).then(console.log);
-```
-
-```txt REST
-curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
-    "tags": ["promptlayer-test"],
-    "request_response": {...},
-    "request_start_time": 1673987077.463504,
-    "request_end_time": 1673987077.463504,
-    "api_key": "pl_<YOUR API KEY>"
-}'
- ```
 </CodeGroup>
     
-   
+## Retrieve the prompt
+
+You can pull down the prompt with one line of code. 
+``` Python
+ai_poet_prompt = promptlayer.templates.get("ai-poet")
+```
+
+Or you can specify a [release label](/features/prompt-registry/overview#release-labels) for prod/staging environments. Make sure to add the release label "prod" in the PromptLayer dashboard first.
+``` Python
+ai_poet_prompt = promptlayer.templates.get("ai-poet", {
+  "label": "prod"
+})
+```
+
+### Inject Input Variables
+
+Remember our user input variable `{topic}` to choose the haiku topic? We can use PromptLayer to format the f-string or jinja2 template.
+
+We can add an argument to inject input variables. For example, the topic can be "American history".
+
+``` Python
+input_variables = {
+    "topic": "American History"
+}
+
+# Grab the prompt template
+ai_poet_prompt = promptlayer.templates.get("ai-poet",
+{
+  "input_variables": input_variables
+})
+```
+
+### Running the request
+
+PromptLayer can help us format the prompt to be OpenAI-specific.
+
+``` Python
+input_variables = {
+    "topic": "American History"
+}
+
+# Grab the prompt template
+ai_poet_prompt = promptlayer.templates.get("ai-poet",
+{
+  "input_variables": input_variables,
+  "provider": "openai", # Format for OpenAI
+})
+
+response = client.chat.completions.create(
+  **city_choice_prompt['llm_kwargs'],
+  model="gpt-3.5-turbo", 
+)
+print("Answer:", response.choices[0].text)
+```
+
+### Logs
+
+Open the dashboard to see logs.
+[image]
+
+#### Extra logs
+
+We can add more metadata to each log, like prompt template, input variables, and score.
+
+
+``` Python
+input_variables = {
+    "topic": "American History"
+}
+
+# Grab the prompt template
+ai_poet_prompt = promptlayer.templates.get("ai-poet",
+{
+  "input_variables": input_variables,
+  "provider": "openai",
+})
+
+response, pl_request_id = client.chat.completions.create(
+  **city_choice_prompt['llm_kwargs'],
+  model="gpt-3.5-turbo", # You can alternatively specify this in the dashboard
+  pl_tags=["quickstart_tutorial"], # Optionally add a tag
+  return_pl_id=True
+)
+print("Answer:", response.choices[0].text)
+
+# Associate the request with the prompt template we used
+promptlayer.track.prompt(request_id=pl_request_id, 
+    prompt_name='ai-poet', prompt_input_variables=input_variables)
+  
+# Add metadata to the logs
+promptlayer.track.metadata(request_id=pl_request_id, metadata={
+  "user_id": "abc123"
+})
+
+# Add a score to the log
+promptlayer.track.score(
+    request_id=pl_request_id,
+    score=100,
+)
+```
+
+This will help find error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
+
+### No more redeploys!
+
+Every time you update the prompt in the dashboard, re-run the code and it will grab the latest version. No eng redeploy is needed.
+
+![Redeploy Gif](/images/quickstart/redeploy.gif)
+
+### Analytics
+
+Go to the dashboard to see analytics.
+![Analytics Screenshot](/images/quickstart/analytics-screenshot.png)
+
+## Evaluations
+
+Every time you edit the prompt version, you can run an evaluation. Learn more about evaluations [here](/features/evaluations/examples).
+
+![Eval Scores](/images/quickstart/eval-scores.png)
+
+# Further reading
+
+From the docs:
+- [Getting Started Tutorial](/getting_started)
+- Migration Guide
+- [Why use a prompt CMS?](/why-promptlayer/prompt-cms)
+- [Evaluating Prompts with PromptLayer](/features/evaluations/examples)
+
+From our blog:
+- [Prompt Management and Collaboration](https://blog.promptlayer.com/scalable-prompt-management-and-collaboration-fff28af39b9b)
+- [Our Favorite Prompts from our Prompt Engineering Tournament](https://blog.promptlayer.com/our-favorite-prompts-from-the-tournament-b9d99464c1dc)
+- [Youtube LLM Development Tutorial Series](https://www.youtube.com/watch?v=u4LMdo-2EP4&list=PL6gx4Cwl9DGDLqIXStz_Zrk2utoTgrsfW)
+- [Building ChatGPT from Scratch with PromptLayer](https://blog.promptlayer.com/building-chatgpt-from-scratch-the-right-way-ef82e771886e)
+- [Comparing Prompts Across Different Models](https://blog.promptlayer.com/migrating-prompts-to-open-source-models-c21e1d482d6f)
+- [Prompt Routers and Modular Prompt Architecture](https://blog.promptlayer.com/prompt-routers-and-modular-prompt-architecture-8691d7a57aee)
+
