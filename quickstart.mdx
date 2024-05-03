@@ -13,11 +13,12 @@ First, make sure you have signed up for an account at www.promptlayer.com to beg
 
 ## Create your first prompt template
 
-To create your first prompt template, navigate to the prompt registry ([learn more here](/features/prompt-registry/overview)) and click "Create Template". 
+1. From [PromptLayer's home screen](https://www.promptlayer.com), navigate to the prompt registry ([learn more](/features/prompt-registry/overview)).
+2. Click "Create Template" to create a new prompt template.
 
 ![Find Registry](/images/quickstart/find-registry.png)
 
-For this example, we'll create a new prompt template called "ai-poet":
+For this example, let's create a new prompt template called "ai-poet":
 
 ```
 You are a skilled poet specializing in haiku. 
@@ -28,51 +29,52 @@ The haiku must have 17 syllables.
 Structured in three lines of 5, 7, and 5 syllables respectively. 
 ```
 
-Next, add a user message with an input variable `{topic}`. This will be filled out by user input.
+Next, add a user message with an input variable `{topic}`. This will be filled out by user input when interacting with the AI.
+
 ![Haiku Prompt](/images/quickstart/haiku-prompt.png)
 
-## Set up PromptLayer locally
+## Set Up PromptLayer Locally
 
 ### Install PromptLayer & OpenAI
 
-Use the following pip commands to install:
+Install the required packages:
 
 ```
 pip install promptlayer
 pip install openai
 ```
 
-Make sure to download the latest versions if you already have them installed.
+Ensure you have the latest versions if already installed.
 
 ### API Key Env Var Setup
 
-Retrieve your [OpenAI API key](https://platform.openai.com/api-keys) and your PromptLayer API key from settings (_click the cog on the top right_). Your .env file should look like this:
+1. Retrieve your [OpenAI API key](https://platform.openai.com/api-keys)
+2. Get a PromptLayer API key from settings (_click the cog on the top right_). 
+3. Create a .env file with the following:
 
 ```
 OPENAI_API_KEY=sk-<your_openai_api_key>
 PROMPTLAYER_API_KEY=<your_promptlayer_api_key>
 ```
+For more on setting up environment variables in Python, refer to this [guide](https://www.twilio.com/en-us/blog/environment-variables-python).
 
-For more information on setting up environment variables in Python, refer to this [guide](https://www.twilio.com/en-us/blog/environment-variables-python).
-
-We recommend using Python dot-env as well. 
+We recommend using `python-dotenv`:
 
 ```
 pip install python-dotenv
 ```
 
-Create a Python file and load all your envvars using dotenv.
+Create a Python file and load the environment variables:
 
 ``` Python
 from dotenv import load_dotenv
-import os
 
 load_dotenv()  # Load env vars from .env file
 ```
 
-### Import Everything
+### Import PromptLayer
 
-This quickstart uses OpenAI, but we support basically every major LLM provider (e.g., Anthropic, LLama, Google, Cohere, Mistral, etc)
+This quickstart uses OpenAI, but PromptLayer supports most major LLM providers (Anthropic, LLama, Google, Cohere, Mistral, etc).
 
 <CodeGroup>
 
@@ -91,14 +93,14 @@ const client = new OpenAI();
 
 </CodeGroup>
     
-## Retrieve the prompt
+## Retrieve the Prompt
 
-You can pull down the prompt with one line of code. 
+Pull down the prompt template with one line:
 ``` Python
 ai_poet_prompt = promptlayer.templates.get("ai-poet")
 ```
 
-Or you can specify a [release label](/features/prompt-registry/overview#release-labels) for prod/staging environments. Make sure to add the release label "prod" in the PromptLayer dashboard first.
+Or specify a [release label](/features/prompt-registry/overview#release-labels) for prod/staging environments. First, make sure to add the release label "prod" in the PromptLayer dashboard.
 ``` Python
 ai_poet_prompt = promptlayer.templates.get("ai-poet", {
   "label": "prod"
@@ -107,13 +109,13 @@ ai_poet_prompt = promptlayer.templates.get("ai-poet", {
 
 ### Inject Input Variables
 
-Remember our user input variable `{topic}` to choose the haiku topic? We can use PromptLayer to format the f-string or jinja2 template.
+Remember the `{topic}` user input variable to choose the haiku topic? PromptLayer can format the f-string or Jinja2 template using this variable.
 
-We can add an argument to inject input variables. For example, the topic can be "American history".
+Add an argument to inject input variables. For example:
 
 ``` Python
 input_variables = {
-    "topic": "American History"
+    "topic": "The American Revolution"
 }
 
 # Grab the prompt template
@@ -123,9 +125,9 @@ ai_poet_prompt = promptlayer.templates.get("ai-poet",
 })
 ```
 
-### Running the request
+### Run the Request
 
-PromptLayer can help us format the prompt to be OpenAI-specific.
+PromptLayer can help format the prompt to send to OpenAI:
 
 ``` Python
 input_variables = {
@@ -148,13 +150,12 @@ print("Answer:", response.choices[0].text)
 
 ### Logs
 
-Open the dashboard to see logs.
+Open the dashboard to see the logs.
 [image]
 
 #### Extra logs
 
-We can add more metadata to each log, like prompt template, input variables, and score.
-
+Add more metadata to each log, such as the prompt template, input variables, and score:
 
 ``` Python
 input_variables = {
@@ -170,13 +171,13 @@ ai_poet_prompt = promptlayer.templates.get("ai-poet",
 
 response, pl_request_id = client.chat.completions.create(
   **city_choice_prompt['llm_kwargs'],
-  model="gpt-3.5-turbo", # You can alternatively specify this in the dashboard
+  model="gpt-3.5-turbo", # Alternatively specify this in the dashboard
   pl_tags=["quickstart_tutorial"], # Optionally add a tag
   return_pl_id=True
 )
 print("Answer:", response.choices[0].text)
 
-# Associate the request with the prompt template we used
+# Associate the request with the prompt template used
 promptlayer.track.prompt(request_id=pl_request_id, 
     prompt_name='ai-poet', prompt_input_variables=input_variables)
   
@@ -192,22 +193,23 @@ promptlayer.track.score(
 )
 ```
 
-This will help find error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
+This helps triage through error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
 
 ### No more redeploys!
 
 Every time you update the prompt in the dashboard, re-run the code and it will grab the latest version. No eng redeploy is needed.
 
+
 ![Redeploy Gif](/images/quickstart/redeploy.gif)
 
 ### Analytics
 
-Go to the dashboard to see analytics.
+Visit the dashboard to see analytics.
 ![Analytics Screenshot](/images/quickstart/analytics-screenshot.png)
 
 ## Evaluations
 
-Every time you edit the prompt version, you can run an evaluation. Learn more about evaluations [here](/features/evaluations/examples).
+Each time you edit the prompt version, you can run an evaluation. Learn more about evaluations [here](/features/evaluations/examples).
 
 ![Eval Scores](/images/quickstart/eval-scores.png)
 
