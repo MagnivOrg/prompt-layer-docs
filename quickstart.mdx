@@ -13,6 +13,8 @@ First, make sure you have signed up for an account at www.promptlayer.com to beg
 
 ## Create your first prompt template
 
+PromptLayer makes creating, versioning, and collaborating on prompt templates easy. They are model-agnostic and auditable.
+
 1. From [PromptLayer's home screen](https://www.promptlayer.com), navigate to the prompt registry ([learn more](/features/prompt-registry/overview)).
 2. Click "Create Template" to create a new prompt template.
 
@@ -109,7 +111,7 @@ ai_poet_prompt = promptlayer.templates.get("ai-poet", {
 
 ### Inject Input Variables
 
-Remember the `{topic}` user input variable to choose the haiku topic? PromptLayer can format the f-string or Jinja2 template using this variable.
+Remember the `{topic}` user input variable to specify the haiku topic in our prompt? PromptLayer can format the f-string or Jinja2 template using this variable.
 
 Add an argument to inject input variables. For example:
 
@@ -142,7 +144,7 @@ ai_poet_prompt = promptlayer.templates.get("ai-poet",
 })
 
 response = client.chat.completions.create(
-  **city_choice_prompt['llm_kwargs'],
+  **ai_poet_prompt['llm_kwargs'],
   model="gpt-3.5-turbo", 
 )
 print("Answer:", response.choices[0].text)
