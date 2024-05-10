@@ -145,12 +145,12 @@ from promptlayer import PromptLayer, utils
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
-promptlayer = PromptLayer(api_key=os.environ.get("PROMPTLAYER_API_KEY"))
+promptlayer_client = PromptLayer(api_key=os.environ.get("PROMPTLAYER_API_KEY"))
 
 GEMINI_PRO = "gemini-pro"
 
 model = genai.GenerativeModel(GEMINI_PRO)
-template = promptlayer.templates.get(
+template = promptlayer_client.templates.get(
     "weather",
     {
         "provider": "google",
@@ -199,7 +199,7 @@ httpx.post(
         "request_response": request_response,
         "request_start_time": request_start_time,
         "request_end_time": request_end_time,
-        "api_key": promptlayer.api_key,
+        "api_key": promptlayer_client.api_key,
     },
 )
 ```
@@ -208,7 +208,7 @@ httpx.post(
 import { PromptLayer } from "promptlayer";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
 const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
@@ -216,7 +216,7 @@ const GEMINI_PRO = "gemini-pro";
 
 const main = async () => {
   const model = genAI.getGenerativeModel({ model: GEMINI_PRO });
-  const template = await promptlayer.templates.get("weather", {
+  const template = await promptLayerClient.templates.get("weather", {
     provider: "google",
   });
   const history = template.llm_kwargs.history;

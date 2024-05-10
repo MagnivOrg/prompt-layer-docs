@@ -13,6 +13,19 @@ pip install promptlayer
 
 PromptLayer python library has support for both OpenAI and Anthropic LLMs!
 
+Set up a PromptLayer client in your python file.
+
+```python
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
+```
+
+Optionally, you can specify the API key in the client.
+
+```python
+promptlayer_client = PromptLayer(api_key="pl_****")
+```
+
 ## OpenAI
 
 In the Python file where you use OpenAI APIs, add the following. This allows us to keep track of your requests without needing any other code changes.
@@ -21,17 +34,17 @@ In the Python file where you use OpenAI APIs, add the following. This allows us 
 
 ```python openai >= 1.0.0
 from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
 
-promptlayer = PromptLayer(api_key="pl_****")
-OpenAI = promptlayer.openai.OpenAI
+OpenAI = promptlayer_client.openai.OpenAI
 client = OpenAI()
 ```
 
 ```python openai < 1.0.0
 from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
 
-promptlayer = PromptLayer(api_key="pl_****")
-openai = promptlayer.openai
+openai = promptlayer_client.openai
 ```
 
 </CodeGroup>
@@ -63,11 +76,10 @@ Here is a complete code snippet:
 
 ```python
 from promptlayer import PromptLayer
-
-promptlayer = PromptLayer()
+promptlayer_client = PromptLayer()
 
 # Swap out 'from openai import OpenAI'
-OpenAI = promptlayer.openai.OpenAI
+OpenAI = promptlayer_client.openai.OpenAI
 
 client = OpenAI()
 completion = client.chat.completions.create(
@@ -89,11 +101,10 @@ Below is an example code snippet of the one line replacement:
 
 ```python
 from promptlayer import PromptLayer
-
-promptlayer = PromptLayer()
+promptlayer_client = PromptLayer()
 
 # Swap out 'from anthropic import Anthropic'
-anthropic = promptlayer.anthropic
+anthropic = promptlayer_client.anthropic
 
 client = anthropic.Anthropic()
 

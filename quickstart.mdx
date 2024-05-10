@@ -17,11 +17,10 @@ __Get started with the code below!__
 ```python Python openai >= 1.0.0
 # Make sure to `pip install promptlayer`
 from promptlayer import PromptLayer
-
-promptlayer = PromptLayer()
+promptlayer_client = PromptLayer()
 
 # Swap out your 'from openai import OpenAI'
-OpenAI = promptlayer.openai.OpenAI
+OpenAI = promptlayer_client.openai.OpenAI
 client = OpenAI()
 
 # Do something fun 🚀
@@ -38,11 +37,10 @@ completion = client.chat.completions.create(
 ```python Python openai < 1.0.0
 # Make sure to `pip install promptlayer`
 from promptlayer import PromptLayer
-
-promptlayer = PromptLayer()
+promptlayer_client = PromptLayer()
 
 # Swap out your 'import openai'
-openai = promptlayer.openai
+openai = promptlayer_client.openai
 
 # Do something fun 🚀
 openai.Completion.create(
@@ -55,11 +53,10 @@ openai.Completion.create(
 ```js JavaScript
 // Make sure to `npm install promptlayer`
 import { PromptLayer } from "promptlayer";
-
-const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptLayerClient = new PromptLayer();
 
 // Make sure you have openai installed with `npm install openai`
-const OpenAI = promptlayer.OpenAI;
+const OpenAI = promptLayerClient.OpenAI;
 const openai = new OpenAI();
 
 // Do something fun 🚀

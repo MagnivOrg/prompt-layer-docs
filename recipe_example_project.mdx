@@ -55,10 +55,9 @@ import os
 from pathlib import Path
 import pinecone
 from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
 
-promptlayer = PromptLayer()
-
-openai = promptlayer.openai
+openai = promptlayer_client.openai
 ```
 
 Next we will set up our configurations for directories along with Pinecone's API key and index name. This will make the rest of our code more clear. It will also allow us to easily change our data directory location or index name if needed.
@@ -148,7 +147,7 @@ variables = {
     'recipes_string': '\n\n'.join(recipes_list)
 }
 
-recipe_template = promptlayer.templates.get("recipe_template", {
+recipe_template = promptlayer_client.templates.get("recipe_template", {
     "provider": "openai",
     "input_variables": variables
 })
@@ -171,7 +170,7 @@ print(response.choices[0].message.content)
 Lastly, we'll associate the generated response with this specific prompt template in PromptLayer for tracking.
 
 ```python
-promptlayer.track.prompt(
+promptlayer_client.track.prompt(
     request_id=pl_request_id,
     prompt_name='recipe_template',
     prompt_input_variables=variables
@@ -219,7 +218,7 @@ In the PromptLayer dashboard, you can view the log of all requests made. Here we
 You can also add scoring programmatically by calling the `score()` method after making a request:
 
 ```python
-promptlayer.track.score(
+promptlayer_client.track.score(
    request_id=pl_request_id,
    score=(100 if food in response.choices[0].message.content else 0)
 )
@@ -236,7 +235,7 @@ When editing a template, you can click on "Parameters" > "Set Parameters" to set
 You can now retrieve that metadata by using the following code:
 
 ```python
-recipe_template = promptlayer.templates.get(
+recipe_template = promptlayer_client.templates.get(
     "recipe_template"
 )
 metadata = recipe_template["metadata"]
@@ -261,7 +260,7 @@ By attaching user-specific metadata (e.g., user ID, dietary preferences, geograp
 To add metadata to a request, use the `metadata()` method:
 
 ```python
-promptlayer.track.metadata(
+promptlayer_client.track.metadata(
   request_id=pl_request_id,
   metadata={
      "user_id": "abc123",
