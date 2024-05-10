@@ -141,12 +141,11 @@ from datetime import datetime
 
 import google.generativeai as genai
 import httpx
-import promptlayer
-from promptlayer import utils
+from promptlayer import PromptLayer, utils
 
 GOOGLE_API_KEY = os.environ.get("GOOGLE_API_KEY")
 genai.configure(api_key=GOOGLE_API_KEY)
-promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
+promptlayer = PromptLayer(api_key=os.environ.get("PROMPTLAYER_API_KEY"))
 
 GEMINI_PRO = "gemini-pro"
 
@@ -206,8 +205,10 @@ httpx.post(
 ```
 
 ```javascript JavaScript
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
 import { GoogleGenerativeAI } from "@google/generative-ai";
+
+const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
 const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);

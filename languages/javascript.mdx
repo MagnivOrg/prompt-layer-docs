@@ -16,7 +16,9 @@ npm install promptlayer
 In the JavaScript file where the OpenAI APIs are integrated, include the following lines. They enable PromptLayer to track your requests without additional code modifications.
 
 ```js
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
+
+const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const OpenAI = promptlayer.OpenAI;
 const openai = new OpenAI();
@@ -61,7 +63,9 @@ The PromptLayer JavaScript library also supports TypeScript. You can type cast t
 
 ```ts
 import BaseOpenAI from "openai";
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
+
+const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const OpenAI: typeof BaseOpenAI = promptlayer.OpenAI;
 
@@ -88,13 +92,13 @@ Using Anthropic with PromptLayer is very similar to how to one would use OpenAI.
 Below is an example code snippet of the one line replacement:
 
 ```js
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
+
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 // Instead of `import Anthropic from "@anthropic-ai/sdk";` ->
 const Anthropic = promptlayer.Anthropic;
 const anthropic = new Anthropic();
-
-promptlayer.api_key = process.env.PROMPTLAYER_API_KEY;
 
 const response = anthropic.completions.create({
   prompt: `${Anthropic.HUMAN_PROMPT} How many toes do dogs have? more information more information more${Anthropic.AI_PROMPT}`,
@@ -118,7 +122,9 @@ PromptLayer can be used with Edge functions. Please use either our Javascript li
 ```js
 import BaseAnthropic from "@anthropic-ai/sdk";
 
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
+
+const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 const Anthropic: typeof BaseAnthropic = promptlayer.Anthropic;
 const anthropic = new Anthropic();
 
@@ -145,7 +151,9 @@ Or use streaming. Here's another example that can be run in NextJS on edge.
 ```js
 import BaseAnthropic from "@anthropic-ai/sdk";
 import { AnthropicStream, StreamingTextResponse } from "ai";
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
+
+const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 // Add this line
 export const runtime = "edge";

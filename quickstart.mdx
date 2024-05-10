@@ -16,7 +16,9 @@ __Get started with the code below!__
 
 ```python Python openai >= 1.0.0
 # Make sure to `pip install promptlayer`
-import promptlayer
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer()
 
 # Swap out your 'from openai import OpenAI'
 OpenAI = promptlayer.openai.OpenAI
@@ -35,7 +37,9 @@ completion = client.chat.completions.create(
 
 ```python Python openai < 1.0.0
 # Make sure to `pip install promptlayer`
-import promptlayer
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer()
 
 # Swap out your 'import openai'
 openai = promptlayer.openai
@@ -50,7 +54,9 @@ openai.Completion.create(
 
 ```js JavaScript
 // Make sure to `npm install promptlayer`
-import { promptlayer } from "promptlayer";
+import { PromptLayer } from "promptlayer";
+
+const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 // Make sure you have openai installed with `npm install openai`
 const OpenAI = promptlayer.OpenAI;
@@ -66,7 +72,6 @@ openai.completions.create({
 
 ```python Python with LangChain
 # Make sure to `pip install promptlayer`
-import promptlayer
 from langchain.callbacks import PromptLayerCallbackHandler
 
 # Using OpenAI completions

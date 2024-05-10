@@ -54,7 +54,9 @@ Let's start by first pulling in the necessary libraries and initializing OpenAI 
 import os
 from pathlib import Path
 import pinecone
-import promptlayer
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer()
 
 openai = promptlayer.openai
 ```

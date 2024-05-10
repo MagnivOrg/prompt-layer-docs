@@ -20,15 +20,17 @@ In the Python file where you use OpenAI APIs, add the following. This allows us 
 <CodeGroup>
 
 ```python openai >= 1.0.0
-import promptlayer
-promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
 OpenAI = promptlayer.openai.OpenAI
 client = OpenAI()
 ```
 
 ```python openai < 1.0.0
-import promptlayer
-promptlayer.api_key = "<YOUR PromptLayer API KEY pl_xxxxxx>"
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
 openai = promptlayer.openai
 ```
 
@@ -60,7 +62,9 @@ After making your first few requests, you should be able to see them in the Prom
 Here is a complete code snippet:
 
 ```python
-import promptlayer
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer()
 
 # Swap out 'from openai import OpenAI'
 OpenAI = promptlayer.openai.OpenAI
@@ -84,7 +88,9 @@ Using Anthropic with PromptLayer is very similar to how to one would use OpenAI.
 Below is an example code snippet of the one line replacement:
 
 ```python
-import promptlayer
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer()
 
 # Swap out 'from anthropic import Anthropic'
 anthropic = promptlayer.anthropic
