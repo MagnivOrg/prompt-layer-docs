@@ -18,7 +18,7 @@ In the JavaScript file where the OpenAI APIs are integrated, include the followi
 ```js
 import { PromptLayer } from "promptlayer";
 
-const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const OpenAI = promptlayer.OpenAI;
 const openai = new OpenAI();
@@ -65,7 +65,7 @@ The PromptLayer JavaScript library also supports TypeScript. You can type cast t
 import BaseOpenAI from "openai";
 import { PromptLayer } from "promptlayer";
 
-const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const OpenAI: typeof BaseOpenAI = promptlayer.OpenAI;
 
@@ -124,7 +124,7 @@ import BaseAnthropic from "@anthropic-ai/sdk";
 
 import { PromptLayer } from "promptlayer";
 
-const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 const Anthropic: typeof BaseAnthropic = promptlayer.Anthropic;
 const anthropic = new Anthropic();
 
@@ -153,7 +153,7 @@ import BaseAnthropic from "@anthropic-ai/sdk";
 import { AnthropicStream, StreamingTextResponse } from "ai";
 import { PromptLayer } from "promptlayer";
 
-const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 // Add this line
 export const runtime = "edge";

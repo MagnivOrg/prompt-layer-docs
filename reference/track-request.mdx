@@ -208,7 +208,7 @@ httpx.post(
 import { PromptLayer } from "promptlayer";
 import { GoogleGenerativeAI } from "@google/generative-ai";
 
-const promptLayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 
 const GOOGLE_API_KEY = process.env.GOOGLE_API_KEY || "";
 const genAI = new GoogleGenerativeAI(GOOGLE_API_KEY);
