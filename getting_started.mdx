@@ -46,13 +46,14 @@ Once we have loaded our environment variables, we can import `promptlayer` and s
 <CodeGroup>
 
 ```python Python
-import promptlayer
+from promptlayer import PromptLayer
 import os
-promptlayer.api_key = os.environ.get("PROMPTLAYER_API_KEY")
+promptlayer = PromptLayer(api_key=os.environ.get("PROMPTLAYER_API_KEY"))
 ```
 
 ```js Javascript
-const promptLayerApiKey = process.env.PROMPTLAYER_API_KEY;
+import { PromptLayer } from "promptlayer";
+const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 ```
 </CodeGroup>
 

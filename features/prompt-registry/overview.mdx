@@ -43,8 +43,6 @@ const template_dict = await promptlayer.templates.get("my_template");
 
 Alternatively, use the REST API endpoint `/prompte-templates/{prompt_name}` ([read more](/reference/templates-get)).
 
-*Note*: Please use `promptlayer.templates.get` to access prompt templates. The `promptlayer.prompts.get` function is deprecated and returns templates in the legacy format.
-
 ### By Release Label
 
 Release labels like `prod` and `staging` can be optionally applied to template versions and used to retrieve the template.
