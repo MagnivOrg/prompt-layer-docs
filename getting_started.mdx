@@ -48,12 +48,12 @@ Once we have loaded our environment variables, we can import `promptlayer` and s
 ```python Python
 from promptlayer import PromptLayer
 import os
-promptlayer = PromptLayer(api_key=os.environ.get("PROMPTLAYER_API_KEY"))
+promptlayer_client = PromptLayer(api_key=os.environ.get("PROMPTLAYER_API_KEY"))
 ```
 
 ```js Javascript
 import { PromptLayer } from "promptlayer";
-const promptlayer = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
 ```
 </CodeGroup>
 
@@ -63,7 +63,7 @@ PromptLayer is at its core a REST library. Using our [Python SDK](/languages/pyt
 
 Because latency is so important, the best way to use PromptLayer is to first make your request to OpenAI and then log the request to PromptLayer. This is how our Python SDK works under the hood.
 
-If you are used to working with the Python SDK, all you will need to do is swap out your `import openai` for `openai = promptlayer.openai`. The rest of your code stays the same!
+If you are used to working with the Python SDK, all you will need to do is swap out your `import openai` for `openai = promptlayer_client.openai`. The rest of your code stays the same!
 
 In this step we'll make a simple request to the OpenAI GPT-3 engine to generate a response for the prompt "My name is".
 
@@ -71,7 +71,7 @@ In this step we'll make a simple request to the OpenAI GPT-3 engine to generate 
 
 ```python Python openai >= 1.0.0
 # Instead of `import openai` we will use
-OpenAI = promptlayer.openai.OpenAI
+OpenAI = promptlayer_client.openai.OpenAI
 openai = OpenAI()
 
 # Make a completion to OpenAI
@@ -84,7 +84,7 @@ print(response.choices[0].text)
 
 ```python Python openai < 1.0.0
 # Instead of `import openai` we will use
-openai = promptlayer.openai
+openai = promptlayer_client.openai
 openai.api_key = os.environ.get("OPENAI_API_KEY")
 
 # Make a completion to OpenAI
@@ -97,7 +97,7 @@ print(response.choices[0].text)
 
 ```js JavaScript
 // Instead of `import openai` we will use
-const OpenAI = promptlayer.OpenAI;
+const OpenAI = promptLayerClient.OpenAI;
 const openai = new OpenAI();
 
 // Make a completion to OpenAI
@@ -266,7 +266,7 @@ print(answer)
 correct_answer = "albany" in answer.lower()
 
 # Log score to 🍰 PromptLayer
-promptlayer.track.score(
+promptlayer_client.track.score(
     request_id=pl_request_id,
     score=100 if correct_answer else 0,
 )
@@ -285,7 +285,7 @@ console.log(answer);
 const correct_answer = "albany" in answer.lower();
 
 // Log score to 🍰 PromptLayer
-promptlayer.track.score({
+promptLayerClient.track.score({
   request_id: pl_request_id,
   score: correct_answer ? 100 : 0,
 });
@@ -318,7 +318,7 @@ print(answer)
 
 # Check if the answer is correct & log score to 🍰 PromptLayer
 correct_answer = "albany" in answer.lower()
-promptlayer.track.score(
+promptlayer_client.track.score(
     request_id=pl_request_id,
     score=100 if correct_answer else 0,
 )
@@ -437,7 +437,7 @@ except ValueError as e:
     pass
 
 # Use score in 🍰 PromptLayer to track if answer was an int
-promptlayer.track.score(
+promptlayer_client.track.score(
     request_id=pl_request_id,
     score=100 if numeric_answer else 0,
 )
@@ -445,7 +445,7 @@ promptlayer.track.score(
 print("Numeric answer:", numeric_answer)
 
 # Log metadata for request in 🍰 PromptLayer
-promptlayer.track.metadata(
+promptlayer_client.track.metadata(
     request_id=pl_request_id,
     metadata={
         "referrer": "getting_started.ipynb",
@@ -500,7 +500,7 @@ try {
 }
 
 // Use score in 🍰 PromptLayer to track if answer was an int
-promptlayer.track.score({
+promptLayerClient.track.score({
   request_id: pl_request_id,
   score: numeric_answer ? 100 : 0,
 });
@@ -508,7 +508,7 @@ promptlayer.track.score({
 console.log("Numeric answer:", numeric_answer);
 
 // Log metadata for request in 🍰 PromptLayer
-promptlayer.track.metadata({
+promptLayerClient.track.metadata({
   request_id: pl_request_id,
   metadata: {
     referrer: "getting_started.ipynb",
@@ -559,7 +559,7 @@ except ValueError as e:
     pass
 
 # Use score in 🍰 PromptLayer to track if answer was an int
-promptlayer.track.score(
+promptlayer_client.track.score(
     request_id=pl_request_id,
     score=100 if numeric_answer else 0,
 )
@@ -567,7 +567,7 @@ promptlayer.track.score(
 print("Numeric answer:", numeric_answer)
 
 # Log metadata for request in 🍰 PromptLayer
-promptlayer.track.metadata(
+promptlayer_client.track.metadata(
     request_id=pl_request_id,
     metadata={
         "referrer": "getting_started.ipynb",
@@ -730,16 +730,16 @@ The Prompt Registry handles versioning, just visually edit the prompt in the das
 <CodeGroup>
 
 ```python Python
-city_choice_prompt = promptlayer.templates.get("city_choice")
-city_choice_prompt_v1 = promptlayer.templates.get("city_choice", { "version": 1 })
-city_choice_prompt_prod = promptlayer.templates.get("city_choice", { "label": "prod" })
+city_choice_prompt = promptlayer_client.templates.get("city_choice")
+city_choice_prompt_v1 = promptlayer_client.templates.get("city_choice", { "version": 1 })
+city_choice_prompt_prod = promptlayer_client.templates.get("city_choice", { "label": "prod" })
 print(city_choice_prompt_v1['prompt_template'])
 ```
 
 ```js JavaScript
-const city_choice_prompt = await promptlayer.templates.get("city_choice");
-const city_choice_prompt_v1 = await promptlayer.templates.get("city_choice",{ version: 1 });
-const city_choice_prompt_prod = await promptlayer.templates.get("city_choice", { label: "prod" });
+const city_choice_prompt = await promptLayerClient.templates.get("city_choice");
+const city_choice_prompt_v1 = await promptLayerClient.templates.get("city_choice",{ version: 1 });
+const city_choice_prompt_prod = await promptLayerClient.templates.get("city_choice", { label: "prod" });
 console.log(city_choice_prompt_v1["prompt_template"]);
 ```
 
@@ -811,7 +811,7 @@ input_variables = {
 }
 
 # Grab the prompt template
-city_choice_prompt = promptlayer.templates.get("city_choice",
+city_choice_prompt = promptlayer_client.templates.get("city_choice",
 {
   "provider": "openai",
   "input_variables": input_variables
@@ -826,7 +826,7 @@ response, pl_request_id = client.completions.create(
 print("Answer:", response.choices[0].text)
 
 # Associate the request with the prompt template we used
-promptlayer.track.prompt(request_id=pl_request_id, 
+promptlayer_client.track.prompt(request_id=pl_request_id, 
     prompt_name='city_choice', prompt_input_variables=input_variables)
 ```
 
@@ -837,7 +837,7 @@ const input_variables = {
   city: "Washington, D.C.",
   interests: "resorts, museums, beaches",
 };
-const city_choice_prompt = await promptlayer.templates.get("city_choice", {
+const city_choice_prompt = await promptlayer_client.templates.get("city_choice", {
   provider: "openai",
   input_variables,
 });
@@ -851,7 +851,7 @@ const [response, pl_request_id] = await openai.completions.create({
 console.log("Answer:", response.choices[0].text);
 
 // Associate the request with the prompt template we used
-promptlayer.track.prompt({
+promptLayerClient.track.prompt({
   request_id: pl_request_id,
   prompt_name: "city_choice",
   prompt_input_variables: input_variables,
@@ -889,7 +889,7 @@ Here's an example of how to use a chat model from OpenAI:
 <CodeGroup>
 
 ```python Python
-openai = promptlayer.openai
+openai = promptlayer_client.openai
 
 response = openai.ChatCompletion.create(
     model="gpt-3.5-turbo",
@@ -972,7 +972,7 @@ We can also use models from Anthropic natively with the PromptLayer Python SDK:
 
 ```python Python
 # Swap out 'from anthropic import Anthropic'
-Anthropic = promptlayer.anthropic.Anthropic
+Anthropic = promptlayer_client.anthropic.Anthropic
 
 anthropic = Anthropic()
 completion = anthropic.completions.create(
@@ -985,7 +985,7 @@ print(completion.completion)
 ```
 
 ```js JavaScript
-const Anthropic = promptlayer.Anthropic;
+const Anthropic = promptLayerClient.Anthropic;
 const anthropic = new Anthropic();
 
 const response = await anthropic.completions.create({

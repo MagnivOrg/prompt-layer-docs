@@ -12,7 +12,7 @@ To associate requests with a prompt from the prompt registry, run the code
 <CodeGroup>
 
 ```python Python
-promptlayer.track.prompt(
+promptlayer_client.track.prompt(
   request_id=pl_request_id, 
   prompt_name="example-2",
   prompt_input_variables=input_variables,
@@ -21,7 +21,7 @@ promptlayer.track.prompt(
 ```
 
 ```js JavaScript
-promptlayer.track.prompt({
+promptLayerClient.track.prompt({
   request_id: pl_request_id, 
   prompt_name: "example-2",
   prompt_input_variables: input_variables,
@@ -55,7 +55,7 @@ You can also use prompt [template release labels](/features/prompt-registry#rele
 <CodeGroup>
 
 ```python Python
-promptlayer.track.prompt(
+promptlayer_client.track.prompt(
   request_id=pl_request_id, 
   prompt_name="example-2",
   prompt_input_variables=input_variables,
@@ -64,7 +64,7 @@ promptlayer.track.prompt(
 ```
 
 ```js JavaScript
-promptlayer.track.prompt({
+promptLayerClient.track.prompt({
   request_id: pl_request_id, 
   prompt_name: "example-2",
   prompt_input_variables: input_variables,

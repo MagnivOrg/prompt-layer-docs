@@ -22,7 +22,7 @@ PromptLayer allows you to attach multiple key value pairs as metadata to a reque
 <CodeGroup>
 
 ```python Python
-promptlayer.track.metadata(
+promptlayer_client.track.metadata(
   request_id=pl_request_id,
   metadata={
       "user_id":"1abf2345f",
@@ -33,7 +33,7 @@ promptlayer.track.metadata(
 ```
 
 ```js JavaScript
-promptlayer.track.metadata({
+promptLayerClient.track.metadata({
   request_id:pl_request_id,
   metadata:{
       "user_id":"1abf2345f",
@@ -63,7 +63,7 @@ Below is an example of how you can score a request programmatically. It can also
 <CodeGroup>
 
 ```python Python
-promptlayer.track.score(
+promptlayer_client.track.score(
   request_id=pl_request_id, 
   score_name="summarization", # optional score name
   score=100
@@ -71,7 +71,7 @@ promptlayer.track.score(
 ```
 
 ```js JavaScript
-promptlayer.track.score({
+promptLayerClient.track.score({
   request_id: pl_request_id,
   score: 100
 })

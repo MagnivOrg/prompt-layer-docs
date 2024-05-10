@@ -20,13 +20,18 @@ The `pl_request_id` is returned as `request_id` in the case of a successful requ
 
 ## Python
 
-To retrieve the `pl_request_id` using OpenAI in Python (through `promptlayer.openai`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream=true`, then only the last `pl_request_id` will be the id; otherwise, it will be `None`.
+To retrieve the `pl_request_id` using OpenAI in Python (through `promptlayer_client.openai.OpenAI`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream=true`, then only the last `pl_request_id` will be the id; otherwise, it will be `None`.
 
 The same is true for Anthropic.
         
 ```python
-from promptlayer import openai
-response, pl_request_id = openai.Completion.create(
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
+
+OpenAI = promptlayer_client.openai.OpenAI
+client = OpenAI()
+
+response, pl_request_id = client.Completion.create(
     engine="gpt-3.5-turbo-instruct", 
     prompt="hi my name is ", 
     return_pl_id=True
@@ -35,15 +40,18 @@ response, pl_request_id = openai.Completion.create(
 
 ## Javascript
 
-To retrieve the `pl_request_id` using OpenAI in JavaScript (through `promptlayer.OpenAI`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream: true`, then only the last `pl_request_id` will be the id; otherwise, it will be `undefined`.
+To retrieve the `pl_request_id` using OpenAI in JavaScript (through `promptLayerClient.OpenAI`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream: true`, then only the last `pl_request_id` will be the id; otherwise, it will be `undefined`.
 
 The same is true for Anthropic.
         
 ```js
-const OpenAI = promptlayer.OpenAI;
-const openai = new OpenAI();
+import { PromptLayer } from "promptlayer";
+const promptLayerClient = new PromptLayer();
 
-const [response, pl_request_id] = await openai.completions.create({
+const OpenAI = promptLayerClient.OpenAI;
+const client = new OpenAI();
+
+const [response, pl_request_id] = await client.completions.create({
     model: "gpt-3.5-turbo-instruct",
     prompt: "hi my name is ",
     return_pl_id: true
