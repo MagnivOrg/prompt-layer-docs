@@ -15,14 +15,14 @@ By default, an individual score is named default. You can enrich a request with 
 
 ```python Python
 # named score
-promptlayer.track.score(
+promptlayer_client.track.score(
   request_id=pl_request_id, 
   score_name="summarization",
   score=100
 )
 
 # default score
-promptlayer.track.score(
+promptlayer_client.track.score(
   request_id=pl_request_id, 
   # score_name="default",
   score=100
@@ -30,7 +30,7 @@ promptlayer.track.score(
 ```
 
 ```js JavaScript
-promptlayer.track.score({
+promptLayerClient.track.score({
   request_id: pl_request_id,
   score: 100
 })
