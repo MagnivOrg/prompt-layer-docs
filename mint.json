@@ -20,6 +20,7 @@
       "pages": [
         "introduction",
         "quickstart",
+        "migration",
         "getting_started",
         "recipe_example_project"
       ]
