@@ -80,17 +80,25 @@ This quickstart uses OpenAI, but PromptLayer supports most major LLM providers (
 
 <CodeGroup>
 
-```python Python
-import promptlayer
-OpenAI = promptlayer.openai.OpenAI
+```python Python openai >= 1.0.0
+# Make sure to `pip install promptlayer`
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
+
+# Swap out your 'from openai import OpenAI'
+OpenAI = promptlayer_client.openai.OpenAI
 client = OpenAI()
 ```
 
 
 ```js JavaScript
-import { promptlayer } from "promptlayer";
-const OpenAI = promptlayer.OpenAI;
-const client = new OpenAI();
+// Make sure to `npm install promptlayer`
+import { PromptLayer } from "promptlayer";
+const promptLayerClient = new PromptLayer();
+
+// Make sure you have openai installed with `npm install openai`
+const OpenAI = promptLayerClient.OpenAI;
+const openai = new OpenAI();
 ```
 
 </CodeGroup>

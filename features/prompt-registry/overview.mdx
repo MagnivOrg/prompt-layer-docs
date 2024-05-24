@@ -32,18 +32,16 @@ It’s simple.
 <CodeGroup>
 
 ```python Python SDK
-template_dict = promptlayer.templates.get("my_template")
+template_dict = promptlayer_client.templates.get("my_template")
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.templates.get("my_template");
+const template_dict = await promptLayerClient.templates.get("my_template");
 ```
 
 </CodeGroup>
 
 Alternatively, use the REST API endpoint `/prompte-templates/{prompt_name}` ([read more](/reference/templates-get)).
-
-*Note*: Please use `promptlayer.templates.get` to access prompt templates. The `promptlayer.prompts.get` function is deprecated and returns templates in the legacy format.
 
 ### By Release Label
 
@@ -52,11 +50,11 @@ Release labels like `prod` and `staging` can be optionally applied to template v
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.templates.get("my_template", { "label": "prod" })
+promptlayer_client.templates.get("my_template", { "label": "prod" })
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.templates.get("my_template", { label: "prod" });
+const template_dict = await promptLayerClient.templates.get("my_template", { label: "prod" });
 ```
 
 </CodeGroup>
@@ -68,11 +66,11 @@ You can also optionally pass `version` to get an older version of a prompt. By d
 <CodeGroup>
 
 ```python Python SDK
-template_dict = promptlayer.templates.get("my_template", { "version": 3 })
+template_dict = promptlayer_client.templates.get("my_template", { "version": 3 })
 ```
 
 ```js JavaScript
-const template_dict = await promptlayer.templates.get("my_template", { version: 3 });
+const template_dict = await promptLayerClient.templates.get("my_template", { version: 3 });
 
 ```
 
@@ -85,12 +83,12 @@ When fetching a prompt template, you can view your `metadata` using the followin
 <CodeGroup>
 
 ```python Python SDK
-template = promptlayer.templates.get("my_template")
+template = promptlayer_client.templates.get("my_template")
 print(template["metadata"])
 ```
 
 ```js JavaScript
-const template = await promptlayer.templates.get("my_template");
+const template = await promptLayerClient.templates.get("my_template");
 console.log(template.metadata);
 ```
 
@@ -110,7 +108,7 @@ input_variables = {
     "interests": "resorts, museums, beaches"
 }
 
-city_choice_prompt = promptlayer.templates.get("city_choice",
+city_choice_prompt = promptlayer_client.templates.get("city_choice",
 {
   "provider": "openai",
   "input_variables": input_variables
@@ -129,7 +127,7 @@ const input_variables = {
   city: "Washington, D.C.",
   interests: "resorts, museums, beaches",
 };
-const city_choice_prompt = await promptlayer.templates.get("city_choice", {
+const city_choice_prompt = await promptLayerClient.templates.get("city_choice", {
   provider: "openai",
   input_variables,
 });
@@ -171,7 +169,7 @@ While it's easiest to publish prompt templates visually through the dashboard, s
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.templates.publish({
+promptlayer_client.templates.publish({
   "prompt_name": "my_template", 
   "prompt_template": my_template,
   "tags": ["my_tag"]   
@@ -179,7 +177,7 @@ promptlayer.templates.publish({
 ```
 
 ```js JavaScript
-promptlayer.templates.publish({
+promptLayerClient.templates.publish({
   prompt_name: "my_template",
   prompt_template: my_template,
   tags: ["my_tag"],
@@ -200,9 +198,9 @@ You can also set release labels via the SDK
 <CodeGroup>
 
 ```python Python SDK
-pt = promptlayer.templates.get("demo-template")
+pt = promptlayer_client.templates.get("demo-template")
 
-promptlayer.templates.publish({
+promptlayer_client.templates.publish({
     "prompt_name": "demo-template",
     "commit_message": "This is a test",
     "prompt_template": pt["prompt_template"],
@@ -211,11 +209,11 @@ promptlayer.templates.publish({
 ```
 
 ```js JavaScript
-const pt = await promptlayer.templates.get({
+const pt = await promptLayerClient.templates.get({
   prompt_name: "demo-template"
 });
 
-promptlayer.templates.publish({
+promptLayerClient.templates.publish({
   prompt_name: "demo-template",
   commit_message: "This is a test",
   prompt_template: pt.prompt_template,
@@ -238,11 +236,11 @@ You can also retrieve the commit messages through code. You'll see them when you
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.templates.all()
+promptlayer_client.templates.all()
 ```
 
 ```js JavaScript
-promptlayer.templates.all()
+promptLayerClient.templates.all()
 ```
 
 </CodeGroup>
@@ -252,9 +250,9 @@ Or set them, by specifing a commit_message arg to templates.publish, like this:
 <CodeGroup>
 
 ```python Python SDK
-pt = promptlayer.templates.get("demo-template")
+pt = promptlayer_client.templates.get("demo-template")
 
-promptlayer.templates.publish({
+promptlayer_client.templates.publish({
     "prompt_name": "demo-template",
     "commit_message": "This is a test",
     "prompt_template": pt["prompt_template"],
@@ -262,11 +260,11 @@ promptlayer.templates.publish({
 ```
 
 ```js JavaScript
-const pt = await promptlayer.templates.get({
+const pt = await promptLayerClient.templates.get({
   prompt_name: "demo-template"
 });
 
-promptlayer.templates.publish({
+promptLayerClient.templates.publish({
   prompt_name: "demo-template",
   commit_message: "This is a test",
   prompt_template: pt.prompt_template,
@@ -296,7 +294,7 @@ You can use our Python SDK to publish a prompt template with metadata. For examp
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.templates.publish({
+promptlayer_client.templates.publish({
     "prompt_name": "my_template",
     "prompt_template": my_template,
     "metadata": {
@@ -311,7 +309,7 @@ promptlayer.templates.publish({
 ```
 
 ```js JavaScript
-promptlayer.templates.publish({
+promptLayerClient.templates.publish({
   prompt_name: "my_template",
   prompt_template: my_template,
   metadata: {
@@ -342,12 +340,12 @@ To associate a request with a prompt template and some input variables, use the 
 <CodeGroup>
 
 ```python Python SDK
-promptlayer.track.prompt(request_id=pl_request_id,
+promptlayer_client.track.prompt(request_id=pl_request_id,
     prompt_name='<PROMPT_NAME>', prompt_input_variables={...})
 ```
 
 ```js JavaScript
-promptlayer.track.prompt({
+promptLayerClient.track.prompt({
   request_id: pl_request_id,
   prompt_name: '<PROMPT_NAME>',
   prompt_input_variables: {...} 
@@ -373,13 +371,11 @@ To get all prompts from prompt registry you can use the following code snippet:
 <CodeGroup>
 
 ```python Python SDK
-from promptlayer import templates
-
-all_prompts = templates.all()
+all_prompts = promptlayer_client.templates.all()
 ```
 
 ```js JavaScript
-const all_prompts = promptlayer.templates.all()
+const all_prompts = promptLayerClient.templates.all()
 ```
 
 </CodeGroup>
@@ -393,7 +389,7 @@ all_prompts = templates.all(per_page=100)
 ```
 
 ```js JavaScript
-const all_prompts = promptlayer.templates.all({ per_page: 100 })
+const all_prompts = promptLayerClient.templates.all({ per_page: 100 })
 ```
 
 </CodeGroup>
@@ -407,7 +403,7 @@ all_prompts = templates.all(page=2)
 ```
 
 ```js JavaScript
-const all_prompts = promptlayer.templates.all({ page: 2 })
+const all_prompts = promptLayerClient.templates.all({ page: 2 })
 ```
 
 </CodeGroup>

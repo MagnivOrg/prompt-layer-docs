@@ -67,11 +67,12 @@ If you are interested in onprem, please [contact us](mailto:hello@promptlayer.co
 Yes, AsyncOpenAI is compatible with PromptLayer. Use them together as demonstrated in example below.
 
 ```python
+from promptlayer import PromptLayer 
+promptlayer_client = PromptLayer(api_key="pl_*****")
+
 import asyncio
 # from openai import AsyncOpenAI
-import promptlayer
-promptlayer.api_key = "pl_*****"
-AsyncOpenAI = promptlayer.openai.AsyncOpenAI
+AsyncOpenAI = promptlayer_client.openai.AsyncOpenAI
 
 client = AsyncOpenAI(
     api_key="sk-***",
