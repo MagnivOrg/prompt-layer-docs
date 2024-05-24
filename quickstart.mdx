@@ -71,17 +71,36 @@ For more on setting up environment variables in Python, refer to this [guide](ht
 
 If you are using Python, we recommend using `python-dotenv`:
 
-```
+<CodeGroup>
+
+```python Python
 pip install python-dotenv
 ```
 
+```js Javascript
+// You would use the `dotenv` package in Node.js to load environment variables
+// Install with `npm install dotenv`
+
+require('dotenv').config({ path: '.env' });
+```
+
+</CodeGroup>
+
 Create a Python file called `app.py` and load the environment variables:
 
-``` Python
+<CodeGroup>
+
+```python Python
 from dotenv import load_dotenv
 
 load_dotenv()  # Load env vars from .env file
 ```
+
+```js Javascript
+require('dotenv').config(); // Load env vars from .env file
+```
+
+</CodeGroup>
 
 ### Import PromptLayer
 
@@ -219,7 +238,7 @@ In the background, PromptLayer will save the output of every request you make. O
 
 PromptLayer can be used to monitor user behavior, beta deployments, and much more.
 
-Add more metadata to each log, such as the prompt template, input variables, and score:
+Add more [metadata](/features/prompt-history/metadata) to each log, such as the [prompt template](/features/prompt-history/tracking-templates), input variables, [tags](/features/prompt-history/tagging-requests), and [score](/features/prompt-history/scoring-requests):
 
 <CodeGroup>
 
@@ -317,6 +336,12 @@ For large-scale production deployments, we recommend using [webhooks](/features/
 Visit the dashboard to see analytics. [Learn more](/why-promptlayer/analytics)
 
 ![Analytics Screenshot](/images/quickstart/analytics-screenshot.png)
+
+You can also take advantage of our [advanced search](/why-promptlayer/advanced-search) by using metadata to search in the sidebar.
+
+<video controls="controls">
+    <source src="/videos/advanced-search-2.mp4" type="video/mp4" />
+</video> 
 
 ## Evaluations
 
