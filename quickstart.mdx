@@ -94,7 +94,7 @@ load_dotenv()  # Load env vars from .env file
 ```
 
 ```js Javascript
-require('dotenv').config(); // Load env vars from .env file
+import 'dotenv/config';
 ```
 
 </CodeGroup>
@@ -251,7 +251,17 @@ In the background, PromptLayer will save the output of every request you make. O
 
 ![Opening Log](/images/quickstart/haiku-log.png)
 
-#### Enriching logs with metadata
+### No more redeploys!
+
+Every time you update a prompt in the dashboard, simply re-run the code and PromptLayer will grab the latest version. No eng redeploy is needed.
+
+![Redeploy Gif](/images/quickstart/redeploy.gif)
+
+Decoupling prompts from your code and [using a prompt CMS will speed up development](/why-promptlayer/prompt-management). Read more about prompt management best practices on our [blog](https://blog.promptlayer.com/scalable-prompt-management-and-collaboration-fff28af39b9b).
+
+For large-scale production deployments, we recommend using [webhooks](/features/prompt-registry/webhooks) to maintain a caching layer.
+
+### Logging Metadata
 
 PromptLayer can be used to monitor user behavior, beta deployments, and much more.
 
@@ -312,7 +322,7 @@ const [response, pl_request_id] = await openai.chat.completions.create({
   pl_tags: ["quickstart_tutorial"],
   return_pl_id: true,
 });
-console.log("Answer:", response.choices[0].text);
+console.log("Answer:", response.choices[0].message.content);
 
 // Associate the request with the prompt template used
 await promptLayerClient.track.prompt({
@@ -341,17 +351,6 @@ await promptLayerClient.track.score({
 This will help you triage through error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
 
 ![Enriched Log Visualization](/images/quickstart/enriched-log.png)
-
-
-### No more redeploys!
-
-Every time you update a prompt in the dashboard, simply re-run the code and PromptLayer will grab the latest version. No eng redeploy is needed.
-
-![Redeploy Gif](/images/quickstart/redeploy.gif)
-
-For large-scale production deployments, we recommend using [webhooks](/features/prompt-registry/webhooks) to maintain a caching layer.
-
-Decoupling prompts from your code and [using a prompt CMS will speed up development](/why-promptlayer/prompt-management). Read more about prompt management best practices on our [blog](https://blog.promptlayer.com/scalable-prompt-management-and-collaboration-fff28af39b9b).
 
 ## Analytics
 
