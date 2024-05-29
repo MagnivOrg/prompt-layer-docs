@@ -92,7 +92,7 @@
                       "type": "string"
                     },
                     "request_id": {
-                      "type": "string",
+                      "type": "integer",
                       "description": "The unique identifier for the tracked request."
                     }
                   },
@@ -1906,7 +1906,11 @@
                 "prompt_version_number": { "type": "integer" },
                 "release_label": { "type": "string" }
               },
-              "required": ["prompt_version_id", "prompt_version_number", "release_label"]
+              "required": [
+                "prompt_version_id",
+                "prompt_version_number",
+                "release_label"
+              ]
             },
             "title": "Release Labels"
           }
