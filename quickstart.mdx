@@ -63,7 +63,7 @@ Ensure you have the latest versions if already installed.
 2. Get a PromptLayer API key from settings (_click the cog on the top right_). 
 3. Create a .env file with the following:
 
-```
+```txt .env
 OPENAI_API_KEY=sk-<your_openai_api_key>
 PROMPTLAYER_API_KEY=<your_promptlayer_api_key>
 ```
@@ -78,10 +78,7 @@ pip install python-dotenv
 ```
 
 ```js Javascript
-// You would use the `dotenv` package in Node.js to load environment variables
-// Install with `npm install dotenv`
-
-require('dotenv').config({ path: '.env' });
+npm install dotenv
 ```
 
 </CodeGroup>
@@ -376,11 +373,11 @@ You can build these eval datasets using the request logs we captured above. Lear
 
 ![Eval Scores](/images/quickstart/eval-scores.png)
 
-# Further reading
+# Further reading 📖
 
 From the docs:
 - [Getting Started Tutorial](/getting_started)
-- Migration Guide
+- [Migration Guide](/migration)
 - [Why use a prompt CMS?](/why-promptlayer/prompt-management)
 - [Evaluating Prompts with PromptLayer](/features/evaluations/examples)
 
