@@ -138,16 +138,36 @@ const openai = new OpenAI();
 ## Retrieve the Prompt
 
 Pull down our prompt template with one line:
-``` Python
-ai_poet_prompt = promptlayer.templates.get("ai-poet")
+
+<CodeGroup>
+
+```python Python
+ai_poet_prompt = promptlayer_client.templates.get("ai-poet")
 ```
 
+```js JavaScript
+const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet");
+```
+
+</CodeGroup>
+
+
 Or specify a [release label](/features/prompt-registry/overview#release-labels) for prod/staging environments. You will need to add the release label "prod" in the PromptLayer dashboard for this line to work:
-``` Python
-ai_poet_prompt = promptlayer.templates.get("ai-poet", {
+
+<CodeGroup>
+
+```python Python
+ai_poet_prompt = promptlayer_client.templates.get("ai-poet", {
   "label": "prod"
 })
 ```
+
+```js JavaScript
+const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet", {
+  label: "prod"
+});
+```
+</CodeGroup>
 
 ### Inject Input Variables
 
@@ -163,7 +183,7 @@ input_variables = {
 }
 
 # Grab the prompt template
-ai_poet_prompt = promptlayer.templates.get("ai-poet",
+ai_poet_prompt = promptlayer_client.templates.get("ai-poet",
 {
   "input_variables": input_variables
 })
@@ -195,7 +215,7 @@ input_variables = {
 }
 
 # Grab the prompt template
-ai_poet_prompt = promptlayer.templates.get("ai-poet",
+ai_poet_prompt = promptlayer_client.templates.get("ai-poet",
 {
   "input_variables": input_variables,
   "provider": "openai", # Format for OpenAI
@@ -205,7 +225,7 @@ response = client.chat.completions.create(
   **ai_poet_prompt['llm_kwargs'],
   model="gpt-3.5-turbo", 
 )
-print("Answer:", response.choices[0].text)
+print("Answer:", response.choices[0].message.content)
 ```
 
 ```js Javascript
@@ -223,7 +243,7 @@ const response = await openai.chat.completions.create({
   ...ai_poet_prompt.llm_kwargs,
   model: "gpt-3.5-turbo",
 });
-console.log("Answer:", response.choices[0].text);
+console.log("Answer:", response.choices[0].message.content);
 
 ```
 </CodeGroup>
@@ -232,7 +252,7 @@ console.log("Answer:", response.choices[0].text);
 
 In the background, PromptLayer will save the output of every request you make. Open the dashboard to see the logs.
 
-[image]
+![Opening Log](/images/quickstart/haiku-log.png)
 
 #### Enriching logs with metadata
 
@@ -248,31 +268,31 @@ input_variables = {
 }
 
 # Grab the prompt template
-ai_poet_prompt = promptlayer.templates.get("ai-poet",
+ai_poet_prompt = promptlayer_client.templates.get("ai-poet",
 {
   "input_variables": input_variables,
   "provider": "openai",
 })
 
 response, pl_request_id = client.chat.completions.create(
-  **city_choice_prompt['llm_kwargs'],
+  **ai_poet_prompt['llm_kwargs'],
   model="gpt-3.5-turbo", # Alternatively specify this in the dashboard
   pl_tags=["quickstart_tutorial"], # Optionally add a tag
   return_pl_id=True
 )
-print("Answer:", response.choices[0].text)
+print("Answer:", response.choices[0].message.content)
 
 # Associate the request with the prompt template used
-promptlayer.track.prompt(request_id=pl_request_id, 
+promptlayer_client.track.prompt(request_id=pl_request_id, 
     prompt_name='ai-poet', prompt_input_variables=input_variables)
   
 # Add metadata to the logs
-promptlayer.track.metadata(request_id=pl_request_id, metadata={
+promptlayer_client.track.metadata(request_id=pl_request_id, metadata={
   "user_id": "abc123"
 })
 
 # Add a score to the log
-promptlayer.track.score(
+promptlayer_client.track.score(
     request_id=pl_request_id,
     score=100,
 )
@@ -323,6 +343,9 @@ await promptLayerClient.track.score({
 
 This will help you triage through error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
 
+![Enriched Log Visualization](/images/quickstart/enriched-log.png)
+
+
 ### No more redeploys!
 
 Every time you update a prompt in the dashboard, simply re-run the code and PromptLayer will grab the latest version. No eng redeploy is needed.
@@ -331,13 +354,15 @@ Every time you update a prompt in the dashboard, simply re-run the code and Prom
 
 For large-scale production deployments, we recommend using [webhooks](/features/prompt-registry/webhooks) to maintain a caching layer.
 
+Decoupling prompts from your code and [using a prompt CMS will speed up development](/why-promptlayer/prompt-cms). Read more about prompt management best practices on our [blog](https://blog.promptlayer.com/scalable-prompt-management-and-collaboration-fff28af39b9b).
+
 ## Analytics
 
 Visit the dashboard to see analytics. [Learn more](/why-promptlayer/analytics)
 
 ![Analytics Screenshot](/images/quickstart/analytics-screenshot.png)
 
-You can also take advantage of our [advanced search](/why-promptlayer/advanced-search) by using metadata to search in the sidebar.
+You can also take advantage of our [advanced search](/why-promptlayer/advanced-search) by using metadata to search in the sidebar. This is useful for triaging errors by user ID, execution ID, or by score.
 
 <video controls="controls">
     <source src="/videos/advanced-search-2.mp4" type="video/mp4" />
