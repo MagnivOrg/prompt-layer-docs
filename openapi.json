@@ -63,6 +63,14 @@
                   "api_key": {
                     "type": "string",
                     "description": "The API key for authentication."
+                  },
+                  "group_id": {
+                    "type": "integer",
+                    "description": "The ID of the group that you want to associate with this request. This is useful for tracking requests that are part of a group, such as a conversation or a session."
+                  },
+                  "return_data": {
+                    "type": "boolean",
+                    "description": "If you want to return the data that is associated with the request, set this to `true`. This will return the request_id and the request data."
                   }
                 },
                 "required": [
