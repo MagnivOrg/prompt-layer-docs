@@ -249,7 +249,7 @@ response = promptlayer_client.run(
   prompt_name="ai-poet", input_variables=input_variables, 
   prompt_release_label="prod",
   tags=["quickstart_tutorial"], # Add tags
-  metdata={"user_id": "abc123"}) # Add metadata
+  metadata={"user_id": "abc123"}) # Add metadata
 
 print(response["raw_response"].choices[0].message.content)
 
