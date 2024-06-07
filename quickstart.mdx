@@ -129,7 +129,7 @@ client = OpenAI()
 
 ```js JavaScript
 // Make sure to `npm install promptlayer`
-const { PromptLayer } = require("promptlayer");
+import { PromptLayer } from "promptlayer";
 const promptLayerClient = new PromptLayer();
 
 // Make sure you have openai installed with `npm install openai`
@@ -152,8 +152,10 @@ input_variables = {
     "topic": "The American Revolution"
 }
 
-response = promptlayer_client.run(
-  prompt_name="ai-poet", input_variables=input_variables)
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables
+});
 
 print(response["raw_response"].choices[0].message.content)
 ```
@@ -163,8 +165,10 @@ const input_variables = {
   topic: "The American Revolution"
 };
 
-const ai_poet_prompt = await promptLayerClient.run(
-  promptName="ai-poet", inputVariables=input_variables);
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+});
 
 console.log(response["raw_response"].choices[0].message.content);
 ```
@@ -223,9 +227,11 @@ const input_variables = {
   topic: "The American Revolution"
 };
 
-const ai_poet_prompt = await promptLayerClient.run(
-  promptName="ai-poet", inputVariables=input_variables
-  promptReleaseLabel="prod"); // The release label
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables,
+    promptReleaseLabel: "prod" // The release label
+});
 
 console.log(response["raw_response"].choices[0].message.content);
 ```
@@ -265,11 +271,13 @@ const input_variables = {
   topic: "The American Revolution"
 };
 
-const ai_poet_prompt = await promptLayerClient.run(
-  promptName="ai-poet", inputVariables=input_variables
-  promptReleaseLabel="prod",
-  tags=["quickstart_tutorial"], // Add tags
-  metadata={"user_id": "abc123"}); // Add metadata
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables,
+    promptReleaseLabel: "prod",
+    tags: ["quickstart_tutorial"], // Add tags
+    metadata: {"user_id": "abc123"} // Add metadata
+});
 
 console.log(response["raw_response"].choices[0].message.content);
 
