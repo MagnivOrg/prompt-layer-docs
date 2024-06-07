@@ -7,6 +7,7 @@ Get started using PromptLayer in minutes.
 
 - Create and version prompts visually
 - Programmatically retrieve and iterate on prompts
+- Run prompts automatically with OpenAI, Anthropic, and all major models
 - Log and evaulate prompt versions
 
 First, make sure you have signed up for an account at [promptlayer.com](https://www.promptlayer.com) to begin 🍰
@@ -34,6 +35,12 @@ Structured in three lines of 5, 7, and 5 syllables respectively.
 Next, add a new message with an input variable `{topic}`. This will be filled out by user input when interacting with the AI.
 
 ![Haiku Prompt](/images/quickstart/haiku-prompt.png)
+
+Finally, choose a model to run the prompt on by clicking "Parameters"
+
+<img width="450" src="/images/quickstart/set-parameters.png" />
+
+Save the prompt template, and we are good to go! 🍰
 
 ## Set Up PromptLayer Locally
 
@@ -94,7 +101,7 @@ load_dotenv()  # Load env vars from .env file
 ```
 
 ```js Javascript
-import 'dotenv/config';
+require('dotenv').config();
 ```
 
 </CodeGroup>
@@ -134,43 +141,9 @@ const openai = new OpenAI();
     
 ## Retrieve & Run the Prompt
 
-Pull down our prompt template with one line:
-
-<CodeGroup>
-
-```python Python
-ai_poet_prompt = promptlayer_client.templates.get("ai-poet")
-```
-
-```js JavaScript
-const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet");
-```
-
-</CodeGroup>
-
-
-Or specify a [release label](/features/prompt-registry/overview#release-labels) for prod/staging environments. You will need to add the release label "prod" in the PromptLayer dashboard for this line to work:
-
-<CodeGroup>
-
-```python Python
-ai_poet_prompt = promptlayer_client.templates.get("ai-poet", {
-  "label": "prod"
-})
-```
-
-```js JavaScript
-const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet", {
-  label: "prod"
-});
-```
-</CodeGroup>
-
-### Inject Input Variables
-
 Remember the `{topic}` user input variable we made to specify the haiku topic in our prompt? PromptLayer can format the f-string or Jinja2 template using this variable.
 
-Add an argument to our getter to inject input variables. For example:
+We will use PromptLayer to fetch the latest version of the prompt, inject input variables, and run it.
 
 <CodeGroup>
 
@@ -179,77 +152,40 @@ input_variables = {
     "topic": "The American Revolution"
 }
 
-# Grab the prompt template
-ai_poet_prompt = promptlayer_client.templates.get("ai-poet",
-{
-  "input_variables": input_variables
-})
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables
+});
+
+print(response["raw_response"].choices[0].message.content)
 ```
 
-```js Javascript
+```js JavaScript
 const input_variables = {
   topic: "The American Revolution"
 };
 
-// Grab the prompt template
-const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet", {
-  input_variables,
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
 });
+
+console.log(response["raw_response"].choices[0].message.content);
 ```
+
 </CodeGroup>
 
-### Run the LLM Request
+Amazing! `promptlayer_client.run` will automatically format your prompt template into the format needed by OpenAI, Anthropic, and all other major model providers.
 
-Different models expect different keyword arguments. PromptLayer can help format the prompt for all major model providers.
-
-For this quickstart, we will format the prompt for OpenAI and then run it.
-
-<CodeGroup>
-
-```python Python
-input_variables = {
-    "topic": "American History"
-}
-
-# Grab the prompt template
-ai_poet_prompt = promptlayer_client.templates.get("ai-poet",
-{
-  "input_variables": input_variables,
-  "provider": "openai", # Format for OpenAI
-})
-
-response = client.chat.completions.create(
-  **ai_poet_prompt['llm_kwargs'],
-  model="gpt-3.5-turbo", 
-)
-print("Answer:", response.choices[0].message.content)
-```
-
-```js Javascript
-const input_variables = {
-  topic: "American History"
-};
-
-// Grab the prompt template
-const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet", {
-  input_variables,
-  provider: "openai", // Format for OpenAI
-});
-
-const response = await openai.chat.completions.create({
-  ...ai_poet_prompt.llm_kwargs,
-  model: "gpt-3.5-turbo",
-});
-console.log("Answer:", response.choices[0].message.content);
-
-```
-</CodeGroup>
+The LLM request runs locally on your machine.
 
 ### Logs
 
 In the background, PromptLayer will save the output of every request you make. Open the dashboard to see the logs.
 
-![Opening Log](/images/quickstart/haiku-log.png)
+![Opening Log](/images/quickstart/haiku-request-log.png)
+
+Try opening the log in Playground!
 
 ### No more redeploys!
 
@@ -261,87 +197,93 @@ Decoupling prompts from your code and [using a prompt CMS will speed up developm
 
 For large-scale production deployments, we recommend using [webhooks](/features/prompt-registry/webhooks) to maintain a caching layer.
 
-### Logging Metadata
 
-PromptLayer can be used to monitor user behavior, beta deployments, and much more.
+### Release Labels
 
-Add more [metadata](/features/prompt-history/metadata) to each log, such as the [prompt template](/features/prompt-history/tracking-templates), input variables, [tags](/features/prompt-history/tagging-requests), and [score](/features/prompt-history/scoring-requests):
+PromptLayer allows you to use [release labels](/features/prompt-registry/overview#release-labels) as a way to manage prod/staging environments.
+
+Back in the PromptLayer dashboard, hover over a version and click "Add Release Label". Now you can add `prompt_release_label` to the run call.
+
+![Release Label](/images/quickstart/release-label.gif)
+
+Alternatively, use `prompt_version` to specify a version number directly.
 
 <CodeGroup>
 
 ```python Python
 input_variables = {
-    "topic": "American History"
+    "topic": "The American Revolution"
 }
 
-# Grab the prompt template
-ai_poet_prompt = promptlayer_client.templates.get("ai-poet",
-{
-  "input_variables": input_variables,
-  "provider": "openai",
-})
+response = promptlayer_client.run(
+  prompt_name="ai-poet", input_variables=input_variables, 
+  prompt_release_label="prod") # The release label
 
-response, pl_request_id = client.chat.completions.create(
-  **ai_poet_prompt['llm_kwargs'],
-  model="gpt-3.5-turbo", # Alternatively specify this in the dashboard
-  pl_tags=["quickstart_tutorial"], # Optionally add a tag
-  return_pl_id=True
-)
-print("Answer:", response.choices[0].message.content)
+print(response["raw_response"].choices[0].message.content)
+```
 
-# Associate the request with the prompt template used
-promptlayer_client.track.prompt(request_id=pl_request_id, 
-    prompt_name='ai-poet', prompt_input_variables=input_variables)
-  
-# Add metadata to the logs
-promptlayer_client.track.metadata(request_id=pl_request_id, metadata={
-  "user_id": "abc123"
-})
+```js JavaScript
+const input_variables = {
+  topic: "The American Revolution"
+};
+
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables,
+    promptReleaseLabel: "prod" // The release label
+});
+
+console.log(response["raw_response"].choices[0].message.content);
+```
+
+</CodeGroup>
+
+### Logging Metadata
+
+PromptLayer can be used to monitor user behavior, beta deployments, and much more.
+
+Add a [metadata](/features/prompt-history/metadata) object to each log, [tags](/features/prompt-history/tagging-requests), and a [score](/features/prompt-history/scoring-requests) to better track requests:
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "The American Revolution"
+}
+
+response = promptlayer_client.run(
+  prompt_name="ai-poet", input_variables=input_variables, 
+  prompt_release_label="prod",
+  tags=["quickstart_tutorial"], # Add tags
+  metadata={"user_id": "abc123"}) # Add metadata
+
+print(response["raw_response"].choices[0].message.content)
 
 # Add a score to the log
 promptlayer_client.track.score(
-    request_id=pl_request_id,
+    request_id=response["request_id"],
     score=100,
 )
 ```
 
 ```js JavaScript
 const input_variables = {
-  topic: "American History"
+  topic: "The American Revolution"
 };
 
-// Grab the prompt template
-const ai_poet_prompt = await promptLayerClient.templates.get("ai-poet", {
-  input_variables,
-  provider: "openai",
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables,
+    promptReleaseLabel: "prod",
+    tags: ["quickstart_tutorial"], // Add tags
+    metadata: {"user_id": "abc123"} // Add metadata
 });
 
-const [response, pl_request_id] = await openai.chat.completions.create({
-  ...ai_poet_prompt.llm_kwargs,
-  model: "gpt-3.5-turbo",
-  pl_tags: ["quickstart_tutorial"],
-  return_pl_id: true,
-});
-console.log("Answer:", response.choices[0].message.content);
-
-// Associate the request with the prompt template used
-await promptLayerClient.track.prompt({
-  request_id: pl_request_id,
-  prompt_name: 'ai-poet',
-  prompt_input_variables: input_variables
-});
-
-// Add metadata to the logs
-await promptLayerClient.track.metadata({
-  request_id: pl_request_id,
-  metadata: {
-    user_id: "abc123"
-  }
-});
+console.log(response["raw_response"].choices[0].message.content);
 
 // Add a score to the log
 await promptLayerClient.track.score({
-  request_id: pl_request_id,
+  request_id: response["request_id"],
   score: 100
 });
 ```
@@ -349,8 +291,6 @@ await promptLayerClient.track.score({
 </CodeGroup>
 
 This will help you triage through error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
-
-![Enriched Log Visualization](/images/quickstart/enriched-log.png)
 
 ## Analytics
 
