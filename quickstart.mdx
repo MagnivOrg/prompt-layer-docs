@@ -101,7 +101,7 @@ load_dotenv()  # Load env vars from .env file
 ```
 
 ```js Javascript
-import 'dotenv/config';
+require('dotenv').config();
 ```
 
 </CodeGroup>
@@ -129,7 +129,7 @@ client = OpenAI()
 
 ```js JavaScript
 // Make sure to `npm install promptlayer`
-import { PromptLayer } from "promptlayer";
+const { PromptLayer } = require("promptlayer");
 const promptLayerClient = new PromptLayer();
 
 // Make sure you have openai installed with `npm install openai`
@@ -164,7 +164,7 @@ const input_variables = {
 };
 
 const ai_poet_prompt = await promptLayerClient.run(
-  prompt_name="ai-poet", input_variables=input_variables);
+  promptName="ai-poet", inputVariables=input_variables);
 
 console.log(response["raw_response"].choices[0].message.content);
 ```
@@ -224,8 +224,8 @@ const input_variables = {
 };
 
 const ai_poet_prompt = await promptLayerClient.run(
-  prompt_name="ai-poet", input_variables=input_variables, 
-  prompt_release_label="prod"); // The release label
+  promptName="ai-poet", inputVariables=input_variables
+  promptReleaseLabel="prod"); // The release label
 
 console.log(response["raw_response"].choices[0].message.content);
 ```
@@ -266,8 +266,8 @@ const input_variables = {
 };
 
 const ai_poet_prompt = await promptLayerClient.run(
-  prompt_name="ai-poet", input_variables=input_variables, 
-  prompt_release_label="prod",
+  promptName="ai-poet", inputVariables=input_variables
+  promptReleaseLabel="prod",
   tags=["quickstart_tutorial"], // Add tags
   metadata={"user_id": "abc123"}); // Add metadata
 
