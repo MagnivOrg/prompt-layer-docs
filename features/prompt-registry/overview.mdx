@@ -411,3 +411,37 @@ const all_prompts = promptLayerClient.templates.all({ page: 2 })
 It is important to note that `prompt_template` represents the latest version of the prompt template.
 
 Alternatively, use the REST API endpoint `/prompt-templates` ([read more](/reference/list-prompt-templates)).
+
+## Using Images as Input Variables
+
+You can dynamically set images into your user prompt by setting an image input variable in your prompt template. This allows you to provide a list of input images to be used in your prompt.
+
+To define an image input variable, simply click the attach icon in the prompt registry and enter a name for the variable in the resulting modal dialog.
+
+![Image Input Variable](/images/image-input-variables.gif)
+
+You can then use this input variable in your prompt template as you would any other input variable. Keep in mind we expect the image input variable to be a list of image urls or base64 encoded images.
+
+<CodeGroup>
+
+```python Python SDK
+  input_variables = {
+      "user_photos": [
+        "https://example.com/image1.jpg", 
+        "https://example.com/image2.jpg"
+      ]
+  }
+  promptlayer_client.run("my_template", input_variables=input_variables)
+```
+
+```js JavaScript
+  const inputVariables = {
+      user_photos: [
+        "https://example.com/image1.jpg",
+        "https://example.com/image2.jpg"
+      ]
+  }
+  promptLayerClient.run("my_template", inputVariables=inputVariables)
+```
+
+</CodeGroup>
