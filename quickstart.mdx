@@ -152,10 +152,8 @@ input_variables = {
     "topic": "The American Revolution"
 }
 
-const response = await promptLayerClient.run({
-    promptName: "ai-poet", 
-    inputVariables: input_variables
-});
+response = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables)
 
 print(response["raw_response"].choices[0].message.content)
 ```
