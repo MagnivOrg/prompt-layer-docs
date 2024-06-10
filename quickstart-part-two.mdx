@@ -1,0 +1,175 @@
+---
+title: "Quickstart - Pt 2"
+icon: "flag-checkered"
+---
+
+### Streaming
+
+Streaming responses using `promptlayer_client.run` is easy.
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "The American Revolution"
+}
+
+response_stream = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables,
+    stream=True # Add this
+) 
+
+for data in response_stream:
+    print(data["raw_response"])
+```
+
+```js Javascript
+const input_variables = {
+  topic: "The American Revolution"
+};
+
+const responseStream = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+  stream: true // Add this
+});
+
+for await (const message of responseStream) {
+    console.log(message)
+}
+```
+
+</CodeGroup>
+
+Learn more about [OpenAI streams](https://cookbook.openai.com/examples/how_to_stream_completions).
+
+### Organization
+
+#### Workspaces
+
+[Shared workspaces](/why-promptlayer/shared-workspaces) allow you to collaborate with the rest of the team. Use separate workspaces to organize work between projects or deployment environments. We commonly see teams with "Prod" and "Dev" workspaces.
+
+#### Prompt branching
+
+====put screenshot here
+
+Use "Duplicate" or "Copy a version" to organize and branch your work. You can use this to duplicate a prompt into another workspace or to pop out a version into a brand new prompt template.
+
+#### Groups
+
+Using [groups](/features/prompt-history/groups), you can associate multiple request logs with eachother. This makes searching and debugging much easier.
+
+To do this, you must first create a group ID.
+
+<CodeGroup>
+
+```python Python
+group_id = promptlayer_client.group.create()
+```
+
+```js Javascript
+const groupId = await promptLayerClient.group.create()
+```
+
+</CodeGroup>
+
+Then, when running the request, just pass in this group ID.
+
+
+<CodeGroup>
+
+```python Python
+response = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables,
+    group_id=group_id
+)
+```
+
+```js JavaScript
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+  groupId: groupId
+});
+```
+
+</CodeGroup>
+
+## Switching models
+
+An important part of prompt engineering is finding the right model. PromptLayer makes it easy to switch between language models and test them out.
+
+### Prompt Blueprint
+
+Instead of using `response["raw_response"]` to access the LLM response (as done in earlier code snippets), we recommend taking advantage of `response["prompt_blueprint"]`.
+
+The Prompt Blueprint is a model-agnostic data format built by PromptLayer. Using this, you can safely update the models in PromptLayer without requiring any code change.
+
+For the exact schema, please look at the `prompt_template` return type of [get-prompt-template](/reference/templates-get).
+
+Using it looks something like this:
+
+
+<CodeGroup>
+
+```python Python
+response = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables)
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+```
+
+```js JavaScript
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+});
+
+console.log(response["prompt_blueprint"]["prompt_template"]["messages"].slice(-1)[0]["content"]);
+```
+
+</CodeGroup>
+
+====Link to .run() api ref
+
+### Updating the Base URL
+
+To use your own self-hosted models or models hosted by providers like HuggingFace, simply add a custom base URL to your workspace. In settings, scroll down to "Provider Base URLs".
+
+Models must conform to one of the listed provider model-families.
+
+![Base URL Configuration](/images/quickstart/base-url.png)
+
+### Fine-tuning
+
+PromptLayer makes it incredibly easy to build [fine-tuned](/why-promptlayer/fine-tuning) models. It's specifically easy for use cases where you are training `gpt-3.5-turbo` on `gpt-4` request history (or something similar).
+
+Be warned, fine-tuning has a slower iteration cycle. [We wrote a blog post on why most teams should not rely on fine-tuning.](https://blog.promptlayer.com/why-fine-tuning-is-probably-not-for-you-37d8c4987530)
+
+### Using other models (from old getting_started)
+
+PromptLayer supports a variety of models beyond OpenAI. You can easily switch between different models by updating the model parameter in your prompt configuration.
+
+### link to migration blog post
+
+For more details on migrating between models, refer to our [migration blog post](https://blog.promptlayer.com/migration).
+
+## Advanced prompt engineering
+
+#### Building datasets
+
+Building high-quality datasets is crucial for effective prompt engineering and fine-tuning. PromptLayer provides tools to help you create and manage datasets.
+
+1. Navigate to the Datasets section.
+2. Create a new dataset or upload an existing one.
+3. Annotate and preprocess your data as needed.
+
+#### Creating evals
+
+Evaluations (evals) help you measure the performance of your prompts and models. PromptLayer allows you to create and run evals to ensure your prompts are performing as expected.
+
+##### Building your first eval
+
+1. Navigate to the Evals section.
+2. Create a new eval and define the evaluation criteria.
+3. Run the eval on your prompts and review the results.
