@@ -1,7 +1,9 @@
 ---
 title: "Quickstart - Pt 2"
-icon: "flag-checkered"
+icon: "square-2"
 ---
+
+<Info>Did you read [Quickstart Part One](/quickstart)?</Info>
 
 ### Streaming
 
@@ -163,20 +165,22 @@ Be warned, fine-tuning is hard to get right. [We wrote a blog post on why most t
 
 ## Advanced prompt engineering
 
-### Building datasets
+### Batch jobs and datasets
 
-Building high-quality datasets is crucial for effective prompt engineering and fine-tuning. PromptLayer provides tools to help you create and manage datasets.
+In PromptLayer, you can build datasets by either uploading new data or utilizing historical data. This is a crucial step for running batch jobs and evaluating the performance of your prompts. 
 
-1. Navigate to the Datasets section.
-2. Create a new dataset or upload an existing one.
-3. Annotate and preprocess your data as needed.
+Learn more about [datasets](/features/evaluations/datasets). PromptLayer provides tools to label or annotate data, or to build datasets with requests that you have previously logged.
 
-### Creating evals
+Once your datasets are ready, you can use the evals page to run a batch job. In this context, the datasets serve as the input variables to the prompt for each run in the batch. 
 
-Evaluations (evals) help you measure the performance of your prompts and models. PromptLayer allows you to create and run evals to ensure your prompts are performing as expected.
+### Backtests
 
-#### Building your first eval
+Backtesting is the easiest way to evaluate your prompts, allowing you to assess how new prompt versions would have performed under past conditions. To perform backtests, start by building a dataset from your request history. This can be done in a few clicks on the Datasets page.
 
-1. Navigate to the Evals section.
-2. Create a new eval and define the evaluation criteria.
-3. Run the eval on your prompts and review the results.
+Once you have your dataset, the next step is to create an evaluation pipeline. This pipeline will feed historical request contexts into your new prompt version and compare the new results to the old results. You can use simple string comparisons or more advanced techniques like cosine similarities to measure differences. For detailed instructions, visit the [backtesting section](/features/evaluations/continuous-integration#backtesting). Backtesting is an effective way to detect potential regressions and validate improvements, ensuring that updates enhance rather than detract from the user experience.
+
+### Custom evals
+
+For some prompts, it's better to build tailored evaluation pipelines that meet your specific requirements. For example, you can use PromptLayer to build end-to-end RAG pipelines or unit test evaluations. 
+
+Custom evaluations can be integrated into your CI/CD pipeline to run on every new version of your prompt. Learn more about [continuous integration](/features/evaluations/continuous-integration) and explore [eval examples here](/features/evaluations/examples). Evaluations provide a robust framework for continuously improving your prompts by rigorously testing them against a variety of scenarios and metrics.
