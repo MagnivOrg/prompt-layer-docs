@@ -22,12 +22,6 @@ To use `gpt-4-vision-preview` with PromptLayer, follow these steps:
 
 Multi-modal models are also supported in the Prompt Registry, Playground, and Evaluations pages.
  
-## What does response 413 mean in PromptLayer requests?
-
-Response 413 from PromptLayer indicates that the request payload exceeds the maximum allowed size of 0.5MB. This limit is in place to ensure efficient processing and management of data within the PromptLayer system.
-
-To prevent a 413 response for request payloads, it's advisable to use image URLs for image-based requests rather than embedding large base64-encoded images. If base64-encoded images are necessary, try optimizing and compressing the image size.
-
 ## Do you support OpenAI function calling?
 
 Yes, we take great pride in staying up to date. PromptLayer is 1-to-1 with OpenAI's library. That means, if you are using PromptLayer+OpenAI through the Python libraries, [function calling](https://platform.openai.com/docs/guides/function-calling) will be implicitly supported.
