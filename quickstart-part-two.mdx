@@ -1,0 +1,186 @@
+---
+title: "Quickstart - Pt 2"
+icon: "square-2"
+---
+
+<Info>Did you read [Quickstart Part One](/quickstart)?</Info>
+
+### Streaming
+
+Streaming responses using `promptlayer_client.run` is easy.
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "The American Revolution"
+}
+
+response_stream = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables,
+    stream=True # Add this
+) 
+
+for data in response_stream:
+    print(data["raw_response"])
+```
+
+```js Javascript
+const input_variables = {
+  topic: "The American Revolution"
+};
+
+const responseStream = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+  stream: true // Add this
+});
+
+for await (const message of responseStream) {
+    console.log(message)
+}
+```
+
+</CodeGroup>
+
+Learn more about [OpenAI streams](https://cookbook.openai.com/examples/how_to_stream_completions).
+
+## Organization
+
+### Workspaces
+
+[Shared workspaces](/why-promptlayer/shared-workspaces) allow you to collaborate with the rest of the team. Use separate workspaces to organize work between projects or deployment environments. We commonly see teams with "Prod" and "Dev" workspaces.
+
+<Frame>
+![Workspace Selector](/images/quickstart/workspaces.png)
+</Frame>
+
+### Prompt branching
+
+Use "Duplicate" or "Copy a version" to organize and branch your work. You can use this to duplicate a prompt into another workspace or to pop out a version into a brand new prompt template.
+
+<Frame>
+![copy-a-version.png](/images/quickstart/copy-a-version.png)
+</Frame>
+
+### Groups
+
+Using [groups](/features/prompt-history/groups), you can associate multiple request logs with eachother. This makes searching and debugging much easier.
+
+To do this, you must first create a group ID.
+
+<CodeGroup>
+
+```python Python
+group_id = promptlayer_client.group.create()
+```
+
+```js Javascript
+const groupId = await promptLayerClient.group.create()
+```
+
+</CodeGroup>
+
+Then, when running the request, just pass in this group ID.
+
+
+<CodeGroup>
+
+```python Python
+response = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables,
+    group_id=group_id
+)
+```
+
+```js JavaScript
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+  groupId: groupId
+});
+```
+
+</CodeGroup>
+
+## Switching models
+
+An important part of prompt engineering is finding the right model. PromptLayer makes it easy to switch between language models and test them out.
+
+### Prompt Blueprint
+
+Prompt Blueprint is a model-agnostic data format that allows you to update models in PromptLayer without changing any code.
+
+Instead of using `response["raw_response"]` to access the LLM response (as done in earlier code snippets), we recommend using the standardized `response["prompt_blueprint"]`.
+
+Using it looks something like this:
+
+<CodeGroup>
+
+```python Python
+response = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables)
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+```
+
+```js JavaScript
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+});
+
+console.log(response["prompt_blueprint"]["prompt_template"]["messages"].slice(-1)[0]["content"]);
+```
+
+</CodeGroup>
+
+Using the above code snippet, you can update from OpenAI -> Anthropic without any code changes.
+
+For the exact schema, please look at the `prompt_template` return type of [get-prompt-template](/reference/templates-get).
+
+### Migrating prompts
+
+PromptLayer supports various models beyond OpenAI. You can easily switch between different models by updating the model parameter in your prompt template.
+
+For details on comparing models, see our [blog post on migrating prompts to open source models](https://blog.promptlayer.com/migrating-prompts-to-open-source-models-c21e1d482d6f).
+
+### Updating the Base URL
+
+To use your own self-hosted models or those from providers like HuggingFace, add a custom base URL to your workspace. In settings, scroll to "Provider Base URLs".
+
+Models must conform to one of the listed provider model-families.
+
+<Frame>
+![Base URL Configuration](/images/quickstart/base-url.png)
+</Frame>
+
+Base URLs will work locally and in the PromptLayer Playground.
+
+### Fine-tuning
+
+PromptLayer makes it incredibly easy to build [fine-tuned](/why-promptlayer/fine-tuning) models. It's specifically useful for fine-tuning a cheaper `gpt-3.5-turbo` model on more expensive `gpt-4` historical request data.
+
+Be warned, fine-tuning is hard to get right. [We wrote a blog post on why most teams should not rely on fine-tuning.](https://blog.promptlayer.com/why-fine-tuning-is-probably-not-for-you-37d8c4987530)
+
+## Advanced prompt engineering
+
+### Batch jobs and datasets
+
+In PromptLayer, you can build datasets by either uploading new data or utilizing historical data. This is a crucial step for running batch jobs and evaluating the performance of your prompts. 
+
+Learn more about [datasets](/features/evaluations/datasets). PromptLayer provides tools to label or annotate data, or to build datasets with requests that you have previously logged.
+
+Once your datasets are ready, you can use the evals page to run a batch job. In this context, the datasets serve as the input variables to the prompt for each run in the batch. 
+
+### Backtests
+
+Backtesting is the easiest way to evaluate your prompts, allowing you to assess how new prompt versions would have performed under past conditions. To perform backtests, start by building a dataset from your request history. This can be done in a few clicks on the Datasets page.
+
+Once you have your dataset, the next step is to create an evaluation pipeline. This pipeline will feed historical request contexts into your new prompt version and compare the new results to the old results. You can use simple string comparisons or more advanced techniques like cosine similarities to measure differences. For detailed instructions, visit the [backtesting section](/features/evaluations/continuous-integration#backtesting). Backtesting is an effective way to detect potential regressions and validate improvements, ensuring that updates enhance rather than detract from the user experience.
+
+### Custom evals
+
+For some prompts, it's better to build tailored evaluation pipelines that meet your specific requirements. For example, you can use PromptLayer to build end-to-end RAG pipelines or unit test evaluations. 
+
+Custom evaluations can be integrated into your CI/CD pipeline to run on every new version of your prompt. Learn more about [continuous integration](/features/evaluations/continuous-integration) and explore [eval examples here](/features/evaluations/examples). Evaluations provide a robust framework for continuously improving your prompts by rigorously testing them against a variety of scenarios and metrics.
