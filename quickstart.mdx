@@ -157,6 +157,7 @@ input_variables = {
 response = promptlayer_client.run(
     prompt_name="ai-poet", input_variables=input_variables)
 
+# Using OpenAI format
 print(response["raw_response"].choices[0].message.content)
 ```
 
@@ -170,10 +171,18 @@ const response = await promptLayerClient.run({
   inputVariables: input_variables,
 });
 
+// Using OpenAI format
 console.log(response["raw_response"].choices[0].message.content);
 ```
 
 </CodeGroup>
+
+<Tip>
+  For simplicity, the code snippet above will work with OpenAI only. Use the [prompt blueprint](/quickstart-part-two#prompt-blueprint) return item for a model-agnostic response format. 
+  ```python
+  print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+  ```
+</Tip>
 
 Amazing! `promptlayer_client.run` will automatically format your prompt template into the format needed by OpenAI, Anthropic, and all other major model providers.
 
