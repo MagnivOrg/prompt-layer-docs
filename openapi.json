@@ -1916,12 +1916,14 @@
               "properties": {
                 "prompt_version_id": { "type": "integer" },
                 "prompt_version_number": { "type": "integer" },
-                "release_label": { "type": "string" }
+                "release_label": { "type": "string" },
+                "release_label_id": { "type": "integer" }
               },
               "required": [
                 "prompt_version_id",
                 "prompt_version_number",
-                "release_label"
+                "release_label",
+                "release_label_id"
               ]
             },
             "title": "Release Labels"
