@@ -101,6 +101,7 @@
         "reference/templates-labels-get",
         "reference/prompt-labels-patch",
         "reference/prompt-labels-delete",
+        "reference/prompt-labels-create",
         "reference/track-score",
         "reference/track-prompt",
         "reference/track-group",
