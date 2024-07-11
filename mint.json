@@ -100,6 +100,7 @@
         "reference/publish-prompt-template",
         "reference/templates-labels-get",
         "reference/prompt-labels-patch",
+        "reference/prompt-labels-delete",
         "reference/track-score",
         "reference/track-prompt",
         "reference/track-group",
