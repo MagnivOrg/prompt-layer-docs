@@ -33,14 +33,17 @@ recipe that we will use throughout the project.
 Next, we need to set up the API keys for the services we will be using.
 
 ### OpenAI setup
+
 1. Create an API key at https://platform.openai.com/account/api-keys
 2. Save it as an environment variable under `OPENAI_API_KEY`
 
 ### Pinecone setup
+
 1. Create an API key at https://app.pinecone.io/
 2. Save it as an environment variable under `PINECONE_API_KEY`
 
 ### PromptLayer setup
+
 1. Create an API key at https://promptlayer.com/home
 2. Save it as an environment variable under `PROMPTLAYER_API_KEY`
 
@@ -55,9 +58,9 @@ import os
 from pathlib import Path
 import pinecone
 from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
+promptlayer_client = PromptLayer(api_key=os.environ.get('PROMPTLAYER_API_KEY'))
 
-openai = promptlayer_client.openai
+openai = promptlayer_client.openai.OpenAI()
 ```
 
 Next we will set up our configurations for directories along with Pinecone's API key and index name. This will make the rest of our code more clear. It will also allow us to easily change our data directory location or index name if needed.
@@ -108,9 +111,9 @@ The recommendation logic will operate by initially converting a food item the us
 
 ```python
 food = 'chicken'
-food_embedding_response = openai.Embedding.create(
+food_embedding_response = openai.embeddings.create(
     input=food,
-    engine='text-similarity-ada-001',
+    model='text-similarity-ada-001',
 )
 vector = food_embedding_response['data'][0]['embedding']
 ```
@@ -188,6 +191,7 @@ Things are working, but let's tweak our prompt a bit to see if we can get some b
 This simple change in the phrasing of the prompt can significantly alter the response from the AI. Using more affirmative language like "My favorite food is" rather than just "I like" puts more emphasis on the user's preference. This signals to the AI that it should pay close attention to tailoring the suggestion to that specific food.
 
 **Prompt engineering** involves systematically experimenting with different ways of phrasing the input prompt to find what works best. Some key aspects to tweak can include:
+
 - Using more natural conversational language
 - Providing additional context to guide the AI
 - Emphasizing key information through wording
