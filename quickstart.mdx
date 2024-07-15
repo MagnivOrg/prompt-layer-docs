@@ -121,7 +121,7 @@ Behind the scenes, the PromptLayer library is a wrapper around OpenAI's SDK. Thi
 ```python Python openai >= 1.0.0
 # Make sure to `pip install promptlayer`
 from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
+promptlayer_client = PromptLayer(api_key="<your_promptlayer_api_key>")
 
 # Swap out your 'from openai import OpenAI'
 OpenAI = promptlayer_client.openai.OpenAI
