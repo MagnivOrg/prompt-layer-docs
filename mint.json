@@ -44,6 +44,7 @@
           "pages": [
             "features/prompt-registry/overview",
             "features/prompt-registry/snippets",
+            "features/prompt-registry/dynamic-release-labels",
             "features/prompt-registry/function-calling",
             "features/prompt-registry/webhooks"
           ],
@@ -69,6 +70,7 @@
       "pages": [
         "why-promptlayer/prompt-management",
         "why-promptlayer/advanced-search",
+        "why-promptlayer/ab-releases",
         {
           "group": "Evaluations",
           "pages": [

@@ -1,0 +1,44 @@
+---
+title: "A/B Releases"
+icon: "arrows-split"
+---
+
+A/B Releases is a powerful feature that allows you to test different versions of your prompts in production, safely roll out updates, and segment users. 🚀
+
+For technical details and usage instructions, check out the [Dynamic Release Labels](/features/prompt-registry/dynamic-release-labels) page.
+
+## Overview
+
+A/B Releases work by dynamically overloading your release labels. You can split traffic between different prompt versions based on percentages or user segments. This lets you:
+
+- Test new prompt versions with a subset of users before a full rollout
+- Gradually release updates to minimize risk
+- Segment users to receive specific versions (e.g., beta users, internal employees)
+
+## Use Cases
+
+### Testing Prompt Updates
+
+Have a stable prompt version that's working well but want to test an update? Create an A/B Release! 
+
+You can direct a small percentage of traffic (e.g., 20%) to the new version. If there are no issues after a week, you can slowly increase the percentage. This minimizes the risk of rolling out an update to all users at once.
+
+![Dynamic Release Labels Diagram](/images/split-release-flowchart.png)
+
+### Gradual Rollouts
+
+Ready to roll out a new prompt version but want to minimize risk? Use A/B Releases to gradually ramp up traffic to the new version.
+
+Start with a 5% rollout, then increase to 10%, 25%, 50%, and eventually 100% as you gain confidence in the new version. This staged approach ensures a smooth transition for your users.
+
+### User Segmentation
+
+Want to give certain users access to a dev version of your prompt? A/B Releases make this easy.
+
+Define user segments based on metadata (e.g., user ID, company) and specify which prompt version each segment should receive. This lets you test new versions with beta users or give internal employees access to dev versions.
+
+For example, you could create a segment for internal user IDs and configure their traffic split to be 50% dev version and 50% stable version. Alternatively, you could segment based on the user's subscription level, giving free users access to experimental prompt versions first before rolling them out to paying customers. This allows you to gather feedback and iterate on new features without affecting your premium user base.
+
+---
+
+A/B Releases give you the power to experiment, safely roll out updates, and deliver targeted experiences. Try it out and take control of your prompt releases! 🎉

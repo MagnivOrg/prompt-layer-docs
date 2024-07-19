@@ -1,0 +1,42 @@
+---
+title: "Dynamic Release Labels"
+icon: "tag"
+---
+
+Dynamic Release Labels allow you to overload release labels and dynamically route traffic to different prompt versions based on percentages or user segments. 🏷️
+
+For an overview of the benefits and key use cases, check out our [A/B Releases](/why-promptlayer/ab-releases) page.
+
+## Overview
+
+Normally, a release label (e.g., "prod") points to a specific prompt version. Dynamic Release Labels let you overload this mapping and split traffic between multiple versions.
+
+This is powered by the A/B Releases feature. When you create an A/B Release, it dynamically routes requests for the specified release label based on your configuration.
+
+![Dynamic Release Labels Diagram](/images/split-release-flowchart.png)
+
+## Usage
+
+<video controls width="100%">
+  <source src="/videos/ab-release.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+1. Navigate to the A/B Releases Registry in the PromptLayer UI.
+2. Create a new A/B Release and select the release label to overload (e.g., "prod").
+3. See the base prompt version and choose the version(s) to release.
+4. Set the traffic percentages for each version.
+   - The percentages must add up to 100%.
+   - Example: 90% to version 3 (stable), 10% to version 4 (new).
+5. (Optional) Add user segments and define which version each segment should receive.
+   - Segments are defined using request metadata (e.g., user ID, company).
+   - Example: Internal employees receive version 4 (dev) 50% of the time.
+6. Save the A/B Release. It will now dynamically route traffic for the specified release label.
+
+**Important**: When [logging requests](/features/prompt-history/tracking-templates), make sure to log the specific version returned, not just the release label. The label will always point to the original version in your logs.
+
+To stop dynamically routing traffic, simply delete the A/B Release. The release label will revert to its base mapping.
+
+---
+
+Dynamic Release Labels give you fine-grained control over prompt version routing. Use them to safely test updates, roll out new versions, and segment users. 🎯
