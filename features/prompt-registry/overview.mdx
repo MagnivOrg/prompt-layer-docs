@@ -7,7 +7,7 @@ The Prompt Registry allows you to easily manage your prompt templates, which are
 
 Specifically, a prompt template is your prompt string with variables indicated in curly brackets (`This is a prompt by {author_name}`). Prompt templates can have tags and are uniquely named.
 
-You can use this tool to programmatically retrieve and publish prompts (even at runtime!). That is, this registry makes it easy to start A/B testing your prompts. Viewed as a "**Prompt Management System**”, this registry allows your org to pull out and organize the prompts that are currently dispersed throughout your codebase.
+You can use this tool to programmatically retrieve and publish prompts (even at runtime!). That is, this registry makes it easy to start [A/B testing](/why-promptlayer/ab-releases) your prompts. Viewed as a "**Prompt Management System**”, this registry allows your org to pull out and organize the prompts that are currently dispersed throughout your codebase.
 
 <video controls="controls">
   <source src="/videos/registry.mp4" type="video/mp4" />
@@ -360,9 +360,21 @@ Learn more about tracking templates [here](/features/prompt-history/tracking-tem
 
 ## A/B Testing
 
-The Prompt Registry allows you to manage and publish prompt templates programmatically, which makes it easier to separate prompts from the codebase and to perform A/B testing.
+The Prompt Registry, combined with our powerful [A/B Releases](/why-promptlayer/ab-releases) feature, allows you to easily perform A/B tests on your prompts. This feature enables you to test different versions of your prompts in production, safely roll out updates, and segment users.
 
-CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better. This can help you optimize your prompts and improve user engagement.
+With A/B Releases, you can:
+
+- Test new prompt versions with a subset of users before a full rollout
+- Gradually release updates to minimize risk
+- Segment users to receive specific versions (e.g., beta users, internal employees)
+
+Here's how it works:
+
+1. Create multiple versions of a prompt template in the Prompt Registry.
+2. Use [Dynamic Release Labels](/features/prompt-registry/dynamic-release-labels) to split traffic between different prompt versions based on percentages or user segments.
+3. Retrieve the appropriate prompt version at runtime using the `get` method with a release label.
+
+CMS systems like the Prompt Registry are useful for A/B testing because they allow you to programmatically manage and publish different versions of a prompt template. By creating multiple versions of a prompt template, you can serve different prompts to different users and measure which version performs better.
 
 ## Getting all Prompts Programmatically
 
