@@ -1,0 +1,60 @@
+---
+title: "Release Labels"
+icon: "tag"
+---
+
+Release Labels provide a powerful way to organize and manage versions of your prompt templates in the Prompt Registry. They allow you to:
+
+- Easily deploy different versions of a prompt template 
+- Safely test new versions with a subset of users before a full rollout
+- Gradually release updates to minimize risk
+- Segment users to receive specific versions (e.g., beta users, internal employees)
+
+## Adding Release Labels
+
+You can add Release Labels to a specific version of a prompt template either through the UI.
+
+1. In the Prompt Registry, hover over a prompt template version 
+2. Click "Add Release Label"
+3. Enter a unique label name (e.g. "prod", "staging", "v2")
+
+![Release Label](/images/quickstart/release-label.gif)
+
+## Retrieving Prompts by Release Label
+
+To retrieve a specific version of a prompt template, pass the `label` parameter when getting the template:
+
+<CodeGroup>
+
+```python Python SDK
+promptlayer_client.templates.get("my_template", { "label": "prod" })
+```
+
+```js JavaScript
+const template = await promptLayerClient.templates.get("my_template", { label: "prod" });
+```
+
+</CodeGroup>
+
+This will return the version of the prompt template associated with the "prod" release label. This also works with `promptlayer_client.run()`.
+
+## Using Release Labels for A/B Testing
+
+Release Labels, combined with [Dynamic Release Labels](/features/prompt-registry/dynamic-release-labels), enable powerful A/B testing capabilities:
+
+1. Create multiple versions of a prompt template
+2. Set up a Dynamic Release Label to overload an existing release label (e.g., "prod")
+3. Configure the Dynamic Release Label to split traffic between different versions based on percentages or user segments
+4. Programmatically retrieve the prompt using the original release label, which will now dynamically route to the appropriate version
+5. Analyze performance of each version using PromptLayer's analytics and Evaluations
+
+This approach allows you to test prompt changes on a subset of users, compare performance, and gradually roll out updates while maintaining a single, consistent Release Label for your application to use.
+
+
+## Best Practices 
+
+- Use descriptive Release Labels that indicate the version's stage or intended audience (e.g., "prod", "staging", "beta_users")
+- Remove unused Release Labels to keep your prompt template organized
+- Use Dynamic Release Labels for more advanced traffic splitting and segmentation
+
+With Release Labels, you can confidently manage prompt template versions and roll out updates without code changes. Combine them with PromptLayer's [versioning](/features/prompt-registry/overview), [analytics](/why-promptlayer/analytics), and [evaluations](/features/evaluations/overview) for a powerful prompt engineering workflow.
