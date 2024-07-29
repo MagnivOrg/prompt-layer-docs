@@ -1,12 +1,26 @@
 ---
-title: "Function Calling"
+title: "Tool Calling"
 icon: "function"
 ---
 
+The Prompt Registry supports all major tool calling formats, including [OpenAI tools](https://platform.openai.com/docs/guides/function-calling), OpenAI functions, [Anthropic tools](https://docs.anthropic.com/en/docs/build-with-claude/tool-use), and Gemini tools. 
 
-The Prompt Registry supports the [OpenAI tools](https://platform.openai.com/docs/guides/function-calling) format. You can create a prompt using tools both visually and programmatically.
+You can create tool schemas interactively, and your prompt template will seemlessly work on any LLM. Tool calling in PromptLayer is model-agnostic.
 
-Be sure to read [this OpenAI guide](https://platform.openai.com/docs/guides/function-calling) for more context.
+<Tip>
+Learn more about when you should use tools [on our blog](https://blog.promptlayer.com/tool-calling-with-llms-how-and-when-to-use-it-d65493a87954).
+</Tip>
+
+### What is Tool Calling?
+
+Tool calling (previously known as function calling) is a powerful feature that allows Language Models (LLMs) to return structured data and invoke predefined functions with JSON arguments. This capability enables more complex interactions and structured outputs from LLMs.
+
+Key benefits of tool calling include:
+
+- Structured Outputs: Tool arguments are always in JSON format, enforced by JSONSchema at the API level.
+- Efficient Communication: Tool calling is a concept built into the model, reducing token usage and improving understanding.
+- Model Routing: Facilitates setting up modular prompts with specific responsibilities.
+- Prompt Injection Protection: Strict schema definitions at the model level make it harder to "jailbreak" the model.
 
 ### Creating Visually
 
@@ -18,109 +32,4 @@ Tools can be defined, called, and set up visually through the Prompt Registry.
 
 ### Publishing Programmatically
 
-To publish a prompt template with tools programatically is very similar to how you would publish a regular prompt template. To add tools you can add the arguments `tools` and `tool_choice` to your `prompt_template` object.
-
-If you’re already calling OpenAI API, you can bundle the tools and publish it into the Prompt Registry, like this:
-
-<CodeGroup>
-
-```python Python SDK
-messages = [{"role": "user", "content": {"type": "text", "text": "What's the weather like in Boston?"}}]
-tools = [{
-  "type": "function",
-  "function": {
-    "name": "get_current_weather",
-    "description": "Get the current weather in a given location",
-    "parameters": {
-      "type": "object",
-      "properties": {
-        "location": {
-          "type": "string",
-          "description": "The city and state, e.g. San Francisco, CA",
-        },
-        "unit": {"type": "string", "enum": ["celsius", "fahrenheit"]},
-      },
-      "required": ["location"],
-    },
-  }
-}]
-
-promptlayer_client.templates.publish({
-    "prompt_name": "test_chat_tools",
-    "prompt_template": {
-        "type": "chat",
-        "function_call": "auto",
-        "messages": [
-            {
-                "role": role,
-                "content": [
-                    {
-                        "type": "text",
-                        "text": content,
-                    }
-                ],
-            }
-            for (role, content) in map(lambda x: x.values(), messages)
-        ],
-        "tools": tools,
-    }
-  })
-
-response = openai.ChatCompletion.create(
-  model="gpt-3.5-turbo",
-  messages=messages,
-  tools=tools,
-  tool_choice="auto",
-)
-```
-
-```js JavaScript
-const messages = [
-  { role: "user", content: "What's the weather like in Boston?" },
-];
-const tools = [{
-  type: "function",
-  function:{
-    name: "get_current_weather",
-    description: "Get the current weather in a given location",
-    parameters: {
-      type: "object",
-      properties: {
-        location: {
-          type: "string",
-          description: "The city and state, e.g. San Francisco, CA",
-        },
-        unit: { type: "string", enum: ["celsius", "fahrenheit"] },
-      },
-      required: ["location"],
-    },
-  },
-}];
-
-promptLayerClient.templates.publish({
-  prompt_name: "test_chat_tools",
-  prompt_template: {
-    type: "chat",
-    function_call: "auto",
-    messages: messages.map(({ role, content }) => ({
-      role,
-      content: [
-        {
-          type: "text",
-          text: content,
-        },
-      ],
-    })),
-    tools,
-  },
-});
-
-const response = await openai.chat.completions.create({
-  model: "gpt-3.5-turbo",
-  messages,
-  tools,
-  tool_choice: "auto",
-});
-```
-
-</CodeGroup>
+To publish a prompt template with tools programmatically, you can add the arguments `tools` and `tool_choice` to your prompt_template object. This is similar to how you would publish a regular prompt template.

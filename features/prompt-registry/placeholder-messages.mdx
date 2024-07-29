@@ -1,0 +1,37 @@
+---
+title: "Placeholder Messages"
+icon: "square-question"
+---
+
+Placeholder Messages are a powerful feature that allows you to injected messages into a prompt template. By using the `placeholder` message role, you can define placeholders within your prompt template that can be replaced with full messages at runtime.
+
+This is useful to inject conversation context.
+
+## Creating Placeholder Messages
+
+You can create Placeholder Messages either through the PromptLayer dashboard or programmatically using the `templates.publish` method.
+
+In the dashboard, simply create a new message with the role `placeholder` and provide the desired placeholder content.
+
+![Placeholder Message](/images/placeholder.png)
+
+
+## Running a Template with Placeholders
+
+Programmatically, you can include Placeholder Messages when publishing a prompt template:
+
+```python
+promptlayer_client.run(
+    prompt_name="template-name",
+    input_variables={
+        "fill_in_message": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "My age is 29"}],
+            }
+        ]
+    },
+)
+```
+
+Passed in messages must confirm to our [prompt blueprint](/quickstart-part-two#prompt-blueprint) format.
