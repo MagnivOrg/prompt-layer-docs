@@ -80,6 +80,7 @@
             "features/evaluations/continuous-integration",
             "features/evaluations/examples",
             "features/evaluations/building-pipelines",
+            "features/evaluations/eval-types",
             "features/evaluations/datasets",
             "features/evaluations/programmatic"
           ],
