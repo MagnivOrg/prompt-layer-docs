@@ -422,7 +422,13 @@
                       "type": "integer"
                     }
                   },
-                  "required": ["created_at", "id", "name", "prompt_id", "prompt_version_id"]
+                  "required": [
+                    "created_at",
+                    "id",
+                    "name",
+                    "prompt_id",
+                    "prompt_version_id"
+                  ]
                 }
               }
             }
@@ -431,7 +437,7 @@
       }
     },
     "/prompt-labels/{prompt_label_id}": {
-      "patch":{
+      "patch": {
         "tags": ["prompt-templates", "release-labels"],
         "summary": "Move Prompt Template Labels",
         "operationId": "prompt_templates_labels_prompt_label_id__patch",
@@ -491,14 +497,20 @@
                       "type": "integer"
                     }
                   },
-                  "required": ["created_at", "id", "name", "prompt_id", "prompt_version_id"]
+                  "required": [
+                    "created_at",
+                    "id",
+                    "name",
+                    "prompt_id",
+                    "prompt_version_id"
+                  ]
                 }
               }
             }
           }
         }
       },
-      "delete":{
+      "delete": {
         "tags": ["prompt-templates", "release-labels"],
         "summary": "Delete Prompt Template Label",
         "operationId": "delete_prompt_templates_labels_prompt_label_id",
@@ -1072,7 +1084,22 @@
                     },
                     "description": "A list of tags to filter by."
                   },
-                  "metadata": {
+                  "metadata_and": {
+                    "type": "array",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "key": {
+                          "type": "string"
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    },
+                    "description": "A list of metadata key-value pairs to filter by."
+                  },
+                  "metadata_or": {
                     "type": "array",
                     "items": {
                       "type": "object",
