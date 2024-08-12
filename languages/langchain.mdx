@@ -170,31 +170,59 @@ llm("How tall are you?")
 ```
 
 ```python Full Example
-def pl_id_scoring_callback(pl_id):
-    print("PromptLayer Request ID:", pl_id)
-    
-    # ⭐ score is an integer 0-100
-    promptlayer_client.track.score(
-        request_id=pl_id, score=100
-    )
-    # 📊 metadata is a dictionary of request data
-    promptlayer_client.track.metadata(
-        request_id=pl_id, metadata={"user_id": "0000"}
-    )
-    # 👁️ associate a prompt template with the request
-    promptlayer_client.track.prompt(
-        request_id=pl_id,
-        prompt_name="name_prompt",
-        prompt_input_variables={"name": "Jared"},
-        version=2,
-    )
+# Import required libraries
+from langchain_openai import ChatOpenAI
+from langchain.callbacks import PromptLayerCallbackHandler
+from promptlayer import PromptLayer
 
-openai_llm = OpenAI(
-    model_name="gpt-3.5-turbo-instruct",
-    callbacks=[PromptLayerCallbackHandler(
-            pl_id_callback=pl_id_scoring_callback, 
-            pl_tags=["langchain"])],
+# Initialize PromptLayer client
+pl_client = PromptLayer()
+
+# Global variables
+PROMPT_NAME = ''
+INPUT_VARIABLES = {}
+
+# Helper functions
+def convert_role(role):
+    """Convert 'user' role to 'human', keep others as is."""
+    return "human" if role == "user" else role
+
+def convert_content(content):
+    """Extract text content from list or return as is."""
+    return content[0]["text"] if isinstance(content, list) else content
+
+def track_prompt_usage(prompt_layer_id):
+    """Track prompt usage in PromptLayer."""
+    pl_client.track.prompt(prompt_name=PROMPT_NAME, request_id=prompt_layer_id, prompt_input_variables=INPUT_VARIABLES)
+
+# Initialize LangChain ChatOpenAI with PromptLayer callback
+llm = ChatOpenAI(
+    model="gpt-4o",
+    temperature=0,
+    max_tokens=None,
+    timeout=None,
+    max_retries=2,
+    callbacks=[PromptLayerCallbackHandler(pl_id_callback=track_prompt_usage)]
 )
+
+PROMPT_NAME = "ai-poet-test"
+INPUT_VARIABLES = {"topic": "PromptLayer the Premier Prompt Engineering Platform"}
+template = pl_client.templates.get(PROMPT_NAME, {"input_variables": INPUT_VARIABLES})
+pl_messages = template["llm_kwargs"]["messages"]
+
+messages = [
+    (convert_role(pl_message["role"]), convert_content(pl_message["content"])) for pl_message in pl_messages
+]
+ai_msg = llm.invoke(messages)
+
+PROMPT_NAME = "check-the-weather"
+INPUT_VARIABLES = {'location': 'New York'}
+template = pl_client.templates.get(PROMPT_NAME, {"input_variables": INPUT_VARIABLES})
+pl_messages = template["llm_kwargs"]["messages"]
+messages = [
+    (convert_role(pl_message["role"]), convert_content(pl_message["content"])) for pl_message in pl_messages
+]
+ai_msg = llm.invoke(messages)
 ```
 
 </CodeGroup>
