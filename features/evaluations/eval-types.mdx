@@ -5,15 +5,15 @@ icon: "screwdriver-wrench"
 
 This page provides an overview of the various evaluation column types available on our platform.
 
-## Prompt Template
+## Primary Types
 
-![Prompt Template](/images/prompt-template-eval.png)
+<img width="450" src="/images/prompt-template-eval.png" />
+
+### Prompt Template
 
 The _Prompt Template_ evaluation type allows you to execute a prompt template from the Prompt Registry. You have the flexibility to select the latest version, a specific label, or a particular version of the prompt template. You also have the ability to assign the input variables based on available inputs from the dataset or other columns. You can override the model parameters that are set in the Prompt Registry. This functionality is particularly useful for testing a prompt template within a larger evaluation pipeline, comparing different model parameters, or implementing an "LLM as a judge" prompt template.
 
-## Custom API Endpoint
-
-![Custom API Endpoint](/images/custom-api-endpoint-eval.png)
+### Custom API Endpoint
 
 The _Custom API Endpoint_ enables you to set up a webhook that our system will call (POST) with all the columns to the left of the API endpoint when that cell is executed. As cells are processed sequentially, we will call this endpoint with all the columns to the left as the given payload, and the returned result will be displayed. This feature allows for extensive customization to accommodate specific use cases and integrate with external systems or custom evaluators.
 
@@ -30,87 +30,67 @@ The payload will be in the form of
         }
     ```
 
-## Human Input
-
-![Human Input](/images/human-input-eval.png)
+### Human Input
 
 The _Human Input_ evaluation type allows the addition of either numeric or text input where an evaluator can provide feedback via a slider or a text box. This input can then be utilized in subsequent columns in the evaluation pipeline, allowing for the incorporation of human judgment.
 
 ## Simple Evals
 
-### Equality Comparison
+<img width="450" src="/images/equality-comparison-eval.png" />
 
-![Equality Comparison](/images/equality-comparison-eval.png)
+### Equality Comparison
 
 _Equality Comparison_ allows you to compare two different columns as strings. It provides a visual diff if there is a difference between the columns. Note that the diff is not used when calculating the score in that column and the column will be treated as a boolean for the purposes of a score. If there is no difference, it this column return true. 
 
 ### Contains Value
 
-![Contains Value](/images/contains-value-eval.png)
-
 The _Contains_ evaluation type enables you to search for a substring within a column. For instance, you could search for a specific word or phrase within each cell in the column. It is using the python `in` operator to check if the substring is in the cell and is case insensitive.
 
 ### Regex Match
-
-![Regex Match](/images/regex-match-eval.png)
 
 The _Regex Match_ evaluation type allows you to define a regular expression pattern to search within the column. This provides powerful pattern matching capabilities for complex text analysis tasks.
 
 ### Absolute Numeric Distance
 
-![Absolute Numeric Distance](/images/absolute-numeric-distance-eval.png)
-
 The _Absolute Numeric Distance_ evaluation type allows you to select two different columns and output the absolute distance between their numeric values in a new column. Both source columns must contain numeric values.
 
 ## LLM Evals
 
-### Run LLM Assertion
+<img width="450" src="/images/llm-assertion-eval.png" />
 
-![Run LLM Assertion](/images/llm-assertion-eval.png)
+### Run LLM Assertion
 
 The _LLM Assertion_ evaluation type enables you to run an assertion on a column using natural language prompts. You can create prompts such as "Does this contain an API key?", "Is this sensitive content?", or "Is this in English?". Our system uses a backend prompt template that processes your assertion and returns either true or false. Assertions should be framed as questions.
 
 ### Cosine Similarity
 
-![Cosine Similarity](/images/cosine-similarity-eval.png)
-
 _Cosine Similarity_ allows you to compare the vector distance between two columns. The system takes the two columns you supply, converts them into strings, and then embeds them using OpenAI's embedding vectors. It then calculates the cosine similarity, resulting in a number between 0 and 1. This metric is useful for understanding how semantically similar two bodies of text are, which can be valuable in assessing topic adherence or content similarity.
 
 ## Helper Functions
 
-### JSON Extraction
+<img width="450" src="/images/json-extraction-eval.png" />
 
-![JSON Extraction](/images/json-extraction-eval.png)
+### JSON Extraction
 
 The _JSON Extraction_ evaluation type allows you to define a JSON path and extract either the first match or all matches in that path. We will automatically cast the source column into a JSON object. This is particularly useful for parsing structured data within your evaluations.
 
 ### Parse Value
 
-![Parse Value](/images/parse-value-eval.png)
-
 The _Parse Value_ column type enables you to convert another column into one of the following value types: string, number, Boolean, or JSON.
 
 ### Static Value
-
-![Static Value](/images/static-value-eval.png)
 
 The _Static Value_ evaluation type allows you to pre-populate a column with a specific value. This is useful for adding constant values or context that you may need to use later in one of the other columns in your evaluation pipeline.
 
 ### Type Validation
 
-![Type Validation](/images/type-validation-eval.png)
-
 _Type Validation_ returns a boolean for the given source column if it fits one of the specified types. The types supported for validation are JSON, number, or SQL. It will return `true` if the value is valid for the specified type, and `false` otherwise. For SQL validation, the system utilizes the [SQLGlot library](https://github.com/tobymao/sqlglot?tab=readme-ov-file#parser-errors).
 
 ### Coalesce
 
-![Coalesce](/images/coalesce-eval.png)
-
 The _Coalesce_ evaluation type allows you to take multiple different columns and coalesce them, similar to [SQL's COALESCE function](https://www.w3schools.com/sql/func_sqlserver_coalesce.asp).
 
 ### Count
-
-![Count](/images/count-eval.png)
 
 The _Count_ evaluation type allows you to select a source column and count either the characters, words, or paragraphs within it. This will output a numeric value, which can be useful for analyzing the length or complexity of LLM outputs.
 
