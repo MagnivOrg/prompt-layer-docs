@@ -73,6 +73,7 @@
         "why-promptlayer/prompt-management",
         "why-promptlayer/advanced-search",
         "why-promptlayer/ab-releases",
+        "why-promptlayer/traces",
         {
           "group": "Evaluations",
           "pages": [

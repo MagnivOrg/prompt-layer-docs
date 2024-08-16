@@ -1,0 +1,146 @@
+---
+title: "Traces"
+icon: "split"
+---
+
+Traces are a powerful feature in PromptLayer that allow you to monitor and analyze the execution flow of your applications, including LLM requests. Built on OpenTelemetry, Traces provide detailed insights into function calls, their durations, inputs, and outputs.
+
+## Overview
+
+Traces in PromptLayer offer a comprehensive view of your application's performance and behavior. They allow you to:
+
+- Visualize the execution flow of your functions
+- Track LLM requests and their associated metadata
+- Measure function durations and identify performance bottlenecks
+- Inspect function inputs and outputs for debugging
+
+![Traces Overview](/images/traces/trace-details.png)
+
+## Key Features
+
+### Function Tracing
+
+Easily trace any function in your codebase using the `@pl.traceable()` decorator. This allows you to gather detailed information about function executions, including:
+
+- Start time
+- End time
+- Duration
+- Input parameters
+- Return value
+
+### LLM Request Tracing
+
+Automatically capture detailed information about your LLM requests, including:
+
+- Model used
+- Input prompts
+- Generated responses
+- Request duration
+- Associated metadata
+
+## Initializing PromptLayer with Tracing
+
+<CodeGroup>
+```python Python
+from promptlayer import PromptLayer
+
+# Initialize PromptLayer with tracing enabled
+pl = PromptLayer(
+    api_key="your_api_key",
+    enable_tracing=True,
+    workspace_id=your_workspace_id
+)
+
+# Use .run() to execute a prompt with tracing
+response = pl.run(
+    prompt_name="simple-greeting",
+    prompt_input={
+        "name": "Alice"
+    },
+    metadata={
+        "user_id": "12345"
+    }
+)
+
+print(response)
+```
+
+```js Javascript
+import { PromptLayer } from "@/index";
+
+// Initialize PromptLayer with tracing enabled
+const promptlayer = new PromptLayer({
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+  enableTracing: true,
+  workspaceId: 1,
+});
+
+// Use run() to execute a prompt with tracing
+async function runPrompt() {
+  try {
+    const response = await promptlayer.run({
+      promptName: "simple-greeting",
+      inputVariables: {
+        name: "Alice"
+      },
+      metadata: {
+        user_id: "12345"
+      }
+    });
+
+    console.log(response);
+  } catch (error) {
+    console.error("Error running prompt:", error);
+  }
+}
+
+runPrompt();
+```
+</CodeGroup>
+
+## Use with decorators
+
+<CodeGroup>
+```python Python
+# Use the @pl.traceable() decorator to trace a function
+@pl.traceable()
+def greet(name):
+    return f"Hello, {name}!"
+
+# Use the decorator with custom attributes
+@pl.traceable(attributes={"function_type": "math"})
+def calculate_sum(a, b):
+    return a + b
+
+# Example usage
+result1 = greet("Alice")
+print(result1)  # Output: Hello, Alice!
+
+result2 = calculate_sum(5, 3)
+print(result2)  # Output: 8
+```
+
+```js Javascript
+// Define and wrap a function with PromptLayer tracing
+const greet = promptlayer.wrapWithSpan('greet', (name: string): string => {
+  return `Hello, ${name}!`;
+});
+
+// Example usage
+const result = greet("Alice");
+console.log(result);  // Output: Hello, Alice!
+```
+</CodeGroup>
+
+## Best Practices
+
+- Use descriptive names for your functions to make traces easier to understand
+- Add custom attributes to your traces for additional context
+- Trace key functions in your application, but avoid over-tracing to maintain performance
+- Regularly review your traces to identify optimization opportunities and potential issues
+
+## Technical Details
+
+PromptLayer Traces are built on OpenTelemetry, a popular open-source observability framework. The PromptLayerSpanExporter class is responsible for exporting trace data to the PromptLayer API.
+
+For more advanced usage and configuration options, refer to the [OpenTelemetry documentation](https://opentelemetry.io/docs/). usage and configuration options, refer to the OpenTelemetry documentation.
