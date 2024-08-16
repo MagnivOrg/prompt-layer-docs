@@ -1,6 +1,6 @@
 ---
 title: "Traces"
-icon: "split"
+icon: "diagram-project"
 ---
 
 Traces are a powerful feature in PromptLayer that allow you to monitor and analyze the execution flow of your applications, including LLM requests. Built on OpenTelemetry, Traces provide detailed insights into function calls, their durations, inputs, and outputs.
@@ -56,7 +56,7 @@ Once PromptLayer is initialized with tracing enabled, you can use the `run()` me
 ```python Python
 response = pl.run(
     prompt_name="simple-greeting",
-    prompt_input={
+    input_variables={
         "name": "Alice"
     },
     metadata={
