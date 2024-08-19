@@ -31,11 +31,7 @@ When you initialize the PromptLayer class with `enable_tracing` set to `True`, P
 from promptlayer import PromptLayer
 
 # Initialize PromptLayer with tracing enabled
-pl = PromptLayer(
-    api_key="your_api_key",
-    enable_tracing=True,
-    workspace_id=YOUR_WORKSPACE_ID
-)
+pl_client = PromptLayer(enable_tracing=True)
 ```
 
 ```javascript JavaScript
@@ -54,7 +50,7 @@ Once PromptLayer is initialized with tracing enabled, you can use the `run()` me
 
 <CodeGroup>
 ```python Python
-response = pl.run(
+response = pl_client.run(
     prompt_name="simple-greeting",
     input_variables={
         "name": "Alice"
@@ -96,13 +92,13 @@ In addition to automatic LLM request tracing, you can also use the `traceable` d
 
 <CodeGroup>
 ```python Python
-# Use the @pl.traceable() decorator to trace a function
-@pl.traceable()
+# Use the @pl_client.traceable() decorator to trace a function
+@pl_client.traceable()
 def greet(name):
     return f"Hello, {name}!"
 
 # Use the decorator with custom attributes
-@pl.traceable(attributes={"function_type": "math"})
+@pl_client.traceable(attributes={"function_type": "math"})
 def calculate_sum(a, b):
     return a + b
 

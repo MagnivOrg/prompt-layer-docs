@@ -55,6 +55,7 @@
         {
           "group": "Logging",
           "pages": [
+            "features/prompt-history/traces",
             "features/prompt-history/request-id",
             "features/prompt-history/tagging-requests",
             "features/prompt-history/metadata",
@@ -73,7 +74,6 @@
         "why-promptlayer/prompt-management",
         "why-promptlayer/advanced-search",
         "why-promptlayer/ab-releases",
-        "why-promptlayer/traces",
         {
           "group": "Evaluations",
           "pages": [
