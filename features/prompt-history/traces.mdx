@@ -14,6 +14,8 @@ Traces in PromptLayer offer a comprehensive view of your application's performan
 - Measure function durations and identify performance bottlenecks
 - Inspect function inputs and outputs for debugging
 
+**Note:** The left menu in the PromptLayer UI only shows root spans, which represent the entry function of your program. While your program is running, you might not see all spans in the UI immediately, even though child spans are being sent to the backend. The root span, along with all its child spans, will only appear in the UI once the program completes. This behavior is particularly noticeable in long-running programs or those with complex execution flows.
+
 ![Traces Overview](/images/traces/trace-details.png)
 
 ## Automatic LLM Request Tracing
