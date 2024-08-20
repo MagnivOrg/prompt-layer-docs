@@ -55,6 +55,7 @@
         {
           "group": "Logging",
           "pages": [
+            "features/prompt-history/traces",
             "features/prompt-history/request-id",
             "features/prompt-history/tagging-requests",
             "features/prompt-history/metadata",
