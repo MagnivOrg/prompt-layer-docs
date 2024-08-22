@@ -321,6 +321,33 @@ You can build these eval datasets using the request logs we captured above. Lear
 
 ![Eval Scores](/images/quickstart/eval-scores.png)
 
+## Tracing and Spans
+
+PromptLayer provides powerful tracing capabilities to help you monitor and analyze the execution flow of your applications. With tracing enabled, you can visualize function calls, track LLM requests, measure durations, and inspect inputs and outputs.
+
+![Trace Details](/images/quickstart/traces.png)
+
+To enable tracing, simply initialize the PromptLayer client with `enable_tracing` set to `True`:
+
+<CodeGroup>
+```python Python
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer(enable_tracing=True)
+```
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+  const promptlayer = new PromptLayer({
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+  enableTracing: true,
+});
+```
+</CodeGroup>
+
+You can then use the `@promptlayer_client.traceable` decorator in Python or `wrapWithSpan` in JavaScript to trace custom functions.
+
+Read more about [tracing here](/features/prompt-history/traces).
+
 <Tip> Continue reading with [Quickstart Part 2](/quickstart-part-two) ➡️</Tip>
 
 # Further reading 📖
