@@ -1077,12 +1077,19 @@
                     "type": "string",
                     "description": "The end time for the dataset's time range filter."
                   },
-                  "tags": {
+                  "tags_and": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "A list of tags to filter by."
+                    "description": "A list of tags to filter by. This will perform an AND operation."
+                  },
+                  "tags_or": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "A list of tags to filter by. This will perform an OR operation."
                   },
                   "metadata_and": {
                     "type": "array",
