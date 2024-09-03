@@ -120,3 +120,43 @@ const result = greet("Alice");
 console.log(result);
 ```
 </CodeGroup>
+
+## Setting Custom Span Names
+
+When tracing functions, you may want to set custom names for your spans to make them more descriptive. Both Python and JavaScript implementations of PromptLayer allow you to set custom span names.
+
+### Python
+
+In Python, you can set a custom span name by passing the `name` parameter to the `traceable` decorator:
+
+```python
+@pl_client.traceable(name="CustomGreeting")
+def greet(name):
+    return f"Hello, {name}!"
+
+result = greet("Alice")
+print(result)
+```
+
+If you don't provide a name parameter, the span will use the function's name by default.
+
+### JavaScript
+
+In JavaScript, you can set a custom span name by passing it as the first argument to the wrapWithSpan function:
+
+```javascript JavaScript
+const greet = promptlayer.wrapWithSpan('CustomGreeting', (name) => {
+    return `Hello, ${name}!`;
+});
+
+const result = greet("Alice");
+console.log(result);
+```
+
+If you want to use the function's name as the span name, you can simply pass the function name as a string:
+
+```javascript JavaScript
+const greet = promptlayer.wrapWithSpan('greet', (name) => {
+    return `Hello, ${name}!`;
+});
+```
