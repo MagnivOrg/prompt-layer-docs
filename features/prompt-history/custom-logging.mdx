@@ -1,0 +1,176 @@
+---
+title: "Custom Logging"
+icon: "brackets-curly"
+---
+
+PromptLayer allows you to log requests made via custom LLM providers. This is useful for logging requests that are not made via the PromptLayer SDK.
+
+<CodeGroup>
+```python Python
+from huggingface_hub import InferenceClient
+from promptlayer import PromptLayer
+from datetime import datetime
+
+PROMPTLAYER_API_KEY = "pl_..."
+promptlayer = PromptLayer(api_key=PROMPTLAYER_API_KEY)
+
+prompt_name = "weather"
+prompt_version_number = 30
+prompt_input_variables = {"city": "Paris"}
+template = promptlayer.templates.get(
+    prompt_name,
+    {"version": prompt_version_number, "input_variables": prompt_input_variables},
+)
+
+messages = [
+    message
+    if isinstance(message["content"], str)
+    else {**message, "content": message["content"][0]["text"]}
+    for message in template["llm_kwargs"]["messages"]
+]
+parameters = template["metadata"]["model"]["parameters"]
+
+provider = "meta-llama"
+model = "Meta-Llama-3-8B-Instruct"
+
+HF_TOKEN = "hf_..."
+client = InferenceClient(
+    f"{provider}/{model}",
+    api_key=HF_TOKEN,
+)
+request_start_time = datetime.now().timestamp()
+response = client.chat_completion(messages=messages, **parameters)
+request_end_time = datetime.now().timestamp()
+
+input = {
+    "type": "chat",
+    "messages": [
+        {**message, "content": [{"type": "text", "text": message["content"]}]}
+        for message in messages
+    ],
+}
+
+output = {
+    "type": "chat",
+    "messages": [
+        {
+            "role": "assistant",
+            "content": [
+                {
+                    "type": "text",
+                    "text": response.choices[0].message.content,
+                }
+            ],
+        }
+    ],
+}
+
+request_log = promptlayer.log_request(
+    provider=provider,
+    model=model,
+    input=input,
+    output=output,
+    request_start_time=request_start_time,
+    parameters=parameters,
+    request_end_time=request_end_time,
+    prompt_name=prompt_name,
+    prompt_version_number=prompt_version_number,
+    prompt_input_variables=prompt_input_variables,
+    input_tokens=response.usage.prompt_tokens,
+    output_tokens=response.usage.completion_tokens,
+    function_name="inference",
+    tags=["chat"],
+    metadata={"model": "custom-model"},
+    price=0.00045,
+    score=70,
+)
+print(request_log["id"])
+```
+
+```javascript JavaScript
+import { PromptLayer } from "@/index";
+import { HfInference } from "@huggingface/inference";
+
+const PROMPTLAYER_API_KEY = "pl_...";
+const promptLayer = new PromptLayer({ apiKey: PROMPTLAYER_API_KEY });
+
+const main = async () => {
+  const prompt_name = "weather";
+  const prompt_version_number = 30;
+  const prompt_input_variables = { city: "Paris" };
+  const template = await promptLayer.templates.get(prompt_name, {
+    version: prompt_version_number,
+    input_variables: prompt_input_variables,
+  });
+
+  const messages = template.llm_kwargs.messages.map((message) =>
+    typeof message.content === "string"
+      ? message
+      : { ...message, content: message.content[0].text }
+  );
+
+  const parameters = template.metadata.model.parameters;
+
+  const provider = "meta-llama";
+  const model = "Meta-Llama-3-8B-Instruct";
+
+  const HF_TOKEN = "hf_...";
+
+  const client = new HfInference(HF_TOKEN);
+  const request_start_time = new Date().getTime();
+  const response = await client.chatCompletion({
+    model: `${provider}/${model}`,
+    messages,
+    ...parameters,
+  });
+  const request_end_time = new Date().getTime();
+
+  const input = {
+    type: "chat",
+    messages: messages.map((message) => ({
+      ...message,
+      content: [{ type: "text", text: message.content }],
+    })),
+  };
+
+  const output = {
+    type: "chat",
+    messages: [
+      {
+        role: "assistant",
+        content: [
+          {
+            type: "text",
+            text: response.choices[0].message.content,
+          },
+        ],
+      },
+    ],
+  };
+
+  const request_log = await promptLayer.logRequest({
+    provider,
+    model,
+    input,
+    output,
+    request_start_time,
+    parameters,
+    request_end_time,
+    prompt_name,
+    prompt_version_number,
+    prompt_input_variables,
+    input_tokens: response.usage.prompt_tokens,
+    output_tokens: response.usage.completion_tokens,
+    function_name: "inference",
+    tags: ["chat"],
+    metadata: { model },
+    price: 0.00045,
+    score: 70,
+  });
+
+  console.log(request_log.id);
+};
+
+main();
+```
+</CodeGroup>

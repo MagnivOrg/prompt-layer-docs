@@ -61,7 +61,8 @@
             "features/prompt-history/metadata",
             "features/prompt-history/scoring-requests",
             "features/prompt-history/tracking-templates",
-            "features/prompt-history/groups"
+            "features/prompt-history/groups",
+            "features/prompt-history/custom-logging"
           ],
           "icon": "cassette-tape"
         },
@@ -117,7 +118,8 @@
         "reference/dataset-from-filter-params",
         "reference/delete-datasets-by-name",
         "reference/create-reports",
-        "reference/delete-reports-by-name"
+        "reference/delete-reports-by-name",
+        "reference/log-request"
       ]
     }
   ],
