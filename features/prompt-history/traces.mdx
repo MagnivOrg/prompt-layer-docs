@@ -160,3 +160,60 @@ const greet = promptlayer.wrapWithSpan('greet', (name) => {
     return `Hello, ${name}!`;
 });
 ```
+
+## Creating Parent Spans and Grouping Function Calls
+
+To create a parent span and group multiple function calls within it, you can use the traceable decorator on a main function that calls other traced functions.
+Here's an example that demonstrates this concept:
+
+```python
+from promptlayer import PromptLayer
+
+# Initialize PromptLayer with tracing enabled
+pl_client = PromptLayer(enable_tracing=True)
+
+@pl_client.traceable(name="custom-span")
+def main():
+    # This function will be the parent span
+    openai_call()
+    anthropic_call()
+    custom_function()
+    run_prompt()
+
+@pl_client.traceable()
+def openai_call():
+    OpenAI = pl_client.openai.OpenAI
+    openai = OpenAI()
+    template = pl_client.templates.get("simple-greeting")
+    response, pl_request_id = openai.chat.completions.create(
+        **template["llm_kwargs"],
+        return_pl_id=True
+    )
+    print("OpenAI response:", response.choices[0].message.content)
+
+@pl_client.traceable()
+def anthropic_call():
+    anthropic = pl_client.anthropic.Anthropic()
+    # Add your Anthropic API call here
+    print("Anthropic call executed")
+
+@pl_client.traceable()
+def custom_function():
+    # This is a custom function that will be traced
+    result = "Custom function executed"
+    print(result)
+    return result
+
+@pl_client.traceable()
+def run_prompt():
+    response = pl_client.run(
+        prompt_name="simple-greeting",
+        input_variables={}
+    )
+    print("Prompt response:", response["prompt_blueprint"]["prompt_template"]["messages"][-1])
+
+if __name__ == "__main__":
+    main()
+```
+
+![Group nests spans](/images/traces/nested-spans.png)
