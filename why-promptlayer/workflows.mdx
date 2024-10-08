@@ -1,0 +1,47 @@
+---
+title: "Workflows"
+icon: "sitemap"
+---
+
+**PromptLayer Workflows** allow you to quickly build, deploy, and manage AI-driven applications involving complex chains of large language model (LLM) calls and business logic. With a visual drag-and-drop UI, Workflows streamline the creation, testing, and scaling of AI systems without the need for managing complex infrastructure. By enabling users to visually connect nodes, define variables, and see how data flows, PromptLayer makes it easy for teams to iterate rapidly, integrate multiple AI responses, and add business rules, transforming AI capabilities into production-ready solutions with ease.
+
+## Key Concepts
+
+### 1. Input Variables
+These are dynamic elements that affect the behavior of the Workflow. Input Variables allow you to pass data into the Workflow, which is then processed by various nodes.
+
+### 2. Nodes
+Nodes are the building blocks of the Workflow. Each node represents a specific action or decision in the Workflow. There are different types of nodes, including:
+
+- **Prompt Template Nodes**: Nodes where Input Variables are passed into an LLM prompt.
+- **Endpoint Nodes**: Nodes that allow the Workflow to make external API calls, enabling integration with external systems or services.
+- **Math Operator Nodes**: Nodes that perform numerical comparisons or calculations between different data sources.
+- **Parse Value Nodes**: Nodes used to extract and process specific data types like strings, numbers, or JSON from the inputs.
+- **Coalesce Nodes**: Nodes that combine multiple input sources into a single result for further processing.
+
+### 3. Output Nodes
+The Output Node designates the part of the Workflow’s output that you want to return from your Workflow. It’s essential for deploying Workflows and controlling what the external application receives as the final result.
+
+## Versioning in PromptLayer Workflows
+
+Versioning is a key feature of **PromptLayer Workflows**, allowing you to track and manage changes over time. Every time you update or modify a Workflow, a new version is automatically created. This ensures that you can always roll back to a previous version if needed, preventing regressions or unintended issues in production.
+
+Versioning also makes collaboration easier, as team members can confidently make updates without fear of disrupting live systems. Each version keeps a complete history of the Workflow's structure. Additionally, version control helps in testing new iterations of a Workflow while keeping the production version stable.
+
+With versioning, you can maintain flexibility, experiment safely, and ensure consistency across your AI-driven applications.
+
+## Workflow Execution
+
+### Running a Workflow
+When you run a Workflow, you can visualize the execution path and see the intermediate outputs at each step. This feedback allows for debugging and refining the Workflow, ensuring it works as expected before deployment.
+
+## Examples and Use Cases:
+
+### 1. **Customer Support Bot with Escalation to a Human**
+Build a customer support bot that automates responses to common inquiries while ensuring high-priority or sensitive issues are quickly escalated to a human agent. This allows businesses to streamline support processes, provide faster service to customers, and maintain a personal touch when needed, ultimately improving customer satisfaction and operational efficiency.
+
+### 2. **Combining Multiple LLM Calls into a Single Output**
+Enhance the quality of AI-generated responses by combining the results of multiple language model calls into a single, cohesive output. This enables businesses to produce more accurate, comprehensive, and context-rich responses, helping to improve decision-making, customer interactions, and the overall user experience by leveraging multiple data points in one fluid response.
+
+### 3. **Personalized Marketing Campaigns**
+Automatically generate personalized marketing messages based on individual customer preferences and behaviors. This allows businesses to deliver highly targeted, relevant content at scale, improving customer engagement and boosting conversion rates. By customizing the marketing approach for each user, businesses can strengthen customer loyalty and maximize the effectiveness of their campaigns.
