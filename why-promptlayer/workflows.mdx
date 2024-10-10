@@ -1,0 +1,56 @@
+---
+title: "Workflows"
+icon: "sitemap"
+---
+
+PromptLayer Workflows let you quickly build, launch, and manage AI agents that use multiple LLMs and business rules. You can create and test these AI systems easily using a visual drag-and-drop tool, and then deploy them without needing to worry about complex infrastructure management.
+
+![Workflow DAG](/images/workflows/workflow-dag.png)
+
+## Use Cases
+
+### 1. **Combining Multiple LLM Calls into a Single Output**
+Improve AI-generated responses by using results from multiple LLM calls, either by merging outputs or choosing the best one. This can lead to:
+- More thorough and precise outputs
+- Enhanced decision-making by considering multiple perspectives
+- Higher reliability through comparing multiple AI answers
+
+### 2. **Building Complex Agents**
+Create advanced AI systems that can handle multi-step tasks and solve complex problems. These systems can:
+- Integrate multiple LLM calls
+- Incorporate external data sources
+- Automate complex decision-making processes
+
+## Key Concepts
+
+### 1. Input Variables
+Input Variables are the data you feed into a Workflow. They can be text, numbers, or other information the Workflow uses in its various steps to produce the final result.
+
+![Input Variables](/images/workflows/input-variables.png)
+
+### 2. Nodes
+Nodes are the building blocks of the Workflow. Each node represents a specific action or decision. Types include:
+
+- **Prompt Template**: Make an LLM call using a specified prompt template and input variables.
+- **Endpoint**: Make external API calls to integrate with other systems or services.
+- **Math Operator**: Perform numerical comparisons or calculations between different data sources.
+- **Parse Value**: Extract and process specific data types like strings, numbers, or JSON from inputs.
+
+![Nodes](/images/workflows/nodes.png)
+
+### 3. Output Nodes
+The Output Node selects the specific part of the Workflow's output to return. It controls what the external application receives as the final result when deploying Workflows.
+
+![Output Nodes](/images/workflows/output-node.png)
+
+## Versioning
+
+Workflow versioning automatically tracks changes over time. Each update creates a new version, allowing you to safely experiment with new ideas while keeping the current production version stable. You can view the full history of your Workflow's changes, which helps with team collaboration and iterative development.
+
+![Versioning](/images/workflows/versions.png)
+
+## Running a Workflow
+
+After running a Workflow, the full trace, including spans from all nodes, will be visible in the left traces menu. This allows you to visualize the execution path and see intermediate outputs at each step, helping you debug and optimize your Workflow.
+
+![Traces](/images/workflows/spans.png)
