@@ -3,54 +3,54 @@ title: "Workflows"
 icon: "sitemap"
 ---
 
-**PromptLayer Workflows** allow you to quickly build, deploy, and manage AI-driven applications involving complex chains of large language model (LLM) calls and business logic. With a visual drag-and-drop UI, Workflows streamline the creation, testing, and scaling of AI systems without the need for managing complex infrastructure. By enabling users to visually connect nodes, define variables, and see how data flows, PromptLayer makes it easy for teams to iterate rapidly, integrate multiple AI responses, and add business rules, transforming AI capabilities into production-ready solutions with ease.
+PromptLayer Workflows let you quickly build, launch, and manage AI agents that use multiple LLMs and business rules. You can create and test these AI systems easily using a visual drag-and-drop tool, and then deploy them without needing to worry about complex infrastructure management.
 
 ![Workflow DAG](/images/workflows/workflow-dag.png)
 
-## Examples and Use Cases:
+## Use Cases
 
 ### 1. **Combining Multiple LLM Calls into a Single Output**
-Enhance the quality of AI-generated responses by combining the results of multiple language model calls into a single, cohesive output. This enables businesses to produce more accurate, comprehensive, and context-rich responses, helping to improve decision-making, customer interactions, and the overall user experience by leveraging multiple data points in one fluid response.
+Improve AI-generated responses by using results from multiple LLM calls, either by merging outputs or choosing the best one. This can lead to:
+- More thorough and precise outputs
+- Enhanced decision-making by considering multiple perspectives
+- Higher reliability through comparing multiple AI answers
 
-### 2. **Complex Agents**
-Create sophisticated AI agents that handle multi-step tasks and dynamic interactions. By integrating multiple LLM calls, external data sources, and conditional logic, these agents can perform complex operations like research, analysis, or problem-solving. This approach enables the development of adaptive virtual assistants and automated systems capable of delivering intelligent, context-aware responses across various applications.
+### 2. **Building Complex Agents**
+Create advanced AI systems that can handle multi-step tasks and solve complex problems. These systems can:
+- Integrate multiple LLM calls
+- Incorporate external data sources
+- Automate complex decision-making processes
 
 ## Key Concepts
 
 ### 1. Input Variables
-These are dynamic elements that affect the behavior of the Workflow. Input Variables allow you to pass data into the Workflow, which is then processed by various nodes.
+Input Variables are the data you feed into a Workflow. They can be text, numbers, or other information the Workflow uses in its various steps to produce the final result.
 
 ![Input Variables](/images/workflows/input-variables.png)
 
 ### 2. Nodes
-Nodes are the building blocks of the Workflow. Each node represents a specific action or decision in the Workflow. There are different types of nodes, including:
+Nodes are the building blocks of the Workflow. Each node represents a specific action or decision. Types include:
 
-- **Prompt Template Nodes**: Nodes where Input Variables are passed into an LLM prompt.
-- **Endpoint Nodes**: Nodes that allow the Workflow to make external API calls, enabling integration with external systems or services.
-- **Math Operator Nodes**: Nodes that perform numerical comparisons or calculations between different data sources.
-- **Parse Value Nodes**: Nodes used to extract and process specific data types like strings, numbers, or JSON from the inputs.
-- **Coalesce Nodes**: Nodes that combine multiple input sources into a single result for further processing.
+- **Prompt Template**: Make an LLM call using a specified prompt template and input variables.
+- **Endpoint**: Make external API calls to integrate with other systems or services.
+- **Math Operator**: Perform numerical comparisons or calculations between different data sources.
+- **Parse Value**: Extract and process specific data types like strings, numbers, or JSON from inputs.
 
 ![Nodes](/images/workflows/nodes.png)
 
 ### 3. Output Nodes
-The Output Node designates the part of the Workflow’s output that you want to return from your Workflow. It’s essential for deploying Workflows and controlling what the external application receives as the final result.
+The Output Node selects the specific part of the Workflow's output to return. It controls what the external application receives as the final result when deploying Workflows.
 
 ![Output Nodes](/images/workflows/output-node.png)
 
-## Versioning in PromptLayer Workflows
+## Versioning
 
-Versioning is a key feature of **PromptLayer Workflows**, allowing you to track and manage changes over time. Every time you update or modify a Workflow, a new version is automatically created. This ensures that you can always roll back to a previous version if needed, preventing regressions or unintended issues in production.
-
-Versioning also makes collaboration easier, as team members can confidently make updates without fear of disrupting live systems. Each version keeps a complete history of the Workflow's structure. Additionally, version control helps in testing new iterations of a Workflow while keeping the production version stable.
-
-With versioning, you can maintain flexibility, experiment safely, and ensure consistency across your AI-driven applications.
+Workflow versioning automatically tracks changes over time. Each update creates a new version, allowing you to safely experiment with new ideas while keeping the current production version stable. You can view the full history of your Workflow's changes, which helps with team collaboration and iterative development.
 
 ![Versioning](/images/workflows/versions.png)
 
-## Workflow Execution
+## Running a Workflow
 
-### Running a Workflow
-After running a Workflow, the full trace, including spans from all nodes, will be visible in the left traces menu. This allows you to visualize the execution path and see intermediate outputs at each step, facilitating debugging and refinement of your Workflow before deployment.
+After running a Workflow, the full trace, including spans from all nodes, will be visible in the left traces menu. This allows you to visualize the execution path and see intermediate outputs at each step, helping you debug and optimize your Workflow.
 
 ![Traces](/images/workflows/spans.png)
