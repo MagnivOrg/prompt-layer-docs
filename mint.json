@@ -49,7 +49,7 @@
             "features/prompt-registry/function-calling",
             "features/prompt-registry/placeholder-messages",
             "features/prompt-registry/webhooks",
-            "features/prompt-registry/updating-prompt-templates-with-new-variables"
+            "features/prompt-registry/zero-downtime-releases"
           ],
           "icon": "notebook"
         },
