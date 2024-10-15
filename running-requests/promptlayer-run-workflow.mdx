@@ -1,13 +1,15 @@
 ---
 title: "Run Workflow"
-icon: "layer-group"
+icon: "network-wired"
 ---
 
 The `run_workflow()` method allows you to execute predefined workflows in PromptLayer, providing a way to run complex, multi-step prompt sequences.
 
 ## Basic Usage
 
-```python
+<CodeGroup>
+
+```python Python
 from promptlayer import PromptLayer
 
 pl = PromptLayer(api_key="your_api_key")
@@ -20,43 +22,96 @@ response = pl.run_workflow(
 print(response)
 ```
 
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+
+const pl = new PromptLayer({ apiKey: "your_api_key" });
+
+const response = await pl.runWorkflow({
+  workflowName: "Your Workflow Name",
+  workflowVersionNumber: 1
+});
+
+console.log(response);
+```
+
+</CodeGroup>
+
 ## Parameters
 
-- `workflow_name` (str, required): The name of the workflow to run.
-- `input_variables` (Dict[str, Any], optional): Variables to be used in the workflow.
+- `workflow_name` / `workflowName` (str, required): The name of the workflow to run.
+- `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be used in the workflow.
 - `metadata` (Dict[str, str], optional): Additional metadata for the workflow run.
-- `workflow_label_name` (str, optional): Label name for the workflow version.
-- `workflow_version_number` (int, optional): Specific version number of the workflow to run.
+- `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the workflow version.
+- `workflow_version_number` / `workflowVersionNumber` (int, optional): Specific version number of the workflow to run.
 
 ## Return Value
 
-The method returns a dictionary containing the results of the workflow execution. The exact structure depends on the workflow definition.
+The method returns a dictionary (Python) or object (JavaScript) containing the results of the workflow execution. The structure includes:
+
+- `success` (bool): Indicates if the workflow executed successfully.
+- `message` (str, optional): Additional information about the execution.
+- `error` (str, optional): Error message if the workflow failed.
+- `workflow_version_execution_id` (str, optional): Unique identifier for the workflow execution.
 
 ## Advanced Usage
 
 ### Using Input Variables
 
-```python
+<CodeGroup>
+
+```python Python
 response = pl.run_workflow(
     workflow_name="Data Analysis Workflow",
     input_variables={"dataset_url": "https://example.com/data.csv"}
 )
 ```
 
+```js JavaScript
+const response = await pl.runWorkflow({
+  workflowName: "Data Analysis Workflow",
+  inputVariables: { dataset_url: "https://example.com/data.csv" }
+});
+```
+
+</CodeGroup>
+
 ### Adding Metadata
 
-```python
+<CodeGroup>
+
+```python Python
 response = pl.run_workflow(
     workflow_name="Customer Service Workflow",
     metadata={"customer_id": "12345"}
 )
 ```
 
+```js JavaScript
+const response = await pl.runWorkflow({
+  workflowName: "Customer Service Workflow",
+  metadata: { customer_id: "12345" }
+});
+```
+
+</CodeGroup>
+
 ### Using Workflow Labels
 
-```python
+<CodeGroup>
+
+```python Python
 response = pl.run_workflow(
     workflow_name="Marketing Campaign Workflow",
     workflow_label_name="production"
 )
 ```
+
+```js JavaScript
+const response = await pl.runWorkflow({
+  workflowName: "Marketing Campaign Workflow",
+  workflowLabelName: "production"
+});
+```
+
+</CodeGroup>
