@@ -56,7 +56,8 @@
         {
           "group": "Running Requests",
           "pages": [
-            "features/prompt-history/traces"
+            "running-requests/prompt-blueprints",
+            "running-requests/traces"
           ],
           "icon": "circle-play"
         },

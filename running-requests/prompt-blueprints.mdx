@@ -1,0 +1,80 @@
+---
+title: "Prompt Blueprints"
+icon: "layer-group"
+---
+
+Prompt Blueprints are the foundational component of PromptLayer's model-agnostic interface, enabling you to interact with multiple LLM providers using a unified format. They abstract away provider-specific details, allowing you to switch between different LLMs without changing your code.
+
+## Why Use Prompt Blueprints?
+
+- **Model Agnosticism**: Communicate with various LLM providers through a common interface.
+- **Code Stability**: Avoid code changes when updating or swapping LLM models.
+- **Flexibility**: Easily integrate new providers as they become available.
+- **Simplicity**: Focus on crafting prompts without worrying about underlying API differences.
+
+## Accessing LLM Responses with Prompt Blueprints
+
+Instead of accessing the raw LLM response via `response["raw_response"]`, it's recommended to use the standardized `response["prompt_blueprint"]`. This ensures consistency across different providers.
+
+### Example
+
+```python
+response = promptlayer_client.run(
+    prompt_name="ai-poet",
+    input_variables={'topic': 'food'},
+)
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][0]["text"])
+```
+
+With this approach, you can update from one provider to another (e.g., OpenAI to Anthropic) without any code changes.
+
+## Understanding Placeholder Messages
+
+Placeholder Messages are a powerful feature that allows you to inject messages into a prompt template at runtime. By using the `placeholder` role, you can define placeholders within your prompt template that can be replaced with full messages when the prompt is executed.
+
+For more detailed information on Placeholder Messages, including how to create and use them, please refer to our dedicated [Placeholder Messages Documentation](/features/prompt-registry/placeholder-messages) page.
+
+### Running a Template with Placeholders
+
+When running a prompt that includes placeholders, you need to supply the messages that will replace the placeholders in the input variables.
+
+#### Example
+
+```python
+response = promptlayer_client.run(
+    prompt_name="template-name",
+    input_variables={
+        "fill_in_message": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "My age is 29"}],
+            },
+            {
+                "role": "assistant",
+                "content": [{"type": "text", "text": "What a wonderful age!"}],
+            }
+        ]
+    },
+)
+```
+
+**Note**: The messages provided must conform to the Prompt Blueprint format.
+
+### Prompt Blueprint Message Format
+
+Each message should be a dictionary with the following structure:
+
+- **`role`**: The role of the message sender (`user`, `assistant`, etc.).
+- **`content`**: A list of content items, where each item has:
+  - **`type`**: The type of content (`text`, `image_url`, etc.).
+  - **`text`**: The text content (if `type` is `text`).
+
+#### Example Message
+
+```python
+{
+    "role": "user",
+    "content": [{"type": "text", "text": "Hello, how are you?"}],
+}
+```
