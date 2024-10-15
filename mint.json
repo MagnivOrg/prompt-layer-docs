@@ -54,9 +54,15 @@
           "icon": "notebook"
         },
         {
-          "group": "Logging",
+          "group": "Running Requests",
           "pages": [
-            "features/prompt-history/traces",
+            "features/prompt-history/traces"
+          ],
+          "icon": "circle-play"
+        },
+        {
+          "group": "Advanced Logging",
+          "pages": [
             "features/prompt-history/request-id",
             "features/prompt-history/tagging-requests",
             "features/prompt-history/metadata",
