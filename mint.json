@@ -120,7 +120,8 @@
         "reference/delete-datasets-by-name",
         "reference/create-reports",
         "reference/delete-reports-by-name",
-        "reference/log-request"
+        "reference/log-request",
+        "reference/workflow-version-execution-results"
       ]
     }
   ],
