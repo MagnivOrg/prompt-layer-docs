@@ -1299,6 +1299,77 @@
           }
         }
       }
+    },
+    "/workflow-version-execution-results": {
+      "get": {
+        "summary": "Get Workflow Version Execution Results",
+        "operationId": "getWorkflowVersionExecutionResults",
+        "tags": ["workflow"],
+        "parameters": [
+          {
+            "name": "workflow_version_execution_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "format": "int64"
+            },
+            "description": "The unique identifier of the workflow version execution whose results you want to retrieve."
+          },
+          {
+            "name": "all_outputs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When set to `true`, the response includes all output nodes' results. If omitted or set to `false`, only the main output is returned."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response with execution results.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "status": {
+                      "type": "string",
+                      "description": "The status of the workflow execution."
+                    },
+                    "value": {
+                      "description": "The main output value of the workflow execution. The type varies based on the workflow."
+                    }
+                  },
+                  "required": ["status", "value"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
