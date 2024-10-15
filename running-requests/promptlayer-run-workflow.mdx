@@ -3,7 +3,7 @@ title: "Run Workflow"
 icon: "network-wired"
 ---
 
-The `run_workflow()` method allows you to execute predefined workflows in PromptLayer, providing a way to run complex, multi-step prompt sequences.
+The `run_workflow()` method initiates the execution of predefined workflows in PromptLayer, allowing you to start complex, multi-step prompt sequences. Workflows enable you to build, launch, and manage AI agents that use multiple LLMs and business rules. For a comprehensive understanding of workflows, including their use cases, key concepts, and versioning, please refer to the [Workflows documentation](/why-promptlayer/workflows).
 
 ## Basic Usage
 
@@ -47,12 +47,24 @@ console.log(response);
 
 ## Return Value
 
-The method returns a dictionary (Python) or object (JavaScript) containing the results of the workflow execution. The structure includes:
+The method returns a dictionary (Python) or object (JavaScript) containing information about the initiated workflow execution:
 
-- `success` (bool): Indicates if the workflow executed successfully.
-- `message` (str, optional): Additional information about the execution.
-- `error` (str, optional): Error message if the workflow failed.
-- `workflow_version_execution_id` (str, optional): Unique identifier for the workflow execution.
+- `success` (bool): Indicates if the workflow execution was successfully initiated.
+- `message` (str): A message confirming the execution creation.
+- `workflow_version_execution_id` (int): Unique identifier for the workflow execution.
+
+Example response:
+```python
+{
+    'message': 'Workflow execution created successfully',
+    'success': True,
+    'workflow_version_execution_id': 115
+}
+```
+
+## Important Note
+
+This method only initiates the workflow execution. The actual workflow may take time to complete. To retrieve the results once the workflow has finished, you need to use a separate API endpoint. For details on how to fetch the workflow execution results, including the required parameters and response format, please refer to the [Get Workflow Version Execution Results](/reference/workflow-version-execution-results) API documentation.
 
 ## Advanced Usage
 
