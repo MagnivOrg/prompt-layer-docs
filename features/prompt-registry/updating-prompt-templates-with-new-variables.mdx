@@ -23,11 +23,11 @@ response = pl.run(
 
 Follow these steps to safely add a new `mood` variable to your prompt template:
 
-1. **Create a new template version with the new `mood` variable**
+1. Create a new template version with the new `mood` variable
 
-2. **Apply a unique temporary label (e.g., `new-var`) to the new version**
+2. Apply a unique temporary label (e.g., `new-var`) to the new version
 
-3. **Update and deploy your code to use the new template version and include the new variable:**
+3. Update and deploy your code to use the new template version and include the new variable:
 
    ```python
    response = pl.run(
@@ -40,9 +40,9 @@ Follow these steps to safely add a new `mood` variable to your prompt template:
    )
    ```
 
-4. **In the PromptLayer UI, move the `prod` label to the most recent prompt version**
+4. In the PromptLayer UI, move the `prod` label to the most recent prompt version
 
-5. **Update your source code to reference the `prod` prompt version again and deploy:**
+5. Update your source code to reference the `prod` prompt version again and deploy:
 
    ```python
    response = pl.run(
@@ -55,4 +55,4 @@ Follow these steps to safely add a new `mood` variable to your prompt template:
    )
    ```
 
-6. **Delete the temporary `new-var` label from the PromptLayer UI**
+6. Delete the temporary `new-var` label from the PromptLayer UI
