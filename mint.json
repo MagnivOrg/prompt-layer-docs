@@ -57,6 +57,7 @@
           "group": "Running Requests",
           "pages": [
             "running-requests/prompt-blueprints",
+            "running-requests/promptlayer-run",
             "running-requests/traces"
           ],
           "icon": "circle-play"

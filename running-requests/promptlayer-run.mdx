@@ -1,0 +1,85 @@
+---
+title: "PromptLayer.run()"
+icon: "layer-group"
+---
+
+The `run()` method is a core function of the PromptLayer SDK, allowing you to execute prompts and interact with various Language Model (LLM) providers using a unified interface.
+
+## Basic Usage
+
+```python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(api_key="your_api_key")
+
+response = pl.run(
+    prompt_name="your-prompt-name",
+    input_variables={"variable_name": "value"}
+)
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][0]["text"])
+```
+
+## Parameters
+
+- `prompt_name` (str, required): The name of the prompt to run.
+- `prompt_version` (int, optional): Specific version of the prompt to use.
+- `prompt_release_label` (str, optional): Release label of the prompt (e.g., "prod", "staging").
+- `input_variables` (Dict[str, Any], optional): Variables to be inserted into the prompt template.
+- `tags` (List[str], optional): Tags to associate with this run.
+- `metadata` (Dict[str, str], optional): Additional metadata for the run.
+- `group_id` (int, optional): Group ID to associate with this run.
+- `stream` (bool, default=False): Whether to stream the response.
+
+## Return Value
+
+The method returns a dictionary with the following keys:
+
+- `request_id`: Unique identifier for the request.
+- `raw_response`: The raw response from the LLM provider.
+- `prompt_blueprint`: The prompt blueprint used for the request.
+
+## Advanced Usage
+
+### Streaming
+
+To stream the response:
+
+```python
+for chunk in pl.run(prompt_name="your-prompt", stream=True):
+    print(chunk.content)
+```
+
+### Using Different Versions or Release Labels
+
+```python
+response = pl.run(
+    prompt_name="your-prompt",
+    prompt_version=2,  # or
+    prompt_release_label="staging"
+)
+```
+
+### Adding Tags and Metadata
+
+```python
+response = pl.run(
+    prompt_name="your-prompt",
+    tags=["test", "experiment"],
+    metadata={"user_id": "12345"}
+)
+```
+
+### Using with Tracing
+
+Enable tracing for detailed performance insights:
+
+```python
+pl = PromptLayer(api_key="your_api_key", enable_tracing=True)
+```
+
+## Notes
+
+- Ensure your PromptLayer API key is set either in the constructor or as an environment variable (`PROMPTLAYER_API_KEY`).
+- The `run()` method automatically handles the intricacies of different LLM providers based on the prompt configuration.
+- For best practices, use release labels or versions to manage different iterations of your prompts.
