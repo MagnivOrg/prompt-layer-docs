@@ -3,6 +3,58 @@ title: "Zero Downtime Releases"
 icon: "rocket"
 ---
 
+## Input Variable Handling
+
+The `pl.run()` function handles input variables in the following ways:
+
+1. **Normal Usage**:
+
+Provide all required variables as defined in your prompt template:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption"
+   },
+)
+```
+
+2. **Missing Variables**:
+
+If you don't provide the required input variables, you'll receive a warning in the console, but the prompt template will still run. The missing variables will be sent to the LLM as unprocessed strings:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={},
+)
+```
+
+```
+WARNING: While getting your prompt template: Some input variables are missing: (`favorite_movie`)
+Undefined variable in message index 1: 'favorite_movie' is undefined
+```
+
+3. **Extra Variables**:
+
+If you include extra variables that aren't in the template, they will be ignored:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "release_year": 1994
+   },
+)
+```
+
+In this case, the `release_year` variable will be ignored in the LLM request if it's not part of the current template.
+
 When you need to add new input variables to your prompt template, it's important to keep your source code in sync with the template changes. This guide outlines the process for deploying these updates to your production environment.
 
 ## Example Scenario
@@ -56,55 +108,3 @@ response = pl.run(
 ```
 
 6. Delete the temporary `new-var` label from the PromptLayer UI
-
-## Input Variable Handling
-
-The `pl.run()` function handles input variables in the following ways:
-
-1. **Normal Usage**:
-
-Provide all required variables as defined in your prompt template:
-
-```python
-response = pl.run(
-   prompt_name="movie_recommender",
-   prompt_release_label="prod",
-   input_variables={
-       "favorite_movie": "The Shawshank Redemption"
-   },
-)
-```
-
-2. **Missing Variables**:
-
-If you don't provide the required input variables, you'll receive a warning in the console, but the prompt template will still run. The missing variables will be sent to the LLM as unprocessed strings:
-
-```python
-response = pl.run(
-   prompt_name="movie_recommender",
-   prompt_release_label="prod",
-   input_variables={},
-)
-```
-
-```
-WARNING: While getting your prompt template: Some input variables are missing: (`favorite_movie`)
-Undefined variable in message index 1: 'favorite_movie' is undefined
-```
-
-3. **Extra Variables**:
-
-If you include extra variables that aren't in the template, they will be ignored:
-
-```python
-response = pl.run(
-   prompt_name="movie_recommender",
-   prompt_release_label="prod",
-   input_variables={
-       "favorite_movie": "The Shawshank Redemption",
-       "release_year": 1994
-   },
-)
-```
-
-In this case, the `release_year` variable will be ignored in the LLM request if it's not part of the current template.
