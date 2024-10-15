@@ -1,5 +1,5 @@
 ---
-title: "PromptLayer.run()"
+title: "Run"
 icon: "layer-group"
 ---
 
@@ -69,17 +69,3 @@ response = pl.run(
     metadata={"user_id": "12345"}
 )
 ```
-
-### Using with Tracing
-
-Enable tracing for detailed performance insights:
-
-```python
-pl = PromptLayer(api_key="your_api_key", enable_tracing=True)
-```
-
-## Notes
-
-- Ensure your PromptLayer API key is set either in the constructor or as an environment variable (`PROMPTLAYER_API_KEY`).
-- The `run()` method automatically handles the intricacies of different LLM providers based on the prompt configuration.
-- For best practices, use release labels or versions to manage different iterations of your prompts.

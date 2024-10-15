@@ -1,0 +1,62 @@
+---
+title: "Run Workflow"
+icon: "layer-group"
+---
+
+The `run_workflow()` method allows you to execute predefined workflows in PromptLayer, providing a way to run complex, multi-step prompt sequences.
+
+## Basic Usage
+
+```python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(api_key="your_api_key")
+
+response = pl.run_workflow(
+    workflow_name="Your Workflow Name",
+    workflow_version_number=1
+)
+
+print(response)
+```
+
+## Parameters
+
+- `workflow_name` (str, required): The name of the workflow to run.
+- `input_variables` (Dict[str, Any], optional): Variables to be used in the workflow.
+- `metadata` (Dict[str, str], optional): Additional metadata for the workflow run.
+- `workflow_label_name` (str, optional): Label name for the workflow version.
+- `workflow_version_number` (int, optional): Specific version number of the workflow to run.
+
+## Return Value
+
+The method returns a dictionary containing the results of the workflow execution. The exact structure depends on the workflow definition.
+
+## Advanced Usage
+
+### Using Input Variables
+
+```python
+response = pl.run_workflow(
+    workflow_name="Data Analysis Workflow",
+    input_variables={"dataset_url": "https://example.com/data.csv"}
+)
+```
+
+### Adding Metadata
+
+```python
+response = pl.run_workflow(
+    workflow_name="Customer Service Workflow",
+    metadata={"customer_id": "12345"}
+)
+```
+
+### Using Workflow Labels
+
+```python
+response = pl.run_workflow(
+    workflow_name="Marketing Campaign Workflow",
+    workflow_label_name="production"
+)
+```
