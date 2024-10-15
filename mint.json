@@ -48,7 +48,8 @@
             "features/prompt-registry/dynamic-release-labels",
             "features/prompt-registry/function-calling",
             "features/prompt-registry/placeholder-messages",
-            "features/prompt-registry/webhooks"
+            "features/prompt-registry/webhooks",
+            "features/prompt-registry/zero-downtime-releases"
           ],
           "icon": "notebook"
         },

@@ -1,0 +1,110 @@
+---
+title: "Zero Downtime Releases"
+icon: "rocket"
+---
+
+## Input Variable Handling
+
+The `pl.run()` function handles input variables in the following ways:
+
+1. **Normal Usage**:
+
+Provide all required variables as defined in your prompt template:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption"
+   },
+)
+```
+
+2. **Missing Variables**:
+
+If you don't provide the required input variables, you'll receive a warning in the console, but the prompt template will still run. The missing variables will be sent to the LLM as unprocessed strings:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={},
+)
+```
+
+```
+WARNING: While getting your prompt template: Some input variables are missing: (`favorite_movie`)
+Undefined variable in message index 1: 'favorite_movie' is undefined
+```
+
+3. **Extra Variables**:
+
+If you include extra variables that aren't in the template, they will be ignored:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "release_year": 1994
+   },
+)
+```
+
+In this case, the `release_year` variable will be ignored in the LLM request if it's not part of the current template.
+
+When you need to add new input variables to your prompt template, it's important to keep your source code in sync with the template changes. This guide outlines the process for deploying these updates to your production environment.
+
+## Example Scenario
+
+Assume you have a prompt template version tagged with `prod` that uses only one input variable, `favorite_movie`:
+
+```python
+response = pl.run(
+    prompt_name="movie_recommender",
+    prompt_release_label="prod",
+    input_variables={
+        "favorite_movie": "The Shawshank Redemption"
+    },
+)
+```
+
+## Update Process
+
+Follow these steps to safely add a new `mood` variable to your prompt template:
+
+1. Create a new template version with the new `mood` variable
+
+2. Apply a unique temporary label (e.g., `new-var`) to the new version
+
+3. Update and deploy your code to use the new template version and include the new variable:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="new-var",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "mood": "uplifting"
+   },
+)
+```
+
+4. In the PromptLayer UI, move the `prod` label to the most recent prompt version
+
+5. Update your source code to reference the `prod` prompt version again and deploy:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "mood": "uplifting"
+   },
+)
+```
+
+6. Delete the temporary `new-var` label from the PromptLayer UI
