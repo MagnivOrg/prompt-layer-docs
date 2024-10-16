@@ -1,0 +1,134 @@
+---
+title: "Prompt Blueprints"
+icon: "layer-group"
+---
+
+Prompt Blueprints are a core part of PromptLayer's architecture that let you work with multiple LLM providers using one simple format. They hide the specific details of each provider, so you can switch between different LLMs without needing to change your code.
+
+## Why Use Prompt Blueprints?
+
+- **Model Agnostic**: Communicate with various LLM providers through a common interface.
+- **Code Stability**: Avoid code changes when updating or swapping LLM models.
+- **Flexibility**: Easily integrate new providers as they become available.
+- **Simplicity**: Focus on crafting prompts without worrying about underlying API differences.
+
+## Accessing LLM Responses with Prompt Blueprints
+
+Instead of accessing the raw LLM response via `response["raw_response"]`, it's recommended to use the standardized `response["prompt_blueprint"]`. This ensures consistency across different providers.
+
+### Example
+
+```python
+response = promptlayer_client.run(
+    prompt_name="ai-poet",
+    input_variables={'topic': 'food'},
+)
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][0]["text"])
+```
+
+With this approach, you can update from one provider to another (e.g., OpenAI to Anthropic) without any code changes.
+
+## Understanding Placeholder Messages
+
+Placeholder Messages are a powerful feature that allows you to inject messages into a prompt template at runtime. By using the `placeholder` role, you can define placeholders within your prompt template that can be replaced with full messages when the prompt is executed.
+
+For more detailed information on Placeholder Messages, including how to create and use them, please refer to our dedicated [Placeholder Messages Documentation](/features/prompt-registry/placeholder-messages) page.
+
+### Running a Template with Placeholders
+
+When running a prompt that includes placeholders, you need to supply the messages that will replace the placeholders in the input variables.
+
+#### Example
+
+```python
+response = promptlayer_client.run(
+    prompt_name="template-name",
+    input_variables={
+        "fill_in_message": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "My age is 29"}],
+            },
+            {
+                "role": "assistant",
+                "content": [{"type": "text", "text": "What a wonderful age!"}],
+            }
+        ]
+    },
+)
+```
+
+**Note**: The messages provided must conform to the Prompt Blueprint format.
+
+### Prompt Blueprint Message Format
+
+Each message should be a dictionary with the following structure:
+
+- **`role`**: The role of the message sender (`user`, `assistant`, etc.).
+- **`content`**: A list of content items, where each item has:
+  - **`type`**: The type of content (`text`, `image_url`, etc.).
+  - **`text`**: The text content (if `type` is `text`).
+
+#### Example Message
+
+```python
+{
+    "role": "user",
+    "content": [{"type": "text", "text": "Hello, how are you?"}],
+}
+```
+
+## Usage with Tool Calls
+
+This section demonstrates how to handle function calling within Prompt Blueprints.
+
+```python
+def execute_function(name, args):
+    return "Success"
+
+messages = [
+    {
+        "role": "user",
+        "content": [{
+            "type": "text",
+            "text": "Create an index.html file"
+        }]
+    }
+]
+
+response = pl_client.run(
+    prompt_name="builder",
+    input_variables={
+        'messages': messages
+    },
+)
+prompt_blueprint = response['prompt_blueprint'] or {}
+prompt_template = prompt_blueprint.get('prompt_template', {})
+prompt_template_messages = prompt_template.get('messages', [])
+last_message = prompt_template_messages[-1]
+
+for tool_call in last_message.get('tool_calls', []):
+    if tool_call['type'] == "function":
+        function_name = tool_call['function']['name']
+        function_args = json.loads(tool_call['function']['arguments'])
+        # Replace this with your actual function execution
+        function_response = execute_function(function_name, function_args)
+        prompt_template_messages.append({
+            "role": "tool",
+            "content": [{
+                "type": "text",
+                "text": function_response
+            }],
+            "tool_call_id": tool_call['id']
+        })
+
+response = pl_client.run(
+    prompt_name="builder",
+    input_variables={
+        'messages': prompt_template_messages
+    },
+)
+
+print(response)
+```
