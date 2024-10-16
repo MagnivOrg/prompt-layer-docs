@@ -16,7 +16,7 @@ pl = PromptLayer(api_key="your_api_key")
 
 response = pl.run_workflow(
     workflow_name="Your Workflow Name",
-    workflow_version_number=1
+    workflow_version=1
 )
 
 print(response)
@@ -29,7 +29,7 @@ const pl = new PromptLayer({ apiKey: "your_api_key" });
 
 const response = await pl.runWorkflow({
   workflowName: "Your Workflow Name",
-  workflowVersionNumber: 1
+  workflowVersion: 1
 });
 
 console.log(response);
@@ -43,7 +43,7 @@ console.log(response);
 - `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be used in the workflow.
 - `metadata` (Dict[str, str], optional): Additional metadata for the workflow run.
 - `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the workflow version.
-- `workflow_version_number` / `workflowVersionNumber` (int, optional): Specific version number of the workflow to run.
+- `workflow_version` / `workflowVersion` (int, optional): Specific version number of the workflow to run.
 
 ## Return Value
 
