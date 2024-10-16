@@ -78,3 +78,57 @@ Each message should be a dictionary with the following structure:
     "content": [{"type": "text", "text": "Hello, how are you?"}],
 }
 ```
+
+## Usage with Tool Calls
+
+This section demonstrates how to handle function calling within Prompt Blueprints.
+
+```python
+def execute_function(name, args):
+    return "Success"
+
+messages = [
+    {
+        "role": "user",
+        "content": [{
+            "type": "text",
+            "text": "Create an index.html file"
+        }]
+    }
+]
+
+response = pl_client.run(
+    prompt_name="builder",
+    input_variables={
+        'messages': messages
+    },
+)
+prompt_blueprint = response['prompt_blueprint'] or {}
+prompt_template = prompt_blueprint.get('prompt_template', {})
+prompt_template_messages = prompt_template.get('messages', [])
+last_message = prompt_template_messages[-1]
+
+for tool_call in last_message.get('tool_calls', []):
+    if tool_call['type'] == "function":
+        function_name = tool_call['function']['name']
+        function_args = json.loads(tool_call['function']['arguments'])
+        # Replace this with your actual function execution
+        function_response = execute_function(function_name, function_args)
+        prompt_template_messages.append({
+            "role": "tool",
+            "content": [{
+                "type": "text",
+                "text": function_response
+            }],
+            "tool_call_id": tool_call['id']
+        })
+
+response = pl_client.run(
+    prompt_name="builder",
+    input_variables={
+        'messages': prompt_template_messages
+    },
+)
+
+print(response)
+```
