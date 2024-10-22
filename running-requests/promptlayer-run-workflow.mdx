@@ -47,24 +47,38 @@ console.log(response);
 
 ## Return Value
 
-The method returns a dictionary (Python) or object (JavaScript) containing information about the initiated workflow execution:
+The method returns a dictionary (Python) or object (JavaScript) containing information about the workflow execution, and the response structure depends on the `return_all_outputs` parameter.
 
-- `success` (bool): Indicates if the workflow execution was successfully initiated.
-- `message` (str): A message confirming the execution creation.
-- `workflow_version_execution_id` (int): Unique identifier for the workflow execution.
+### When `return_all_outputs` is False (default):
+
+Data from the output node of the workflow execution:
+- `status` (str): The status of the workflow execution (e.g., `"SUCCESS"`).
+- `value` (Any): The output produced by the output node.
 
 Example response:
 ```python
 {
-    'message': 'Workflow execution created successfully',
-    'success': True,
-    'workflow_version_execution_id': 115
+    'status': 'SUCCESS',
+    'value': False
 }
 ```
 
-## Important Note
+### When `return_all_outputs` is True:
 
-This method only initiates the workflow execution. The actual workflow may take time to complete. To retrieve the results once the workflow has finished, you need to use a separate API endpoint. For details on how to fetch the workflow execution results, including the required parameters and response format, please refer to the [Get Workflow Version Execution Results](/reference/workflow-version-execution-results) API documentation.
+The method returns a dictionary containing detailed outputs from each node in the workflow execution:
+- Each key represents a node in the workflow (e.g., "Node 1", "Node 2").
+- Each node contains:
+  - `status` (str): The execution status of the node (e.g., "SUCCESS").
+  - `value` (Any): The output value produced by the node.
+
+Example response:
+```python
+{
+    'Node 1': {'status': 'SUCCESS', 'value': '123'},
+    'Node 2': {'status': 'SUCCESS', 'value': '456'},
+    'Node 3': {'status': 'SUCCESS', 'value': False}
+}
+```
 
 ## Advanced Usage
 
