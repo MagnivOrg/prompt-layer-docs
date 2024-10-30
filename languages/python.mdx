@@ -123,6 +123,133 @@ Here is how it would look like on the dashbaord:
 
 <img src="/images/anthropic-test1.png" />
 
+## Asynchronous Support in PromptLayer
+
+PromptLayer now supports asynchronous operations, allowing you to manage concurrent tasks more effectively, especially useful when working in environments where non-blocking behavior is desired (e.g., web servers, microservices, or Jupyter notebooks).
+
+With asynchronous support, you can now perform tasks like making API requests or running workflows without blocking your main thread, making your applications more efficient.
+
+### Initializing the Asynchronous Client
+
+To start using asynchronous methods in PromptLayer, initialize the `AsyncPromptLayer` client as shown below:
+
+```python
+from promptlayer import AsyncPromptLayer
+
+# Initialize an asynchronous client with your API key
+async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+```
+
+Once initialized, you can use the asynchronous client to make non-blocking calls to various PromptLayer methods.
+
+### Examples of Asynchronous Usage
+
+The asynchronous client works similarly to the synchronous client but allows for non-blocking execution such as running them concurrently using `asyncio`. Below are a few examples of using asynchronous methods.
+
+#### Example 1: Asynchronous Template Management
+
+Here's how you can use asynchronous methods to manage templates:
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    # Fetch a template asynchronously
+    template = await async_promptlayer_client.templates.get("Test1")
+    print(template)
+
+    # Fetch all templates asynchronously
+    templates = await async_promptlayer_client.templates.all()
+    print(templates)
+
+# Run the asynchronous function
+asyncio.run(main())
+```
+
+#### Example 2: Asynchronous Workflow Execution
+
+You can run workflows asynchronously to improve efficiency:
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    response = await async_promptlayer_client.run_workflow(
+        workflow_name="example_workflow",
+        workflow_version=1,
+        input_variables={"num1": "1", "num2": "2"},
+        return_all_outputs=True,
+    )
+    print(response)
+
+# Run the asynchronous function
+asyncio.run(main())
+```
+
+#### Example 3: Asynchronous Tracking and Logging
+
+The asynchronous client also supports tracking and logging functionalities:
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    # Track metadata asynchronously
+    request_id = "pl_request_id_example"
+    await async_promptlayer_client.track.metadata(request_id, {"key": "value"})
+
+    # Log request asynchronously (for detailed logging, refer to the custom logging page)
+    await async_promptlayer_client.log_request(
+        provider="openai",
+        model="gpt-3.5-turbo",
+        input=prompt_template,
+        output=output_template,
+        request_start_time=1630945600,
+        request_end_time=1630945605,
+    )
+
+# Run the asynchronous function
+asyncio.run(main())
+```
+
+For more detailed information on how to use custom logging in PromptLayer, please visit our [Custom Logging Documentation](/features/prompt-history/custom-logging).
+
+### Supported Methods: Synchronous vs. Asynchronous
+
+The following table provides an overview of the methods currently available in both synchronous and asynchronous versions of the PromptLayer client:
+
+| **Method**         | **Description**               | **Synchronous Version**               | **Asynchronous Version**                    |
+| ------------------ | ----------------------------- | ------------------------------------- | ------------------------------------------- |
+| `templates.get()`  | Retrieves a template by name. | `promptlayer_client.templates.get()`  | `async_promptlayer_client.templates.get()`  |
+| `templates.all()`  | Retrieves all templates.      | `promptlayer_client.templates.all()`  | `async_promptlayer_client.templates.all()`  |
+| `run_workflow()`   | Executes a workflow.          | `promptlayer_client.run_workflow()`   | `async_promptlayer_client.run_workflow()`   |
+| `track.metadata()` | Tracks metadata.              | `promptlayer_client.track.metadata()` | `async_promptlayer_client.track.metadata()` |
+| `track.group()`    | Tracks a group.               | `promptlayer_client.track.group()`    | `async_promptlayer_client.track.group()`    |
+| `track.prompt()`   | Tracks a prompt.              | `promptlayer_client.track.prompt()`   | `async_promptlayer_client.track.prompt()`   |
+| `track.score()`    | Tracks a score.               | `promptlayer_client.track.score()`    | `async_promptlayer_client.track.score()`    |
+| `group.create()`   | Creates a new group.          | `promptlayer_client.group.create()`   | `async_promptlayer_client.group.create()`   |
+| `log_request()`    | Logs a request.               | `promptlayer_client.log_request()`    | `async_promptlayer_client.log_request()`    |
+
+> **Note:** All asynchronous methods require an active event loop. Use them within an `async` function and run the function using `asyncio.run()` or another method suitable for managing event loops (e.g., `await` in Jupyter notebooks).
+
+### Switching Between Synchronous and Asynchronous Clients
+
+Depending on your use case, you can switch between synchronous and asynchronous clients in PromptLayer:
+
+- **Synchronous Client (`PromptLayer`)**: Use for basic scripts or applications where blocking behavior is acceptable.
+- **Asynchronous Client (`AsyncPromptLayer`)**: Use for web servers, microservices, or any environment where non-blocking execution is necessary.
+
+With this flexibility, PromptLayer makes it easy to integrate both synchronous and asynchronous support into your Python projects.
+
 ---
 
 Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
