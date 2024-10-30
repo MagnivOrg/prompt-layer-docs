@@ -142,7 +142,7 @@ async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
 
 The asynchronous client functions similarly to the synchronous version, but allows for non-blocking execution with `asyncio`. Below are example uses.
 
-#### Example 1: Asynchronous Template Management
+#### Example 1: Async Template Management
 
 Use asynchronous methods to manage templates:
 
@@ -161,11 +161,11 @@ async def main():
     templates = await async_promptlayer_client.templates.all()
     print(templates)
 
-# Run the asynchronous function
+# Run the async function
 asyncio.run(main())
 ```
 
-#### Example 2: Asynchronous Workflow Execution
+#### Example 2: Async Workflow Execution
 
 Run workflows asynchronously for better efficiency:
 
@@ -184,11 +184,11 @@ async def main():
     )
     print(response)
 
-# Run the asynchronous function
+# Run the async function
 asyncio.run(main())
 ```
 
-#### Example 3: Asynchronous Tracking and Logging
+#### Example 3: Async Tracking and Logging
 
 Track and log requests asynchronously:
 
@@ -213,7 +213,7 @@ async def main():
         request_end_time=1630945605,
     )
 
-# Run the asynchronous function
+# Run the async function
 asyncio.run(main())
 ```
 
