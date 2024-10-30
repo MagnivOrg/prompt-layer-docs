@@ -123,15 +123,13 @@ Here is how it would look like on the dashbaord:
 
 <img src="/images/anthropic-test1.png" />
 
-## Asynchronous Support in PromptLayer
+## Async Support
 
-PromptLayer now supports asynchronous operations, allowing you to manage concurrent tasks more effectively, especially useful when working in environments where non-blocking behavior is desired (e.g., web servers, microservices, or Jupyter notebooks).
+PromptLayer supports asynchronous operations, ideal for managing concurrent tasks in non-blocking environments like web servers, microservices, or Jupyter notebooks.
 
-With asynchronous support, you can now perform tasks like making API requests or running workflows without blocking your main thread, making your applications more efficient.
+### Initializing the Async Client
 
-### Initializing the Asynchronous Client
-
-To start using asynchronous methods in PromptLayer, initialize the `AsyncPromptLayer` client as shown below:
+To use asynchronous non-blocking methods, initialize AsyncPromptLayer as shown:
 
 ```python
 from promptlayer import AsyncPromptLayer
@@ -140,15 +138,13 @@ from promptlayer import AsyncPromptLayer
 async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
 ```
 
-Once initialized, you can use the asynchronous client to make non-blocking calls to various PromptLayer methods.
+### Async Usage Examples
 
-### Examples of Asynchronous Usage
-
-The asynchronous client works similarly to the synchronous client but allows for non-blocking execution such as running them concurrently using `asyncio`. Below are a few examples of using asynchronous methods.
+The asynchronous client functions similarly to the synchronous version, but allows for non-blocking execution with `asyncio`. Below are example uses.
 
 #### Example 1: Asynchronous Template Management
 
-Here's how you can use asynchronous methods to manage templates:
+Use asynchronous methods to manage templates:
 
 ```python
 import asyncio
@@ -171,7 +167,7 @@ asyncio.run(main())
 
 #### Example 2: Asynchronous Workflow Execution
 
-You can run workflows asynchronously to improve efficiency:
+Run workflows asynchronously for better efficiency:
 
 ```python
 import asyncio
@@ -194,7 +190,7 @@ asyncio.run(main())
 
 #### Example 3: Asynchronous Tracking and Logging
 
-The asynchronous client also supports tracking and logging functionalities:
+Track and log requests asynchronously:
 
 ```python
 import asyncio
@@ -221,7 +217,7 @@ async def main():
 asyncio.run(main())
 ```
 
-For more detailed information on how to use custom logging in PromptLayer, please visit our [Custom Logging Documentation](/features/prompt-history/custom-logging).
+For more information on custom logging, please visit our [Custom Logging Documentation](/features/prompt-history/custom-logging).
 
 ### Supported Methods: Synchronous vs. Asynchronous
 
@@ -241,15 +237,6 @@ The following table provides an overview of the methods currently available in b
 
 > **Note:** All asynchronous methods require an active event loop. Use them within an `async` function and run the function using `asyncio.run()` or another method suitable for managing event loops (e.g., `await` in Jupyter notebooks).
 
-### Switching Between Synchronous and Asynchronous Clients
-
-Depending on your use case, you can switch between synchronous and asynchronous clients in PromptLayer:
-
-- **Synchronous Client (`PromptLayer`)**: Use for basic scripts or applications where blocking behavior is acceptable.
-- **Asynchronous Client (`AsyncPromptLayer`)**: Use for web servers, microservices, or any environment where non-blocking execution is necessary.
-
-With this flexibility, PromptLayer makes it easy to integrate both synchronous and asynchronous support into your Python projects.
-
 ---
 
-Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
+Want to say hi 👋, submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
