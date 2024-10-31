@@ -315,11 +315,11 @@
         }
       }
     },
-    "/prompt-templates/{prompt_name}/labels": {
+    "/prompt-templates/{identifier}/labels": {
       "get": {
         "tags": ["prompt-templates", "release-labels"],
         "summary": "Get Prompt Template Labels",
-        "operationId": "get_prompt_templates_labels_prompt_name__post",
+        "operationId": "get_prompt_templates_labels_prompt_identifier__post",
         "parameters": [
           {
             "required": true,
@@ -328,12 +328,13 @@
             "in": "header"
           },
           {
-            "name": "prompt_name",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "prompt_name"
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id."
             }
           }
         ],
