@@ -123,6 +123,120 @@ Here is how it would look like on the dashbaord:
 
 <img src="/images/anthropic-test1.png" />
 
+## Async Support
+
+PromptLayer supports asynchronous operations, ideal for managing concurrent tasks in non-blocking environments like web servers, microservices, or Jupyter notebooks.
+
+### Initializing the Async Client
+
+To use asynchronous non-blocking methods, initialize AsyncPromptLayer as shown:
+
+```python
+from promptlayer import AsyncPromptLayer
+
+# Initialize an asynchronous client with your API key
+async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+```
+
+### Async Usage Examples
+
+The asynchronous client functions similarly to the synchronous version, but allows for non-blocking execution with `asyncio`. Below are example uses.
+
+#### Example 1: Async Template Management
+
+Use asynchronous methods to manage templates:
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    # Fetch a template asynchronously
+    template = await async_promptlayer_client.templates.get("Test1")
+    print(template)
+
+    # Fetch all templates asynchronously
+    templates = await async_promptlayer_client.templates.all()
+    print(templates)
+
+# Run the async function
+asyncio.run(main())
+```
+
+#### Example 2: Async Workflow Execution
+
+Run workflows asynchronously for better efficiency:
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    response = await async_promptlayer_client.run_workflow(
+        workflow_name="example_workflow",
+        workflow_version=1,
+        input_variables={"num1": "1", "num2": "2"},
+        return_all_outputs=True,
+    )
+    print(response)
+
+# Run the async function
+asyncio.run(main())
+```
+
+#### Example 3: Async Tracking and Logging
+
+Track and log requests asynchronously:
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    # Track metadata asynchronously
+    request_id = "pl_request_id_example"
+    await async_promptlayer_client.track.metadata(request_id, {"key": "value"})
+
+    # Log request asynchronously (for detailed logging, refer to the custom logging page)
+    await async_promptlayer_client.log_request(
+        provider="openai",
+        model="gpt-3.5-turbo",
+        input=prompt_template,
+        output=output_template,
+        request_start_time=1630945600,
+        request_end_time=1630945605,
+    )
+
+# Run the async function
+asyncio.run(main())
+```
+
+For more information on custom logging, please visit our [Custom Logging Documentation](/features/prompt-history/custom-logging).
+
+### Supported Methods: Synchronous vs. Asynchronous
+
+The following table provides an overview of the methods currently available in both synchronous and asynchronous versions of the PromptLayer client:
+
+| **Method**         | **Description**               | **Synchronous Version**               | **Asynchronous Version**                    |
+| ------------------ | ----------------------------- | ------------------------------------- | ------------------------------------------- |
+| `templates.get()`  | Retrieves a template by name. | `promptlayer_client.templates.get()`  | `async_promptlayer_client.templates.get()`  |
+| `templates.all()`  | Retrieves all templates.      | `promptlayer_client.templates.all()`  | `async_promptlayer_client.templates.all()`  |
+| `run_workflow()`   | Executes a workflow.          | `promptlayer_client.run_workflow()`   | `async_promptlayer_client.run_workflow()`   |
+| `track.metadata()` | Tracks metadata.              | `promptlayer_client.track.metadata()` | `async_promptlayer_client.track.metadata()` |
+| `track.group()`    | Tracks a group.               | `promptlayer_client.track.group()`    | `async_promptlayer_client.track.group()`    |
+| `track.prompt()`   | Tracks a prompt.              | `promptlayer_client.track.prompt()`   | `async_promptlayer_client.track.prompt()`   |
+| `track.score()`    | Tracks a score.               | `promptlayer_client.track.score()`    | `async_promptlayer_client.track.score()`    |
+| `group.create()`   | Creates a new group.          | `promptlayer_client.group.create()`   | `async_promptlayer_client.group.create()`   |
+| `log_request()`    | Logs a request.               | `promptlayer_client.log_request()`    | `async_promptlayer_client.log_request()`    |
+
+> **Note:** All asynchronous methods require an active event loop. Use them within an `async` function and run the function using `asyncio.run()` or another method suitable for managing event loops (e.g., `await` in Jupyter notebooks).
+
 ---
 
-Want to say hi 👋 , submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
+Want to say hi 👋, submit a feature request, or report a bug? [✉️ Contact us](mailto:hello@promptlayer.com)
