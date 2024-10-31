@@ -47,7 +47,7 @@
                   },
                   "prompt_id": {
                     "type": "string",
-                    "description": "The ID of the prompt in the PromptLayer Registry that you used for this request (see `/prompt-templates/{prompt_name}` on how to get this id or you can get it from the URL in the dashboard).",
+                    "description": "The ID of the prompt in the PromptLayer Registry that you used for this request (see `/prompt-templates/{identifier}` on how to get this id or you can get it from the URL in the dashboard).",
                     "optional": true
                   },
                   "prompt_input_variables": {
@@ -257,11 +257,11 @@
         }
       }
     },
-    "/prompt-templates/{prompt_name}": {
+    "/prompt-templates/{identifier}": {
       "post": {
         "tags": ["prompt-templates"],
         "summary": "Get Prompt Template by ID",
-        "operationId": "get_prompt_templates__prompt_name__post",
+        "operationId": "get_prompt_templates__prompt_identifier__post",
         "parameters": [
           {
             "required": true,
@@ -270,12 +270,13 @@
             "in": "header"
           },
           {
-            "name": "prompt_name",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
               "type": "string",
-              "title": "prompt_name"
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id."
             }
           }
         ],
