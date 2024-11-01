@@ -138,6 +138,23 @@ print(response)
 
 The `image_variable` attribute allows you to dynamically insert a list of images into your prompt templates. This attribute is part of the `ImageContent` structure and can be used to include images based on a specified variable name.
 
+### Structure
+
+The `image_variable` is nested within the message content.
+
+```json
+{
+    “role”: “user”,
+    “content”: [
+        {
+            “type”: “image_url”,
+            “image_url”: {“url”: “”},
+            “image_variable”: “image_variables”
+        }
+    ]
+}
+```
+
 ### Example Usage
 
 When defining a prompt template, you can specify an `image_variable` to dynamically include images in your messages.
