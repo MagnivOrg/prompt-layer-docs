@@ -132,3 +132,30 @@ response = pl_client.run(
 
 print(response)
 ```
+
+
+## Using Image Variable
+
+The `image_variable` attribute allows you to dynamically insert a list of images into your prompt templates. This attribute is part of the `ImageContent` structure and can be used to include images based on a specified variable name.
+
+### Example Usage
+
+When defining a prompt template, you can specify an `image_variable` to dynamically include images in your messages.
+<img src="/images/image-variable.mp4"/>
+
+#### Example Template
+
+```python
+response = pl_client.run(
+    prompt_name="image-prompt",
+    input_variables={
+        "image_urls": [
+            "https://example.com/image1.jpg",
+            "https://example.com/image2.jpg"
+        ]
+    },
+)
+
+print(response)
+```
+
