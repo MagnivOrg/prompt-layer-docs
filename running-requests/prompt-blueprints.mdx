@@ -3,20 +3,13 @@ title: "Prompt Blueprints"
 icon: "layer-group"
 ---
 
-Prompt Blueprints are a core part of PromptLayer's architecture that let you work with multiple LLM providers using one simple format. They hide the specific details of each provider, so you can switch between different LLMs without needing to change your code.
+Prompt Blueprints are central to PromptLayer’s architecture, enabling you to work seamlessly with multiple LLM providers in a single format. They abstract provider-specific details, allowing you to switch between LLMs without modifying your code.
 
-## Why Use Prompt Blueprints?
+*Prompt Blueprint* is a model-agnostic and standardized schema that PromptLayer uses to store prompts.
 
-- **Model Agnostic**: Communicate with various LLM providers through a common interface.
-- **Code Stability**: Avoid code changes when updating or swapping LLM models.
-- **Flexibility**: Easily integrate new providers as they become available.
-- **Simplicity**: Focus on crafting prompts without worrying about underlying API differences.
-
-## Accessing LLM Responses with Prompt Blueprints
+## Accessing the Prompt Blueprint
 
 Instead of accessing the raw LLM response via `response["raw_response"]`, it's recommended to use the standardized `response["prompt_blueprint"]`. This ensures consistency across different providers.
-
-### Example
 
 ```python
 response = promptlayer_client.run(
@@ -29,7 +22,7 @@ print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"]
 
 With this approach, you can update from one provider to another (e.g., OpenAI to Anthropic) without any code changes.
 
-## Understanding Placeholder Messages
+## Placeholder Messages
 
 Placeholder Messages are a powerful feature that allows you to inject messages into a prompt template at runtime. By using the `placeholder` role, you can define placeholders within your prompt template that can be replaced with full messages when the prompt is executed.
 
@@ -38,8 +31,6 @@ For more detailed information on Placeholder Messages, including how to create a
 ### Running a Template with Placeholders
 
 When running a prompt that includes placeholders, you need to supply the messages that will replace the placeholders in the input variables.
-
-#### Example
 
 ```python
 response = promptlayer_client.run(
@@ -61,16 +52,16 @@ response = promptlayer_client.run(
 
 **Note**: The messages provided must conform to the Prompt Blueprint format.
 
-### Prompt Blueprint Message Format
+## Prompt Blueprint Message Format
 
-Each message should be a dictionary with the following structure:
+Each message in a Prompt Blueprint should be a dictionary with the following structure:
 
 - **`role`**: The role of the message sender (`user`, `assistant`, etc.).
 - **`content`**: A list of content items, where each item has:
   - **`type`**: The type of content (`text`, `image_url`, etc.).
   - **`text`**: The text content (if `type` is `text`).
 
-#### Example Message
+### Example Message
 
 ```python
 {
@@ -79,7 +70,7 @@ Each message should be a dictionary with the following structure:
 }
 ```
 
-## Usage with Tool Calls
+## Tools and Function Calling
 
 This section demonstrates how to handle function calling within Prompt Blueprints.
 
@@ -132,3 +123,43 @@ response = pl_client.run(
 
 print(response)
 ```
+
+## Multi-Modal Variables
+
+The `image_variable` attribute allows you to dynamically insert a list of images into prompt template messages.
+
+The `image_variable` is nested within the message content. The `type` and `image_url` are required fields specifying the type of content and the URL of the image, respectively. The `image_url` needs to be blank and is there for type requirements. The `image_variable` is the name of the list of images to be dynamically inserted.
+
+```json
+{
+    "role": "user",
+    "content": [
+        {
+            "type": "image_url",
+            "image_url": {"url": ""},
+            "image_variable": "images_to_insert"
+        }
+    ]
+}
+```
+
+When defining a prompt template, you can specify an `image_variable` to dynamically include images in your messages.
+<img src="/images/image-variable.gif"/>
+
+#### Running with Image Variables
+
+```python
+response = pl_client.run(
+    prompt_name="image-prompt",
+    input_variables={
+        "image_urls": [
+            "https://example.com/image1.jpg",
+            "https://example.com/image2.jpg"
+        ]
+    },
+)
+
+print(response)
+```
+<Note>Notice that the `image_urls` is a list of strings</Note>
+

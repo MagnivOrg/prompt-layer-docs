@@ -48,6 +48,7 @@
             "features/prompt-registry/dynamic-release-labels",
             "features/prompt-registry/function-calling",
             "features/prompt-registry/placeholder-messages",
+            "running-requests/prompt-blueprints",
             "features/prompt-registry/webhooks",
             "features/prompt-registry/zero-downtime-releases"
           ],
@@ -56,7 +57,6 @@
         {
           "group": "Running Requests",
           "pages": [
-            "running-requests/prompt-blueprints",
             "running-requests/promptlayer-run",
             "running-requests/promptlayer-run-workflow",
             "running-requests/traces"
