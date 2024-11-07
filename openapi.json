@@ -160,51 +160,6 @@
         }
       }
     },
-    "/rest/prompts": {
-      "get": {
-        "tags": ["prompts"],
-        "summary": "List",
-        "operationId": "list_rest_prompts__get",
-        "parameters": [
-          {
-            "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
-          {
-            "in": "query",
-            "name": "page",
-            "schema": { "type": "integer", "title": "Page" }
-          },
-          {
-            "in": "query",
-            "name": "per_page",
-            "schema": { "type": "integer", "title": "Per Page" }
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Response",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/api__schemas__pagination__Response"
-                }
-              }
-            }
-          },
-          "422": {
-            "description": "Validation Error",
-            "content": {
-              "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
-              }
-            }
-          }
-        }
-      }
-    },
     "/rest/get-prompt-template": {
       "get": {
         "summary": "Get Prompt Template",
