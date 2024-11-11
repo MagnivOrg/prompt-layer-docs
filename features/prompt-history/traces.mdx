@@ -1,0 +1,123 @@
+---
+title: "Traces"
+icon: "diagram-project"
+---
+
+Traces are a powerful feature in PromptLayer that allow you to monitor and analyze the execution flow of your applications, including LLM requests. Built on OpenTelemetry, Traces provide detailed insights into function calls, their durations, inputs, and outputs.
+
+## Overview
+
+Traces in PromptLayer offer a comprehensive view of your application's performance and behavior. They allow you to:
+
+- Visualize the execution flow of your functions
+- Track LLM requests and their associated metadata
+- Measure function durations and identify performance bottlenecks
+- Inspect function inputs and outputs for debugging
+
+**Note:** The left menu in the PromptLayer UI only shows root spans, which represent the entry function of your program. While your program is running, you might not see all spans in the UI immediately, even though child spans are being sent to the backend. The root span, along with all its child spans, will only appear in the UI once the program completes. This behavior is particularly noticeable in long-running programs or those with complex execution flows.
+
+![Traces Overview](/images/traces/trace-details.png)
+
+## Automatic LLM Request Tracing
+
+When you initialize the PromptLayer class with `enable_tracing` set to `True`, PromptLayer will automatically track any LLM calls made using the PromptLayer library. This allows you to capture detailed information about your LLM requests, including:
+
+- Model used
+- Input prompts
+- Generated responses
+- Request duration
+- Associated metadata
+
+<CodeGroup>
+```python Python
+from promptlayer import PromptLayer
+
+# Initialize PromptLayer with tracing enabled
+pl_client = PromptLayer(enable_tracing=True)
+```
+
+```javascript JavaScript
+import { PromptLayer } from "promptlayer";
+
+// Initialize PromptLayer with tracing enabled
+const promptlayer = new PromptLayer({
+    apiKey: process.env.PROMPTLAYER_API_KEY,
+    enableTracing: true,
+    workspaceId: YOUR_WORKSPACE_ID,
+});
+```
+</CodeGroup>
+
+Once PromptLayer is initialized with tracing enabled, you can use the `run()` method to execute prompts. All LLM calls made through this method will be automatically traced, providing detailed insights into your prompt executions.
+
+<CodeGroup>
+```python Python
+response = pl_client.run(
+    prompt_name="simple-greeting",
+    input_variables={
+        "name": "Alice"
+    },
+    metadata={
+        "user_id": "12345"
+    }
+)
+
+print(response)
+```
+
+```javascript JavaScript
+async function runPrompt() {
+    try {
+        const response = await promptlayer.run({
+            promptName: "simple-greeting",
+            inputVariables: {
+                name: "Alice"
+            },
+            metadata: {
+                user_id: "12345"
+            }
+        });
+
+        console.log(response);
+    } catch (error) {
+        console.error("Error running prompt:", error);
+    }
+}
+
+runPrompt();
+```
+</CodeGroup>
+
+## Custom Function Tracing
+
+In addition to automatic LLM request tracing, you can also use the `traceable` decorator (for Python) or `wrapWithSpan` (for JavaScript) to explicitly track span data for additional functions. This allows you to gather detailed information about function executions.
+
+<CodeGroup>
+```python Python
+# Use the @pl_client.traceable() decorator to trace a function
+@pl_client.traceable()
+def greet(name):
+    return f"Hello, {name}!"
+
+# Use the decorator with custom attributes
+@pl_client.traceable(attributes={"function_type": "math"})
+def calculate_sum(a, b):
+    return a + b
+
+result1 = greet("Alice")
+print(result1)
+
+result2 = calculate_sum(5, 3)
+print(result2)
+```
+
+```javascript JavaScript
+// Define and wrap a function with PromptLayer tracing
+const greet = promptlayer.wrapWithSpan('greet', (name: string): string => {
+    return `Hello, ${name}!`;
+});
+
+const result = greet("Alice");
+console.log(result);
+```
+</CodeGroup>
