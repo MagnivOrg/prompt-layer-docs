@@ -127,7 +127,6 @@
         "reference/list-prompt-templates",
         "reference/get-prompts",
         "reference/dataset-from-filter-params",
-        "reference/delete-datasets-by-name",
         "reference/create-reports",
         "reference/delete-reports-by-name",
         "reference/log-request",

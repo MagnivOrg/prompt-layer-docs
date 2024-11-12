@@ -856,60 +856,6 @@
         }
       }
     },
-    "/datasets/name/{dataset_name}": {
-      "delete": {
-        "summary": "Delete Datasets by Name",
-        "operationId": "deleteDatasetsByName",
-        "tags": ["datasets"],
-        "parameters": [
-          {
-            "name": "dataset_name",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Name of the dataset to delete."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key to authorize the operation."
-          }
-        ],
-        "responses": {
-          "200": {
-            "description": "Successful Operation",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    }
-                  },
-                  "required": ["success", "message"]
-                }
-              }
-            }
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "404": {
-            "description": "Dataset not found"
-          }
-        }
-      }
-    },
     "/reports/name/{report_name}": {
       "delete": {
         "summary": "Delete Reports by Name",
