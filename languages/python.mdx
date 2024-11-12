@@ -219,6 +219,30 @@ asyncio.run(main())
 
 For more information on custom logging, please visit our [Custom Logging Documentation](/features/prompt-history/custom-logging).
 
+#### Example 4: Asynchronous Prompt Execution with run Method
+
+You can execute prompt templates asynchronously using the run method. This allows you to run a prompt template by name with given input variables.
+
+```python
+import asyncio
+from promptlayer import AsyncPromptLayer
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+
+    # Execute a prompt template asynchronously
+    response = await async_promptlayer_client.run(
+        prompt_name="TestPrompt",
+        input_variables={"variable1": "value1", "variable2": "value2"}
+    )
+    print(response)
+
+# Run the async function
+asyncio.run(main())
+```
+
+In this example, replace "TestPrompt" with the name of your prompt template, and provide any required input variables.
+
 ### Supported Methods: Synchronous vs. Asynchronous
 
 The following table provides an overview of the methods currently available in both synchronous and asynchronous versions of the PromptLayer client:
@@ -227,6 +251,7 @@ The following table provides an overview of the methods currently available in b
 | ------------------ | ----------------------------- | ------------------------------------- | ------------------------------------------- |
 | `templates.get()`  | Retrieves a template by name. | `promptlayer_client.templates.get()`  | `async_promptlayer_client.templates.get()`  |
 | `templates.all()`  | Retrieves all templates.      | `promptlayer_client.templates.all()`  | `async_promptlayer_client.templates.all()`  |
+| `run()`            | Executes a prompt template.   | `promptlayer_client.run()`            | `async_promptlayer_client.run()`            |
 | `run_workflow()`   | Executes a workflow.          | `promptlayer_client.run_workflow()`   | `async_promptlayer_client.run_workflow()`   |
 | `track.metadata()` | Tracks metadata.              | `promptlayer_client.track.metadata()` | `async_promptlayer_client.track.metadata()` |
 | `track.group()`    | Tracks a group.               | `promptlayer_client.track.group()`    | `async_promptlayer_client.track.group()`    |
