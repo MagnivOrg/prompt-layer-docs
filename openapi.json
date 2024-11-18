@@ -1802,6 +1802,17 @@
               { "type": "null" }
             ],
             "title": "Input Variables"
+          },
+          "metadata_filters": {
+            "anyOf": [
+              {
+                "additionalProperties": { "type": "string" },
+                "type": "object"
+              },
+              { "type": "null" }
+            ],
+            "title": "Metadata Filters",
+            "description": "Optional dictionary of key values used for A/B release labels."
           }
         },
         "type": "object",
