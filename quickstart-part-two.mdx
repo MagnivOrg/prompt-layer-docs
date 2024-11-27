@@ -7,7 +7,7 @@ icon: "square-2"
 
 ### Streaming
 
-Streaming responses using `promptlayer_client.run` is easy.
+Streaming responses using `promptlayer_client.run` is easy. Streaming allows the API to return responses incrementally, delivering partial outputs as they're generated rather than waiting for the complete response. This can significantly improve the perceived responsiveness of your application.
 
 <CodeGroup>
 
@@ -49,7 +49,7 @@ Learn more about [OpenAI streams](https://cookbook.openai.com/examples/how_to_st
 
 ### Workspaces
 
-[Shared workspaces](/why-promptlayer/shared-workspaces) allow you to collaborate with the rest of the team. Use separate workspaces to organize work between projects or deployment environments. We commonly see teams with "Prod" and "Dev" workspaces.
+[Shared workspaces](/why-promptlayer/shared-workspaces) allow you to collaborate with the rest of the team. Use separate workspaces to organize work between projects or deployment environments. We commonly see teams with "Prod" and "Dev" workspaces. Each workspace has its own unique PromptLayer API key, allowing you to maintain separate authentication for different environments.
 
 <Frame>
 ![Workspace Selector](/images/quickstart/workspaces.png)
@@ -63,49 +63,11 @@ Use "Duplicate" or "Copy a version" to organize and branch your work. You can us
 ![copy-a-version.png](/images/quickstart/copy-a-version.png)
 </Frame>
 
-### Groups
-
-Using [groups](/features/prompt-history/groups), you can associate multiple request logs with eachother. This makes searching and debugging much easier.
-
-To do this, you must first create a group ID.
-
-<CodeGroup>
-
-```python Python
-group_id = promptlayer_client.group.create()
-```
-
-```js Javascript
-const groupId = await promptLayerClient.group.create()
-```
-
-</CodeGroup>
-
-Then, when running the request, just pass in this group ID.
-
-
-<CodeGroup>
-
-```python Python
-response = promptlayer_client.run(
-    prompt_name="ai-poet", input_variables=input_variables,
-    group_id=group_id
-)
-```
-
-```js JavaScript
-const response = await promptLayerClient.run({
-  promptName: "ai-poet", 
-  inputVariables: input_variables,
-  groupId: groupId
-});
-```
-
-</CodeGroup>
-
 ## Switching models
 
 An important part of prompt engineering is finding the right model. PromptLayer makes it easy to switch between language models and test them out.
+
+To switch between different models for your prompts, we recommend using our Prompt Blueprint feature.
 
 ### Prompt Blueprint
 
@@ -144,6 +106,47 @@ For the exact schema, please look at the `prompt_template` return type of [get-p
 PromptLayer supports various models beyond OpenAI. You can easily switch between different models by updating the model parameter in your prompt template.
 
 For details on comparing models, see our [blog post on migrating prompts to open source models](https://blog.promptlayer.com/migrating-prompts-to-open-source-models-c21e1d482d6f).
+
+<Accordion title="If you're using a new model, make sure to add the new key to your .env file">
+For better security, you can use environment variables from a .env file:
+
+```txt .env
+OPENAI_API_KEY=sk-<your_openai_api_key>
+PROMPTLAYER_API_KEY=<your_promptlayer_api_key>
+ANTHROPIC_API_KEY=<your_anthropic_api_key>
+```
+For more on setting up environment variables in Python, refer to this [guide](https://www.twilio.com/en-us/blog/environment-variables-python).
+
+If you are using Python, we recommend using `python-dotenv`:
+
+<CodeGroup>
+
+```python Python
+pip install python-dotenv
+```
+
+```js Javascript
+npm install dotenv
+```
+
+</CodeGroup>
+
+Create a Python file called `app.py` and load the environment variables:
+
+<CodeGroup>
+
+```python Python
+from dotenv import load_dotenv
+
+load_dotenv()  # Load env vars from .env file
+```
+
+```js Javascript
+require('dotenv').config();
+```
+
+</CodeGroup>
+</Accordion>
 
 ### Updating the Base URL
 
