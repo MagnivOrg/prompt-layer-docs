@@ -34,6 +34,79 @@ The payload will be in the form of
 
 The _Human Input_ evaluation type allows the addition of either numeric or text input where an evaluator can provide feedback via a slider or a text box. This input can then be utilized in subsequent columns in the evaluation pipeline, allowing for the incorporation of human judgment.
 
+### Code Execution
+
+The _Code Execution_ evaluation type allows you to write and execute code for each row in your dataset. You can access the data through the `data` variable and return the cell value. Note that stdout will be ignored.
+
+Code example to return a list of the names of each column:
+
+<CodeGroup>
+
+```py Python
+message = "These are my column names: "
+columns = [column_name for column_name in data.keys()]
+return message + str(columns)
+```
+
+```js JavaScript
+const message = "These are my column names: ";
+const columns = Object.keys(data);
+return message + JSON.stringify(columns);
+```
+
+</CodeGroup>
+
+**Python Runtime**
+
+```
+The Python runtime runs Python 3.12.0 with no filesystem or network access. Only the standard library is available. Here are the resource quotas:
+
+- Input code size: 1MiB
+- Size of stdin: 10MiB
+- Size of stdout: 20MiB
+- Size of stderr: 10MiB
+- Number of environment variables: 100
+- Environment variable key size: 4KiB
+- Environment variable value size: 100KiB
+- Number of arguments: 100
+- Argument size: 100KiB
+- Execution duration: 30 seconds
+- Memory consumption: 128MiB
+```
+
+**JavaScript Runtime**
+
+```
+The JavaScript runtime is built on Mozilla's SpiderMonkey engine with no filesystem or network access. It is not node or deno. Available APIs include:
+
+- Legacy Encoding: atob, btoa, decodeURI, encodeURI, decodeURIComponent, encodeURIComponent
+- Streams: ReadableStream, ReadableStreamBYOBReader, ReadableStreamBYOBRequest, ReadableStreamDefaultReader, ReadableStreamDefaultController, ReadableByteStreamController, WritableStream, ByteLengthQueuingStrategy, CountQueuingStrategy, TransformStream
+- URL: URL, URLSearchParams
+- Console: console
+- Performance: Performance
+- Task: queueMicrotask, setInterval, setTimeout, clearInterval, clearTimeout
+- Location: WorkerLocation, location
+- JSON: JSON
+- Encoding: TextEncoder, TextDecoder, CompressionStream, DecompressionStream
+- Structured Clone: structuredClone
+- Fetch: fetch, Request, Response, Headers
+- Crypto: SubtleCrypto, Crypto, crypto, CryptoKey
+
+Resource Quotas:
+
+- Input code size: 1MiB
+- Size of stdin: 10MiB
+- Size of stdout: 20MiB
+- Size of stderr: 10MiB
+- Number of environment variables: 100
+- Environment variable key size: 4KiB
+- Environment variable value size: 100KiB
+- Number of arguments: 100
+- Argument size: 100KiB
+- Execution duration: 30 seconds
+- Memory consumption: 128MiB
+```
+
 ## Simple Evals
 
 <img width="450" src="/images/equality-comparison-eval.png" />
