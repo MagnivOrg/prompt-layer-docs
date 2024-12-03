@@ -24,6 +24,8 @@ Optionally, you can specify the API key in the client.
 const promptLayerClient = new PromptLayer({ apiKey: "pl_****" });
 ```
 
+<Warning>PromptLayer's JavaScript library is not compatible with client-side (browser) environments. It is designed for use exclusively in server-side runtimes such as Node.js, Bun, or Deno.</Warning>
+
 ## OpenAI
 
 In the JavaScript file where the OpenAI APIs are integrated, include the following lines. They enable PromptLayer to track your requests without additional code modifications.
