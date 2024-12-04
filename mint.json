@@ -131,7 +131,8 @@
         "reference/create-reports",
         "reference/delete-reports-by-name",
         "reference/log-request",
-        "reference/workflow-version-execution-results"
+        "reference/workflow-version-execution-results",
+        "reference/run-workflow"
       ]
     }
   ],

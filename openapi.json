@@ -1318,10 +1318,165 @@
           }
         ]
       }
+    },
+    "/workflows/{workflow_name}/run": {
+      "post": {
+        "summary": "Run Workflow",
+        "operationId": "runWorkflow",
+        "tags": ["workflow"],
+        "parameters": [
+          {
+            "name": "workflow_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The name of the workflow to execute."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RunWorkflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Workflow execution created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RunWorkflowResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
     "schemas": {
+      "RunWorkflow": {
+        "type": "object",
+        "properties": {
+          "workflow_label_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "Specify a workflow label name to run a specific labeled version."
+          },
+          "workflow_version_number": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Specify a workflow version number to run a specific version."
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "A dictionary of metadata key-value pairs."
+          },
+          "input_variables": {
+            "type": "object",
+            "additionalProperties": true,
+            "default": {},
+            "description": "A dictionary of input variables required by the workflow."
+          },
+          "return_all_outputs": {
+            "type": "boolean",
+            "default": false,
+            "description": "If set to `true`, all outputs from the workflow execution will be returned."
+          }
+        },
+        "required": [],
+        "description": "Parameters to run a workflow."
+      },
+      "RunWorkflowResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the request was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message describing the result."
+          },
+          "warning": {
+            "type": "string",
+            "nullable": true,
+            "description": "Any warnings about missing input variables."
+          },
+          "workflow_version_execution_id": {
+            "type": "integer",
+            "description": "The ID of the created workflow execution."
+          }
+        },
+        "required": ["success", "message", "workflow_version_execution_id"],
+        "description": "Response after initiating a workflow execution."
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "default": false,
+            "description": "Indicates that the request failed."
+          },
+          "error": {
+            "type": "string",
+            "description": "Error message explaining why the request failed."
+          }
+        },
+        "required": ["success", "error"],
+        "description": "Error response format."
+      },
       "Base": {
         "properties": {
           "page": {

@@ -1,0 +1,33 @@
+---
+title: "Run Workflow"
+openapi: "POST /workflows/{workflow_name}/run"
+---
+
+Initiate the execution of a specific workflow by its name. You can specify input variables, metadata, and choose which version of the workflow to run.
+
+## HTTP Request
+
+`POST /workflows/{workflow_name}/run`
+
+## Path Parameters
+
+- **workflow_name** (string, required): The name of the workflow you wish to execute.
+
+## Request Body
+
+The request body expects a JSON object with the following structure:
+
+### Schema
+
+```json
+{
+  "workflow_label_name": "string (optional)",
+  "workflow_version_number": "integer (optional)",
+  "metadata": {
+    "string": "string"
+  },
+  "input_variables": {
+    "string": "any"
+  },
+  "return_all_outputs": "boolean (default: false)"
+}
