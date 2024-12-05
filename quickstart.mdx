@@ -23,7 +23,9 @@ PromptLayer makes creating, versioning, and collaborating on prompt templates ea
 
 ![Find Registry](/images/quickstart/find-registry.png)
 
-For this example, let's create a new prompt template called "ai-poet":
+For this example, let's create a new prompt template called "ai-poet".  Name it in the 'Title' field. 
+
+Next, paste the following snippet into the "SYSTEM" field:
 
 ```
 You are a skilled poet specializing in haiku. 
@@ -42,7 +44,10 @@ Finally, choose a model to run the prompt on by clicking "Parameters"
 
 <img width="450" src="/images/quickstart/set-parameters.png" />
 
-Save the prompt template, and we are good to go! 🍰
+<Card>
+  <h3>🎉 You're all set!</h3>
+  **Save the prompt template,** and we are good to go! 🍰
+</Card>
 
 ## Set Up PromptLayer Locally
 
@@ -66,11 +71,16 @@ npm install openai
 
 Ensure you have the latest versions if already installed.
 
+
+
 ### API Key Env Var Setup
 
 1. Retrieve your [OpenAI API key](https://platform.openai.com/api-keys)
-2. Get a PromptLayer API key from settings (_click the cog on the top right_). 
-3. Create a .env file with the following:
+2. Get a PromptLayer API key from settings (_click the cog on the top right_)
+3. Replace `<your_openai_api_key>` and `<your_promptlayer_api_key>` in the code snippets below with your actual keys
+
+<Accordion title="Using a .env file instead">
+For better security, you can use environment variables from a .env file:
 
 ```txt .env
 OPENAI_API_KEY=sk-<your_openai_api_key>
@@ -107,6 +117,7 @@ require('dotenv').config();
 ```
 
 </CodeGroup>
+</Accordion>
 
 ### Import PromptLayer
 
@@ -120,6 +131,9 @@ Behind the scenes, the PromptLayer library is a wrapper around OpenAI's SDK. Thi
 
 ```python Python openai >= 1.0.0
 # Make sure to `pip install promptlayer`
+import os
+os.environ["OPENAI_API_KEY"] = "sk-<your_openai_api_key>"
+
 from promptlayer import PromptLayer
 promptlayer_client = PromptLayer(api_key="<your_promptlayer_api_key>")
 
@@ -188,6 +202,15 @@ Amazing! `promptlayer_client.run` will automatically format your prompt template
 
 The LLM request runs locally on your machine.
 
+<Tip>
+  **Running the code:**
+  If you're new to running Python locally, save all the code above in a file called `app.py` and run it from your terminal with:
+  ```bash
+  python app.py
+  ```
+  Make sure you're in the same directory as your `app.py` file when running this command.
+</Tip>
+
 ### Logs
 
 In the background, PromptLayer will save the output of every request you make. Open the dashboard to see the logs.
@@ -211,7 +234,7 @@ For large-scale production deployments, we recommend using [webhooks](/features/
 
 PromptLayer allows you to use [release labels](/features/prompt-registry/overview#release-labels) as a way to manage prod/staging environments.
 
-Back in the PromptLayer dashboard, hover over a version and click "Add Release Label". Now you can add `prompt_release_label` to the run call.
+Back in the PromptLayer dashboard, hover over a version and click "Add Release Label". Name the release label "prod". Now you can add `prompt_release_label` to the run call.
 
 ![Release Label](/images/quickstart/release-label.gif)
 
