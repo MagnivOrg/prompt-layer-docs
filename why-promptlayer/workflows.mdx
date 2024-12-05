@@ -42,7 +42,7 @@ Input Variables are the data you feed into a Workflow. They can be text, numbers
 Nodes are the building blocks of the Workflow. Each node represents a specific action or decision. Types include:
 
 - **Prompt Template**: Make an LLM call using a specified prompt template and input variables.
-- **Endpoint**: Make external API calls to integrate with other systems or services.
+- **Callback Endpoint**: Make external API calls (ex: RAG steps) or trigger callback requests after workflow processes finish.
 - **Math Operator**: Perform numerical comparisons or calculations between different data sources.
 - **Parse Value**: Extract and process specific data types like strings, numbers, or JSON from inputs.
 

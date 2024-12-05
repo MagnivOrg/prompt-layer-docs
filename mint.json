@@ -99,13 +99,13 @@
           ],
           "icon": "vial-circle-check"
         },
+        "why-promptlayer/workflows",
         "why-promptlayer/fine-tuning",
         "why-promptlayer/analytics",
         "why-promptlayer/evaluation-and-ranking",
         "why-promptlayer/playground",
         "why-promptlayer/shared-workspaces",
-        "why-promptlayer/how-it-works",
-        "why-promptlayer/workflows"
+        "why-promptlayer/how-it-works"
       ]
     },
     {
