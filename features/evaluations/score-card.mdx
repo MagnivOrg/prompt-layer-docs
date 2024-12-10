@@ -53,7 +53,23 @@ You can optionally return multiple drill-down matrices. This is useful for gener
 Your custom scoring code must return an object with the following keys:
 
 - `score` (required): A number representing the overall score. This is mandatory.
-- `score_matrix` (optional): A list of lists of lists, representing one or more matrices of drilled-down scores. These matrices can contain titles or numbers and will be displayed for comparison.
+- `score_matrix` (optional): A list of lists of lists, representing one or more matrices of drilled-down scores. Each cell in these matrices can be a raw value or an object with metadata.
+
+#### Score Matrix Cell Format
+
+Each cell in the `score_matrix` can be either:
+- A raw value (string or number), or
+- An object with the following properties:
+  - `value`: The actual value of the cell, which can be a string or number.
+  - `ascending`: (Optional) A boolean indicating whether an increase in this value is considered positive (`true`). If absent, we default to true.
+
+**Examples**
+- Simple value: `42`
+- Object with metadata: `{"value": 42, "ascending": true}`
+
+The optional `ascending` property can be used to indicate how changes in the value should be interpreted when comparing evaluations. This is particularly useful for automated reporting and analysis tools.
+
+### Code example
 
 The `data` variable will be available in your scoring code, which is a list containing a dictionary for each row in the evaluation results. The keys in each dictionary correspond to the column names, and the values are the corresponding cell values.
 
