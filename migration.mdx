@@ -91,20 +91,6 @@ chat.generate([
   [new SystemChatMessage("You are a helpful AI assistant."),],
 ]).then(console.log);
 ```
-
-```txt REST
-curl --location --request POST 'https://api.promptlayer.com/rest/track-request' \
---header 'Content-Type: application/json' \
---data-raw '{
-    "function_name": "openai.Completion.create",
-    "kwargs": {"engine": "text-ada-001", "prompt": "My name is"},
-    "tags": ["promptlayer-test"],
-    "request_response": {...},
-    "request_start_time": 1673987077.463504,
-    "request_end_time": 1673987077.463504,
-    "api_key": "pl_<YOUR API KEY>"
-}'
- ```
 </CodeGroup>
     
    

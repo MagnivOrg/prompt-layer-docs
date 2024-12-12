@@ -112,7 +112,6 @@
       "group": "Reference",
       "pages": [
         "reference/rest-api-reference",
-        "reference/track-request",
         "reference/templates-get",
         "reference/get-prompt-template",
         "reference/templates-publish",
