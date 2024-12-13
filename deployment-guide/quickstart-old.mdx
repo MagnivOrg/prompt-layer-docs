@@ -1,0 +1,393 @@
+---
+title: "Quickstart"
+icon: "flag-checkered"
+---
+
+Get started using PromptLayer in minutes.
+
+- Create and version prompts visually
+- Programmatically retrieve and iterate on prompts
+- Run prompts automatically with OpenAI, Anthropic, and all major models
+- Log and evaulate prompt versions
+
+First, make sure you have signed up for an account at [promptlayer.com](https://www.promptlayer.com) to begin 🍰
+
+PromptLayer is available in [Python](/languages/python), [Javascript](/languages/javascript), and [REST](/languages/rest-api).
+
+## Create your first prompt template
+
+PromptLayer makes creating, versioning, and collaborating on prompt templates easy. They are model-agnostic and auditable.
+
+1. From [PromptLayer's home screen](https://www.promptlayer.com), navigate to the prompt registry ([read more](/features/prompt-registry/overview)).
+2. Click "Create Template" to create a new prompt template.
+
+![Find Registry](/images/quickstart/find-registry.png)
+
+For this example, let's create a new prompt template called "ai-poet".  Name it in the 'Title' field. 
+
+Next, paste the following snippet into the "SYSTEM" field:
+
+```
+You are a skilled poet specializing in haiku. 
+
+Your task is to write a haiku based on a topic provided by the user. 
+
+The haiku must have 17 syllables.
+Structured in three lines of 5, 7, and 5 syllables respectively. 
+```
+
+Next, add a new message with an input variable `{topic}`. This will be filled out by user input when interacting with the AI.
+
+![Haiku Prompt](/images/quickstart/haiku-prompt.png)
+
+Finally, choose a model to run the prompt on by clicking "Parameters"
+
+<img width="450" src="/images/quickstart/set-parameters.png" />
+
+<Card>
+  <h3>🎉 You're all set!</h3>
+  **Save the prompt template,** and we are good to go! 🍰
+</Card>
+
+## Set Up PromptLayer Locally
+
+### Install PromptLayer & OpenAI
+
+Install the required packages:
+
+<CodeGroup>
+
+```python Python
+pip install promptlayer
+pip install openai
+```
+
+```js JavaScript
+npm install promptlayer
+npm install openai
+```
+
+</CodeGroup>
+
+Ensure you have the latest versions if already installed.
+
+
+
+### API Key Env Var Setup
+
+1. Retrieve your [OpenAI API key](https://platform.openai.com/api-keys)
+2. Get a PromptLayer API key from settings (_click the cog on the top right_)
+3. Replace `<your_openai_api_key>` and `<your_promptlayer_api_key>` in the code snippets below with your actual keys
+
+<Accordion title="Using a .env file instead">
+For better security, you can use environment variables from a .env file:
+
+```txt .env
+OPENAI_API_KEY=sk-<your_openai_api_key>
+PROMPTLAYER_API_KEY=<your_promptlayer_api_key>
+```
+For more on setting up environment variables in Python, refer to this [guide](https://www.twilio.com/en-us/blog/environment-variables-python).
+
+If you are using Python, we recommend using `python-dotenv`:
+
+<CodeGroup>
+
+```python Python
+pip install python-dotenv
+```
+
+```js Javascript
+npm install dotenv
+```
+
+</CodeGroup>
+
+Create a Python file called `app.py` and load the environment variables:
+
+<CodeGroup>
+
+```python Python
+from dotenv import load_dotenv
+
+load_dotenv()  # Load env vars from .env file
+```
+
+```js Javascript
+require('dotenv').config();
+```
+
+</CodeGroup>
+</Accordion>
+
+### Import PromptLayer
+
+This quickstart uses OpenAI, but PromptLayer supports most major LLM providers, including Anthropic, LLama, Google, Cohere, and Mistral.
+
+First, import PromptLayer and create a PromptLayer client. We'll use this client to call OpenAI.
+
+Behind the scenes, the PromptLayer library is a wrapper around OpenAI's SDK. This means that all LLM requests are still made locally from your machine. PromptLayer functions as a sidecar, logging the response after the request is made.
+
+<CodeGroup>
+
+```python Python openai >= 1.0.0
+# Make sure to `pip install promptlayer`
+import os
+os.environ["OPENAI_API_KEY"] = "sk-<your_openai_api_key>"
+
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer(api_key="<your_promptlayer_api_key>")
+
+# Swap out your 'from openai import OpenAI'
+OpenAI = promptlayer_client.openai.OpenAI
+client = OpenAI()
+```
+
+
+```js JavaScript
+// Make sure to `npm install promptlayer`
+import { PromptLayer } from "promptlayer";
+const promptLayerClient = new PromptLayer();
+
+// Make sure you have openai installed with `npm install openai`
+const OpenAI = promptLayerClient.OpenAI;
+const openai = new OpenAI();
+```
+
+</CodeGroup>
+    
+## Retrieve & Run the Prompt
+
+Remember the `{topic}` user input variable we made to specify the haiku topic in our prompt? PromptLayer can format the f-string or Jinja2 template using this variable.
+
+We will use PromptLayer to fetch the latest version of the prompt, inject input variables, and run it.
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "The American Revolution"
+}
+
+response = promptlayer_client.run(
+    prompt_name="ai-poet", input_variables=input_variables)
+
+# Using OpenAI format
+print(response["raw_response"].choices[0].message.content)
+```
+
+```js JavaScript
+const input_variables = {
+  topic: "The American Revolution"
+};
+
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+});
+
+// Using OpenAI format
+console.log(response["raw_response"].choices[0].message.content);
+```
+
+</CodeGroup>
+
+<Tip>
+  For simplicity, the code snippet above will work with OpenAI only. Use the [prompt blueprint](/quickstart-part-two#prompt-blueprint) return item for a model-agnostic response format. 
+  ```python
+  print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+  ```
+</Tip>
+
+Amazing! `promptlayer_client.run` will automatically format your prompt template into the format needed by OpenAI, Anthropic, and all other major model providers.
+
+The LLM request runs locally on your machine.
+
+<Tip>
+  **Running the code:**
+  If you're new to running Python locally, save all the code above in a file called `app.py` and run it from your terminal with:
+  ```bash
+  python app.py
+  ```
+  Make sure you're in the same directory as your `app.py` file when running this command.
+</Tip>
+
+### Logs
+
+In the background, PromptLayer will save the output of every request you make. Open the dashboard to see the logs.
+
+![Opening Log](/images/quickstart/haiku-request-log.png)
+
+Try opening the log in Playground!
+
+### No more redeploys!
+
+Every time you update a prompt in the dashboard, simply re-run the code and PromptLayer will grab the latest version. No eng redeploy is needed.
+
+![Redeploy Gif](/images/quickstart/redeploy.gif)
+
+Decoupling prompts from your code and [using a prompt CMS will speed up development](/why-promptlayer/prompt-management). Read more about prompt management best practices on our [blog](https://blog.promptlayer.com/scalable-prompt-management-and-collaboration-fff28af39b9b).
+
+For large-scale production deployments, we recommend using [webhooks](/features/prompt-registry/webhooks) to maintain a caching layer.
+
+
+### Release Labels
+
+PromptLayer allows you to use [release labels](/features/prompt-registry/overview#release-labels) as a way to manage prod/staging environments.
+
+Back in the PromptLayer dashboard, hover over a version and click "Add Release Label". Name the release label "prod". Now you can add `prompt_release_label` to the run call.
+
+![Release Label](/images/quickstart/release-label.gif)
+
+Alternatively, use `prompt_version` to specify a version number directly.
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "The American Revolution"
+}
+
+response = promptlayer_client.run(
+  prompt_name="ai-poet", input_variables=input_variables, 
+  prompt_release_label="prod") # The release label
+
+print(response["raw_response"].choices[0].message.content)
+```
+
+```js JavaScript
+const input_variables = {
+  topic: "The American Revolution"
+};
+
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables,
+    promptReleaseLabel: "prod" // The release label
+});
+
+console.log(response["raw_response"].choices[0].message.content);
+```
+
+</CodeGroup>
+
+### Logging Metadata
+
+PromptLayer can be used to monitor user behavior, beta deployments, and much more.
+
+Add a [metadata](/features/prompt-history/metadata) object to each log, [tags](/features/prompt-history/tagging-requests), and a [score](/features/prompt-history/scoring-requests) to better track requests:
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "The American Revolution"
+}
+
+response = promptlayer_client.run(
+  prompt_name="ai-poet", input_variables=input_variables, 
+  prompt_release_label="prod",
+  tags=["quickstart_tutorial"], # Add tags
+  metadata={"user_id": "abc123"}) # Add metadata
+
+print(response["raw_response"].choices[0].message.content)
+
+# Add a score to the log
+promptlayer_client.track.score(
+    request_id=response["request_id"],
+    score=100,
+)
+```
+
+```js JavaScript
+const input_variables = {
+  topic: "The American Revolution"
+};
+
+const response = await promptLayerClient.run({
+    promptName: "ai-poet", 
+    inputVariables: input_variables,
+    promptReleaseLabel: "prod",
+    tags: ["quickstart_tutorial"], // Add tags
+    metadata: {"user_id": "abc123"} // Add metadata
+});
+
+console.log(response["raw_response"].choices[0].message.content);
+
+// Add a score to the log
+await promptLayerClient.track.score({
+  request_id: response["request_id"],
+  score: 100
+});
+```
+
+</CodeGroup>
+
+This will help you triage through error logs when using [advanced search](/why-promptlayer/advanced-search), creating [datasets](/features/evaluations/datasets), or [fine-tuning](/why-promptlayer/fine-tuning).
+
+## Analytics
+
+Visit the dashboard to see analytics. [Learn more](/why-promptlayer/analytics)
+
+![Analytics Screenshot](/images/quickstart/analytics-screenshot.png)
+
+You can also take advantage of our [advanced search](/why-promptlayer/advanced-search) by using metadata to search in the sidebar. This is useful for triaging errors by user ID, execution ID, or by score.
+
+<video controls="controls">
+    <source src="/videos/advanced-search-2.mp4" type="video/mp4" />
+</video> 
+
+## Evaluations
+
+Each time you edit the prompt version, you can run an evaluation. Most teams use historical backtests and regression tests to prompt engineer more effectively. 
+
+You can build these eval datasets using the request logs we captured above. Learn more [here](/features/evaluations/examples).
+
+![Eval Scores](/images/quickstart/eval-scores.png)
+
+## Tracing and Spans
+
+PromptLayer provides powerful tracing capabilities to help you monitor and analyze the execution flow of your applications. With tracing enabled, you can visualize function calls, track LLM requests, measure durations, and inspect inputs and outputs.
+
+![Trace Details](/images/quickstart/traces.png)
+
+To enable tracing, simply initialize the PromptLayer client with `enable_tracing` set to `True`:
+
+<CodeGroup>
+```python Python
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer(enable_tracing=True)
+```
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+  const promptlayer = new PromptLayer({
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+  enableTracing: true,
+});
+```
+</CodeGroup>
+
+You can then use the `@promptlayer_client.traceable` decorator in Python or `wrapWithSpan` in JavaScript to trace custom functions.
+
+Read more about [tracing here](/features/prompt-history/traces).
+
+<Tip> Continue reading with [Quickstart Part 2](/quickstart-part-two) ➡️</Tip>
+
+# Further reading 📖
+
+From the docs:
+- [Getting Started Tutorial](/getting_started)
+- [Migration Guide](/migration)
+- [Why use a prompt CMS?](/why-promptlayer/prompt-management)
+- [Evaluating Prompts with PromptLayer](/features/evaluations/examples)
+
+Articles on prompt engineering:
+- [Prompt Management and Collaboration](https://blog.promptlayer.com/scalable-prompt-management-and-collaboration-fff28af39b9b)
+- [Prompt Routers and Modular Prompt Architecture](https://blog.promptlayer.com/prompt-routers-and-modular-prompt-architecture-8691d7a57aee)
+- [Our Favorite Prompts from our Prompt Engineering Tournament](https://blog.promptlayer.com/our-favorite-prompts-from-the-tournament-b9d99464c1dc)
+
+Technical tutorials:
+- [Building ChatGPT from Scratch with PromptLayer](https://blog.promptlayer.com/building-chatgpt-from-scratch-the-right-way-ef82e771886e)
+- [Comparing Prompts Across Different Models](https://blog.promptlayer.com/migrating-prompts-to-open-source-models-c21e1d482d6f)
+- [Youtube LLM Development Tutorial Series](https://www.youtube.com/watch?v=u4LMdo-2EP4&list=PL6gx4Cwl9DGDLqIXStz_Zrk2utoTgrsfW)
+
