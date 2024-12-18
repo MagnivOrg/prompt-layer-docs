@@ -113,25 +113,6 @@ from langchain.llms import PromptLayerOpenAI
 llm = PromptLayerOpenAI(pl_tags=["mytag1", "mytag2"])
 resp = llm("tell me a joke")
 ```
-
-```javascript Javascript/REST
-const axios = require('axios');
-
-const requestData = {
-  function_name: 'openai.Completion.create',
-  kwargs: {
-    engine: 'gpt-3.5-turbo-instruct',
-    prompt: 'tell me a joke',
-  },
-  tags: ["mytag1", "mytag2"],
-  ...
-};
-
-axios.post('https://api.promptlayer.com/rest/track-request', requestData)
-  .then(response => {
-    console.log(response.data);
-  })
-```
 </CodeGroup>
 
 #### Favorites
