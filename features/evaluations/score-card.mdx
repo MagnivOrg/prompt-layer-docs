@@ -61,13 +61,13 @@ Each cell in the `score_matrix` can be either:
 - A raw value (string or number), or
 - An object with the following properties:
   - `value`: The actual value of the cell, which can be a string or number.
-  - `ascending`: (Optional) A boolean indicating whether an increase in this value is considered positive (`true`). If absent, we default to true.
+  - `positive_metric`: (Optional) A boolean indicating whether an increase in this value is considered positive (`true`). If absent, we default to true.
 
 **Examples**
 - Simple value: `42`
-- Object with metadata: `{"value": 42, "ascending": true}`
+- Object with metadata: `{"value": 42, "positive_metric": true}`
 
-The optional `ascending` property can be used to indicate how changes in the value should be interpreted when comparing evaluations. This is particularly useful for automated reporting and analysis tools.
+The optional `positive_metric` property can be used to indicate how changes in the value should be interpreted when comparing evaluations. This is particularly useful for automated reporting and analysis tools.
 
 ### Code example
 
