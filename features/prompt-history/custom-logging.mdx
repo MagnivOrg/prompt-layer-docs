@@ -13,12 +13,12 @@ from promptlayer import PromptLayer
 from datetime import datetime
 
 PROMPTLAYER_API_KEY = "pl_..."
-promptlayer = PromptLayer(api_key=PROMPTLAYER_API_KEY)
+pl_client = PromptLayer(api_key=PROMPTLAYER_API_KEY)
 
 prompt_name = "weather"
 prompt_version_number = 30
 prompt_input_variables = {"city": "Paris"}
-template = promptlayer.templates.get(
+template = pl_client.templates.get(
     prompt_name,
     {"version": prompt_version_number, "input_variables": prompt_input_variables},
 )
@@ -66,7 +66,7 @@ output = {
     ],
 }
 
-request_log = promptlayer.log_request(
+request_log = pl_client.log_request(
     provider=provider,
     model=model,
     input=input,
@@ -93,13 +93,13 @@ import { PromptLayer } from "@/index";
 import { HfInference } from "@huggingface/inference";
 
 const PROMPTLAYER_API_KEY = "pl_...";
-const promptLayer = new PromptLayer({ apiKey: PROMPTLAYER_API_KEY });
+const plClient = new PromptLayer({ apiKey: PROMPTLAYER_API_KEY });
 
 const main = async () => {
   const prompt_name = "weather";
   const prompt_version_number = 30;
   const prompt_input_variables = { city: "Paris" };
-  const template = await promptLayer.templates.get(prompt_name, {
+  const template = await plClient.templates.get(prompt_name, {
     version: prompt_version_number,
     input_variables: prompt_input_variables,
   });
@@ -149,7 +149,7 @@ const main = async () => {
     ],
   };
 
-  const request_log = await promptLayer.logRequest({
+  const request_log = await plClient.logRequest({
     provider,
     model,
     input,
