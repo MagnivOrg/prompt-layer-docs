@@ -70,58 +70,74 @@ Each message in a Prompt Blueprint should be a dictionary with the following str
 }
 ```
 
+You're absolutely right - let me update that part of the documentation to show a more realistic tool response format that uses structured JSON data. Here's the revised section:
+
 ## Tools and Function Calling
 
-This section demonstrates how to handle function calling within Prompt Blueprints.
+The Prompt Blueprint supports tool and function calling capabilities. This section demonstrates how to define available tools, handle assistant tool calls, and provide tool responses.
+
+### Defining Available Tools
+
+When creating a prompt template, you can specify available tools under the `tools` field. Each tool definition follows this structure:
 
 ```python
-def execute_function(name, args):
-    return "Success"
-
-messages = [
+tools = [
     {
-        "role": "user",
-        "content": [{
-            "type": "text",
-            "text": "Create an index.html file"
-        }]
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "location": {"type": "string"}
+                }
+            }
+        }
     }
 ]
 
-response = pl_client.run(
-    prompt_name="builder",
-    input_variables={
-        'messages': messages
-    },
-)
-prompt_blueprint = response['prompt_blueprint'] or {}
-prompt_template = prompt_blueprint.get('prompt_template', {})
-prompt_template_messages = prompt_template.get('messages', [])
-last_message = prompt_template_messages[-1]
+prompt_template = {
+    "type": "chat",
+    "messages": messages,
+    "tools": tools
+}
+```
 
-for tool_call in last_message.get('tool_calls', []):
-    if tool_call['type'] == "function":
-        function_name = tool_call['function']['name']
-        function_args = json.loads(tool_call['function']['arguments'])
-        # Replace this with your actual function execution
-        function_response = execute_function(function_name, function_args)
-        prompt_template_messages.append({
-            "role": "tool",
-            "content": [{
-                "type": "text",
-                "text": function_response
-            }],
-            "tool_call_id": tool_call['id']
-        })
+### Assistant Tool Calls
 
-response = pl_client.run(
-    prompt_name="builder",
-    input_variables={
-        'messages': prompt_template_messages
-    },
-)
+When the assistant decides to use a tool, the response will include a `tool_calls` field in the message. The format is:
 
-print(response)
+```python
+{
+    "role": "assistant",
+    "tool_calls": [
+        {
+            "id": "call_abc123",
+            "type": "function",
+            "function": {
+                "name": "get_weather", 
+                "arguments": "{\"location\": \"Paris\"}"
+            }
+        }
+    ]
+}
+```
+
+### Providing Tool Responses
+
+After executing the requested function, you can provide the result back to the assistant using a "tool" role message. The response should be structured JSON data:
+
+```python
+{
+    "role": "tool",
+    "content": [
+        {
+            "type": "text",
+            "text": "{\"temperature\": 72, \"conditions\": \"sunny\", \"humidity\": 45}"
+        }
+    ],
+    "tool_call_id": "call_abc123"
+}
 ```
 
 ## Multi-Modal Variables
