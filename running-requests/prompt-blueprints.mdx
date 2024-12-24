@@ -58,7 +58,7 @@ Each message in a Prompt Blueprint should be a dictionary with the following str
 
 - **`role`**: The role of the message sender (`user`, `assistant`, etc.).
 - **`content`**: A list of content items, where each item has:
-  - **`type`**: The type of content (`text`, `image_url`, etc.).
+  - **`type`**: The type of content (`text`, `media`, etc.).
   - **`text`**: The text content (if `type` is `text`).
 
 ### Example Message
@@ -126,33 +126,34 @@ print(response)
 
 ## Multi-Modal Variables
 
-The `image_variable` attribute allows you to dynamically insert a list of images into prompt template messages.
+PromptLayer supports any number of modalities in a single prompt. You can include text, images, videos, and other media types in your prompt templates.
 
-The `image_variable` is nested within the message content. The `type` and `image_url` are required fields specifying the type of content and the URL of the image, respectively. The `image_url` needs to be blank and is there for type requirements. The `image_variable` is the name of the list of images to be dynamically inserted.
+The `media_variable` content allows you to dynamically insert a list of medias into prompt template messages.
+
+The `media_variable` is nested within the message content. The `type` and `name` are required fields specifying the type of content and the name of the variable, respectively. The `name` is the name of the list of medias to be dynamically inserted.
 
 ```json
 {
     "role": "user",
     "content": [
         {
-            "type": "image_url",
-            "image_url": {"url": ""},
-            "image_variable": "images_to_insert"
+            "type": "media_variable",
+            "name": "media"
         }
     ]
 }
 ```
 
-When defining a prompt template, you can specify an `image_variable` to dynamically include images in your messages.
-<img src="/images/image-variable.gif"/>
+When defining a prompt template, you can specify an `media_variable` to dynamically include medias in your messages.
+<img src="/images/media-variable.gif"/>
 
-#### Running with Image Variables
+#### Running with Media Variables
 
 ```python
 response = pl_client.run(
     prompt_name="image-prompt",
     input_variables={
-        "image_urls": [
+        "media": [
             "https://example.com/image1.jpg",
             "https://example.com/image2.jpg"
         ]
@@ -161,5 +162,5 @@ response = pl_client.run(
 
 print(response)
 ```
-<Note>Notice that the `image_urls` is a list of strings</Note>
+<Note>Notice that the `media` is a list of strings, they can either be public URLs or base64 strings.</Note>
 
