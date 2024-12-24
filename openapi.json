@@ -1870,7 +1870,9 @@
               },
               "oneOf": [
                 { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" }
+                { "$ref": "#/components/schemas/ImageContent" },
+                { "$ref": "#/components/schemas/MediaContent" },
+                { "$ref": "#/components/schemas/MediaVariable" }
               ]
             },
             "title": "Content",
@@ -1927,6 +1929,24 @@
         "required": ["url"],
         "title": "ImageURL"
       },
+      "Media": {
+        "properties": {
+          "title": {
+            "type": "string",
+            "title": "Title",
+            "description": "Title of the media"
+          },
+          "type": {
+            "type": "string",
+            "title": "Type",
+            "description": "Type of the media. For example, image/png"
+          },
+          "url": { "type": "string", "title": "Url" }
+        },
+        "type": "object",
+        "required": ["url"],
+        "title": "ImageURL"
+      },
       "ImageContent": {
         "properties": {
           "type": {
@@ -1947,6 +1967,40 @@
         "title": "ImageContent",
         "type": "object"
       },
+      "MediaContent": {
+        "properties": {
+          "type": {
+            "const": "media",
+            "default": "media",
+            "enum": ["media"],
+            "title": "Type",
+            "type": "string"
+          },
+          "media": { "$ref": "#/components/schemas/Media" }
+        },
+        "required": ["media"],
+        "title": "MediaContent",
+        "type": "object"
+      },
+      "MediaVariable": {
+        "properties": {
+          "type": {
+            "const": "media_variable",
+            "default": "media_variable",
+            "enum": ["media_variable"],
+            "title": "Type",
+            "type": "string"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name",
+            "description": "Name of the media variable"
+          }
+        },
+        "required": ["name"],
+        "title": "MediaVariable",
+        "type": "object"
+      },
       "SystemMessage": {
         "properties": {
           "input_variables": {
@@ -1965,7 +2019,9 @@
             "items": {
               "oneOf": [
                 { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" }
+                { "$ref": "#/components/schemas/ImageContent" },
+                { "$ref": "#/components/schemas/MediaContent" },
+                { "$ref": "#/components/schemas/MediaVariable" }
               ],
               "discriminator": {
                 "propertyName": "type",
@@ -2006,7 +2062,9 @@
             "items": {
               "oneOf": [
                 { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" }
+                { "$ref": "#/components/schemas/ImageContent" },
+                { "$ref": "#/components/schemas/MediaContent" },
+                { "$ref": "#/components/schemas/MediaVariable" }
               ],
               "discriminator": {
                 "propertyName": "type",
@@ -2444,7 +2502,9 @@
             "items": {
               "oneOf": [
                 { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" }
+                { "$ref": "#/components/schemas/ImageContent" },
+                { "$ref": "#/components/schemas/MediaContent" },
+                { "$ref": "#/components/schemas/MediaVariable" }
               ],
               "discriminator": {
                 "propertyName": "type",
