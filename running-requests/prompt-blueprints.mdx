@@ -138,7 +138,7 @@ The `media_variable` is nested within the message content. The `type` and `name`
     "content": [
         {
             "type": "media_variable",
-            "name": "images_to_insert"
+            "name": "media"
         }
     ]
 }
@@ -153,7 +153,7 @@ When defining a prompt template, you can specify an `media_variable` to dynamica
 response = pl_client.run(
     prompt_name="image-prompt",
     input_variables={
-        "image_urls": [
+        "media": [
             "https://example.com/image1.jpg",
             "https://example.com/image2.jpg"
         ]
@@ -162,5 +162,5 @@ response = pl_client.run(
 
 print(response)
 ```
-<Note>Notice that the `image_urls` is a list of strings</Note>
+<Note>Notice that the `media` is a list of strings, they can either be public URLs or base64 strings.</Note>
 
