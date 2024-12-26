@@ -1899,7 +1899,7 @@
           }
         },
         "required": ["content"],
-        "title": "CompletionTemplate",
+        "title": "Completion Template",
         "type": "object"
       },
       "TextContent": {
@@ -2290,7 +2290,7 @@
           }
         },
         "required": ["messages"],
-        "title": "ChatTemplate",
+        "title": "Chat Template",
         "type": "object"
       },
       "GetPromptTemplateResponse": {
@@ -2783,6 +2783,32 @@
         "required": ["message"],
         "title": "BadRequestError",
         "type": "object"
+      },
+      "PromptBlueprint": {
+        "properties": {
+          "prompt_template": {
+            "oneOf": [
+              { "$ref": "#/components/schemas/CompletionPrompt" },
+              { "$ref": "#/components/schemas/ChatPrompt" }
+            ],
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "chat": "#/components/schemas/ChatPrompt",
+                "completion": "#/components/schemas/CompletionPrompt"
+              }
+            }
+          },
+          "metadata": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/Metadata" },
+              { "type": "null" }
+            ]
+          }
+        },
+        "type": "object",
+        "required": ["prompt_template"],
+        "title": "PromptBlueprint"
       }
     }
   }

@@ -1,7 +1,10 @@
 ---
 title: "Prompt Blueprints"
 icon: "layer-group"
+openapi-schema: PromptBlueprint
 ---
+
+
 
 Prompt Blueprints are central to PromptLayer’s architecture, enabling you to work seamlessly with multiple LLM providers in a single format. They abstract provider-specific details, allowing you to switch between LLMs without modifying your code.
 
@@ -96,12 +99,15 @@ tools = [
     }
 ]
 
+
 prompt_template = {
     "type": "chat",
     "messages": messages,
     "tools": tools
 }
 ```
+
+The `parameters` field is of interest because it specifies the expected input parameters for the function. The LLM provider will use this information to generate the appropriate tool call. You can define the `parameters` using [JSON Schema](https://json-schema.org) format. You can read moe about how OpenAI uses JSON Schema for defining parameters [here](https://platform.openai.com/docs/guides/function-calling). And you can read more about how Anthropic uses JSON Schema for defining parameters [here](https://docs.anthropic.com/en/docs/build-with-claude/tool-use).
 
 ### Assistant Tool Calls
 
@@ -122,6 +128,14 @@ When the assistant decides to use a tool, the response will include a `tool_call
     ]
 }
 ```
+- `id` is used by the assistant to track the tool call.
+- `type` is always `function`.
+- `function` contains the function details
+    - `name` tells us which function to call
+    - `arguments` is a JSON string containing the function's input parameters.
+
+For more information about how PromptLayer structures tool calls, please refer to schema definition towards end of this page.
+
 
 ### Providing Tool Responses
 
@@ -138,6 +152,70 @@ After executing the requested function, you can provide the result back to the a
     ],
     "tool_call_id": "call_abc123"
 }
+```
+
+Here is an example of how to log a request with tool calls and responses using OpenAI:
+
+```python
+from openai import OpenAI
+client = OpenAI()
+model = "gpt-4o"
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "parameters": {
+                "type": "object",
+                "properties": {"location": {"type": "string"}},
+            },
+        },
+    }
+]
+messages = [
+    {
+        "role": "user",
+        "content": [
+            {"type": "text", "text": "What's the weather like in Paris today?"}
+        ],
+    }
+]
+prompt_template = {
+    "type": "chat",
+    "messages": messages,
+    "tools": tools,
+}
+
+request_start_time = time.time()
+completion = client.chat.completions.create(
+    model=model,
+    messages=prompt_template["messages"],
+    tools=prompt_template["tools"],
+)
+request_end_time = time.time()
+print(completion.choices[0].message.tool_calls)
+
+promptlayer.log_request(
+    provider="openai",
+    model=model,
+    input=prompt_template,
+    output={
+        "type": "chat",
+        "messages": [
+            {
+                "role": "assistant",
+                "tool_calls": [
+                    tool_call.model_dump()
+                    for tool_call in completion.choices[0].message.tool_calls
+                ],
+            }
+        ],
+    },
+    input_tokens=completion.usage.prompt_tokens,
+    output_tokens=completion.usage.completion_tokens,
+    request_start_time=request_start_time,
+    request_end_time=request_end_time,
+)
 ```
 
 ## Multi-Modal Variables
