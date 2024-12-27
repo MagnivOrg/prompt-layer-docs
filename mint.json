@@ -113,9 +113,7 @@
       "pages": [
         "reference/rest-api-reference",
         "reference/templates-get",
-        "reference/get-prompt-template",
         "reference/templates-publish",
-        "reference/publish-prompt-template",
         "reference/templates-labels-get",
         "reference/prompt-labels-patch",
         "reference/prompt-labels-delete",
@@ -125,7 +123,6 @@
         "reference/track-group",
         "reference/track-metadata",
         "reference/list-prompt-templates",
-        "reference/get-prompts",
         "reference/dataset-from-filter-params",
         "reference/create-reports",
         "reference/delete-reports-by-name",
