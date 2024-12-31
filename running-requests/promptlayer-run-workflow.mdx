@@ -44,12 +44,13 @@ console.log(response);
 - `metadata` (Dict[str, str], optional): Additional metadata for the workflow run.
 - `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the workflow version.
 - `workflow_version` / `workflowVersion` (int, optional): Specific version number of the workflow to run.
+- `return_all_outputs` / `returnAllOutputs` (bool, optional): Whether to return all outputs from the workflow execution.
 
 ## Return Value
 
-The method returns a dictionary (Python) or object (JavaScript) containing information about the workflow execution, and the response structure depends on the `return_all_outputs` parameter.
+The method returns a dictionary (Python) or object (JavaScript) containing information about the workflow execution, and the response structure depends on the `return_all_outputs` (Python) or `returnAllOutputs` (JavaScript) parameter.
 
-### When `return_all_outputs` is False (default):
+### When `return_all_outputs` / `returnAllOutputs` is False (default):
 
 Data from the output node of the workflow execution:
 - `status` (str): The status of the workflow execution (e.g., `"SUCCESS"`).
@@ -63,7 +64,7 @@ Example response:
 }
 ```
 
-### When `return_all_outputs` is True:
+### When `return_all_outputs` / `returnAllOutputs` is True:
 
 The method returns a dictionary containing detailed outputs from each node in the workflow execution:
 - Each key represents a node in the workflow (e.g., "Node 1", "Node 2").
