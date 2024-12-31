@@ -241,6 +241,35 @@ async def main():
 asyncio.run(main())
 ```
 
+#### Example 5: Asynchronous Streaming Prompt Execution with run Method
+
+You can run streaming prompt template using the run method as well.
+
+```python
+
+import asyncio
+import os
+from promptlayer import AsyncPromptLayer
+
+
+async def main():
+    async_promptlayer_client = AsyncPromptLayer(
+        api_key=os.environ.get("PROMPTLAYER_API_KEY")
+    )
+
+    response_generator = await async_promptlayer_client.run(
+        prompt_name="TestPrompt",
+        input_variables={"variable1": "value1", "variable2": "value2"}, stream=True
+    )
+
+    final_response = ""
+    async for response in response_generator:
+        print("streaming response", response)
+
+# Run the async function
+asyncio.run(main())
+```
+
 In this example, replace "TestPrompt" with the name of your prompt template, and provide any required input variables.
 
 ### Supported Methods: Synchronous vs. Asynchronous
