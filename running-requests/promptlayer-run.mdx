@@ -7,6 +7,11 @@ The `run()` method is a core function of the PromptLayer SDK, allowing you to ex
 
 ## Basic Usage
 
+### Disclaimer
+
+> **Note**: For any LLM provider you plan to use, you must set its corresponding API key as an environment variable (for example, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, etc.).  
+> The PromptLayer client does not support passing these keys directly in code. If the relevant environment variables are not set, any requests to those LLM providers will fail.
+
 <CodeGroup>
 
 ```python Python
