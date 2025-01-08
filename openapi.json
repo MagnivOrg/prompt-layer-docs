@@ -1759,6 +1759,49 @@
         "required": ["name"],
         "title": "FunctionMessage"
       },
+      "DeveloperMessage": {
+        "properties": {
+          "input_variables": {
+            "items": { "type": "string" },
+            "type": "array",
+            "title": "Input Variables",
+            "default": []
+          },
+          "template_format": {
+            "type": "string",
+            "enum": ["f-string", "jinja2"],
+            "title": "Template Format",
+            "default": "f-string"
+          },
+          "content": {
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ImageContent" },
+                { "$ref": "#/components/schemas/MediaContent" },
+                { "$ref": "#/components/schemas/MediaVariable" }
+              ],
+              "discriminator": {
+                "propertyName": "type",
+                "mapping": {
+                  "image_url": "#/components/schemas/ImageContent",
+                  "text": "#/components/schemas/TextContent"
+                }
+              }
+            },
+            "type": "array",
+            "title": "Content"
+          },
+          "role": { "const": "developer", "title": "Role", "default": "developer" },
+          "name": {
+            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "title": "Name"
+          }
+        },
+        "type": "object",
+        "required": ["content"],
+        "title": "DeveloperMessage"
+      },
       "MessageFunctionCall": {
         "properties": { "name": { "type": "string", "title": "Name" } },
         "type": "object",
@@ -1776,7 +1819,8 @@
                   "placeholder": "#/components/schemas/PlaceholderMessage",
                   "system": "#/components/schemas/SystemMessage",
                   "tool": "#/components/schemas/ToolMessage",
-                  "user": "#/components/schemas/UserMessage"
+                  "user": "#/components/schemas/UserMessage",
+                  "developer": "#/components/schemas/DeveloperMessage"
                 },
                 "propertyName": "role"
               },
@@ -1786,7 +1830,8 @@
                 { "$ref": "#/components/schemas/AssistantMessage" },
                 { "$ref": "#/components/schemas/FunctionMessage" },
                 { "$ref": "#/components/schemas/ToolMessage" },
-                { "$ref": "#/components/schemas/PlaceholderMessage" }
+                { "$ref": "#/components/schemas/PlaceholderMessage" },
+                { "$ref": "#/components/schemas/DeveloperMessage" }
               ]
             },
             "title": "Messages",
