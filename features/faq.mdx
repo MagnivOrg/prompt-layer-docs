@@ -132,3 +132,21 @@ Yes, PromptLayer supports using your own self-hosted models, those from provider
 ### Can I cancel my PromptLayer subscription?
 
 Yes, you can cancel your subscription at any time. Your subscription will remain active until the end of the billing cycle. To cancel your subscription, go to your settings and click on billing portal.
+
+## Does PromptLayer support Grok from xAI?
+
+Yes, PromptLayer supports `grok` through custom base URLs. To set up Grok with PromptLayer:
+
+1. Go to your workspace settings
+2. Navigate to "Provider Base URLs"
+3. Click "Create New" and configure:
+   - Name: xAI
+   - LLM Provider: OpenAI
+   - Base URL: `https://api.x.ai/v1`
+   - Your API key
+4. When using Grok in the Playground or Prompt Registry:
+   - Select your xAI Provider Base URL
+   - Update to the correct Grok model name (e.g., grok-2-112)
+   - Remove any incompatible model parameters
+
+Note that some default OpenAI parameters may not be compatible with Grok. If you encounter errors, try removing parameters like 'seed' before making your request.
