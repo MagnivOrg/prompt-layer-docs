@@ -1,0 +1,66 @@
+---
+title: "Agents"
+icon: "sitemap"
+---
+
+<iframe
+  width="640"
+  height="360"
+  src="https://www.youtube.com/embed/jidwFuKL5tg"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+></iframe>
+
+PromptLayer Agents let you quickly build, launch, and manage AI workflows that use multiple LLMs and business rules. You can create and test these AI systems easily using a visual drag-and-drop tool, and then deploy them without needing to worry about complex infrastructure management.
+
+![Agent DAG](/images/agents/workflow-dag.png)
+
+## Use Cases
+
+### 1. **Combining Multiple LLM Calls into a Single Output**
+Improve AI-generated responses by using results from multiple LLM calls, either by merging outputs or choosing the best one. This can lead to:
+- More thorough and precise outputs
+- Enhanced decision-making by considering multiple perspectives
+- Higher reliability through comparing multiple AI answers
+
+### 2. **Building Complex Agents**
+Create advanced AI systems that can handle multi-step tasks and solve complex problems. These systems can:
+- Integrate multiple LLM calls
+- Incorporate external data sources
+- Automate complex decision-making processes
+
+## Key Concepts
+
+### 1. Input Variables
+Input Variables are the data you feed into an Agent. They can be text, numbers, or other information the Agent uses in its various steps to produce the final result.
+
+![Input Variables](/images/agents/input-variables.png)
+
+### 2. Nodes
+Nodes are the building blocks of the Agent. Each node represents a specific action or decision. Types include:
+
+- **Prompt Template**: Make an LLM call using a specified prompt template and input variables.
+- **Callback Endpoint**: Make external API calls (ex: RAG steps) or trigger callback requests after workflow processes finish.
+- **Math Operator**: Perform numerical comparisons or calculations between different data sources.
+- **Parse Value**: Extract and process specific data types like strings, numbers, or JSON from inputs.
+
+![Nodes](/images/agents/nodes.png)
+
+### 3. Output Nodes
+The Output Node selects the specific part of the Agent's output to return. It controls what the external application receives as the final result when deploying Workflows.
+
+![Output Nodes](/images/agents/output-node.png)
+
+## Versioning
+
+Agent versioning automatically tracks changes over time. Each update creates a new version, allowing you to safely experiment with new ideas while keeping the current production version stable. You can view the full history of your Agent's changes, which helps with team collaboration and iterative development.
+
+![Versioning](/images/agents/versions.png)
+
+## Running an Agent
+
+After running an Agent, the full trace, including spans from all nodes, will be visible in the left traces menu. This allows you to visualize the execution path and see intermediate outputs at each step, helping you debug and optimize your Agent.
+
+![Traces](/images/agents/spans.png)
