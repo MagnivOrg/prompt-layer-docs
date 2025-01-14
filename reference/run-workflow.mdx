@@ -1,9 +1,11 @@
 ---
-title: "Run Workflow"
+title: "Run Agent"
 openapi: "POST /workflows/{workflow_name}/run"
 ---
 
-Initiate the execution of a specific workflow by its name. You can specify input variables, metadata, and choose which version of the workflow to run.
+Initiate the execution of a specific Agent by its name. You can specify input variables, metadata, and choose which version of the Agent to run.
+
+Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
 
 ## HTTP Request
 
@@ -11,7 +13,7 @@ Initiate the execution of a specific workflow by its name. You can specify input
 
 ## Path Parameters
 
-- **workflow_name** (string, required): The name of the workflow you wish to execute.
+- **workflow_name** (string, required): The name of the Agent you wish to execute.
 
 ## Request Body
 

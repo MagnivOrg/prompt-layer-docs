@@ -1,9 +1,9 @@
 ---
-title: "Run Workflow"
+title: "Run Agent"
 icon: "network-wired"
 ---
 
-The `run_workflow()` method initiates the execution of predefined workflows in PromptLayer, allowing you to start complex, multi-step sequences. For a comprehensive understanding of workflows, including their use cases, key concepts, and versioning, please refer to the [Workflows documentation](/why-promptlayer/workflows).
+The `run_workflow()` method initiates the execution of predefined Agents in PromptLayer, allowing you to start complex, multi-step sequences. For a comprehensive understanding of Agents, including their use cases, key concepts, and versioning, please refer to the [Agents documentation](/why-promptlayer/agents).
 
 ## Basic Usage
 
@@ -15,7 +15,7 @@ from promptlayer import PromptLayer
 pl = PromptLayer(api_key="your_api_key")
 
 response = pl.run_workflow(
-    workflow_name="Your Workflow Name",
+    workflow_name="Your Agent Name",
     workflow_version=1
 )
 
@@ -28,7 +28,7 @@ import { PromptLayer } from "promptlayer";
 const pl = new PromptLayer({ apiKey: "your_api_key" });
 
 const response = await pl.runWorkflow({
-  workflowName: "Your Workflow Name",
+  workflowName: "Your Agent Name",
   workflowVersion: 1
 });
 
@@ -39,21 +39,21 @@ console.log(response);
 
 ## Parameters
 
-- `workflow_name` / `workflowName` (str, required): The name of the workflow to run.
-- `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be used in the workflow.
-- `metadata` (Dict[str, str], optional): Additional metadata for the workflow run.
-- `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the workflow version.
-- `workflow_version` / `workflowVersion` (int, optional): Specific version number of the workflow to run.
-- `return_all_outputs` / `returnAllOutputs` (bool, optional): Whether to return all outputs from the workflow execution.
+- `workflow_name` / `workflowName` (str, required): The name of the Agent to run.
+- `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be used in the Agent.
+- `metadata` (Dict[str, str], optional): Additional metadata for the Agent run.
+- `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the Agent version.
+- `workflow_version` / `workflowVersion` (int, optional): Specific version number of the Agent to run.
+- `return_all_outputs` / `returnAllOutputs` (bool, optional): Whether to return all outputs from the Agent execution.
 
 ## Return Value
 
-The method returns a dictionary (Python) or object (JavaScript) containing information about the workflow execution, and the response structure depends on the `return_all_outputs` (Python) or `returnAllOutputs` (JavaScript) parameter.
+The method returns a dictionary (Python) or object (JavaScript) containing information about the Agent execution, and the response structure depends on the `return_all_outputs` (Python) or `returnAllOutputs` (JavaScript) parameter.
 
 ### When `return_all_outputs` / `returnAllOutputs` is False (default):
 
-Data from the output node of the workflow execution:
-- `status` (str): The status of the workflow execution (e.g., `"SUCCESS"`).
+Data from the output node of the Agent execution:
+- `status` (str): The status of the Agent execution (e.g., `"SUCCESS"`).
 - `value` (Any): The output produced by the output node.
 
 Example response:
@@ -66,8 +66,8 @@ Example response:
 
 ### When `return_all_outputs` / `returnAllOutputs` is True:
 
-The method returns a dictionary containing detailed outputs from each node in the workflow execution:
-- Each key represents a node in the workflow (e.g., "Node 1", "Node 2").
+The method returns a dictionary containing detailed outputs from each node in the Agent execution:
+- Each key represents a node in the Agent (e.g., "Node 1", "Node 2").
 - Each node contains:
   - `status` (str): The execution status of the node (e.g., "SUCCESS").
   - `value` (Any): The output value produced by the node.
@@ -89,14 +89,14 @@ Example response:
 
 ```python Python
 response = pl.run_workflow(
-    workflow_name="Data Analysis Workflow",
+    workflow_name="Data Analysis Agent",
     input_variables={"dataset_url": "https://example.com/data.csv"}
 )
 ```
 
 ```js JavaScript
 const response = await pl.runWorkflow({
-  workflowName: "Data Analysis Workflow",
+  workflowName: "Data Analysis Agent",
   inputVariables: { dataset_url: "https://example.com/data.csv" }
 });
 ```
@@ -109,34 +109,34 @@ const response = await pl.runWorkflow({
 
 ```python Python
 response = pl.run_workflow(
-    workflow_name="Customer Service Workflow",
+    workflow_name="Customer Service Agent",
     metadata={"customer_id": "12345"}
 )
 ```
 
 ```js JavaScript
 const response = await pl.runWorkflow({
-  workflowName: "Customer Service Workflow",
+  workflowName: "Customer Service Agent",
   metadata: { customer_id: "12345" }
 });
 ```
 
 </CodeGroup>
 
-### Using Workflow Labels
+### Using Agent Labels
 
 <CodeGroup>
 
 ```python Python
 response = pl.run_workflow(
-    workflow_name="Marketing Campaign Workflow",
+    workflow_name="Marketing Campaign Agent",
     workflow_label_name="production"
 )
 ```
 
 ```js JavaScript
 const response = await pl.runWorkflow({
-  workflowName: "Marketing Campaign Workflow",
+  workflowName: "Marketing Campaign Agent",
   workflowLabelName: "production"
 });
 ```
