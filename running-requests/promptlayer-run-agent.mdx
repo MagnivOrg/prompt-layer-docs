@@ -48,20 +48,15 @@ console.log(response);
 
 ## Return Value
 
-The method returns a dictionary (Python) or object (JavaScript) containing information about the Agent execution, and the response structure depends on the `return_all_outputs` (Python) or `returnAllOutputs` (JavaScript) parameter.
+By default, when `return_all_outputs` / `returnAllOutputs` is `false`, the method returns only the final node’s output as a single value; when set to `true`, it returns a dictionary (Python) or object (JavaScript) containing detailed outputs (including status) for each node in the agent.
 
 ### When `return_all_outputs` / `returnAllOutputs` is False (default):
 
-Data from the output node of the Agent execution:
-- `status` (str): The status of the Agent execution (e.g., `"SUCCESS"`).
-- `value` (Any): The output produced by the output node.
+The method returns only the final node’s output as a single value. For example, if your output node produces False, the method simply returns:
 
 Example response:
 ```python
-{
-    'status': 'SUCCESS',
-    'value': False
-}
+False
 ```
 
 ### When `return_all_outputs` / `returnAllOutputs` is True:
