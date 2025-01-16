@@ -58,7 +58,7 @@
           "group": "Running Requests",
           "pages": [
             "running-requests/promptlayer-run",
-            "running-requests/promptlayer-run-workflow",
+            "running-requests/promptlayer-run-agent",
             "running-requests/traces"
           ],
           "icon": "circle-play"
@@ -99,7 +99,7 @@
           ],
           "icon": "vial-circle-check"
         },
-        "why-promptlayer/workflows",
+        "why-promptlayer/agents",
         "why-promptlayer/fine-tuning",
         "why-promptlayer/analytics",
         "why-promptlayer/evaluation-and-ranking",

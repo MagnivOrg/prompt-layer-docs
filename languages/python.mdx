@@ -165,9 +165,9 @@ async def main():
 asyncio.run(main())
 ```
 
-#### Example 2: Async Workflow Execution
+#### Example 2: Async Agent Execution
 
-Run workflows asynchronously for better efficiency:
+Run Agents asynchronously for better efficiency:
 
 ```python
 import asyncio
@@ -177,7 +177,7 @@ async def main():
     async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
 
     response = await async_promptlayer_client.run_workflow(
-        workflow_name="example_workflow",
+        workflow_name="example_agent",
         workflow_version=1,
         input_variables={"num1": "1", "num2": "2"},
         return_all_outputs=True,
@@ -281,7 +281,7 @@ The following table provides an overview of the methods currently available in b
 | `templates.get()`  | Retrieves a template by name. | `promptlayer_client.templates.get()`  | `async_promptlayer_client.templates.get()`  |
 | `templates.all()`  | Retrieves all templates.      | `promptlayer_client.templates.all()`  | `async_promptlayer_client.templates.all()`  |
 | `run()`            | Executes a prompt template.   | `promptlayer_client.run()`            | `async_promptlayer_client.run()`            |
-| `run_workflow()`   | Executes a workflow.          | `promptlayer_client.run_workflow()`   | `async_promptlayer_client.run_workflow()`   |
+| `run_workflow()`   | Executes an Agent.            | `promptlayer_client.run_workflow()`   | `async_promptlayer_client.run_workflow()`   |
 | `track.metadata()` | Tracks metadata.              | `promptlayer_client.track.metadata()` | `async_promptlayer_client.track.metadata()` |
 | `track.group()`    | Tracks a group.               | `promptlayer_client.track.group()`    | `async_promptlayer_client.track.group()`    |
 | `track.prompt()`   | Tracks a prompt.              | `promptlayer_client.track.prompt()`   | `async_promptlayer_client.track.prompt()`   |
