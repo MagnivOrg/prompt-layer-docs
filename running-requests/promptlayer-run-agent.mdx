@@ -61,18 +61,31 @@ False
 
 ### When `return_all_outputs` / `returnAllOutputs` is True:
 
-The method returns a dictionary containing detailed outputs from each node in the Agent execution:
-- Each key represents a node in the Agent (e.g., "Node 1", "Node 2").
-- Each node contains:
-  - `status` (str): The execution status of the node (e.g., "SUCCESS").
-  - `value` (Any): The output value produced by the node.
+You receive a dictionary (Python) or object (JavaScript) of all node outputs. Each key corresponds to a node in the workflow with details such as:
+- `status` (str): The execution status (e.g., ``"SUCCESS"``, ``"FAILED"``).
+- `value` (Any): The output (e.g., text, boolean).
+- `error_message` / `raw_error_message`: Error information, if any.
+- `is_output_node` (bool): Indicates whether this node is the designated “final output” node.
 
 Example response:
-```python
+```json
 {
-    'Node 1': {'status': 'SUCCESS', 'value': '123'},
-    'Node 2': {'status': 'SUCCESS', 'value': '456'},
-    'Node 3': {'status': 'SUCCESS', 'value': False}
+  "Node 1": {
+    "status": "SUCCESS",
+    "value": "First node",
+    "error_message": null,
+    "raw_error_message": null,
+    "is_output_node": false
+  },
+  "Node 2": {
+    "status": "FAILED",
+    "value": null,
+    "error_message": "Code execution failed: Traceback...",
+    "raw_error_message": {
+      "raw": "Code execution failed: Traceback..."
+    },
+    "is_output_node": true
+  }
 }
 ```
 
