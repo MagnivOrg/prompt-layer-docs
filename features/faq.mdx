@@ -150,3 +150,7 @@ Yes, PromptLayer supports `grok` through custom base URLs. To set up Grok with P
    - Remove any incompatible model parameters
 
 Note that some default OpenAI parameters may not be compatible with Grok. If you encounter errors, try removing parameters like 'seed' before making your request.
+
+## Does PromptLayer support Deepseek models?
+
+Yes, PromptLayer supports Deepseek models through custom base URLs. Configure it in workspace settings under "Provider Base URLs" using OpenAI as the provider and `https://api.deepseek.com` as the base URL. You can then use models like `deepseek-chat` and `deepseek-reasoner` in the Playground and Prompt Registry.
