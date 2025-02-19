@@ -1,0 +1,62 @@
+---
+title: "Observability"
+description: "Learn how to enable logging and review logs to monitor prompt performance and troubleshoot issues."
+hidden: true
+---
+
+**Observability** enables you to monitor prompt performance and troubleshoot issues by reviewing detailed logs. Below are the key steps to enable logging and view logs—with clear instructions for each stage.
+
+## Enable Logging
+
+Set up logging and tracing within your SDK to capture detailed execution data. This enables you to monitor **latency**, track **errors**, and record **metadata** for each execution.
+
+**Step by Step:**
+
+1. Import the **required modules** and the **PromptLayer client**.
+2. Configure **basic logging** to capture **informational messages**.
+3. Initialize the **PromptLayer client** with your **API key**.
+4. (Optional) Add any **additional logging configuration** as needed.
+
+<CodeGroup>
+
+```python Python
+import logging
+from promptlayer import PromptLayer
+
+# Configure logging to display INFO level messages
+logging.basicConfig(level=logging.INFO)
+
+# Initialize the PromptLayer client with your API key
+pl_client = PromptLayer(api_key="YOUR_API_KEY")
+
+# Additional logging configuration can be added here if needed.
+```
+
+```js Javascript
+import { PromptLayer } from "promptlayer";
+
+// Initialize the PromptLayer client with your API key
+const promptLayerClient = new PromptLayer({ apiKey: "YOUR_API_KEY" });
+
+// Log a confirmation message to indicate logging is enabled
+console.log("Logging enabled for PromptLayer SDK.");
+```
+
+</CodeGroup>
+
+---
+
+## Run and View Log
+
+After executing a prompt, review the logs to analyze performance and troubleshoot issues.
+
+**Step by Step:**
+
+1. Execute your prompt using the **SDK**.
+2. Open the **sidebar** on the left (if it’s not already open).
+3. Click on **Requests** to access your **log entries**.
+4. Select a **log entry** to view detailed **information**, including **execution time**, **cost**, **token usage**, and **model parameters**.
+5. Examine **performance metrics** and consider assigning a **rating** or **score** to highlight top-performing requests.
+6. Use these insights to refine and optimize your **prompt**.
+
+By following these steps, you can continuously monitor prompt performance and make **data-driven improvements**.

@@ -1,0 +1,54 @@
+---
+title: "Prompt Management"
+description: "Organize your prompt templates and keep track of changes effectively."
+hidden: true
+---
+
+**Prompt Management** enables you to organize and version your prompt templates effectively. Below are the key steps to save new versions and retrieve your prompts programmatically—with clear instructions for each stage.
+
+## Save New Version
+
+When you update your prompt, save it as a new version. This allows you to track changes over time and compare performance.
+
+**Step by Step:**
+
+1. Go to your prompt in the registry.
+2. Click the **Edit Version #** button.
+3. Make the desired changes to your prompt.
+4. Click the **Update Template** button to save the new version.
+
+---
+
+## Retrieve Your Prompts from Code
+
+Integrate prompt retrieval into your development workflow. Use the examples below to fetch a prompt template programmatically.
+
+**How to Get Your API Key:**
+
+1. Click on the **Settings** icon.
+2. Scroll until you see **PromptLayer API Keys**.
+3. Click the **Generate New API Key** button.
+4. Copy the API key by clicking on the **copy** icon.
+
+Use the API key in your code as shown below:
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+
+pl_client = PromptLayer(api_key="YOUR_API_KEY")
+
+template = pl_client.templates.get("your_prompt_name")
+print(template)
+```
+
+```js Javascript
+import { PromptLayer } from "promptlayer";
+
+const promptLayerClient = new PromptLayer({ apiKey: "YOUR_API_KEY" });
+const template = await promptLayerClient.templates.get("your_prompt_name");
+console.log(template);
+```
+
+</CodeGroup>
