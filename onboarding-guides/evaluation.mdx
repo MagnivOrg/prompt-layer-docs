@@ -1,45 +1,41 @@
----
-title: "Evaluation"
-description: "Evaluate your prompts to measure quality and effectiveness through systematic testing."
-hidden: true
----
-
-**Evaluation** enables you to measure prompt quality and effectiveness through systematic testing. Below are the key steps to import or create test datasets, configure evaluation metrics, and run evaluations—with clear instructions for each stage.
+Evaluating your prompts is essential to ensure they perform as expected before deploying them in production. This page guides you through creating datasets, configuring evaluation metrics, and running evaluations.
 
 ## Import or Create Test Datasets
 
-Establish a dataset by importing existing data or creating a new one. This provides the necessary context for comprehensive prompt testing.
+Establish a dataset by importing existing data or creating a new one. A well-prepared dataset provides context for evaluating your prompts.
 
 **Step by Step:**
 
 1. Click **Datasets** in the left sidebar.
-2. (Optional) Download example datasets.
-3. Click the **Create Dataset** button.
-   1. If you have a .csv file, you can upload it.
+   {/* - <!-- Insert screenshot of the sidebar with "Datasets" highlighted --> */}
+2. Click the **Create Dataset** button.
+   1. If you have a .csv file, upload it or (Optional) download example datasets provided by PromptLayer.
    2. Otherwise, click on **Add Column**.
-   3. Add rows if needed by clicking on the **Add Row** button.
-   4. You can add data from your request history by clicking on **Add from Request History**.
-4. Click the **Save as New Version** button.
+   3. Add rows by clicking the **Add Row** button.
+   4. Optionally, add data from your request history by clicking **Add from Request History**.
+3. Click the **Save as New Version** button.
+   {/* - <!-- Insert screenshot of the dataset creation interface --> */}
 
 ---
 
 ## Configure Evaluation Metrics and Scoring Criteria
 
-Set clear metrics and scoring logic to assess prompt performance. This allows you to pinpoint strengths and areas for improvement.
+Set clear metrics and scoring logic to assess prompt performance. This step helps you pinpoint strengths and areas for improvement.
 
 **Step by Step:**
 
 1. Click the **Evaluate** button.
 2. Click the **New Batch Run** button.
-3. Select a previously created dataset and enter a name.
+3. Select a previously created dataset and enter a name for your evaluation.
 4. Click **Create Pipeline**.
-5. Add steps to evaluate your prompt, set metrics, and scoring criteria.
+5. Add steps to evaluate your prompt, such as comparing outputs or calculating a score.
+   {/* - <!-- Insert screenshot or gif of the evaluation pipeline configuration --> */}
 
 ---
 
 ## Run Evaluation
 
-Execute the evaluation process to generate actionable insights. Running evaluations helps compare outputs against expected results and refine your prompts accordingly.
+Execute the evaluation process to generate actionable insights. This helps you compare outputs against expected results and refine your prompts accordingly.
 
 **Step by Step:**
 
@@ -47,4 +43,6 @@ Execute the evaluation process to generate actionable insights. Running evaluati
 2. Examine the results:
    1. **Define scoring criteria** to objectively assess performance.
    2. **Compare results** across multiple runs to identify trends.
+   3. **Analyze metrics** such as execution time, cost, and accuracy.
 3. Use these insights to **optimize** and **refine** your prompt.
+   {/* - <!-- Insert screenshot of evaluation results with key metrics highlighted --> */}

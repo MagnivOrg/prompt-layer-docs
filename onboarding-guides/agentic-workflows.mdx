@@ -1,46 +1,90 @@
 ---
 title: "Agentic Workflows"
-description: "Automate complex, multi-step tasks by chaining multiple prompts together."
-hidden: true
 ---
 
-**Agentic workflows** enable you to automate complex, multi-step tasks by chaining multiple prompts together. Below are the key steps to build and run an agent, with clear instructions for each stage.
+**Agentic Workflows** allow you to automate complex tasks by chaining multiple prompts together so that the output from one prompt serves as the input for the next. This approach streamlines processes and minimizes manual intervention.
+
+**Example Workflow: The AI Poet Journey**
+
+Imagine you want to create a creative process that generates a poetic journey:
+
+- First, an **ai-poet** prompt generates a haiku based on a user-provided topic.
+- Next, a second prompt takes that haiku as inspiration and produces a reflective commentary.
+- Finally, a third prompt combines the haiku and the commentary to craft a final artistic message.
+
+By saving these prompts and chaining them into an agent, you ensure consistency in tone and style while automating the creation of a multi-layered piece of content. This allows you to experiment with creative outputs, measure engagement, and easily rollback to earlier versions if needed.
 
 ## Import or Create Multiple Prompts
 
-Assemble the prompts required for your workflow. You can import existing prompts or create new ones to form the building blocks of your agent.
+Gather the prompts required for your workflow. For the AI Poet Journey, you might use:
+
+- The original **ai-poet** prompt that generates a haiku that we've already created during [**Getting Started**](/onboarding-guides/getting-started).
+- An additional prompt that generates commentary based on the haiku.
+- Optionally, a prompt that compiles the haiku and commentary into a final creative message.
 
 **Step by Step:**
 
-1. Open your prompt registry.
+1. Open your Prompt Registry.
 2. To add an existing prompt, select it from the list; or click the **Create Prompt** button to start a new one.
 3. Verify that each prompt includes the necessary input variables and configuration.
-4. Organize your prompts in a logical order for later chaining.
+4. Organize your prompts in the order you intend them to run.
+
+<img
+  src="./images/prompts.png"
+  loading="lazy"
+  alt="Prompts for Agentic Workflow"
+/>
+
+To read more about creating and managing prompts, visit the [Prompt Management](/onboarding-guides/prompt-management) guide.
 
 ---
 
 ## Create an Agent That Runs Prompts Sequentially
 
-Build an agent that executes a series of prompts one after the other. Sequential execution ensures that each prompt completes before the next begins, improving reliability and structure.
+Construct an agent to execute your chained prompts one after the other, ensuring smooth data flow between steps.
 
 **Step by Step:**
 
-1. In your agent creation interface, select the prompts you assembled.
-2. Arrange the prompts in the desired sequence to reflect the logical workflow.
-3. Confirm the order and save your agent configuration.
-4. This sequence ensures that the output from one prompt can be used as input for the next, creating a smooth, automated process.
+1. Navigate to the **Agents** page: **Registry** -> **Agents**.
+2. Click the **Create Agent** button.
+3. Add Nodes to your agent by clicking the **Add Node** button.
+4. Select Node Type as **Prompt**.
+5. Select the **ai-poet** prompt you created in the previous step.
+6. Do the same for the **ai-poetry-commentary** and **ai-poetry-final** prompts.
+7. Arrange the prompts in the desired sequence. For example:
+
+   1. First, generate the haiku.
+   2. Next, generate commentary from the haiku.
+   3. Finally, compile the final artistic message.
+
+8. Confirm the order and save your agent configuration.
+
+<img
+  src="./images/agentic-workflow.gif"
+  loading="lazy"
+  alt="Agentic Workflow"
+/>
+
+To learn more about agents, visit the [Agents](/why-promptlayer/agents) page.
 
 ---
 
 ## Enter Input Variables and Run the Agent
 
-Customize your agent by setting the necessary input variables. Once configured, running the agent will automatically process the chained prompts to deliver cohesive and dynamic results.
+Customize your agent by specifying input variables for each prompt. Running the agent is valuable because it automates the entire workflow—processing each step in sequence to generate a complete, integrated output. This saves time and allows you to see the end-to-end effect of your changes, such as how a haiku and its commentary combine to form a final creative piece.
 
 **Step by Step:**
 
 1. Open the agent editor and locate the input variables section.
-2. Enter or update the required input values for each prompt in the sequence.
+2. Enter or update the required input values for each prompt (for example, the topic for the haiku and any parameters needed for the commentary).
 3. Save your changes and execute the agent.
-4. Review the output to ensure that the entire workflow is functioning as expected, and adjust the input values if needed.
+4. Review the output to ensure the entire workflow functions as expected, and adjust the input values if needed.
 
-This comprehensive approach allows you to build, test, and refine agentic workflows that automate complex tasks using multiple prompts.
+<img src="./images/run-agent.gif" loading="lazy" alt="Run Agent" />
+
+---
+
+**Additional Resources:**
+
+- For more on agentic workflows, visit the [Agentic Workflows](/why-promptlayer/agents) page.
+- Learn more about evaluating prompt performance on the [Evaluation](/features/evaluations/overview) page.

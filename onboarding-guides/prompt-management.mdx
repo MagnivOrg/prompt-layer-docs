@@ -1,36 +1,56 @@
 ---
 title: "Prompt Management"
-description: "Organize your prompt templates and keep track of changes effectively."
-hidden: true
+description: "Learn how to version your prompts, retrieve them programmatically, and keep them organized in PromptLayer."
 ---
 
-**Prompt Management** enables you to organize and version your prompt templates effectively. Below are the key steps to save new versions and retrieve your prompts programmatically—with clear instructions for each stage.
+To effectively manage your prompts in **PromptLayer**, you can version them for tracking changes and retrieve them to ensure consistent usage across your projects. In this guide, we explain how to save a new version of your prompt and pull the latest version programmatically.
 
 ## Save New Version
 
-When you update your prompt, save it as a new version. This allows you to track changes over time and compare performance.
+Keep track of prompt updates by saving them as new versions. This ensures you can compare different iterations, revert to an older version if needed, and maintain a clear history of changes.
 
-**Step by Step:**
+**Example Scenario:**
 
-1. Go to your prompt in the registry.
-2. Click the **Edit Version #** button.
-3. Make the desired changes to your prompt.
-4. Click the **Update Template** button to save the new version.
+During **[Getting Started](/onboarding-guides/getting-started)** we created an **ai-poet** prompt that writes a haiku about a specific topic. Initially, it just takes a single input variable for the topic:
+
+- “You are a skilled poet specializing in haiku. Your task is to write a haiku based on a topic provided by the user.”
+
+You decide to enhance it by allowing users to specify a language as well:
+
+- Add a new input variable (e.g., `{lang}`) so the haiku can be written in multiple languages.
+- Update the system prompt to instruct the AI to consider both the topic and the language.
+
+By saving these edits as a **new version**, you can:
+
+- **Compare** how users respond to the updated prompt (e.g., do they enjoy the multilingual option?).
+- **Measure** any improvements in user satisfaction or engagement.
+- **Rollback** to the old version if changes don't yield the desired results.
+
+**How to save a new version:**
+
+1. Log in to your PromptLayer account.
+2. Navigate to the **Prompt Registry**.
+3. Select the existing prompt you want to update (e.g., “Welcome Prompt”).
+4. Click the **Edit Version #** button to modify the prompt’s content (tone, instructions, or additional variables).
+5. Make your changes, such as adding friendlier text or clarifying the product’s key features.
+6. Click **Update Template** to save these edits as a new version.
+   <img src="./images/save-new-version.gif" alt="Save New Version" />
+
+By following these steps, you can keep a detailed history of your prompt’s evolution and quickly revert to an older version if necessary.
 
 ---
 
 ## Retrieve Your Prompts from Code
 
-Integrate prompt retrieval into your development workflow. Use the examples below to fetch a prompt template programmatically.
+Fetch the latest version of your prompt from code, ensuring consistent usage in production.
 
-**How to Get Your API Key:**
+**Step by Step:**
 
-1. Click on the **Settings** icon.
-2. Scroll until you see **PromptLayer API Keys**.
-3. Click the **Generate New API Key** button.
-4. Copy the API key by clicking on the **copy** icon.
-
-Use the API key in your code as shown below:
+1. Obtain your **API Key** by going to **Settings** → **PromptLayer API Keys**.
+   <img src="./images/api-keys.png" alt="API Keys" />
+2. Initialize the PromptLayer client in your application.
+3. Call the appropriate function to retrieve your prompt.
+4. Use the retrieved prompt in your logic.
 
 <CodeGroup>
 
@@ -52,3 +72,15 @@ console.log(template);
 ```
 
 </CodeGroup>
+
+**Example:**  
+Imagine you're building an AI writing tool that dynamically generates content based on user input.
+By retrieving the prompt directly from your code, your application automatically uses the most up-to-date version of the prompt.
+This means that whenever you update the prompt in PromptLayer, your tool will immediately reflect those changes without any manual intervention, ensuring consistency and reducing maintenance overhead.
+
+---
+
+**Additional Resources:**
+
+- For more on prompt creation, visit the [Quickstart](/quickstart).
+- Learn more about the Prompt Registry in the [Documentation](/features/prompt-registry/overview).

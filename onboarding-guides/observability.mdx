@@ -1,21 +1,19 @@
 ---
 title: "Observability"
-description: "Learn how to enable logging and review logs to monitor prompt performance and troubleshoot issues."
-hidden: true
 ---
 
-**Observability** enables you to monitor prompt performance and troubleshoot issues by reviewing detailed logs. Below are the key steps to enable logging and view logs—with clear instructions for each stage.
+To effectively monitor your prompts in **PromptLayer**, you can enable logging to capture detailed execution data, then review logs to pinpoint issues and optimize performance. In this guide, we explain how to set up logging and interpret log entries.
 
 ## Enable Logging
 
-Set up logging and tracing within your SDK to capture detailed execution data. This enables you to monitor **latency**, track **errors**, and record **metadata** for each execution.
+Capture execution details like latency, cost, and tokens to better understand prompt behavior.
 
 **Step by Step:**
 
-1. Import the **required modules** and the **PromptLayer client**.
-2. Configure **basic logging** to capture **informational messages**.
-3. Initialize the **PromptLayer client** with your **API key**.
-4. (Optional) Add any **additional logging configuration** as needed.
+1. Configure logging in your application.
+2. Initialize the PromptLayer client with logging enabled.
+3. Run your prompt and observe the logs being generated.
+   <img src="./images/logging-config.gif" alt="Logging Configuration" />
 
 <CodeGroup>
 
@@ -48,15 +46,21 @@ console.log("Logging enabled for PromptLayer SDK.");
 
 ## Run and View Log
 
-After executing a prompt, review the logs to analyze performance and troubleshoot issues.
+Review your logs to troubleshoot issues and gather performance metrics.
 
 **Step by Step:**
 
-1. Execute your prompt using the **SDK**.
-2. Open the **sidebar** on the left (if it’s not already open).
-3. Click on **Requests** to access your **log entries**.
-4. Select a **log entry** to view detailed **information**, including **execution time**, **cost**, **token usage**, and **model parameters**.
-5. Examine **performance metrics** and consider assigning a **rating** or **score** to highlight top-performing requests.
-6. Use these insights to refine and optimize your **prompt**.
+1. Execute your prompt (via SDK or code).
+2. Open the sidebar and click **Requests** to view log entries.
+   <img src="./images/view-requests.gif" alt="View Requests" />
+3. Use filters to locate the specific prompt log.
+4. Click on the log entry to see execution time, cost, token usage, and more.
+5. Assign a rating or score to highlight top-performing requests.
+6. Use these insights to refine and optimize your prompt.
 
-By following these steps, you can continuously monitor prompt performance and make **data-driven improvements**.
+---
+
+**Additional Resources:**
+
+- For more on prompt creation, visit the [Quickstart](/quickstart).
+- Learn more about evaluating prompt performance on the [Evaluation](/features/evaluations/overview) page.

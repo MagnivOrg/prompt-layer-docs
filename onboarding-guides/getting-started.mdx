@@ -1,48 +1,53 @@
 ---
-title: "Getting Started"
-description: "Learn how to set up your account and start your prompt engineering journey."
-hidden: true
+title: "Getting Started with PromptLayer"
+description: "A comprehensive guide to creating or importing prompts, testing them in the Playground, and reviewing logs."
 ---
 
-To effectively use **PromptLayer**, you need a prompt as the foundation for most interactions. In this guide, we'll begin by **creating** a prompt, **testing** it in the Playground for real-time feedback, and then **reviewing** the logs to **analyze** its performance.
+To effectively use **PromptLayer**, you need a **prompt** that defines how your AI interacts with users. Creating a prompt allows you to set precise instructions for generating content, automating workflows, and ensuring consistent results.
 
 ## Create or Import a Prompt
 
-Begin by creating a new prompt or importing an existing one. This step centralizes your prompt templates for easy management and refinement.
+For example, an **ai-poet** prompt can instruct the AI to generate creative haikus based on a given topic, streamlining your creative process and making it easier to refine your output over time.
 
 **Step by Step:**
 
-1. Navigate to the prompt registry.
-2. Click the **Create Prompt** button
-3. Fill in the required details such as the prompt name, messages, and input variables.
-4. Save your prompt to add it to your registry.
-
----
+1. Log in to your PromptLayer account.
+2. Navigate to the **Prompt Registry**. ([Read more](/features/prompt-registry/overview))
+3. Click the **Create Prompt** button to start a new prompt.
+4. Fill in the required details such as the **Prompt Title**, **Messages**, and **Input Variables**.  
+   Input Variables can be defined using **f-string** or **jinja2** syntax. ([Read more](/features/prompt-registry/overview#string-formats))
+5. Select the **Model** and configure its **Parameters**.
+6. Save your prompt by clicking on **Create Prompt**.
+   <img src="./images/create-prompt.gif" alt="Create Prompt" />
 
 ## Run a Prompt in the Playground
 
-Test your prompts in an interactive environment to see real-time responses and iterate quickly on your design.
+Testing your prompt in the **Playground** gives you immediate feedback on its performance. This interactive environment lets you see how the AI interprets your instructions and allows you to make adjustments to achieve better results.
 
 **Step by Step:**
 
 1. Open your prompt from the PromptLayer dashboard.
 2. Click the **Playground** button.
-3. (Optional) Add something new to the prompt if desired.
-4. Execute the prompt by clicking the **Run** button or pressing "command + enter" on Mac (or "alt + enter" on Windows).
+3. (Optional) Modify the prompt if you want to test new changes.
+4. Execute the prompt by clicking the **Run** button or pressing "command + enter" (Mac) or "alt + enter" (Windows).
 5. Observe the output in real time and adjust your prompt as needed.
-
----
+   <img src="./images/run-playground.gif" alt="Run Prompt in Playground" />
 
 ## Review Prompt Logs
 
-Analyze past prompt executions by reviewing detailed logs. Logs provide insight into prompt performance and help identify areas for improvement.
+Reviewing prompt logs helps you monitor performance metrics such as execution time, cost, token usage, and model parameters. These insights enable you to identify areas for improvement and optimize your prompt for better results.
 
 **Step by Step:**
 
-1. Open the sidebar on the left (if not already open).
-2. Click on **Requests** to access the log entries.
-3. Use the available filters to locate the log for the specific prompt you want to review.
-4. Click on a log entry to view detailed information, including execution time and output data.
-5. Examine performance metrics.
-   - Look at execution time, cost, token usage, and model parameter settings; optionally, assign a star rating or score, or share the log with your team to highlight top-performing requests.
+1. Open the sidebar on the left (if not already visible).
+2. Click on **Requests** to access your log entries.
+3. Use the available filters to locate the log for the specific prompt you want to review. ([Read more](/why-promptlayer/advanced-search))
+4. Click on a log entry to view detailed information, such as execution time, cost, token usage, and model parameters.
+5. Examine performance metrics (consider assigning a star rating or score) to identify top-performing requests.
 6. Use these insights to refine and optimize your prompt.
+   <img src="./images/request-logs.gif" alt="Request Logs" />
+
+**Additional Resources:**
+
+- For more on prompt creation, visit the [Quickstart](/quickstart).
+- Learn more about evaluating prompt performance on the [Evaluation](/features/evaluations/overview) page.
