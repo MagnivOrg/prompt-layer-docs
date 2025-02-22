@@ -3,6 +3,11 @@ title: "Observability"
 description: "Learn how to use logging to monitor performance and optimize your prompts."
 ---
 
+<Tip>
+  This module requires a prompt to be used, so ensure you have one set up in
+  your PromptLayer account before proceeding.
+</Tip>
+
 When buidling a prompt, logging becomes critical. For example, the [ai-poet prompt](/onboarding-guides/getting-started) generates a creative haiku based on a given topic, and enabling logging helps you monitor important performance details. For example, logging can reveal:
 
 - **Execution Time:** How quickly the prompt is executed.
@@ -10,6 +15,24 @@ When buidling a prompt, logging becomes critical. For example, the [ai-poet prom
 - **Cost Metrics:** Whether the prompt runs efficiently within your budget.
 
 By reviewing these logs, you can determine if your ai-poet prompt is performing as expected and make adjustments if necessary—ensuring that your creative content is generated both efficiently and effectively.
+
+## Create an API Key
+
+Before you can enable logging, you need to authenticate your PromptLayer client with an API key.
+
+**Step by Step:**
+
+1. Go to your PromptLayer **Settings**.
+2. Click on **Create an API key** to generate a new API key.
+3. Copy the API key for later use. ([Read more](/quickstart#api-key-env-var-setup))
+
+<img src="./images/api-keys.png" alt="API Keys" />
+
+---
+
+## Enable Logging
+
+Set up logging and tracing within your SDK to capture execution data. This enables you to monitor latency, track errors, and record metadata.
 
 **Step by Step:**
 
