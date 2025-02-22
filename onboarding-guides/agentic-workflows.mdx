@@ -30,10 +30,20 @@ Gather the prompts required for your workflow. For the AI Poet Journey, you migh
 
 **Step by Step:**
 
-1. Open your Prompt Registry.
-2. To add an existing prompt, select it from the list; or click the **Create Prompt** button to start a new one.
-3. Verify that each prompt includes the necessary input variables and configuration.
-4. Organize your prompts in the order you intend them to run.
+1. Navigate to the **Prompt Registry**. ([Read more](/features/prompt-registry/overview))
+2. Click the **Create Prompt** button to start a new prompt.
+3. Fill in the required details such as the **Prompt Title**, **Messages**, and **Input Variables**.  
+   Input Variables can be defined using **f-string** or **jinja2** syntax. ([Read more](/features/prompt-registry/overview#string-formats))
+4. Select the **Model** and configure its **Parameters**.
+5. Save your prompt by clicking on **Create Prompt**.
+
+For our example, we'll create the following prompts:
+
+- **ai-poet**: Generates a haiku based on a user-provided topic.
+- **ai-poetry-commentary**: Generates commentary from the haiku.
+- **ai-poetry-final**: Compiles the haiku and commentary into a final creative message.
+
+See the image below for the prompts we'll create:
 
 <img
   src="./images/prompts.png"
