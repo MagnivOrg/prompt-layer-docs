@@ -1,6 +1,7 @@
 ---
 title: "Evaluation"
 description: "Measure the quality and effectiveness of your prompts through systematic testing."
+hidden: true
 ---
 
 <Tip>
@@ -9,7 +10,7 @@ description: "Measure the quality and effectiveness of your prompts through syst
   Started](/onboarding-guides/getting-started) guide to create a prompt.
 </Tip>
 
-Evaluating your prompts is essential to ensure they perform as expected before deploying them in production. For example, you might use an **ai-poet** prompt to generate creative haikus based on a given topic, allowing you to assess creativity, syllable accuracy, and overall engagement. Similarly, if you're using an **ai-doctor-agent** prompt to provide diagnostic suggestions based on patient data, evaluation can reveal which input parameters yield more accurate and cost-effective results. The same evaluation process applies across different prompt types, helping you optimize performance and make data-driven improvements.
+Evaluating your prompts is crucial to ensuring they perform as intended before deployment. For example, an **ai-poet** prompt generating haikus can be evaluated for creativity, syllable accuracy, and engagement. Similarly, an [**ai-doctor-agent**](/onboarding-guides/agentic-workflows) providing diagnostic suggestions can be assessed to determine which input parameters produce the most accurate and cost-effective results. Evaluation process allows you to optimize performance and drive data-informed improvements.
 
 ## Import or Create Test Datasets
 
@@ -19,7 +20,7 @@ A well-prepared dataset provides the necessary context for evaluating your promp
 
 1. Click **Datasets** in the left sidebar. ([Read more](/features/evaluations/datasets))
 2. Click the **Create Dataset** button.
-   1. If you have a .csv file, upload it or (Optional) download example datasets provided by PromptLayer.
+   1. If you have a .csv file, upload it or (Optional) download example datasets provided by PromptLayer. (<a href="./example-dataset/haiku.csv" download>Download Example Dataset</a>)
    2. Otherwise, click on **Add Column**.
    3. Add rows by clicking the **Add Row** button.
    4. Optionally, add data from your request history by clicking **Add from Request History**.
@@ -51,8 +52,6 @@ Setting clear metrics is critical to objectively assess prompt performance. For 
 
 Executing the evaluation process generates actionable insights across all types of prompts. For instance, with an **ai-poet** prompt, evaluation might reveal which topics yield better haikus. In contrast, with an **ai-doctor-agent** prompt, the evaluation might show which patient data inputs lead to more accurate diagnostic recommendations. Running the **full batch** means executing the evaluation for the **entire dataset file**, allowing you to review comprehensive performance data and make informed adjustments.
 
-For more examples, check out the [Evaluation Examples](/features/evaluations/examples) page.
-
 **Step by Step:**
 
 1. Click **Run Full Batch** to start the evaluation.
@@ -61,7 +60,10 @@ For more examples, check out the [Evaluation Examples](/features/evaluations/exa
    2. **Compare results** across multiple runs to identify trends.
    3. **Analyze metrics** such as execution time, cost, and accuracy.
 3. Use these insights to **optimize** and **refine** your prompt.
+
    <img src="./images/full-batch-run.png" alt="Evaluation Results" />
+
+For more examples, check out the [Evaluation Examples](/features/evaluations/examples) page.
 
 ---
 
