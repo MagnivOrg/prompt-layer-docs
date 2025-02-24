@@ -3,7 +3,7 @@ title: "Score Card"
 icon: "star"
 ---
 
-The score card feature in PromptLayer allows you to assign a score to each evaluation you run. This score provides a quick and easy way to assess the performance of your prompts and compare different versions. 
+The score card feature in PromptLayer allows you to assign a score to each evaluation you run. This score provides a quick and easy way to assess the performance of your prompts and compare different versions.
 
 ## Configuring the Score Card
 
@@ -69,6 +69,20 @@ Each cell in the `score_matrix` can be either:
 
 The optional `positive_metric` property can be used to indicate how changes in the value should be interpreted when comparing evaluations. This is particularly useful for automated reporting and analysis tools.
 
+#### Adding Titles to Score Matrices
+
+To add titles to your score matrices, simply add an extra field to the first row of the matrix and it will automatically be interpreted as the primary title. For example, if you have a matrix like:
+
+```python
+[[1,2],[1,2]]
+```
+
+You can add a title by modifying it to:
+
+```python
+[["Title",1,2],[1,2]]
+```
+
 ### Code example
 
 The `data` variable will be available in your scoring code, which is a list containing a dictionary for each row in the evaluation results. The keys in each dictionary correspond to the column names, and the values are the corresponding cell values.
@@ -82,7 +96,7 @@ For example:
 #       {'columnA': 1, 'columnB': 2},
 #       {'columnA': 4, 'columnB': 1}
 #  ]
-# 
+#
 # Must return a dictionary with the following structure:
 # {
 #   'score': int,  # Required
