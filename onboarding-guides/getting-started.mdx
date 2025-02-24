@@ -12,7 +12,7 @@ A prompt is an instruction given to an AI model to guide its response. Well-stru
 
 - Define **expected behavior** to control AI outputs.
 - Use **input variables** to make responses predictable.
-  - Input variables are placeholders for dynamic data that can be passed to the prompt.
+  - Input Variables are the data you feed into a prompt. They can be text, numbers, or other information the prompt uses to produce the final result.
 
 ### Why Prompts Matter
 
@@ -30,13 +30,21 @@ A prompt typically consists of a system message and a user message:
 
 The system message sets the AI's role and behavior, much like opening a recipe book that defines how a dish should be prepared.
 
-The user message provides specific input, similar to selecting a recipe based on available ingredients.
+- In our example, the system message is designed to create a haiku:
 
-**Example: A Prompt for Writing a Haiku**
+```
+You are a skilled poet specializing in haiku.
+Your task is to write a haiku based on a topic provided by the user.
+The haiku must have 17 syllables, structured in three lines of 5, 7, and 5.
+```
 
-| SYSTEM                                                                                                                                                                                                               | USER      |
-| -------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- | --------- |
-| You are a skilled poet specializing in haiku.<br/><br/>Your task is to write a haiku based on a topic provided by the user.<br/><br/>The haiku must have 17 syllables,<br/>structured in three lines of 5, 7, and 5. | `{topic}` |
+The user message provides input variables, similar to selecting a recipe based on available ingredients
+
+- In our example, the user message is the topic on which the haiku will be written:
+
+```
+{topic}
+```
 
 ## Create a Prompt
 
