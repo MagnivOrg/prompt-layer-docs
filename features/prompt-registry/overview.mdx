@@ -106,7 +106,11 @@ console.log(template.metadata);
 
 PromptLayer can format and convert your prompt to the correct LLM format. You can do this by passing the arguments `provider` and `input_variables`.
 
-Currently we support `provider` type of either `openai` or `anthropic`
+Currently we support `provider` type of either `openai` or `anthropic`.
+
+#### Setting Execution Parameters
+
+When using PromptLayer, ensure you set any necessary parameters for execution, such as `provider`, `input_variables`, and other specific parameters required by the LLM provider (e.g., `temperature`, `max_tokens` for OpenAI). Use the `llm_kwargs` as provided. If you need to override certain arguments, it is recommended to create a new version on PromptLayer. Alternatively, you can override them on your end if necessary.
 
 <CodeGroup>
 
@@ -124,7 +128,6 @@ city_choice_prompt = promptlayer_client.templates.get("city_choice",
 
 response, pl_request_id = client.completions.create(
   **city_choice_prompt['llm_kwargs'],
-  model="gpt-3.5-turbo-instruct", 
   pl_tags=["getting_started_example"],
   return_pl_id=True
 )
@@ -142,7 +145,6 @@ const city_choice_prompt = await promptLayerClient.templates.get("city_choice", 
 
 const [response, pl_request_id] = await openai.completions.create({
   ...city_choice_prompt.llm_kwargs,
-  model: "gpt-3.5-turbo-instruct",
   pl_tags: ["getting_started_example"],
   return_pl_id: true,
 });
