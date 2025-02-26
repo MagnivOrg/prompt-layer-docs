@@ -5,26 +5,25 @@ hidden: true
 ---
 
 <Tip>
-  This module requires a prompt to be used, so ensure you have one set up in
-  your PromptLayer account before proceeding. Use the [Getting
-  Started](/onboarding-guides/getting-started) guide to create a prompt.
+  This module requires an existing prompt in your PromptLayer account. Please
+  follow the [Getting Started](/onboarding-guides/getting-started) guide to
+  create one if needed.
 </Tip>
 
-Evaluating your prompts is crucial to ensuring they perform as intended before deployment. For example, an **ai-poet** prompt generating haikus can be evaluated for creativity, syllable accuracy, and engagement. Similarly, an [**ai-doctor-agent**](/onboarding-guides/agentic-workflows) providing diagnostic suggestions can be assessed to determine which input parameters produce the most accurate and cost-effective results. Evaluation process allows you to optimize performance and drive data-informed improvements.
+Evaluate your prompts to ensure they perform as intended before deployment. For example, a haiku-generating prompt can be assessed based on syllable count, structure, and adherence to the haiku format. This process helps optimize performance and drive data-driven improvements.
 
 ## Import or Create Test Datasets
 
-A well-prepared dataset provides the necessary context for evaluating your prompts. For the ai-poet prompt, you might use a dataset of various topics or historical haiku outputs. For an ai-doctor-agent, you could use patient data samples or historical diagnostic records.
-
-**Step by Step:**
+A well-prepared dataset serves as input variables for your prompt evaluation. For an ai-poet prompt, this could include various topics or historical haiku samples. For an ai-doctor-agent, it might consist of patient data samples or past diagnostic records.
 
 1. Click **Datasets** in the left sidebar. ([Read more](/features/evaluations/datasets))
 2. Click the **Create Dataset** button.
-   1. If you have a .csv file, upload it or (Optional) download example datasets provided by PromptLayer. (<a href="./example-dataset/haiku.csv" download>Download Example Dataset</a>)
-   2. Otherwise, click on **Add Column**.
-   3. Add rows by clicking the **Add Row** button.
-   4. Optionally, add data from your request history by clicking **Add from Request History**.
+   - If you have a .csv file, upload it or optionally download example datasets provided by PromptLayer. (<a href="./example-dataset/haiku.csv" download>Download Example Dataset</a>)
+   - Otherwise, click on **Add Column**.
+   - Add rows by clicking the **Add Row** button.
+   - Optionally, add data from your request history by clicking **Add from Request History**.
 3. Click the **Save as New Version** button.
+
    <video controls>
      <source src="./videos/create-dataset.mp4" type="video/mp4" />
    </video>
@@ -33,15 +32,49 @@ A well-prepared dataset provides the necessary context for evaluating your promp
 
 ## Configure Evaluation Metrics and Scoring Criteria
 
-Setting clear metrics is critical to objectively assess prompt performance. For the ai-poet prompt, you might define metrics such as creativity, syllable count accuracy, and user engagement. For the ai-doctor-agent, you could measure diagnostic accuracy, response time, and cost efficiency.
+Define specific metrics to objectively evaluate prompt performance. For an ai-poet prompt, this could include syllable count accuracy, rhyme scheme, and coherence.
 
-**Step by Step:**
+For this example, you need to have 2 prompts:
+
+- "ai-poet" prompt to generate the haiku
+- "compare-to-human-haiku" prompt to compare the generated haiku to a human-written haiku
+
+  **System**
+
+  ```
+  You are an expert in haikus.
+
+  Analyze the following haikus and rate them based on:
+
+  - Rhyme
+  - Syllable count
+  - Coherence
+
+  After scoring each haiku, determine which one is better overall and provide a final rating for each criterion.
+  ```
+
+  **User**
+
+  ```
+  AI generated haiku: {ai-haiku}
+  Human written haiku: {human-haiku}
+  ```
+
+---
 
 1. Click the **Evaluate** button.
 2. Click the **New Batch Run** button.
 3. Select a previously created dataset and enter a name for your evaluation.
 4. Click **Create Pipeline**.
 5. Add steps to evaluate your prompt, such as comparing generated outputs to a benchmark or calculating a performance score.
+
+   - Click **Add Step**
+   - Select **Prompt Template** as the step type
+   - Select the "ai-poet" prompt
+   - Name the step **ai-haiku**
+   - Select an input variable for the **topic** from the dropdown which is the column name in the dataset
+   - Do the same for the "compare-to-human-haiku" prompt but select input variable from the **ai-haiku** column
+
    <video controls>
      <source src="./videos/run-eval.mp4" type="video/mp4" />
    </video>
@@ -50,9 +83,7 @@ Setting clear metrics is critical to objectively assess prompt performance. For 
 
 ## Run Evaluation
 
-Executing the evaluation process generates actionable insights across all types of prompts. For instance, with an **ai-poet** prompt, evaluation might reveal which topics yield better haikus. In contrast, with an **ai-doctor-agent** prompt, the evaluation might show which patient data inputs lead to more accurate diagnostic recommendations. Running the **full batch** means executing the evaluation for the **entire dataset file**, allowing you to review comprehensive performance data and make informed adjustments.
-
-**Step by Step:**
+Running a full batch evaluation means executing the evaluation for the **entire dataset file**, allowing you to review comprehensive performance data and make informed adjustments.
 
 1. Click **Run Full Batch** to start the evaluation.
 2. Examine the results:
@@ -60,8 +91,6 @@ Executing the evaluation process generates actionable insights across all types 
    2. **Compare results** across multiple runs to identify trends.
    3. **Analyze metrics** such as execution time, cost, and accuracy.
 3. Use these insights to **optimize** and **refine** your prompt.
-
-   <img src="./images/full-batch-run.png" alt="Evaluation Results" />
 
 For more examples, check out the [Evaluation Examples](/features/evaluations/examples) page.
 
