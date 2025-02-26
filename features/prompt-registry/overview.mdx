@@ -108,9 +108,9 @@ PromptLayer can format and convert your prompt to the correct LLM format. You ca
 
 Currently we support `provider` type of either `openai` or `anthropic`.
 
-#### Parameters for Client Completions API
+#### Setting Execution Parameters
 
-When using the client completions API, ensure you are aware of the parameters being passed. These parameters include `provider`, `input_variables`, and any other specific parameters required by the LLM provider (e.g., `temperature`, `max_tokens` for OpenAI). Properly setting these parameters ensures accurate and expected responses from the API.
+When using PromptLayer, ensure you set any necessary parameters for execution, such as `provider`, `input_variables`, and other specific parameters required by the LLM provider (e.g., `temperature`, `max_tokens` for OpenAI). Use the `llm_kwargs` as provided. If you need to override certain arguments, it is recommended to create a new version on PromptLayer. Alternatively, you can override them on your end if necessary.
 
 <CodeGroup>
 
