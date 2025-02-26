@@ -1,0 +1,89 @@
+---
+title: "Agentic Workflows"
+hidden: true
+---
+
+<Tip>
+  This module requires a prompt to be used, so ensure you have one set up in
+  your PromptLayer account before proceeding. Use the [Getting
+  Started](/onboarding-guides/getting-started) guide to create a prompt.
+</Tip>
+
+**Agents** are AI systems that automate complex workflows by executing a sequence of prompts. Like a doctor gathering information for a diagnosis, agents chain prompts together, using one output as the next input. This reduces manual effort, maintains logical flow, and improves efficiency in AI-driven processes.
+
+### Example Use Cases for Agents
+
+Agents are ideal for:
+
+- **Medical Diagnosis Assistants**: Gathering insights from multiple medical models and synthesizing the best possible answer.
+- **Data Processing Pipelines**: Refining, filtering, or transforming data using multiple models in sequence.
+- **Customer Support Automation**: Automating logical decision-making across different models or APIs to answer support queries dynamically.
+
+By structuring agents in a modular way, AI systems can adapt dynamically based on real-time outputs. Learn more in our [Agents Documentation](/why-promptlayer/agents).
+
+### Create Multiple Prompts
+
+Gather the prompts required for your agent. Instead of duplicating content from the Getting Started guide, refer to the [Getting Started](/onboarding-guides/getting-started) guide for details on how to create prompts.
+
+For the Doctor example, you might use:
+
+- The "rephrase-question" prompt refines a question for better clarity.
+- The "ai-doctor" prompt analyzes the user's symptoms and provides a diagnosis.
+- The "choose-best-answer" prompt selects the best response from a list.
+
+## Create an Agent That Runs Prompts Sequentially
+
+Construct an agent to execute your chained prompts one after the other, ensuring smooth data flow between steps.
+
+1. Navigate to **Registry → Agents**.
+2. Click **Create Agent**.
+3. Click **Add Node** and set Node Type to **Prompt Template**.
+4. Select the previously created "rephrase-question" prompt.
+5. Repeat for other prompts:
+   - Use the "ai-doctor" prompt multiple times with different models.
+   - To change the model, select "ai-doctor" and click the pencil icon next to the model engine.
+6. Arrange prompts in order:
+   - First, rephrase the question.
+   - Next, query multiple models for diagnoses.
+   - Then, combine results.
+   - Finally, connect to the choose-best-answer prompt.
+7. Confirm the sequence and **Save** the configuration.
+
+<video controls>
+  <source src="./videos/create-agent.mp4" type="video/mp4" />
+</video>
+
+To learn more about agents, visit the [Agents](/why-promptlayer/agents) page.
+
+---
+
+## Enter Input Variables and Run the Agent
+
+Customize your agent by specifying input variables for each prompt. Running the agent automates the workflow—processing each step in sequence to generate a complete, integrated output.
+
+1. Open the agent editor and locate the input variables section **at the top left of the editor panel**.
+2. Enter or update the required input values for each prompt (for example, the user’s symptoms and any additional diagnostic details).
+3. Save your changes and **Run** the agent.
+4. Review the output to ensure the entire workflow functions as expected, and adjust the input values if needed.
+
+<video controls>
+  <source src="./videos/run-agent.mp4" type="video/mp4" />
+</video>
+
+---
+
+## Agent Tracing
+
+Traces are a powerful feature in PromptLayer that allow you to monitor and analyze the execution flow of your applications, including LLM requests.
+
+To see the traces for an agent:
+
+1. Open the sidebar on the left and select Traces.
+2. Click on the agent name to see the traces for the agent.
+
+<img src="./images/traces.gif" alt="Agent Tracing" />
+
+**Additional Resources:**
+
+- [Learn](/running-requests/traces) how to add tracing to your agents.
+- For more on agents, visit the [Agents](/why-promptlayer/agents) page.

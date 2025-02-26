@@ -1,0 +1,102 @@
+---
+title: "Evaluation"
+description: "Measure the quality and effectiveness of your prompts through systematic testing."
+hidden: true
+---
+
+<Tip>
+  This module requires an existing prompt in your PromptLayer account. Please
+  follow the [Getting Started](/onboarding-guides/getting-started) guide to
+  create one if needed.
+</Tip>
+
+Evaluate your prompts to ensure they perform as intended before deployment. For example, a haiku-generating prompt can be assessed based on syllable count, structure, and adherence to the haiku format. This process helps optimize performance and drive data-driven improvements.
+
+## Import or Create Test Datasets
+
+A well-prepared dataset serves as input variables for your prompt evaluation. For prompt that generate haikus, this could include various topics or human-written haiku samples.
+
+1. Click **Datasets** in the left sidebar. ([Read more](/features/evaluations/datasets))
+2. Click the **Create Dataset** button.
+   - If you have a .csv file, upload it or optionally download example datasets provided by PromptLayer. (<a href="./example-dataset/haiku.csv" download>Download Example Dataset</a>)
+   - Otherwise, click on **Add Column**.
+   - Add rows by clicking the **Add Row** button.
+   - Optionally, add data from your request history by clicking **Add from Request History**.
+3. Click the **Save as New Version** button.
+
+   <video controls>
+     <source src="./videos/create-dataset.mp4" type="video/mp4" />
+   </video>
+
+---
+
+## Configure Evaluation Metrics and Scoring Criteria
+
+Define specific metrics to objectively evaluate prompt performance. For an ai-poet prompt, this could include syllable count accuracy, rhyme scheme, and coherence.
+
+For this example, you need to have 2 prompts:
+
+- "ai-poet" prompt to generate the haiku
+- "compare-to-human-haiku" prompt to compare the generated haiku to a human-written haiku
+
+  **System**
+
+  ```
+  You are an expert in haikus.
+
+  Analyze the following haikus and rate them based on:
+
+  - Rhyme
+  - Syllable count
+  - Coherence
+
+  After scoring each haiku, determine which one is better overall and provide a final rating for each criterion.
+  ```
+
+  **User**
+
+  ```
+  AI generated haiku: {ai-haiku}
+  Human written haiku: {human-haiku}
+  ```
+
+---
+
+1. Click the **Evaluate** button.
+2. Click the **New Batch Run** button.
+3. Select a previously created dataset and enter a name for your evaluation.
+4. Click **Create Pipeline**.
+5. Add steps to evaluate your prompt, such as comparing generated outputs to a benchmark or calculating a performance score.
+
+   - Click **Add Step**
+   - Select **Prompt Template** as the step type
+   - Select the "ai-poet" prompt
+   - Name the step **ai-haiku**
+   - Select an input variable for the **topic** from the dropdown which is the column name in the dataset
+   - Do the same for the "compare-to-human-haiku" prompt but select input variable from the **ai-haiku** column
+
+   <video controls>
+     <source src="./videos/run-eval.mp4" type="video/mp4" />
+   </video>
+
+---
+
+## Run Evaluation
+
+Running a full batch evaluation means executing the evaluation for the **entire dataset file**, allowing you to review comprehensive performance data and make informed adjustments.
+
+1. Click **Run Full Batch** to start the evaluation.
+2. Examine the results:
+   1. **Define scoring criteria** to objectively assess performance.
+   2. **Compare results** across multiple runs to identify trends.
+   3. **Analyze metrics** such as execution time, cost, and accuracy.
+3. Use these insights to **optimize** and **refine** your prompt.
+
+For more examples, check out the [Evaluation Examples](/features/evaluations/examples) page.
+
+---
+
+**Additional Resources:**
+
+- For more on prompt creation, visit the [Quickstart](/quickstart).
+- Learn more about evaluating prompt performance on the [Evaluation](/features/evaluations/overview) page.

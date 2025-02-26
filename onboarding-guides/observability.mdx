@@ -1,0 +1,180 @@
+---
+title: "Observability"
+description: "Learn how to use logging to monitor performance and optimize your prompts."
+hidden: true
+---
+
+<Tip>
+  This module requires an existing prompt in your PromptLayer account. Please
+  follow the [Getting Started](/onboarding-guides/getting-started) guide to
+  create one if needed.
+</Tip>
+
+When buidling a prompt, observability becomes critical. For example, the [ai-poet prompt](/onboarding-guides/getting-started) generates a creative haiku based on a given topic, and enabling logging helps you monitor important performance details. For example, logging can reveal:
+
+- **Execution Issues:** Did the prompt return a reasonable output as expected?
+- **Execution Time:** How quickly the prompt is executed.
+- **Token Usage:** The number of tokens used during execution, which directly impacts cost.
+- **Cost Metrics:** Whether the prompt runs efficiently within your budget.
+
+By reviewing these logs, you can determine if your ai-poet prompt is performing as expected and make adjustments if necessary—ensuring that your creative content is generated both efficiently and effectively.
+
+## Create an API Key
+
+Before you can enable logging, you need to authenticate your PromptLayer client with an API key.
+
+1. Go to your PromptLayer **Settings**.
+2. Click on **Create an API key** to generate a new API key.
+3. Copy the API key for later use. ([Read more](/quickstart#api-key-env-var-setup))
+
+<img src="./images/api-keys.png" alt="API Keys" />
+
+---
+
+## Enable Logging
+
+Set up logging and tracing within your SDK to capture execution data. This enables you to monitor latency, track errors, and record metadata.
+
+1. Install the PromptLayer SDK.
+
+  <CodeGroup>
+
+    ```python Python
+    pip install promptlayer
+    pip install openai
+    ```
+
+    ```js JavaScript
+    npm install promptlayer
+    npm install openai
+    ```
+
+  </CodeGroup>
+
+2. Import the PromptLayer client.
+
+  <CodeGroup>
+
+    ```python Python
+    # Make sure to `pip install promptlayer`
+    import os
+    os.environ["OPENAI_API_KEY"] = "sk-<your_openai_api_key>"
+
+    from promptlayer import PromptLayer
+    promptlayer_client = PromptLayer(api_key="<your_promptlayer_api_key>")
+
+    # Swap out your 'from openai import OpenAI'
+    OpenAI = promptlayer_client.openai.OpenAI
+    client = OpenAI()
+    ```
+
+    ```js JavaScript
+    // Make sure to `npm install promptlayer`
+
+    import { PromptLayer } from "promptlayer";
+    const promptLayerClient = new PromptLayer();
+
+    // Make sure you have openai installed with `npm install openai`
+    const OpenAI = promptLayerClient.OpenAI;
+    const openai = new OpenAI();
+
+    ```
+
+  </CodeGroup>
+
+3. Initialize the PromptLayer client with your API key and logging enabled.
+
+  <CodeGroup>
+
+    ```python Python
+    promptlayer_client = AsyncPromptLayer(api_key="pl_****")
+    ```
+
+    ```js JavaScript
+    const promptLayerClient = new PromptLayer({ apiKey: "pl_****" });
+    ```
+
+  </CodeGroup>
+
+4. Run the "ai-poet" prompt using the `pl_client.run` method, providing an input variable such as `{topic: "The Ocean"}`.
+
+  <CodeGroup>
+
+    ```python Python
+    input_variables = {
+      "topic": "The Ocean"
+    }
+
+    response = promptlayer_client.run(
+      prompt_name="ai-poet",
+      input_variables=input_variables,
+      tags=["onboarding_guide"], # Add tags to search for the request in the UI
+    )
+    ```
+
+    ```js JavaScript
+    const input_variables = {
+      topic: "The Ocean"
+    };
+
+    const response = await promptLayerClient.run({
+      promptName: "ai-poet",
+      inputVariables: input_variables,
+      tags: ["onboarding_guide"], // Add tags to search for the request in the UI
+    });
+    ```
+
+  </CodeGroup>
+
+5. Review the generated logs to analyze metrics like execution time, token usage, and cost, then use these insights to fine-tune your prompt.
+
+<CodeGroup>
+
+```python Python
+# Using OpenAI format
+print(response["raw_response"].choices[0].message.content)
+
+# Add a score to the log
+promptlayer_client.track.score(
+   request_id=response["request_id"],
+   score=100,
+)
+```
+
+```js JavaScript
+// Using OpenAI format
+console.log(response["raw_response"].choices[0].message.content);
+```
+
+</CodeGroup>
+
+To read more about logging, check out the [Logging Metadata](/quickstart#logging-metadata) section of the Quickstart guide.
+
+---
+
+## Run and View Logs
+
+Review your logs to troubleshoot issues and gather performance metrics.
+
+1. Execute your prompt (via SDK or code).
+2. Open the sidebar **on the left side** and click **Requests tab** to view log entries.
+3. Click on the log entry to see execution time, cost, token usage, and more.
+4. Use these insights to refine and optimize your prompt.
+
+<Tip>
+  Use filters to search for specific requests, such as filtering by tags. In
+  this guide, we added the tag `onboarding_guide` to the request.
+</Tip>
+
+<img src="./images/request-logs.gif" alt="View Requests" />
+
+You can also open these logs in the Playground, share them with your team, and add them to a dataset to use them for refining and testing.
+
+---
+
+**Additional Resources:**
+
+- For more on running prompts, visit the [Running Requests](/running-requests/promptlayer-run#run) guide.
+- To learn more about SDKs, check out our [Python](/languages/python) and [Javascript](/languages/javascript) guides.
+- For more on Logging, check out our [Advanced Logging](/features/prompt-history/request-id) guide.
+- To learn more about filtering logs, check out the [Advanced Search](/why-promptlayer/advanced-search#advanced-search) section of the Quickstart guide.
