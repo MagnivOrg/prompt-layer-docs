@@ -10,7 +10,7 @@ hidden: true
   create one if needed.
 </Tip>
 
-Effectively manage your prompts in PromptLayer by versioning them for tracking and retrieval, ensuring consistency across projects. This guide covers saving a new version and programmatically pulling the latest one.
+Effectively manage your prompts in PromptLayer by versioning them for tracking and retrieval, keeping them consistent across projects. This guide covers saving a new version and programmatically pulling the latest one.
 
 ## Save New Version
 
@@ -18,7 +18,7 @@ Save prompt updates as new versions to track changes, compare iterations, and re
 
 **Example Scenario:**
 
-During **[Getting Started](/onboarding-guides/getting-started)**, we created a prompt called ai-poet, which generates a haiku on a given topic. Initially, it takes a single input variable for the topic:
+During **[Getting Started](/onboarding-guides/getting-started)**, we created a prompt called "ai-poet", which generates a haiku on a given topic. Initially, it takes a single input variable for the topic:
 
 - “You are a skilled poet specializing in haikus. Your task is to write a haiku based on a topic provided by the user.”
 
@@ -53,7 +53,7 @@ Saving a new version of your prompt lets you:
   Labels make deploying new prompt versions easier by allowing dynamic references instead of fixed version numbers. With labels, you can:
 
   - Assign names like "beta", "stable", or "prod" to specific versions.
-  - Ensure your application always uses the intended version.
+  - Make sure your application always uses the correct prompt version.
   - Simplify rollbacks and updates for better workflow management.
 
 - **Compare previous iterations** to track improvements.
@@ -63,7 +63,7 @@ Saving a new version of your prompt lets you:
 
 ## Retrieve Your Prompts from Code
 
-Fetch the latest version of your prompt from code, ensuring consistent usage in production.
+Fetch the latest prompt version from code to maintain consistency in production.
 
 1. Obtain your **API Key** by going to **Settings** → **PromptLayer API Keys**.
    <img src="./images/api-keys.png" alt="API Keys" />
