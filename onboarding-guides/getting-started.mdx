@@ -76,9 +76,9 @@ Watch the video below to learn how to create a prompt:
 Testing prompts in Playground provides instant feedback, showing how the AI interprets your instructions and allowing for quick adjustments to improve results.
 
 1. Navigate to the **Prompt Registry** and open the prompt you just created.
-2. Click the **Playground** button.
-3. Optionally, modify the prompt if you want to test new changes.
-4. Execute the prompt by clicking the **Run** button or pressing "command + enter"
+2. Click the **Playground** button, next to Edit.
+3. _Optionally, modify the prompt if you want to test new changes._
+4. Execute the prompt by clicking the **Run** button.
 5. Observe the output in real time and adjust your prompt as needed.
 
    <video controls>
@@ -87,17 +87,19 @@ Testing prompts in Playground provides instant feedback, showing how the AI inte
 
 ## Review Prompt Logs
 
-Reviewing prompt logs helps you monitor performance metrics such as execution time, cost, token usage, and model parameters. These insights enable you to identify areas for improvement and optimize your prompt for better results.
+Reviewing prompt logs helps you track old requests. PromptLayer stores historical outputs, execution time, cost, token usage, and model parameters.
 
 1. Open the sidebar on the left (if not already visible).
-2. Click on **Requests** to access your log entries.
-3. Use the available filters to locate the log for the specific prompt you want to review. ([Read more](/why-promptlayer/advanced-search))
-4. Click on a log entry to view detailed information, such as execution time, cost, token usage, and model parameters.
-5. Examine performance metrics (consider assigning a star rating or score) to identify top-performing requests.
-6. Use these insights to refine and optimize your prompt.
-   <img src="./images/request-logs.gif" alt="Request Logs" />
+2. Click on the first log entry to view detailed information, such as execution time, cost, token usage, and model parameters.
+3. Examine performance metrics or even click **Open in Playground** to experiment with the old prompt.
+
+<img src="./images/request-logs.gif" alt="Request Logs" />
+
+<Info>
+You can search for a specific term or use filters to locate specific prompt log. ([Read more](/why-promptlayer/advanced-search))
+</Info>
 
 **Additional Resources:**
 
-- For more on prompt creation, visit the [Prompt Registry](/features/prompt-registry/overview) page.
-- To learn more about running prompts, visit the [Running Prompts](/running-requests/promptlayer-run#run) guide.
+- Learn more about the [Prompt Registry](/features/prompt-registry/overview).
+- Read the guide to [run a prompt in our SDK](/running-requests/promptlayer-run#run).

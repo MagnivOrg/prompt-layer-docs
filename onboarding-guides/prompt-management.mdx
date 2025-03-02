@@ -4,60 +4,53 @@ description: "Learn how to version your prompts, retrieve them programmatically,
 hidden: true
 ---
 
+It's easy to organize and version your prompts inside of PromptLayer. This guide explains how to save a new version and retrieve the latest one programmatically.
+
 <Tip>
   This module requires an existing prompt in your PromptLayer account. Please
   follow the [Getting Started](/onboarding-guides/getting-started) guide to
   create one if needed.
 </Tip>
 
-Effectively manage your prompts in PromptLayer by versioning them for tracking and retrieval, keeping them consistent across projects. This guide covers saving a new version and programmatically pulling the latest one.
+## Update an Existing Prompt
 
-## Save New Version
+Every time you update a prompt in PromptLayer, a new version is created. You will always be able to track changes, compare versions, or revert if needed.
 
-Save prompt updates as new versions to track changes, compare iterations, and revert if needed.
+### Example
 
-**Example Scenario:**
+In the [Getting Started Onboarding](/onboarding-guides/getting-started), we created a prompt called “ai-poet” to generate a haiku on a given topic. Initially, it uses a single input variable for the topic:
 
-During **[Getting Started](/onboarding-guides/getting-started)**, we created a prompt called "ai-poet", which generates a haiku on a given topic. Initially, it takes a single input variable for the topic:
+```
+SYSTEM:
+You are a skilled poet specializing in haikus.
+Your task is to write a haiku based on a topic provided by the user.
+The haiku must have 17 syllables, structured in three lines of 5, 7, and 5.
 
-- “You are a skilled poet specializing in haikus. Your task is to write a haiku based on a topic provided by the user.”
+USER:
+{topic}
+```
 
-You decide to enhance it by allowing users to specify a language as well:
+Next, we will update the prompt to allow users to specify a language.
 
-- Add a new input variable (e.g., `{language}`) so the haiku can be written in multiple languages.
-- Update the system prompt to instruct the AI to consider both the topic and the language.
+1. First, add a new input variable `{language}`
+2. Update the system prompt to instruct the AI to consider both the topic and the language.
 
-By saving these edits as a new version, you can:
-
-- **Compare** how users respond to the updated prompt (e.g., do they enjoy the multilingual option?).
-- **Measure** any improvements in user satisfaction or engagement.
-- **Rollback** to the old version if changes don't yield the desired results.
-
-**How to save a new version:**
+### Instructions
 
 1. Navigate to the **Prompt Registry**.
 2. Select the existing prompt you want to update (e.g., "ai-poet").
-3. Click the **Edit Version #** button to modify the prompt’s content (tone, instructions, or additional variables).
-4. Make your changes, such as adding friendlier text or clarifying the product’s key features.
+3. Click the **Edit Version #1** button to open the prompt in an editor.
+4. Make some changes
 5. Click **Update Template** to save these edits as a new version.
    <video controls>
      <source src="./videos/add-new-version.mp4" type="video/mp4" />
    </video>
 
-By following these steps, you can keep a detailed history of your prompt’s evolution and quickly revert to an older version if necessary.
+### Additional Features
 
-Saving a new version of your prompt lets you:
-
-- **Label versions** for better organization (e.g., "beta", "stable", "prod"). ([Read more](/features/prompt-registry/release-labels))
-
-  Labels make deploying new prompt versions easier by allowing dynamic references instead of fixed version numbers. With labels, you can:
-
-  - Assign names like "beta", "stable", or "prod" to specific versions.
-  - Make sure your application always uses the correct prompt version.
-  - Simplify rollbacks and updates for better workflow management.
-
-- **Compare previous iterations** to track improvements.
-- **Use A/B testing** to evaluate performance differences. ([Read more](/why-promptlayer/ab-releases))
+- **Label** prompt versions for better organization (e.g., "prod" or "dev"). ([Learn more about release labels.](/features/prompt-registry/release-labels))
+- Compare previous iterations to track improvements.
+- Use **A/B testing** to evaluate performance differences. ([Learn more](/why-promptlayer/ab-releases))
 
 ---
 
