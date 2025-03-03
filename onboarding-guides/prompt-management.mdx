@@ -56,13 +56,11 @@ Next, we will update the prompt to allow users to specify a language.
 
 ## Retrieve Your Prompts from Code
 
-To keep your PromptLayer prompts synchronized with your code, fetch the latest prompt version using the SDK.
+To keep your PromptLayer prompts synchronized with your codebase, fetch the latest prompt version using the SDK.
 
 1. Obtain an **API Key** by going to **Settings** → **PromptLayer API Keys**.
    <img src="./images/api-keys.png" alt="API Keys" />
 2. Initialize the PromptLayer client in your application.
-3. Call the appropriate function to retrieve your prompt.
-4. Use the retrieved prompt in your application logic.
 
 <CodeGroup>
 
@@ -70,33 +68,45 @@ To keep your PromptLayer prompts synchronized with your code, fetch the latest p
 from promptlayer import PromptLayer
 
 pl_client = PromptLayer(api_key="YOUR_API_KEY")
-
-template = pl_client.templates.get("your_prompt_name")
-print(template)
 ```
 
 ```js Javascript
 import { PromptLayer } from "promptlayer";
 
 const promptLayerClient = new PromptLayer({ apiKey: "YOUR_API_KEY" });
-const template = await promptLayerClient.templates.get("your_prompt_name");
-console.log(template);
 ```
 
 </CodeGroup>
 
-**Example:**
+3. Retrieve the prompt and run it. This will pull the latest prompt version, run it client side, and log the results.
 
-Imagine you're building an AI writing tool that generates content based on user input. By retrieving the prompt directly from your code, you can:
+<CodeGroup>
 
-- Automatically use the latest version of the prompt.
-- Reflect updates from PromptLayer without manual changes.
-- Maintain consistency and reduce maintenance overhead.
+```python Python
+response = pl_client.run(prompt_name="ai-poet")
+
+print(response)
+```
+
+```js Javascript
+const response = await promptLayerClient.run({
+  promptName: "ai-poet", 
+  inputVariables: input_variables,
+});
+
+console.log(response);
+```
+
+</CodeGroup>
+
+Once you’ve set up the SDK and your codebase is properly synced with PromptLayer:
+
+-	The latest or production version of your prompts will always synchronized.
+-	New prompt versions can be deployed without requiring engineering code deploys.
 
 ---
 
 **Additional Resources:**
 
-- For more on prompt creation, visit the [Quickstart](/quickstart).
-- Learn more about the Prompt Registry in the [Documentation](/features/prompt-registry/overview).
-- To learn more about [Continuous Integration](/features/evaluations/continuous-integration#continuous-integration)
+- Set up [Continuous Integration](/features/evaluations/continuous-integration#continuous-integration) using PromptLayer
+- Learn more about the Prompt Registry [here](/features/prompt-registry/overview).
