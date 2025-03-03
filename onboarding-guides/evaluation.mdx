@@ -10,19 +10,33 @@ hidden: true
   create one if needed.
 </Tip>
 
-Evaluate your prompts to ensure they perform as intended before deployment. For example, a haiku-generating prompt can be assessed based on syllable count, structure, and adherence to the haiku format. This process helps optimize performance and drive data-driven improvements.
+Prompt engineering is the art of building AI systems that respond correctly to all user inputs. Evaluations, unit tests, and historical backtests are the key to writing reliable prompts.
 
-## Import or Create Test Datasets
+## Create Test Datasets
 
-A well-prepared dataset serves as input variables for your prompt evaluation. For prompt that generate haikus, this could include various topics or human-written haiku samples.
+To run a prompt evaluation, you must first create a dataset that is filled with a diverse set of sample test cases. Each row in a dataset contains test input values, and an evaluation is when a prompt is run over the batch of sample inputs.
 
-1. Click **Datasets** in the left sidebar. ([Read more](/features/evaluations/datasets))
+For example, using a prompt that generates haiku poetry, a dataset could include a single column of sample topics and languages for the poetry.
+
+```csv haiku_dataset.csv
+Topic,Language
+American History,English
+Forbidden Love,Spanish
+Rock n Roll Music,English
+```
+
+In PromptLayer, you create a dataset from scratch, upload a CSV, or build a dataset from your request history.
+
+[Learn more about datasets here.](/features/evaluations/datasets)
+
+### Instructions
+
+1. Navigate to the **Datasets** page in the left sidebar.
 2. Click the **Create Dataset** button.
-   - If you have a .csv file, upload it or optionally download example datasets provided by PromptLayer. (<a href="./example-dataset/haiku.csv" download>Download Example Dataset</a>)
-   - Otherwise, click on **Add Column**.
-   - Add rows by clicking the **Add Row** button.
-   - Optionally, add data from your request history by clicking **Add from Request History**.
-3. Click the **Save as New Version** button.
+   - If you already have a CSV file, upload it or optionally download an example dataset <a href="./example-dataset/haiku.csv" download>here</a>.
+   - To create one from scratch, use the **Add Column** and **Add Row** buttons.
+   - To build a dataset from historical logs, click **Add from Request History**.
+3. Don't forget to save the dataset!
 
    <video controls>
      <source src="./videos/create-dataset.mp4" type="video/mp4" />
@@ -32,71 +46,61 @@ A well-prepared dataset serves as input variables for your prompt evaluation. Fo
 
 ## Configure Evaluation Metrics and Scoring Criteria
 
-Define specific metrics to objectively evaluate prompt performance. For an ai-poet prompt, this could include syllable count accuracy, rhyme scheme, and coherence.
+There are many ways to evaluate a prompt. Running [evaluatins in PromptLayer](/features/evaluations/overview) is flexible, allowing for backtests, LLM-as-judge evals, deterministic heuristics, or all three.
 
-For this example, you need to have 2 prompts:
+To start, let's think about how a human might evaluate prompt results and build an evaluatin around these heuristics. In our example of an AI poetry writer, this could include syllable count, rhyme scheme, and general coherence.
 
-- "ai-poet" prompt to generate the haiku
-- "compare-to-human-haiku" prompt to compare the generated haiku to a human-written haiku
+It's always best to start with the simplest eval possible, so let's just add one LLM-as-judge check to verify that the result is an actual haiku.
 
-  **System**
+### Instructions
 
-  ```
-  You are an expert in haikus.
-
-  Analyze the following haikus and rate them based on:
-
-  - Rhyme
-  - Syllable count
-  - Coherence
-
-  After scoring each haiku, determine which one is better overall and provide a final rating for each criterion.
-  ```
-
-  **User**
-
-  ```
-  AI generated haiku: {ai-haiku}
-  Human written haiku: {human-haiku}
-  ```
-
----
-
-1. Click the **Evaluate** button.
-2. Click the **New Batch Run** button.
-3. Select a previously created dataset and enter a name for your evaluation.
-4. Click **Create Pipeline**.
-5. Add steps to evaluate your prompt, such as comparing generated outputs to a benchmark or calculating a performance score.
+1. Click on **Evaluate** in the navigation bar to get to the evaluations page.
+2. Click **New Batch Run** to create a new eval test set.
+3. Select the dataset we created earlier. We will call this "Haiku Evaluation".
+4. An evaluation is simply a batch run of a prompt with subsequent evaluation steps. Start by adding the prompt as a new step.
 
    - Click **Add Step**
    - Select **Prompt Template** as the step type
    - Select the "ai-poet" prompt
-   - Name the step **ai-haiku**
-   - Select an input variable for the **topic** from the dropdown which is the column name in the dataset
-   - Do the same for the "compare-to-human-haiku" prompt but select input variable from the **ai-haiku** column
+   - Name the step "ai-haiku"
+   - Match the input variable `topic` with one of the columns from your dataset. As the evaluation runs each row, this variable will be injected.
 
+5. Next, add an LLM-as-judge prompt to test if the output is a haiku.
+
+   - Click **Add Step**
+   - Select **LLM Assertion** as the step type
+   - For the assertion, we will use `This poem is strictly a haiku, following the standard syllable count`
+   - Name the step "valid-haiku"
+   - Choose our previous column "ai-haiku" as the input to the assertion.
+
+==================FIX THIS VIDEO
    <video controls>
      <source src="./videos/run-eval.mp4" type="video/mp4" />
    </video>
 
+<Info>
+There are many [step types](/features/evaluations/eval-types) you can use to build evals in PromptLayer. The most commonly used are:
+- Equality Comparison: Used to compare the prompt output against a ground truth.
+- Prompt Template: Used to chain prompts together or compare different models.
+- Cosine Similarity: Used to quantitatively compare how _similar_ two text objects are.
+- Code Snippet: Python or Javascript code that can operate on LLM outputs.
+
+[See more eval examples here.](/features/evaluations/examples)
+</Info>
+
 ---
 
-## Run Evaluation
+## Run the Evaluation
 
-Running a full batch evaluation means executing the evaluation for the **entire dataset file**, allowing you to review comprehensive performance data and make informed adjustments.
+While creating the evaluation, you will see the output results for the first four rows only. To run a full evaluation on the entire dataset, click **Run Full Batch**.
 
-1. Click **Run Full Batch** to start the evaluation.
-2. Examine the results:
-   1. **Define scoring criteria** to objectively assess performance.
-   2. **Compare results** across multiple runs to identify trends.
-   3. **Analyze metrics** such as execution time, cost, and accuracy.
-3. Use these insights to **optimize** and **refine** your prompt.
-
-For more examples, check out the [Evaluation Examples](/features/evaluations/examples) page.
+<Tip>
+To customize the final score calculation of your evaluation, edit and tweak the [scorecard](/features/evaluations/score-card).
+</Tip>
 
 ---
 
 **Additional Resources:**
 
-- For more on prompt creation, visit the [Quickstart](/quickstart).
-- Learn more about evaluating prompt performance on the [Evaluation](/features/evaluations/overview) page.
+- Learn more about evals [here](/features/evaluations/overview)
+- Read [the guide](https://blog.promptlayer.com/migrating-prompts-to-open-source-models/) to creating evals to compare LLM models against eachother.
