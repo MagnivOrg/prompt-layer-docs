@@ -107,8 +107,7 @@ Set up logging and tracing within your SDK to capture execution data. This enabl
 
     response = promptlayer_client.run(
       prompt_name="ai-poet",
-      input_variables=input_variables,
-      tags=["onboarding_guide"], # Add tags to search for the request in the UI
+      input_variables=input_variables
     )
     ```
 
@@ -119,34 +118,13 @@ Set up logging and tracing within your SDK to capture execution data. This enabl
 
     const response = await promptLayerClient.run({
       promptName: "ai-poet",
-      inputVariables: input_variables,
-      tags: ["onboarding_guide"], // Add tags to search for the request in the UI
+      inputVariables: input_variables
     });
     ```
 
   </CodeGroup>
 
 5. Review the generated logs to analyze metrics like execution time, token usage, and cost, then use these insights to fine-tune your prompt.
-
-<CodeGroup>
-
-```python Python
-# Using OpenAI format
-print(response["raw_response"].choices[0].message.content)
-
-# Add a score to the log
-promptlayer_client.track.score(
-   request_id=response["request_id"],
-   score=100,
-)
-```
-
-```js JavaScript
-// Using OpenAI format
-console.log(response["raw_response"].choices[0].message.content);
-```
-
-</CodeGroup>
 
 To read more about logging, check out the [Logging Metadata](/quickstart#logging-metadata) section of the Quickstart guide.
 
