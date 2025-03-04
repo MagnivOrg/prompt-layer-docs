@@ -32,10 +32,44 @@ Gather the prompts required for your agent. Refer to the [Getting Started Guide]
 In this example, we will create a an AI doctor that is comprised of 3 prompts.
 
 1. The "rephrase-question" prompt will refine a question for better clarity.
+
+```
+[SYSTEM MESSAGE]
+The patient has asked a question for the AI doctor.
+Sometimes the patient uses confusing words. 
+Re-write the question in a way that is most understandable for medical professionals.
+
+[USER MESSAGE]
+{question}
+```
+
 2. The "ai-doctor" prompt will analyze the user's symptoms and provides a diagnosis.
+
+```
+[SYSTEM MESSAGE]
+As an AI doctor, follow these key guidelines:
+- Analyze user symptoms to offer relevant health information.
+- Base advice on established medical knowledge; avoid unverified claims.
+- Emphasize your AI nature and the importance of professional medical consultation.
+- Maintain user privacy, in line with HIPAA.
+- Refrain from diagnosing or prescribing.
+- Communicate with empathy, but encourage users to seek real-world medical advice.
+Your role is to inform and guide, not to replace professional healthcare.
+
+[USER MESSAGE]
+{question}
+```
 3. The "choose-best-answer" prompt will select the best response from a list. We will run #2 on multiple different models to get the best result.
 
-========ADD PROMPTS HERE!!!!
+```
+[SYSTEM MESSAGE]
+You are an AI helping to train medical students. They are taking a quiz. 
+Each student provides you an answer. Your job is to return back the "true" answer.
+To find the true answer, use the aggregation of all their answers to pick the best.
+
+[USER MESSAGE]
+{answers}
+```
 
 ### Build the Agent
 
@@ -58,9 +92,16 @@ This agent will take in a user query, rephrase it to something more specific, ru
 8. Mark the "Best Answer" node as an "Output Node" by clicking the three dots on the node. The output node is the final node to run in an agent and will be treated as the "return" statement.
 7. Try clicking "Run" to test it and don't forget to **Save** the configuration!
 
-<video controls>
-  <source src="./videos/create-agent.mp4" type="video/mp4" />
-</video>
+<iframe
+  width="560"
+  height="315"
+  src="https://www.youtube.com/embed/G02EEeXC7dY"
+  title="YouTube video player"
+  frameborder="0"
+  allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+  allowfullscreen
+  className="w-full aspect-video"
+></iframe>
 
 ---
 
