@@ -48,8 +48,24 @@ Nodes are the building blocks of the Agent. Each node represents a specific acti
 
 ![Nodes](/images/agents/nodes.png)
 
-### 3. Output Nodes
-The Output Node selects the specific part of the Agent's output to return. It controls what the external application receives as the final result when deploying Workflows.
+### 3. Conditional Edges
+
+Conditional Edges allow you to create branching logic within your Agent workflows. By clicking on an edge between nodes, you can define conditions that determine the path your workflow will take. Conditions can be combined using logical operators such as **AND** or **OR**, and support comparisons including:
+
+- Equal (`==`)
+- Not Equal (`!=`)
+- Less Than (`<`)
+- Greater Than (`>`)
+- Less Than or Equal To (`<=`)
+- Greater Than or Equal To (`>=`)
+
+You can compare values against numbers or booleans, and multiple conditions can be combined to create complex branching logic. This enables your Agent to dynamically route execution paths based on intermediate results or external data, allowing for more sophisticated and context-aware workflows.
+
+![Conditional Edges](/images/agents/conditional-edges.png)
+
+### 4. Output Nodes
+
+Output Nodes determine what your Agent returns as its final result. When using Conditional Edges to create different paths in your workflow, you can place multiple Output Nodes at the end of different branches. Similar to a "return statement" in programming, whichever Output Node executes successfully first will provide the final output. This allows your Agent to deliver different results based on the specific conditions that were met during the workflow.
 
 ![Output Nodes](/images/agents/output-node.png)
 
