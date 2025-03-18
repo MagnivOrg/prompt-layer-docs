@@ -46,6 +46,7 @@
             "features/prompt-registry/release-labels",
             "features/prompt-registry/dynamic-release-labels",
             "features/prompt-registry/function-calling",
+            "features/prompt-registry/template-variables",
             "features/prompt-registry/placeholder-messages",
             "running-requests/prompt-blueprints",
             "features/prompt-registry/webhooks",

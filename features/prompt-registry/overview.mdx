@@ -5,7 +5,7 @@ icon: "book"
 
 The Prompt Registry allows you to easily manage your prompt templates, which are customizable prompt strings with placeholders for variables.
 
-Specifically, a prompt template is your prompt string with variables indicated in curly brackets (`This is a prompt by {author_name}`). Prompt templates can have tags and are uniquely named.
+Specifically, a prompt template is your prompt string with variables indicated in curly brackets (`This is a prompt by {author_name}`). Learn more about using [template variables](/features/prompt-registry/template-variables). Prompt templates can have tags and are uniquely named.
 
 You can use this tool to programmatically retrieve and publish prompts (even at runtime!). That is, this registry makes it easy to start [A/B testing](/why-promptlayer/ab-releases) your prompts. Viewed as a "**Prompt Management System**”, this registry allows your org to pull out and organize the prompts that are currently dispersed throughout your codebase.
 
@@ -160,7 +160,7 @@ Templates are unique by name, which means that publishing a template with the sa
 
 ### String Formats
 
-You may choose to select from one of the two supported template formats (`f-string, jinja2`) to declare variables. (`f-string`) allows you to declare variables using curly brackets (`{variable_name}`) while (`jinja2`) allows you to declare variables using double curly brackets (`{{variable_name}}`).
+You may choose to select from one of the two supported template formats (`f-string, jinja2`) to declare variables. (`f-string`) allows you to declare variables using curly brackets (`{variable_name}`) while (`jinja2`) allows you to declare variables using double curly brackets (`{{variable_name}}`). For a more detailed explanation of both formats, see our [Template Variables](/features/prompt-registry/template-variables) documentation.
 
 <img src="/images/template-format.png" />
 
