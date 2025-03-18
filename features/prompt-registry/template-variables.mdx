@@ -1,0 +1,263 @@
+---
+title: "Template Variables"
+icon: "pen-ruler"
+---
+
+Creating flexible, dynamic prompts is essential to getting the most out of LLMs. PromptLayer's template system allows you to build reusable prompts where values can be inserted at runtime. This guide explains the two formatting options available in our platform: `f-string` and `jinja2`.
+
+## What are input variables?
+
+Input variables make your prompts dynamic by creating placeholders that get replaced with actual values when the prompt is used. This allows you to:
+
+- Personalize prompts with user information
+- Insert specific context or data
+- Create reusable prompt templates for different scenarios
+- Conditionally include or exclude sections based on available data
+
+PromptLayer supports two popular templating systems, each with their own strengths:
+
+1. **F-strings**: Simple, straightforward variable replacement
+2. **Jinja2**: Advanced templating with conditional logic, loops, and filters
+
+## F-string Variables
+
+F-strings (formatted string literals) offer a straightforward way to insert variables into your prompts using simple curly braces.
+
+### Basic Syntax
+
+```
+Tell me about {topic} in a way that {audience} would understand.
+```
+
+### How It Works
+
+When you use this template, you provide values for each variable:
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "topic": "quantum computing", 
+    "audience": "high school students"
+}
+
+template = promptlayer_client.templates.get("educational_prompt", {
+    "input_variables": input_variables
+})
+```
+
+```js JavaScript
+const input_variables = {
+    topic: "quantum computing",
+    audience: "high school students"
+};
+
+const template = await promptLayerClient.templates.get("educational_prompt", {
+    input_variables
+});
+```
+
+</CodeGroup>
+
+The resulting prompt would be:
+```
+Tell me about quantum computing in a way that high school students would understand.
+```
+
+### F-string Best Practices
+
+- Use descriptive variable names that clearly indicate their purpose
+- Keep variable names simple and avoid special characters
+- Make sure all variables in your template have corresponding values at runtime
+- Use f-strings when you need simple variable substitution without complex logic
+
+## Jinja2 Templates
+
+Jinja2 is a more powerful templating engine that extends beyond basic variable replacement. It's ideal for complex prompt structures that require conditionals, loops, or data transformations.
+
+PromptLayer supports the full Jinja2 spec. Read more about best practices for using Jinja2 [here](https://blog.promptlayer.com/prompt-templates-with-jinja2-2/).
+
+### When to Use Jinja2
+
+Consider using Jinja2 instead of f-strings when:
+- You need conditional sections in your prompts
+- You're working with lists or JSON data that needs to be formatted
+- Your prompt requires loops to handle multiple items
+- You want to transform variables (uppercase, lowercase, etc.)
+- You're using nested data structures
+
+<Warning>
+If your templates contain JSON, always use Jinja2 instead of f-strings, as the curly braces in JSON can conflict with f-string syntax.
+</Warning>
+
+### Basic Variable Replacement
+
+Jinja2 uses double curly braces for variable insertion:
+
+```
+Hello, {{ user_name }}! Let's discuss {{ topic }} today.
+```
+
+### Conditional Logic
+
+Include or exclude sections based on whether variables exist or meet certain conditions:
+
+```
+Let's analyze this text:
+{{ text }}
+
+{% if key_points %}
+Focus on these key points:
+{% for point in key_points %}
+- {{ point }}
+{% endfor %}
+{% else %}
+Provide a general summary.
+{% endif %}
+```
+
+### Loops for Lists and Collections
+
+Iterate through lists of items to include multiple elements:
+
+```
+Please analyze the following products:
+{% for product in products %}
+- {{ product.name }}: priced at ${{ product.price }}, category: {{ product.category }}
+{% endfor %}
+```
+
+### Working with JSON Data
+
+Jinja2 excels at handling structured JSON inputs:
+
+```
+{% if customer.history %}
+Based on your purchase history:
+{% for purchase in customer.history %}
+- {{ purchase.item }} (purchased on {{ purchase.date }})
+{% endfor %}
+
+Here are our recommendations:
+{% for item in recommendations %}
+- {{ item.name }}: {{ item.description }}
+{% endfor %}
+{% else %}
+Welcome new customer! Here are our popular items:
+{% for item in popular_items %}
+- {{ item.name }}: {{ item.description }}
+{% endfor %}
+{% endif %}
+```
+
+### Text Transformation with Filters
+
+Apply transformations to your variables using filters:
+
+```
+Original query: {{ query }}
+Searching for: {{ query | lower }}
+Categories: {{ categories | join(", ") }}
+```
+
+
+### Advanced Jinja2 Techniques
+
+#### Default Values
+
+Provide fallbacks for optional variables:
+
+```
+Hello, {{ user.name | default("valued customer") }}!
+```
+
+#### Macro Definitions
+
+Create reusable template components:
+
+```
+{% macro format_product(item) %}
+- {{ item.name }} (${{ item.price }}): {{ item.description }}
+{% endmacro %}
+
+Our featured products:
+{% for product in featured %}
+{{ format_product(product) }}
+{% endfor %}
+```
+
+#### Working with Conditionals
+
+Make templates adaptable to different inputs:
+
+```
+{% if user.experience == "beginner" %}
+Let me explain {{ topic }} in simple terms...
+{% elif user.experience == "intermediate" %}
+As you're familiar with the basics of {{ topic }}...
+{% else %}
+Given your advanced understanding of {{ topic }}...
+{% endif %}
+```
+
+By leveraging these formatting options, you can create versatile prompt templates that adapt to different scenarios, making your PromptLayer workflows more flexible and powerful.
+
+## Setting Template Format
+
+When creating a template in PromptLayer, select the appropriate format based on your needs:
+
+<img src="/images/template-format.png" />
+
+## Input Variable Examples
+
+### F-string Example
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "product_name": "Smart Home Hub",
+    "customer_segment": "tech enthusiasts",
+    "pain_points": "complex setup process, compatibility issues"
+}
+```
+
+```js JavaScript
+const input_variables = {
+    product_name: "Smart Home Hub",
+    customer_segment: "tech enthusiasts",
+    pain_points: "complex setup process, compatibility issues"
+};
+```
+
+</CodeGroup>
+
+### Jinja2 Example with Structured Data
+
+<CodeGroup>
+
+```python Python
+input_variables = {
+    "user": {
+        "name": "Alex",
+        "role": "Marketing Manager",
+        "experience_level": "intermediate"
+    },
+    "topics": ["SEO optimization", "content strategy", "social media"],
+    "show_advanced": True
+}
+```
+
+```js JavaScript
+const input_variables = {
+    user: {
+        name: "Alex",
+        role: "Marketing Manager",
+        experience_level: "intermediate"
+    },
+    topics: ["SEO optimization", "content strategy", "social media"],
+    show_advanced: true
+};
+```
+
+</CodeGroup>
