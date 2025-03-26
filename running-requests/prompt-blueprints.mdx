@@ -5,10 +5,14 @@ openapi-schema: PromptBlueprint
 ---
 
 
+Prompt Blueprints are a core concept in PromptLayer that provides a standardized, model-agnostic representation of prompts. They serve as an abstraction layer that:
 
-Prompt Blueprints are central to PromptLayer’s architecture, enabling you to work seamlessly with multiple LLM providers in a single format. They abstract provider-specific details, allowing you to switch between LLMs without modifying your code.
+- Creates a unified format that works across all LLM providers (OpenAI, Anthropic, etc.)
+- Enables seamless switching between different models without code changes
+- Standardizes how prompts, responses, and tool calls are structured and stored
+- Ensures consistent handling of various content types (text, images, function calls)
 
-*Prompt Blueprint* is a model-agnostic and standardized schema that PromptLayer uses to store prompts.
+Think of Prompt Blueprints as a universal language for LLM interactions that shields your application from provider-specific implementation details.
 
 ## Accessing the Prompt Blueprint
 
