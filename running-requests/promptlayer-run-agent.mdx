@@ -150,3 +150,32 @@ const response = await pl.runWorkflow({
 ```
 
 </CodeGroup>
+
+## Run Agents using the REST API
+
+**Step 1: Kick off the agent run**
+
+Start by making a request to ["POST /workflows/agentName/run"](/reference/run-workflow).
+
+This request requires:
+- `input_variables` – JSON object with the variables the agent needs
+- `metadata` – *optional* JSON for extra metadata
+- `return_all_outputs` – Set to `true` if you want to include all intermediate node results
+
+The response will contain a `workflow_version_execution_id` that you'll need for the next step.
+
+
+**Step 2: Poll until completion**
+
+After initiating the run, check for results using ["GET /workflow-version-execution-results"](http://localhost:3000/reference/workflow-version-execution-results).
+
+Include these query parameters:
+- `workflow_version_execution_id` – The ID received from step 1
+- `return_all_outputs` – Same setting as in the first request
+
+When polling (suggestion):
+- Check every **5000 ms**
+- A **200** status code means the run is complete, while **202** indicates it's still running
+- Consider timing out after about 10 minutes
+
+Depending on if you set `return_all_outputs` or not, you will either return the output value or all node values on completion. 
