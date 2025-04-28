@@ -3,38 +3,31 @@ title: "Structured Outputs"
 icon: "diagram-project"
 ---
 
-Structured outputs allow you to ensure that LLM responses follow a specific format, enabling consistent parsing and integration with your applications. PromptLayer supports creating structured outputs through JSON schemas and tool/function call schemas.
+Structured outputs ensure LLM responses follow specific formats, making them easier to use in your applications.
 
 ## What are Structured Outputs?
 
-Structured outputs define a schema that the LLM must follow when generating responses. This ensures:
+Structured outputs define formats LLMs must follow when generating responses:
 
 - Consistent response formats
 - Easier parsing and validation
 - More reliable integration with your applications
-- Reduced need for error handling
+- Less error handling
 
-With structured outputs, you can get LLMs to return data in formats like:
-- Customer records
-- Product information
-- Analytical results
-- Event details
-- API payloads
+Examples include customer records, product information, and analytical results.
 
 ## Creating Structured Outputs with JSON Schema
 
-You can define the structure of your LLM outputs using JSON Schema, which specifies the expected fields, types, and constraints.
-
 ![JSON Schema Editor](/images/structured-outputs-schema.png)
 
-When you create a prompt template in PromptLayer, you can add a JSON schema by:
+To add a JSON schema to your prompt template:
 
-1. Editing your prompt template
-2. Clicking on "Add Response Format"
-3. Selecting "JSON Schema"
-4. Defining your schema structure
+1. Edit your prompt template
+2. Click "Add Response Format"
+3. Select "JSON Schema"
+4. Define your schema structure
 
-Example JSON schema for a customer review analysis:
+### Example: Customer Review Analysis Schema
 
 ```json
 {
@@ -52,50 +45,32 @@ Example JSON schema for a customer review analysis:
       },
       "description": "List of topics mentioned in the review"
     },
-    "rating": {
-      "type": "integer",
-      "minimum": 1,
-      "maximum": 5,
-      "description": "Inferred rating on a scale of 1-5"
-    }
   },
-  "required": ["sentiment", "topics", "rating"]
+  "required": ["sentiment", "topics"]
 }
 ```
 
 ## Using Variables in Structured Outputs
 
-You can make your structured output schemas more dynamic by incorporating template variables within the schema definition. This powerful feature allows you to:
+You can make your schemas dynamic by using template variables:
 
-- Customize schema properties based on runtime data
-- Generate different schema structures for different scenarios
-- Adapt validation rules based on context
+<Note>
+Variables in structured outputs only work with Jinja2 format with the Jinja2 option enabled. F-string format isn't supported.
+</Note>
 
-### How to Use Variables in JSON Schemas
+### Interactive Mode
 
-When defining your JSON schema, you can include template variables using the same syntax as in your prompt templates:
+When using the interactive schema editor, you can add variables in two ways:
 
-<CodeGroup>
+1. **For enum values**: Click the enum field and toggle the switch to "Use Variable"
+   ![Enum Variable Placeholder](/images/enum-variable-placeholder.png)
 
-```json F-string
-{
-  "type": "object",
-  "properties": {
-    "sentiment": {
-      "type": "string",
-      "enum": {sentiment_options},
-      "description": "The sentiment of the text"
-    },
-    "topics": {
-      "type": "array",
-      "items": {
-        "type": "string"
-      },
-      "description": "List of topics mentioned in the {document_type}"
-    }
-  }
-}
-```
+2. **For text/string values**: Type `{{ variable_name }}` directly in any text field
+   ![Text Variable Placeholder](/images/text-variable-placeholder.png)
+
+### JSON Mode
+
+Variables must be in quotes, except for enum variables:
 
 ```json Jinja2
 {
@@ -103,8 +78,8 @@ When defining your JSON schema, you can include template variables using the sam
   "properties": {
     "sentiment": {
       "type": "string",
-      "enum": {{ sentiment_options }},
-      "description": "The sentiment of the text"
+      "enum": {name: "sentiment_options", type: "enum_variable"},
+      "description": "The sentiment of the {{ content_type }}"
     },
     "topics": {
       "type": "array",
@@ -117,9 +92,7 @@ When defining your JSON schema, you can include template variables using the sam
 }
 ```
 
-</CodeGroup>
-
-When running the prompt, provide values for these variables just like any other template variables:
+When running the prompt, provide your variables:
 
 ```python
 response = pl.run(
@@ -127,16 +100,18 @@ response = pl.run(
    input_variables={
        "text": "I really enjoyed the new restaurant downtown. The food was amazing and the service was excellent.",
        "sentiment_options": ["positive", "neutral", "negative"],
-       "document_type": "review"
+       "document_type": "review",
+       "content_type": "customer feedback"
    },
 )
 ```
 
-For a comprehensive guide on template variables and the different formatting options available, see our [Template Variables documentation](/features/prompt-registry/template-variables).
+For more information on template variables, see our [Template Variables documentation](/features/prompt-registry/template-variables).
 
-### Best Practices for Variables in Schemas
+### Best Practices
 
-- Use variables for enum values that might change based on context
-- Consider using variables for numeric constraints (min/max values)
-- Ensure all variables used in the schema are provided in input_variables
-- Be careful with syntax when using variables within JSON - proper formatting is essential
+- For enum values: Use `{name: "variable_name", type: "enum_variable"}` in JSON mode or the variable selector in interactive mode
+- For text variables: Include them within quotes as `{{ variable_name }}` in both modes
+- Only Jinja2 format works for variables in structured outputs
+- Ensure all variables used in the schema are provided
+- Use proper JSON formatting with variables
