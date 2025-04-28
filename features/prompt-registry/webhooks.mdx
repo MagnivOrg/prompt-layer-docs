@@ -57,3 +57,82 @@ We notify you for these events:
 To set up a webhook, go to the **Webhook** section in the **Settings** page. Enter the URL of the endpoint you want to send the webhook to and click **Submit**.
 
 ![Creating Webhook](/images/webhooks-form.png)
+
+### Securing Your Webhook
+When you create a webhook, you'll receive a webhook secret signature that looks like this:
+
+![Webhook Secret Signature](/images/webhook-secret-signature.png)
+
+This secret is used to verify that incoming webhook requests are authentic and come from PromptLayer. The signature is included in the `X-PromptLayer-Signature` header of each webhook request.
+
+
+#### Verifying Webhook Signatures
+
+Here are code examples showing how to verify the signatures:
+
+<CodeGroup>
+```python Python
+
+import hmac
+import hashlib
+import json
+
+signature = "HEADER FROM X-PromptLayer-Signature" # Replace with actual header value
+secret_key = "SECRET KEY FROM PROMPTLAYER DASHBOARD" # Replace with actual secret key
+payload = {} # Replace with actual payload
+payload = json.dumps(payload, sort_keys=True).encode('utf-8')
+payload_str = json.dumps(payload, sort_keys=True)
+expected_signature = hmac.new(
+    key=secret_key.encode(),
+    msg=payload_str.encode('utf-8'),
+    digestmod=hashlib.sha256
+).hexdigest()
+
+if hmac.compare_digest(expected_signature, signature):
+    print("Signature is valid")
+else:
+    print("Signature is invalid")
+```
+
+```javascript JavaScript
+const crypto = require('crypto');
+
+// Replace these with actual values
+const signature = "HEADER FROM X-PromptLayer-Signature"; // From request header
+const secretKey = "SECRET KEY FROM PROMPTLAYER DASHBOARD"; // Your webhook secret
+const payload = {}; // Replace with actual request body
+
+// Ensure consistent ordering of keys in the payload
+const normalizedPayload = JSON.stringify(payload, Object.keys(payload).sort());
+
+// Generate expected signature
+const expectedSignature = crypto
+  .createHmac('sha256', secretKey)
+  .update(normalizedPayload)
+  .digest('hex');
+
+console.log("Expected:", expectedSignature);
+console.log("Received:", signature);
+
+// Verify signature using constant-time comparison to prevent timing attacks
+if (signature.length === expectedSignature.length) {
+  try {
+    const isValid = crypto.timingSafeEqual(
+      Buffer.from(expectedSignature, 'hex'),
+      Buffer.from(signature, 'hex')
+    );
+    
+    if (isValid) {
+      console.log("Signature is valid");
+    } else {
+      console.log("Signature is invalid");
+    }
+  } catch (error) {
+    console.error("Error comparing signatures:", error.message);
+    console.log("Signature is invalid");
+  }
+} else {
+  console.log("Signature is invalid (length mismatch)");
+}
+```
+</CodeGroup>
