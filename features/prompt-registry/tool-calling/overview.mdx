@@ -1,9 +1,9 @@
 ---
-title: "Tool Calling"
+title: "Tool Calling Overview"
 icon: "function"
 ---
 
-The Prompt Registry supports all major tool calling formats, including [OpenAI tools](https://platform.openai.com/docs/guides/function-calling), OpenAI functions, [Anthropic tools](https://docs.anthropic.com/en/docs/build-with-claude/tool-use), and Gemini tools. 
+The Prompt Registry supports all major tool calling formats, including [OpenAI tools](https://platform.openai.com/docs/guides/function-calling), OpenAI functions, [Anthropic tools](https://docs.anthropic.com/en/docs/build-with-claude/tool-use), and Gemini tools.
 
 You can create tool schemas interactively, and your prompt template will seemlessly work on any LLM. Tool calling in PromptLayer is model-agnostic.
 
@@ -17,7 +17,7 @@ Tool calling (previously known as function calling) is a powerful feature that a
 
 Key benefits of tool calling include:
 
-- Structured Outputs: Tool arguments are always in JSON format, enforced by JSONSchema at the API level.
+- Structured Outputs: Tool arguments are always in JSON format, enforced by JSONSchema at the API level. See our [Structured Outputs](/features/prompt-registry/tool-calling/structured-outputs) documentation for more details.
 - Efficient Communication: Tool calling is a concept built into the model, reducing token usage and improving understanding.
 - Model Routing: Facilitates setting up modular prompts with specific responsibilities.
 - Prompt Injection Protection: Strict schema definitions at the model level make it harder to "jailbreak" the model.
@@ -28,7 +28,7 @@ Tools can be defined, called, and set up visually through the Prompt Registry.
 
 <video controls="controls">
     <source src="/videos/create-function.mp4" type="video/mp4" />
-</video> 
+</video>
 
 ### Publishing Programmatically
 
