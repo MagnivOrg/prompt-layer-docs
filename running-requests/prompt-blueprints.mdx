@@ -125,7 +125,7 @@ When the assistant decides to use a tool, the response will include a `tool_call
             "id": "call_abc123",
             "type": "function",
             "function": {
-                "name": "get_weather", 
+                "name": "get_weather",
                 "arguments": "{\"location\": \"Paris\"}"
             }
         }
@@ -261,5 +261,12 @@ response = pl_client.run(
 print(response)
 ```
 <Note>Notice that the `media` is a list of strings, they can either be public URLs or base64 strings.</Note>
+
+
+## Structured Outputs
+
+Prompt Blueprints can be configured to produce structured outputs that follow a specific format defined by JSON Schema. This ensures consistent response formats that are easier to parse and integrate with your applications.
+
+For detailed information on creating and using structured outputs with your prompt templates, see our [Structured Outputs documentation](/features/prompt-registry/structured-outputs).
 
 ## Prompt Blueprint Schema

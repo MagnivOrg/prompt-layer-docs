@@ -1,0 +1,127 @@
+---
+title: "Structured Outputs"
+icon: "diagram-project"
+---
+
+Structured outputs ensure LLM responses follow specific formats, making them easier to use in your applications. For more advanced structured data requirements, you may also want to check out our [Tool Calling documentation](/features/prompt-registry/tool-calling).
+
+## What are Structured Outputs?
+
+Structured outputs define formats LLMs must follow when generating responses:
+
+- Consistent response formats
+- Easier parsing and validation
+- More reliable integration with your applications
+- Less error handling
+
+Examples include customer records, product information, and analytical results.
+
+## Creating Structured Outputs with JSON Schema
+
+<video controls="controls">
+  <source src="/videos/schema-editor.mp4" type="video/mp4" />
+</video>
+
+To add a JSON schema to your prompt template:
+
+1. Edit your prompt template
+2. Click "Add Response Format"
+3. Select "JSON Schema"
+4. Define your schema structure
+
+### Example: Customer Review Analysis Schema
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "sentiment": {
+      "type": "string",
+      "enum": ["positive", "neutral", "negative"],
+      "description": "The overall sentiment of the review"
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of topics mentioned in the review"
+    },
+  },
+  "required": ["sentiment", "topics"]
+}
+```
+
+## Using Variables in Structured Outputs
+
+You can make your schemas dynamic by using template variables:
+
+<Note>
+Variables in structured outputs only work with Jinja2 format with the Jinja2 option enabled. F-string format isn't supported.
+</Note>
+
+### Interactive Mode
+
+When using the interactive schema editor, you can add variables in two ways:
+
+1. **For enum values**: Click the enum field and toggle the switch to "Use Variable"
+
+<video controls width="100%">
+  <source src="/videos/enum-variable.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+2. **For text/string values**: Type `{{ variable_name }}` directly in any text field
+
+<video controls width="100%">
+  <source src="/videos/text-variable.mp4" type="video/mp4" />
+  Your browser does not support the video tag.
+</video>
+
+### JSON Mode
+
+Variables must be in quotes, except for enum variables:
+
+```json Jinja2
+{
+  "type": "object",
+  "properties": {
+    "sentiment": {
+      "type": "string",
+      "enum": {name: "sentiment_options", type: "enum_variable"},
+      "description": "The sentiment of the {{ content_type }}"
+    },
+    "topics": {
+      "type": "array",
+      "items": {
+        "type": "string"
+      },
+      "description": "List of topics mentioned in the {{ document_type }}"
+    }
+  }
+}
+```
+
+When running the prompt, provide your variables:
+
+```python
+response = pl.run(
+   prompt_name="content_analyzer",
+   input_variables={
+       "text": "I really enjoyed the new restaurant downtown. The food was amazing and the service was excellent.",
+       "sentiment_options": ["positive", "neutral", "negative"],
+       "document_type": "review",
+       "content_type": "customer feedback"
+   },
+)
+```
+
+For more information on template variables, see our [Template Variables documentation](/features/prompt-registry/template-variables).
+
+### Best Practices
+
+- For enum values: Use `{name: "variable_name", type: "enum_variable"}` in JSON mode or the variable selector in interactive mode
+- For text variables: Include them within quotes as `{{ variable_name }}` in both modes
+- Only Jinja2 format works for variables in structured outputs
+- Ensure all variables used in the schema are provided
+- Use proper JSON formatting with variables
