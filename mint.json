@@ -46,13 +46,8 @@
             "features/prompt-registry/snippets",
             "features/prompt-registry/release-labels",
             "features/prompt-registry/dynamic-release-labels",
-            {
-              "group": "Tool Calling",
-              "pages": [
-                "features/prompt-registry/tool-calling/overview",
-                "features/prompt-registry/tool-calling/structured-outputs"
-              ]
-            },
+            "features/prompt-registry/tool-calling",
+            "features/prompt-registry/structured-outputs",
             "features/prompt-registry/template-variables",
             "features/prompt-registry/placeholder-messages",
             "running-requests/prompt-blueprints",
