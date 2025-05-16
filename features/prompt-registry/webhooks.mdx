@@ -94,44 +94,42 @@ else:
 ```
 
 ```javascript JavaScript
-const crypto = require('crypto');
+import crypto from "crypto";
+import stringify from "json-stable-stringify";
 
 // Replace these with actual values
 const signature = "HEADER FROM X-PromptLayer-Signature"; // From request header
 const secretKey = "SECRET KEY FROM PROMPTLAYER DASHBOARD"; // Your webhook secret
 const payload = {}; // Replace with actual request body
 
-// Ensure consistent ordering of keys in the payload
-const normalizedPayload = JSON.stringify(payload, Object.keys(payload).sort());
-
-// Generate expected signature
-const expectedSignature = crypto
-  .createHmac('sha256', secretKey)
-  .update(normalizedPayload)
-  .digest('hex');
-
-console.log("Expected:", expectedSignature);
-console.log("Received:", signature);
-
-// Verify signature using constant-time comparison to prevent timing attacks
-if (signature.length === expectedSignature.length) {
-  try {
-    const isValid = crypto.timingSafeEqual(
-      Buffer.from(expectedSignature, 'hex'),
-      Buffer.from(signature, 'hex')
-    );
-    
-    if (isValid) {
-      console.log("Signature is valid");
-    } else {
-      console.log("Signature is invalid");
-    }
-  } catch (error) {
-    console.error("Error comparing signatures:", error.message);
-    console.log("Signature is invalid");
-  }
-} else {
-  console.log("Signature is invalid (length mismatch)");
+export function formatPayload(payload) {
+  const raw = stringify(payload);
+  const spacedColons = raw.replace(/"([^"]+)"\s*:/g, '"$1": ');
+  const spaced = spacedColons.replace(/,(?=(?:\s*[\{"\[]))/g, ", ");
+  return spaced;
 }
+
+export function generateSignature(payload, secretKey) {
+  const normalized = formatPayload(payload);
+  return crypto
+    .createHmac("sha256", secretKey)
+    .update(normalized)
+    .digest("hex");
+}
+
+export function verifySignature(signature, payload, secretKey) {
+  const expected = generateSignature(payload, secretKey);
+  try {
+    return crypto.timingSafeEqual(
+      Buffer.from(signature, "hex"),
+      Buffer.from(expected, "hex")
+    );
+  } catch {
+    return false;
+  }
+}
+ 
+const isValid = verifySignature(signature, payload, secretKey);
+console.log("Signature is", isValid ? "valid" : "invalid");
 ```
 </CodeGroup>
