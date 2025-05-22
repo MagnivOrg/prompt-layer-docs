@@ -154,3 +154,14 @@ Note that some default OpenAI parameters may not be compatible with Grok. If you
 ## Does PromptLayer support Deepseek models?
 
 Yes, PromptLayer supports Deepseek models through custom base URLs. Configure it in workspace settings under "Provider Base URLs" using OpenAI as the provider and `https://api.deepseek.com` as the base URL. You can then use models like `deepseek-chat` and `deepseek-reasoner` in the Playground and Prompt Registry.
+
+## Does PromptLayer support MCP?
+
+Yes, PromptLayer supports MCP functions in agents. The MCP Action node allows you to invoke remote functions hosted on your MCP server. To use it, configure the node with your MCP server’s base URL and authentication token. Then, select the target function from the available list—PromptLayer will automatically introspect the function schema. Input parameters can be dynamically mapped from outputs of previous nodes, enabling full integration with the rest of your agent workflow. Function calls are executed at runtime, and outputs are passed downstream like any other node result.
+
+<iframe
+    src="https://www.loom.com/embed/92ab94394c6b46fb966f29f16b72cd31?sid=81976fe8-5998-473c-b9ec-4470bab8b0c4"
+    frameBorder="0"
+    allowFullScreen={true}
+    style={{width: "100%", height: "400px"}}
+></iframe>
