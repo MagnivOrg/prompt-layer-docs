@@ -730,6 +730,459 @@
         }
       }
     },
+    "/reports/{report_id}/run": {
+  "post": {
+    "summary": "Run Full Evaluation",
+    "operationId": "runReport",
+    "tags": ["reports"],
+    "parameters": [
+      {
+        "name": "report_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "ID of the evaluation pipeline report to run."
+      },
+      {
+        "name": "X-API-KEY",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API key to authorize the operation."
+      }
+    ],
+    "requestBody": {
+      "required": true,
+      "content": {
+        "application/json": {
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {
+                "type": "string",
+                "description": "The name of the final report to be created. Must be between 1 and 255 characters in length.",
+                "minLength": 1,
+                "maxLength": 255
+              },
+              "dataset_id": {
+                "type": ["integer", "null"],
+                "description": "The ID of the dataset to use for the report. If not provided, uses the evaluation pipeline's default dataset."
+              },
+              "refresh_dataset": {
+                "type": ["boolean", "null"],
+                "description": "Whether to refresh the dataset before running the report. Only applicable for dynamic datasets."
+              }
+            },
+            "required": ["name"]
+          }
+        }
+      }
+    },
+    "responses": {
+      "201": {
+        "description": "Report run initiated successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "report_id": {
+                  "type": "integer",
+                  "description": "The ID of the created final report."
+                }
+              },
+              "required": ["success", "report_id"]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - Invalid data or report generation error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["success", "message"]
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized - No requests found for the given criteria",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["success", "message"]
+            }
+          }
+        }
+      },
+      "403": {
+        "description": "Forbidden - Can only run evaluation pipeline reports or dataset refresh not allowed",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["success", "message"]
+            }
+          }
+        }
+      },
+      "404": {
+        "description": "Not Found - Report or dataset not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                }
+              },
+              "required": ["success", "message"]
+            }
+          }
+        }
+      }
+    }
+  }
+},
+    "/reports/{report_id}": {
+  "get": {
+    "summary": "Get Evaluation",
+    "operationId": "getReport",
+    "tags": ["reports"],
+    "parameters": [
+      {
+        "name": "report_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "ID of the report to retrieve."
+      },
+      {
+        "name": "X-API-KEY",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API key to authorize the operation."
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Report retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "report": {
+                  "type": "object",
+                  "description": "The report data with all fields",
+                  "properties": {
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "comment": {
+                      "type": ["string", "null"]
+                    },
+                    "is_blueprint": {
+                      "type": ["boolean", "null"]
+                    },
+                    "deleted": {
+                      "type": "boolean"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "updated_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "score": {
+                      "type": ["object", "null"],
+                      "description": "Report score data"
+                    },
+                    "score_configuration": {
+                      "type": ["object", "null"],
+                      "description": "Score configuration settings"
+                    },
+                    "score_matrix": {
+                      "type": ["array", "null"],
+                      "description": "Score matrix for custom scoring"
+                    },
+                    "score_calculation_error": {
+                      "type": ["string", "null"],
+                      "description": "Error message if score calculation failed"
+                    },
+                    "parent_report_id": {
+                      "type": ["integer", "null"]
+                    },
+                    "dataset_id": {
+                      "type": ["integer", "null"]
+                    },
+                    "user_id": {
+                      "type": ["integer", "null"]
+                    },
+                    "workspace_id": {
+                      "type": "integer"
+                    },
+                    "prompt_registry_id": {
+                      "type": ["integer", "null"],
+                      "description": "ID of associated prompt registry"
+                    },
+                    "prompt_version_number": {
+                      "type": ["integer", "null"],
+                      "description": "Version number of associated prompt"
+                    }
+                  },
+                  "required": ["id", "name", "deleted", "created_at", "updated_at", "workspace_id"]
+                },
+                "status": {
+                  "type": "string",
+                  "enum": ["RUNNING", "COMPLETED"],
+                  "description": "Overall status of the report execution"
+                },
+                "stats": {
+                  "type": "object",
+                  "properties": {
+                    "status_counts": {
+                      "type": "object",
+                      "description": "Count of cells in each status",
+                      "properties": {
+                        "COMPLETED": {
+                          "type": "integer",
+                          "description": "Number of completed cells"
+                        },
+                        "FAILED": {
+                          "type": "integer",
+                          "description": "Number of failed cells"
+                        },
+                        "QUEUED": {
+                          "type": "integer",
+                          "description": "Number of queued cells"
+                        },
+                        "RUNNING": {
+                          "type": "integer",
+                          "description": "Number of running cells"
+                        }
+                      },
+                      "required": ["COMPLETED", "FAILED", "QUEUED", "RUNNING"]
+                    }
+                  },
+                  "required": ["status_counts"]
+                }
+              },
+              "required": ["success", "message", "report", "status", "stats"]
+            }
+          }
+        }
+      },
+      "401": {
+        "description": "Unauthorized - Invalid or missing authentication"
+      },
+      "404": {
+        "description": "Report not found or not accessible"
+      }
+    }
+  }
+},
+    "/reports/{report_id}/score": {
+  "get": {
+    "summary": "Get Evaluation Score",
+    "operationId": "getReportScore",
+    "tags": ["reports"],
+    "parameters": [
+      {
+        "name": "report_id",
+        "in": "path",
+        "required": true,
+        "schema": {
+          "type": "integer"
+        },
+        "description": "ID of the report to get the score for."
+      },
+      {
+        "name": "X-API-KEY",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "API key to authorize the operation."
+      }
+    ],
+    "responses": {
+      "200": {
+        "description": "Report score retrieved successfully",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "success": {
+                  "type": "boolean"
+                },
+                "message": {
+                  "type": "string"
+                },
+                "score": {
+                  "type": "object",
+                  "properties": {
+                    "overall_score": {
+                      "type": ["number", "null"],
+                      "description": "The overall score of the report"
+                    },
+                    "score_type": {
+                      "type": "string",
+                      "enum": ["single_column", "multi_column", "custom", "none"],
+                      "description": "Type of scoring used for this report"
+                    },
+                    "has_custom_scoring": {
+                      "type": "boolean",
+                      "description": "Whether custom scoring logic was used"
+                    },
+                    "details": {
+                      "type": "object",
+                      "oneOf": [
+                        {
+                          "description": "Single column score details",
+                          "properties": {
+                            "column_name": {
+                              "type": "string"
+                            },
+                            "score": {
+                              "type": ["number", "null"]
+                            },
+                            "score_type": {
+                              "type": ["string", "null"]
+                            },
+                            "num_skipped": {
+                              "type": "integer"
+                            }
+                          }
+                        },
+                        {
+                          "description": "Multi-column score details",
+                          "properties": {
+                            "columns": {
+                              "type": "array",
+                              "items": {
+                                "type": "object",
+                                "properties": {
+                                  "column_name": {
+                                    "type": "string"
+                                  },
+                                  "score": {
+                                    "type": ["number", "null"]
+                                  },
+                                  "score_type": {
+                                    "type": ["string", "null"]
+                                  },
+                                  "num_skipped": {
+                                    "type": "integer"
+                                  }
+                                }
+                              }
+                            }
+                          }
+                        },
+                        {
+                          "description": "Custom score details",
+                          "properties": {
+                            "matrix": {
+                              "type": "array",
+                              "description": "Score matrix from custom scoring logic"
+                            },
+                            "configuration": {
+                              "type": ["object", "null"],
+                              "description": "Custom scoring configuration"
+                            }
+                          }
+                        },
+                        {
+                          "description": "No score details",
+                          "properties": {
+                            "message": {
+                              "type": "string"
+                            }
+                          }
+                        }
+                      ]
+                    }
+                  },
+                  "required": ["overall_score", "score_type", "has_custom_scoring", "details"]
+                }
+              },
+              "required": ["success", "message", "score"]
+            }
+          }
+        }
+      },
+      "400": {
+        "description": "Bad Request - Blueprint reports do not have scores"
+      },
+      "401": {
+        "description": "Unauthorized"
+      },
+      "403": {
+        "description": "Forbidden - Invalid workspace"
+      },
+      "404": {
+        "description": "Report not found"
+      }
+    }
+  }
+},
     "/dataset-from-filter-params": {
       "post": {
         "summary": "Create Dataset from History",
