@@ -1629,9 +1629,87 @@
           }
         }
       }
+    },
+    "/spans-bulk": {
+      "post": {
+        "tags": ["spans"],
+        "summary": "Create Spans Bulk",
+        "operationId": "createSpansBulk",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSpansBulk"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSpansBulkResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ValidationError"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal Server Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
+    "securitySchemes": {
+      "ApiKeyAuth": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    },
     "schemas": {
       "RunWorkflow": {
         "type": "object",
@@ -2895,6 +2973,182 @@
         "type": "object",
         "required": ["prompt_template"],
         "title": "PromptBlueprint"
+      },
+      "SpanKind": {
+        "type": "string",
+        "enum": [
+          "SpanKind.CLIENT",
+          "SpanKind.CONSUMER",
+          "SpanKind.INTERNAL",
+          "SpanKind.PRODUCER",
+          "SpanKind.SERVER"
+        ],
+        "title": "SpanKind"
+      },
+      "StatusCode": {
+        "type": "string",
+        "enum": [
+          "StatusCode.ERROR",
+          "StatusCode.OK",
+          "StatusCode.UNSET"
+        ],
+        "title": "StatusCode"
+      },
+      "SpanContext": {
+        "type": "object",
+        "properties": {
+          "trace_id": {
+            "type": "string",
+            "title": "Trace ID"
+          },
+          "span_id": {
+            "type": "string",
+            "title": "Span ID"
+          },
+          "trace_state": {
+            "type": "string",
+            "title": "Trace State"
+          }
+        },
+        "required": ["trace_id", "span_id", "trace_state"],
+        "title": "SpanContext"
+      },
+      "SpanStatus": {
+        "type": "object",
+        "properties": {
+          "status_code": {
+            "$ref": "#/components/schemas/StatusCode"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description",
+            "nullable": true
+          }
+        },
+        "required": ["status_code"],
+        "title": "SpanStatus"
+      },
+      "SpanResource": {
+        "type": "object",
+        "properties": {
+          "attributes": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "title": "Attributes"
+          },
+          "schema_url": {
+            "type": "string",
+            "title": "Schema URL"
+          }
+        },
+        "required": ["attributes", "schema_url"],
+        "title": "SpanResource"
+      },
+      "Span": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "context": {
+            "$ref": "#/components/schemas/SpanContext"
+          },
+          "kind": {
+            "$ref": "#/components/schemas/SpanKind"
+          },
+          "parent_id": {
+            "type": "string",
+            "title": "Parent ID",
+            "nullable": true
+          },
+          "start_time": {
+            "type": "integer",
+            "title": "Start Time"
+          },
+          "end_time": {
+            "type": "integer",
+            "title": "End Time"
+          },
+          "status": {
+            "$ref": "#/components/schemas/SpanStatus"
+          },
+          "attributes": {
+            "type": "object",
+            "title": "Attributes"
+          },
+          "events": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "title": "Events",
+            "default": []
+          },
+          "links": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "title": "Links",
+            "default": []
+          },
+          "resource": {
+            "$ref": "#/components/schemas/SpanResource"
+          },
+          "log_request": {
+            "anyOf": [
+              { "$ref": "#/components/schemas/LogRequest" },
+              { "type": "null" }
+            ],
+            "title": "Log Request",
+            "nullable": true
+          }
+        },
+        "required": ["name", "context", "kind", "start_time", "end_time", "status", "attributes", "resource"],
+        "title": "Span"
+      },
+      "CreateSpansBulk": {
+        "type": "object",
+        "properties": {
+          "spans": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Span"
+            },
+            "title": "Spans"
+          }
+        },
+        "required": ["spans"],
+        "title": "CreateSpansBulk"
+      },
+      "CreateSpansBulkResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "spans": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "title": "Spans"
+          },
+          "request_logs": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            },
+            "title": "Request Logs",
+            "nullable": true
+          }
+        },
+        "required": ["success", "spans"],
+        "title": "CreateSpansBulkResponse"
       }
     }
   }
