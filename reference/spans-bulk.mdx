@@ -1,0 +1,129 @@
+---
+title: "Create Spans Bulk"
+openapi: "POST /spans-bulk"
+---
+
+Create multiple spans in bulk with optional log request for each span. This endpoint is used for creating observability spans from telemetry data.
+
+## Request Body
+
+The request body must contain a `spans` array, where each span can optionally include a `log_request` field to simultaneously create a request log associated with the span.
+
+### Span Fields
+
+- **name** (string, required): The name of the span
+- **context** (object, required): Contains trace_id, span_id, and trace_state
+- **kind** (enum, required): One of SpanKind.CLIENT, SpanKind.CONSUMER, SpanKind.INTERNAL, SpanKind.PRODUCER, SpanKind.SERVER
+- **parent_id** (string, optional): The ID of the parent span
+- **start_time** (integer, required): Start time in nanoseconds since epoch
+- **end_time** (integer, required): End time in nanoseconds since epoch
+- **status** (object, required): Contains status_code (StatusCode.ERROR, StatusCode.OK, StatusCode.UNSET) and optional description
+- **attributes** (object, required): Key-value pairs of span attributes
+- **events** (array, optional): Array of span events
+- **links** (array, optional): Array of span links
+- **resource** (object, required): Contains attributes object and schema_url
+- **log_request** (object, optional): Optional request log data to create alongside the span
+
+### Log Request Fields (Optional)
+
+When included, the `log_request` field creates a request log associated with the span:
+
+- **provider** (string, required): The LLM provider (e.g., "openai", "anthropic")
+- **model** (string, required): The model name
+- **input** (object, required): The input template (chat or completion format)
+- **output** (object, required): The output template (chat or completion format)
+- **request_start_time** (datetime, required): ISO format datetime
+- **request_end_time** (datetime, required): ISO format datetime
+- **parameters** (object, optional): Model parameters used
+- **tags** (array[string], optional): Tags to associate with the request
+- **metadata** (object, optional): Metadata key-value pairs
+- **prompt_name** (string, optional): Name of the prompt template
+- **prompt_version_number** (integer, optional): Version number of the prompt
+- **prompt_input_variables** (object, optional): Variables used in the prompt
+- **input_tokens** (integer, optional): Number of input tokens
+- **output_tokens** (integer, optional): Number of output tokens
+- **price** (float, optional): Cost of the request
+- **function_name** (string, optional): Name of the function called
+- **score** (integer, optional): Score between 0-100
+
+## Response
+
+Returns a JSON object with:
+- **success** (boolean): Whether the operation succeeded
+- **spans** (array): Array of created span objects
+- **request_logs** (array, optional): Array of created request log objects (only present if log_request was provided)
+
+## Example Request
+
+```json
+{
+  "spans": [
+    {
+      "name": "llm_call",
+      "context": {
+        "trace_id": "d4b5e2a1-3c8f-4e9a-b7d6-1a2b3c4d5e6f",
+        "span_id": "a1b2c3d4-5e6f-7a8b-9c0d-1e2f3a4b5c6d",
+        "trace_state": "promptlayer=enabled"
+      },
+      "kind": "SpanKind.CLIENT",
+      "parent_id": "parent123",
+      "start_time": 1630000000000000000,
+      "end_time": 1630000001000000000,
+      "status": {
+        "status_code": "StatusCode.OK",
+        "description": "Success"
+      },
+      "attributes": {
+        "llm.provider": "openai",
+        "llm.model": "gpt-3.5-turbo"
+      },
+      "resource": {
+        "attributes": {
+          "service.name": "my-app"
+        },
+        "schema_url": "https://opentelemetry.io/schemas/1.9.0"
+      },
+      "log_request": {
+        "provider": "openai",
+        "model": "gpt-3.5-turbo",
+        "input": {
+          "type": "chat",
+          "messages": [
+            {
+              "role": "user",
+              "content": [{"type": "text", "text": "Hello!"}]
+            }
+          ]
+        },
+        "output": {
+          "type": "chat",
+          "messages": [
+            {
+              "role": "assistant",
+              "content": [{"type": "text", "text": "Hi there! How can I help you?"}]
+            }
+          ]
+        },
+        "request_start_time": "2024-01-20T10:00:00Z",
+        "request_end_time": "2024-01-20T10:00:01Z",
+        "prompt_name": "greeting_prompt",
+        "prompt_version_number": 1,
+        "input_tokens": 10,
+        "output_tokens": 12,
+        "tags": ["production", "greeting"],
+        "metadata": {
+          "user_id": "user123",
+          "session": "abc123"
+        }
+      }
+    }
+  ]
+}
+```
+
+## Notes
+
+- Spans with names "openai.OpenAI" or "anthropic.Anthropic" are excluded from processing
+- When `log_request` is provided, the created request log will be associated with the span via the span_id
+- If a prompt_name is specified but not found, the span will still be created but the log_request creation will be skipped for that span
+- All operations are atomic - if any span creation fails, the entire batch is rolled back
