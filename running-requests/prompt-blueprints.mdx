@@ -24,7 +24,7 @@ response = promptlayer_client.run(
     input_variables={'topic': 'food'},
 )
 
-print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][0]["text"])
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][-1]["text"])
 ```
 
 With this approach, you can update from one provider to another (e.g., OpenAI to Anthropic) without any code changes.
@@ -65,8 +65,10 @@ Each message in a Prompt Blueprint should be a dictionary with the following str
 
 - **`role`**: The role of the message sender (`user`, `assistant`, etc.).
 - **`content`**: A list of content items, where each item has:
-  - **`type`**: The type of content (`text`, `media`, etc.).
+  - **`type`**: The type of content (`text`, `thinking`, `media`, etc.).
   - **`text`**: The text content (if `type` is `text`).
+  - **`thinking`**: The thinking content (if `type` is `thinking`).
+  - **`signature`**: The signature content (if `type` is `thinking`).
 
 ### Example Message
 
@@ -77,6 +79,17 @@ Each message in a Prompt Blueprint should be a dictionary with the following str
 }
 ```
 
+### Example Message with Thinking support
+
+```python
+{
+    "role": "user",
+    "content": [
+        {"signature": "xxxxxx-xxxxx-xxxx-xxxx", "type": "thinking", "thinking": "User is greeting and asking for my wellbeing."},
+        {"type": "text", "text": "Hello, how are you?"},
+    ]
+}
+```
 You're absolutely right - let me update that part of the documentation to show a more realistic tool response format that uses structured JSON data. Here's the revised section:
 
 ## Tools and Function Calling

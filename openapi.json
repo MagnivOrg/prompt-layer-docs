@@ -1983,12 +1983,14 @@
               "discriminator": {
                 "mapping": {
                   "image_url": "#/components/schemas/ImageContent",
-                  "text": "#/components/schemas/TextContent"
+                  "text": "#/components/schemas/TextContent",
+                  "thinking": "#/components/schemas/ThinkingContent"
                 },
                 "propertyName": "type"
               },
               "oneOf": [
                 { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ThinkingContent" },
                 { "$ref": "#/components/schemas/ImageContent" },
                 { "$ref": "#/components/schemas/MediaContent" },
                 { "$ref": "#/components/schemas/MediaVariable" }
@@ -2034,6 +2036,21 @@
         },
         "required": ["text"],
         "title": "TextContent",
+        "type": "object"
+      },
+      "ThinkingContent": {
+        "properties": {
+          "type": {
+            "const": "thinking",
+            "default": "thinking",
+            "enum": ["thinking"],
+            "title": "Type",
+            "type": "string"
+          },
+          "thinking": { "title": "Text", "type": "string" }
+        },
+        "required": ["thinking"],
+        "title": "ThinkingContent",
         "type": "object"
       },
       "ImageURL": {
@@ -2226,13 +2243,15 @@
                 "items": {
                   "oneOf": [
                     { "$ref": "#/components/schemas/TextContent" },
+                    { "$ref": "#/components/schemas/ThinkingContent" },
                     { "$ref": "#/components/schemas/ImageContent" }
                   ],
                   "discriminator": {
                     "propertyName": "type",
                     "mapping": {
                       "image_url": "#/components/schemas/ImageContent",
-                      "text": "#/components/schemas/TextContent"
+                      "text": "#/components/schemas/TextContent",
+                      "thinking": "#/components/schemas/ThinkingContent"
                     }
                   }
                 },
@@ -2666,6 +2685,7 @@
             "items": {
               "oneOf": [
                 { "$ref": "#/components/schemas/TextContent" },
+                { "$ref": "#/components/schemas/ThinkingContent" },
                 { "$ref": "#/components/schemas/ImageContent" },
                 { "$ref": "#/components/schemas/MediaContent" },
                 { "$ref": "#/components/schemas/MediaVariable" }
@@ -2674,7 +2694,8 @@
                 "propertyName": "type",
                 "mapping": {
                   "image_url": "#/components/schemas/ImageContent",
-                  "text": "#/components/schemas/TextContent"
+                  "text": "#/components/schemas/TextContent",
+                  "thinking": "#/components/schemas/ThinkingContent"
                 }
               }
             },
