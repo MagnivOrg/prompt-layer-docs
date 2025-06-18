@@ -24,7 +24,7 @@ response = pl.run(
     input_variables={"variable_name": "value"}
 )
 
-print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][0]["text"])
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"][-1]["text"])
 ```
 
 ```js JavaScript
@@ -37,7 +37,7 @@ const response = await pl.run({
   inputVariables: { variableName: "value" }
 });
 
-console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].content[0].text);
+console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].content.slice(-1)[0].text);
 ```
 
 </CodeGroup>
