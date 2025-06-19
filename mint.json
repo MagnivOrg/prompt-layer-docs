@@ -134,6 +134,7 @@
         "reference/delete-reports-by-name",
         "reference/log-request",
         "reference/workflow-version-execution-results",
+        "reference/list-workflows",
         "reference/run-workflow",
         "reference/spans-bulk"
       ]
