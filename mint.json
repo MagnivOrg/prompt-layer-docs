@@ -78,6 +78,7 @@
           ],
           "icon": "cassette-tape"
         },
+        "features/custom-providers",
         "onboarding-guides/deployment-strategies",
         "features/faq"
       ]
