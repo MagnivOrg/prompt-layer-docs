@@ -1,0 +1,48 @@
+---
+title: "Custom Providers"
+icon: "plug"
+---
+
+Custom providers let you connect your own model endpoints to PromptLayer, including proprietary or self-hosted models.
+
+## Setting Up a Custom Provider
+
+To add a custom provider to your workspace:
+
+1. Navigate to **Settings → Custom Providers**
+2. Click the **Add Custom Provider** button
+3. Configure the provider with the following details:
+
+   - **Name**: A descriptive name for your provider (e.g., "DeepSeek")
+   - **Client**: Select the appropriate client type for your provider's base URL
+   - **Base URL**: The endpoint URL for your custom provider
+   - **API Key**
+
+<img src="/images/custom-provider-modal.png" alt="Custom Provider Modal" width="550" />
+
+## Creating Custom Models
+
+Once your provider is configured, you can define models for it:
+
+1. Go to **Settings → Custom Models**
+2. Click **Create Custom Model**
+3. Fill in the model configuration:
+
+   - **Provider**: Select the custom provider you created earlier
+   - **Model Name**: Choose from known models or enter a custom identifier
+   - **Display Name**: A friendly name that appears in the prompt playground
+   - **Model Type**: Specify whether this is a Chat or Completion model
+
+<img src="/images/custom-provider-new-model.png" alt="Custom Provider New Model" width="550" />
+
+## Using Custom Models
+
+After setup, your custom models seamlessly integrate with PromptLayer's features. You can:
+
+- Select them in the Playground alongside standard models
+- Use them in the Prompt Editor for template creation
+- Track requests and analyze performance just like any other model
+
+<img src="/images/custom-provider-use.png" alt="Custom Provider Use" width="650" />
+
+Custom providers give you complete control over your model infrastructure while maintaining all the benefits of PromptLayer's prompt management and observability features.
