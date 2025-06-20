@@ -160,7 +160,7 @@ Start by making a request to ["POST /workflows/agentName/run"](/reference/run-wo
 This request requires:
 - `input_variables` – JSON object with the variables the agent needs
 - `metadata` – *optional* JSON for extra metadata
-- `return_all_outputs` – Set to `true` if you want to include all intermediate node results
+- `return_all_outputs` – Set to `true` if you want to include all intermediate node results for debugging purposes
 
 The response will contain a `workflow_version_execution_id` that you'll need for the next step.
 
@@ -175,7 +175,7 @@ Include these query parameters:
 
 When polling (suggestion):
 - Check every **5000 ms**
-- A **200** status code means the run is complete, while **202** indicates it's still running
+- A **200** status code means the run is complete, while **204** (with empty body) indicates it's still running
 - Consider timing out after about 10 minutes
 
-Depending on if you set `return_all_outputs` or not, you will either return the output value or all node values on completion. 
+If you set `return_all_outputs` then all node values available by the moment will be returned with *200* status code even if workflow has not completed yet.
