@@ -131,3 +131,32 @@ const response = await pl.run({
 ```
 
 </CodeGroup>
+
+
+### Overriding Model Parameters
+
+You can also override `provider` and `model` at runtime to choose a different LLM provider or model. This is useful if you want to use a different provider than the one specified in the prompt template. PromptLayer will automatically return the corrent `llm_kwargs` for the specified provider and model with default values for the parameters corresponding to the `provider` and `model`.
+
+<CodeGroup>
+
+```python Python SDK
+response = pl.run(
+    prompt_name="your-prompt",
+    provider="openai",  # or "anthropic", "google", etc.
+    model="gpt-4",  # or "claude-2", "gemini-1.5-pro", etc.
+)
+```
+
+```js JavaScript
+const response = await pl.run({
+  promptName: "your-prompt",
+  provider: "openai",  // or "anthropic", "google", etc.
+  model: "gpt-4"  // or "claude-2", "gemini-1.5-pro", etc.
+});
+```
+
+</CodeGroup>
+
+<Tip>
+  Make sure to set both `model` and `provider` in order to run the request against correct LLM provider with correct parameters.
+</Tip>
