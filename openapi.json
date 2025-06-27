@@ -7,13 +7,18 @@
   "paths": {
     "/prompt-templates/{identifier}": {
       "post": {
-        "tags": ["prompt-templates"],
+        "tags": [
+          "prompt-templates"
+        ],
         "summary": "Get Prompt Template by ID",
         "operationId": "get_prompt_templates__prompt_identifier__post",
         "parameters": [
           {
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" },
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
             "name": "X-API-KEY",
             "in": "header"
           },
@@ -33,8 +38,12 @@
             "application/json": {
               "schema": {
                 "anyOf": [
-                  { "$ref": "#/components/schemas/GetPromptTemplate" },
-                  { "type": "null" }
+                  {
+                    "$ref": "#/components/schemas/GetPromptTemplate"
+                  },
+                  {
+                    "type": "null"
+                  }
                 ],
                 "title": "Body"
               }
@@ -56,7 +65,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -65,13 +76,19 @@
     },
     "/prompt-templates/{identifier}/labels": {
       "get": {
-        "tags": ["prompt-templates", "release-labels"],
+        "tags": [
+          "prompt-templates",
+          "release-labels"
+        ],
         "summary": "Get Prompt Template Labels",
         "operationId": "get_prompt_templates_labels_prompt_identifier__post",
         "parameters": [
           {
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" },
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
             "name": "X-API-KEY",
             "in": "header"
           },
@@ -105,7 +122,10 @@
     },
     "/prompts/{prompt_id}/label": {
       "post": {
-        "tags": ["prompts", "labels"],
+        "tags": [
+          "prompts",
+          "labels"
+        ],
         "summary": "Create a new label for a prompt",
         "operationId": "create_prompt_label",
         "parameters": [
@@ -142,7 +162,10 @@
                     "type": "string"
                   }
                 },
-                "required": ["prompt_version_number", "name"]
+                "required": [
+                  "prompt_version_number",
+                  "name"
+                ]
               }
             }
           }
@@ -188,7 +211,10 @@
     },
     "/prompt-labels/{prompt_label_id}": {
       "patch": {
-        "tags": ["prompt-templates", "release-labels"],
+        "tags": [
+          "prompt-templates",
+          "release-labels"
+        ],
         "summary": "Move Prompt Template Labels",
         "operationId": "prompt_templates_labels_prompt_label_id__patch",
         "parameters": [
@@ -205,7 +231,10 @@
             "name": "X-API-KEY",
             "in": "header",
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" }
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            }
           }
         ],
         "requestBody": {
@@ -215,9 +244,13 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "prompt_version_number": { "type": "integer" }
+                  "prompt_version_number": {
+                    "type": "integer"
+                  }
                 },
-                "required": ["prompt_version_number"]
+                "required": [
+                  "prompt_version_number"
+                ]
               }
             }
           }
@@ -261,7 +294,10 @@
         }
       },
       "delete": {
-        "tags": ["prompt-templates", "release-labels"],
+        "tags": [
+          "prompt-templates",
+          "release-labels"
+        ],
         "summary": "Delete Prompt Template Label",
         "operationId": "delete_prompt_templates_labels_prompt_label_id",
         "parameters": [
@@ -278,7 +314,10 @@
             "name": "X-API-KEY",
             "in": "header",
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" }
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            }
           }
         ],
         "responses": {
@@ -297,7 +336,10 @@
     },
     "/rest/prompt-templates": {
       "post": {
-        "tags": ["rest", "prompt-templates"],
+        "tags": [
+          "rest",
+          "prompt-templates"
+        ],
         "summary": "Publish Prompt Template",
         "operationId": "publish_prompt_template_rest_prompt_templates_post",
         "parameters": [
@@ -305,14 +347,19 @@
             "name": "X-API-KEY",
             "in": "header",
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" }
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            }
           }
         ],
         "requestBody": {
           "required": true,
           "content": {
             "application/json": {
-              "schema": { "$ref": "#/components/schemas/CreatePromptTemplate" }
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptTemplate"
+              }
             }
           }
         },
@@ -331,7 +378,9 @@
             "description": "Validation Error",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/HTTPValidationError" }
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
               }
             }
           }
@@ -342,7 +391,9 @@
       "post": {
         "summary": "Track Metadata",
         "operationId": "trackMetadata",
-        "tags": ["metadata"],
+        "tags": [
+          "metadata"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -364,7 +415,11 @@
                     "description": "A dictionary of metadata items to associate with the request. Can include session_ids, user_ids, location, etc."
                   }
                 },
-                "required": ["api_key", "request_id", "metadata"]
+                "required": [
+                  "api_key",
+                  "request_id",
+                  "metadata"
+                ]
               }
             }
           }
@@ -384,7 +439,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -402,7 +460,9 @@
       "post": {
         "summary": "Track Group",
         "operationId": "trackGroup",
-        "tags": ["group"],
+        "tags": [
+          "group"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -423,7 +483,11 @@
                     "description": "The unique identifier for the group to be associated with the request."
                   }
                 },
-                "required": ["api_key", "request_id", "group_id"]
+                "required": [
+                  "api_key",
+                  "request_id",
+                  "group_id"
+                ]
               }
             }
           }
@@ -443,7 +507,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -461,7 +528,9 @@
       "post": {
         "summary": "Track Prompt",
         "operationId": "trackPrompt",
-        "tags": ["prompt"],
+        "tags": [
+          "prompt"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -504,7 +573,11 @@
                     "optional": true
                   }
                 },
-                "required": ["api_key", "prompt_name", "request_id"]
+                "required": [
+                  "api_key",
+                  "prompt_name",
+                  "request_id"
+                ]
               }
             }
           }
@@ -524,7 +597,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -542,7 +618,9 @@
       "post": {
         "summary": "Track Score",
         "operationId": "trackScore",
-        "tags": ["score"],
+        "tags": [
+          "score"
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -570,7 +648,11 @@
                     "description": "Your PromptLayer API Key."
                   }
                 },
-                "required": ["request_id", "score", "api_key"]
+                "required": [
+                  "request_id",
+                  "score",
+                  "api_key"
+                ]
               }
             }
           }
@@ -590,7 +672,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -608,7 +693,9 @@
       "delete": {
         "summary": "Delete Reports by Name",
         "operationId": "deleteReportsByName",
-        "tags": ["reports"],
+        "tags": [
+          "reports"
+        ],
         "parameters": [
           {
             "name": "report_name",
@@ -644,7 +731,10 @@
                       "type": "string"
                     }
                   },
-                  "required": ["success", "message"]
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
               }
             }
@@ -662,7 +752,9 @@
       "post": {
         "summary": "Create Evaluation Pipeline",
         "operationId": "createEvaluationPipeline",
-        "tags": ["reports"],
+        "tags": [
+          "reports"
+        ],
         "parameters": [
           {
             "name": "X-API-KEY",
@@ -692,7 +784,10 @@
                     "description": "The ID of the dataset on which the report will be based. The dataset must be within an accessible workspace to the user."
                   }
                 },
-                "required": ["name", "test_dataset_id"]
+                "required": [
+                  "name",
+                  "test_dataset_id"
+                ]
               }
             }
           }
@@ -716,7 +811,11 @@
                       "description": "The ID of the created report."
                     }
                   },
-                  "required": ["success", "message", "report_id"]
+                  "required": [
+                    "success",
+                    "message",
+                    "report_id"
+                  ]
                 }
               }
             }
@@ -731,463 +830,582 @@
       }
     },
     "/reports/{report_id}/run": {
-  "post": {
-    "summary": "Run Full Evaluation",
-    "operationId": "runReport",
-    "tags": ["reports"],
-    "parameters": [
-      {
-        "name": "report_id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        },
-        "description": "ID of the evaluation pipeline report to run."
-      },
-      {
-        "name": "X-API-KEY",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "description": "API key to authorize the operation."
-      }
-    ],
-    "requestBody": {
-      "required": true,
-      "content": {
-        "application/json": {
-          "schema": {
-            "type": "object",
-            "properties": {
-              "name": {
-                "type": "string",
-                "description": "The name of the final report to be created. Must be between 1 and 255 characters in length.",
-                "minLength": 1,
-                "maxLength": 255
-              },
-              "dataset_id": {
-                "type": ["integer", "null"],
-                "description": "The ID of the dataset to use for the report. If not provided, uses the evaluation pipeline's default dataset."
-              },
-              "refresh_dataset": {
-                "type": ["boolean", "null"],
-                "description": "Whether to refresh the dataset before running the report. Only applicable for dynamic datasets."
-              }
+      "post": {
+        "summary": "Run Full Evaluation",
+        "operationId": "runReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
             },
-            "required": ["name"]
+            "description": "ID of the evaluation pipeline report to run."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the final report to be created. Must be between 1 and 255 characters in length.",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "dataset_id": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "The ID of the dataset to use for the report. If not provided, uses the evaluation pipeline's default dataset."
+                  },
+                  "refresh_dataset": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
+                    "description": "Whether to refresh the dataset before running the report. Only applicable for dynamic datasets."
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Report run initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "report_id": {
+                      "type": "integer",
+                      "description": "The ID of the created final report."
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "report_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid data or report generation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No requests found for the given criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Can only run evaluation pipeline reports or dataset refresh not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Report or dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
           }
         }
       }
     },
-    "responses": {
-      "201": {
-        "description": "Report run initiated successfully",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "report_id": {
-                  "type": "integer",
-                  "description": "The ID of the created final report."
-                }
-              },
-              "required": ["success", "report_id"]
-            }
-          }
-        }
-      },
-      "400": {
-        "description": "Bad Request - Invalid data or report generation error",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "message": {
-                  "type": "string"
-                }
-              },
-              "required": ["success", "message"]
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized - No requests found for the given criteria",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "message": {
-                  "type": "string"
-                }
-              },
-              "required": ["success", "message"]
-            }
-          }
-        }
-      },
-      "403": {
-        "description": "Forbidden - Can only run evaluation pipeline reports or dataset refresh not allowed",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "message": {
-                  "type": "string"
-                }
-              },
-              "required": ["success", "message"]
-            }
-          }
-        }
-      },
-      "404": {
-        "description": "Not Found - Report or dataset not found",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "message": {
-                  "type": "string"
-                }
-              },
-              "required": ["success", "message"]
-            }
-          }
-        }
-      }
-    }
-  }
-},
     "/reports/{report_id}": {
-  "get": {
-    "summary": "Get Evaluation",
-    "operationId": "getReport",
-    "tags": ["reports"],
-    "parameters": [
-      {
-        "name": "report_id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        },
-        "description": "ID of the report to retrieve."
-      },
-      {
-        "name": "X-API-KEY",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "description": "API key to authorize the operation."
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Report retrieved successfully",
-        "content": {
-          "application/json": {
+      "get": {
+        "summary": "Get Evaluation",
+        "operationId": "getReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "message": {
-                  "type": "string"
-                },
-                "report": {
+              "type": "integer"
+            },
+            "description": "ID of the report to retrieve."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
                   "type": "object",
-                  "description": "The report data with all fields",
                   "properties": {
-                    "id": {
-                      "type": "integer"
-                    },
-                    "name": {
-                      "type": "string"
-                    },
-                    "comment": {
-                      "type": ["string", "null"]
-                    },
-                    "is_blueprint": {
-                      "type": ["boolean", "null"]
-                    },
-                    "deleted": {
+                    "success": {
                       "type": "boolean"
                     },
-                    "created_at": {
-                      "type": "string",
-                      "format": "date-time"
+                    "message": {
+                      "type": "string"
                     },
-                    "updated_at": {
-                      "type": "string",
-                      "format": "date-time"
-                    },
-                    "score": {
-                      "type": ["object", "null"],
-                      "description": "Report score data"
-                    },
-                    "score_configuration": {
-                      "type": ["object", "null"],
-                      "description": "Score configuration settings"
-                    },
-                    "score_matrix": {
-                      "type": ["array", "null"],
-                      "description": "Score matrix for custom scoring"
-                    },
-                    "score_calculation_error": {
-                      "type": ["string", "null"],
-                      "description": "Error message if score calculation failed"
-                    },
-                    "parent_report_id": {
-                      "type": ["integer", "null"]
-                    },
-                    "dataset_id": {
-                      "type": ["integer", "null"]
-                    },
-                    "user_id": {
-                      "type": ["integer", "null"]
-                    },
-                    "workspace_id": {
-                      "type": "integer"
-                    },
-                    "prompt_registry_id": {
-                      "type": ["integer", "null"],
-                      "description": "ID of associated prompt registry"
-                    },
-                    "prompt_version_number": {
-                      "type": ["integer", "null"],
-                      "description": "Version number of associated prompt"
-                    }
-                  },
-                  "required": ["id", "name", "deleted", "created_at", "updated_at", "workspace_id"]
-                },
-                "status": {
-                  "type": "string",
-                  "enum": ["RUNNING", "COMPLETED"],
-                  "description": "Overall status of the report execution"
-                },
-                "stats": {
-                  "type": "object",
-                  "properties": {
-                    "status_counts": {
+                    "report": {
                       "type": "object",
-                      "description": "Count of cells in each status",
+                      "description": "The report data with all fields",
                       "properties": {
-                        "COMPLETED": {
-                          "type": "integer",
-                          "description": "Number of completed cells"
+                        "id": {
+                          "type": "integer"
                         },
-                        "FAILED": {
-                          "type": "integer",
-                          "description": "Number of failed cells"
+                        "name": {
+                          "type": "string"
                         },
-                        "QUEUED": {
-                          "type": "integer",
-                          "description": "Number of queued cells"
+                        "comment": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
                         },
-                        "RUNNING": {
-                          "type": "integer",
-                          "description": "Number of running cells"
+                        "is_blueprint": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "deleted": {
+                          "type": "boolean"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "score": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "description": "Report score data"
+                        },
+                        "score_configuration": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "description": "Score configuration settings"
+                        },
+                        "score_matrix": {
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "description": "Score matrix for custom scoring"
+                        },
+                        "score_calculation_error": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "Error message if score calculation failed"
+                        },
+                        "parent_report_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "dataset_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "user_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "workspace_id": {
+                          "type": "integer"
+                        },
+                        "prompt_registry_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "ID of associated prompt registry"
+                        },
+                        "prompt_version_number": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "Version number of associated prompt"
                         }
                       },
-                      "required": ["COMPLETED", "FAILED", "QUEUED", "RUNNING"]
-                    }
-                  },
-                  "required": ["status_counts"]
-                }
-              },
-              "required": ["success", "message", "report", "status", "stats"]
-            }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized - Invalid or missing authentication"
-      },
-      "404": {
-        "description": "Report not found or not accessible"
-      }
-    }
-  }
-},
-    "/reports/{report_id}/score": {
-  "get": {
-    "summary": "Get Evaluation Score",
-    "operationId": "getReportScore",
-    "tags": ["reports"],
-    "parameters": [
-      {
-        "name": "report_id",
-        "in": "path",
-        "required": true,
-        "schema": {
-          "type": "integer"
-        },
-        "description": "ID of the report to get the score for."
-      },
-      {
-        "name": "X-API-KEY",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "description": "API key to authorize the operation."
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "Report score retrieved successfully",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean"
-                },
-                "message": {
-                  "type": "string"
-                },
-                "score": {
-                  "type": "object",
-                  "properties": {
-                    "overall_score": {
-                      "type": ["number", "null"],
-                      "description": "The overall score of the report"
+                      "required": [
+                        "id",
+                        "name",
+                        "deleted",
+                        "created_at",
+                        "updated_at",
+                        "workspace_id"
+                      ]
                     },
-                    "score_type": {
+                    "status": {
                       "type": "string",
-                      "enum": ["single_column", "multi_column", "custom", "none"],
-                      "description": "Type of scoring used for this report"
+                      "enum": [
+                        "RUNNING",
+                        "COMPLETED"
+                      ],
+                      "description": "Overall status of the report execution"
                     },
-                    "has_custom_scoring": {
-                      "type": "boolean",
-                      "description": "Whether custom scoring logic was used"
-                    },
-                    "details": {
+                    "stats": {
                       "type": "object",
-                      "oneOf": [
-                        {
-                          "description": "Single column score details",
+                      "properties": {
+                        "status_counts": {
+                          "type": "object",
+                          "description": "Count of cells in each status",
                           "properties": {
-                            "column_name": {
-                              "type": "string"
+                            "COMPLETED": {
+                              "type": "integer",
+                              "description": "Number of completed cells"
                             },
-                            "score": {
-                              "type": ["number", "null"]
+                            "FAILED": {
+                              "type": "integer",
+                              "description": "Number of failed cells"
                             },
-                            "score_type": {
-                              "type": ["string", "null"]
+                            "QUEUED": {
+                              "type": "integer",
+                              "description": "Number of queued cells"
                             },
-                            "num_skipped": {
-                              "type": "integer"
+                            "RUNNING": {
+                              "type": "integer",
+                              "description": "Number of running cells"
                             }
-                          }
-                        },
-                        {
-                          "description": "Multi-column score details",
-                          "properties": {
-                            "columns": {
-                              "type": "array",
-                              "items": {
-                                "type": "object",
-                                "properties": {
-                                  "column_name": {
-                                    "type": "string"
-                                  },
-                                  "score": {
-                                    "type": ["number", "null"]
-                                  },
-                                  "score_type": {
-                                    "type": ["string", "null"]
-                                  },
-                                  "num_skipped": {
-                                    "type": "integer"
-                                  }
-                                }
-                              }
-                            }
-                          }
-                        },
-                        {
-                          "description": "Custom score details",
-                          "properties": {
-                            "matrix": {
-                              "type": "array",
-                              "description": "Score matrix from custom scoring logic"
-                            },
-                            "configuration": {
-                              "type": ["object", "null"],
-                              "description": "Custom scoring configuration"
-                            }
-                          }
-                        },
-                        {
-                          "description": "No score details",
-                          "properties": {
-                            "message": {
-                              "type": "string"
-                            }
-                          }
+                          },
+                          "required": [
+                            "COMPLETED",
+                            "FAILED",
+                            "QUEUED",
+                            "RUNNING"
+                          ]
                         }
+                      },
+                      "required": [
+                        "status_counts"
                       ]
                     }
                   },
-                  "required": ["overall_score", "score_type", "has_custom_scoring", "details"]
+                  "required": [
+                    "success",
+                    "message",
+                    "report",
+                    "status",
+                    "stats"
+                  ]
                 }
-              },
-              "required": ["success", "message", "score"]
+              }
             }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "404": {
+            "description": "Report not found or not accessible"
           }
         }
-      },
-      "400": {
-        "description": "Bad Request - Blueprint reports do not have scores"
-      },
-      "401": {
-        "description": "Unauthorized"
-      },
-      "403": {
-        "description": "Forbidden - Invalid workspace"
-      },
-      "404": {
-        "description": "Report not found"
       }
-    }
-  }
-},
+    },
+    "/reports/{report_id}/score": {
+      "get": {
+        "summary": "Get Evaluation Score",
+        "operationId": "getReportScore",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the report to get the score for."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report score retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "object",
+                      "properties": {
+                        "overall_score": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "description": "The overall score of the report"
+                        },
+                        "score_type": {
+                          "type": "string",
+                          "enum": [
+                            "single_column",
+                            "multi_column",
+                            "custom",
+                            "none"
+                          ],
+                          "description": "Type of scoring used for this report"
+                        },
+                        "has_custom_scoring": {
+                          "type": "boolean",
+                          "description": "Whether custom scoring logic was used"
+                        },
+                        "details": {
+                          "type": "object",
+                          "oneOf": [
+                            {
+                              "description": "Single column score details",
+                              "properties": {
+                                "column_name": {
+                                  "type": "string"
+                                },
+                                "score": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ]
+                                },
+                                "score_type": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "num_skipped": {
+                                  "type": "integer"
+                                }
+                              }
+                            },
+                            {
+                              "description": "Multi-column score details",
+                              "properties": {
+                                "columns": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "column_name": {
+                                        "type": "string"
+                                      },
+                                      "score": {
+                                        "type": [
+                                          "number",
+                                          "null"
+                                        ]
+                                      },
+                                      "score_type": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "num_skipped": {
+                                        "type": "integer"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "description": "Custom score details",
+                              "properties": {
+                                "matrix": {
+                                  "type": "array",
+                                  "description": "Score matrix from custom scoring logic"
+                                },
+                                "configuration": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "description": "Custom scoring configuration"
+                                }
+                              }
+                            },
+                            {
+                              "description": "No score details",
+                              "properties": {
+                                "message": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "overall_score",
+                        "score_type",
+                        "has_custom_scoring",
+                        "details"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "score"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Blueprint reports do not have scores"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - Invalid workspace"
+          },
+          "404": {
+            "description": "Report not found"
+          }
+        }
+      }
+    },
     "/dataset-from-filter-params": {
       "post": {
         "summary": "Create Dataset from History",
         "operationId": "createDatasetFromFilterParams",
-        "tags": ["dataset"],
+        "tags": [
+          "dataset"
+        ],
         "parameters": [
           {
             "name": "X-API-KEY",
@@ -1312,7 +1530,10 @@
                     "description": "The maximum number of rows that will be included in the dataset."
                   }
                 },
-                "required": ["name", "workspace_id"]
+                "required": [
+                  "name",
+                  "workspace_id"
+                ]
               }
             }
           }
@@ -1336,7 +1557,11 @@
                       "description": "The ID of the created dataset."
                     }
                   },
-                  "required": ["success", "message", "dataset_id"]
+                  "required": [
+                    "success",
+                    "message",
+                    "dataset_id"
+                  ]
                 }
               }
             }
@@ -1352,25 +1577,36 @@
     },
     "/prompt-templates": {
       "get": {
-        "tags": ["prompt-templates"],
+        "tags": [
+          "prompt-templates"
+        ],
         "summary": "Get All",
         "operationId": "get_all_prompt_templates__get",
         "parameters": [
           {
             "required": true,
-            "schema": { "type": "string", "title": "X-Api-Key" },
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
             "name": "X-API-KEY",
             "in": "header"
           },
           {
             "in": "query",
             "name": "page",
-            "schema": { "type": "integer", "title": "Page" }
+            "schema": {
+              "type": "integer",
+              "title": "Page"
+            }
           },
           {
             "in": "query",
             "name": "per_page",
-            "schema": { "type": "integer", "title": "Per Page" }
+            "schema": {
+              "type": "integer",
+              "title": "Per Page"
+            }
           }
         ],
         "responses": {
@@ -1378,7 +1614,9 @@
             "description": "Successful Response",
             "content": {
               "application/json": {
-                "schema": { "$ref": "#/components/schemas/ListPromptTemplates" }
+                "schema": {
+                  "$ref": "#/components/schemas/ListPromptTemplates"
+                }
               }
             }
           }
@@ -1387,7 +1625,9 @@
     },
     "/log-request": {
       "post": {
-        "tags": ["request"],
+        "tags": [
+          "request"
+        ],
         "summary": "Log Request",
         "operationId": "logRequest",
         "parameters": [
@@ -1429,8 +1669,12 @@
               "application/json": {
                 "schema": {
                   "anyOf": [
-                    { "$ref": "#/components/schemas/BadRequestError" },
-                    { "$ref": "#/components/schemas/ValidationError" }
+                    {
+                      "$ref": "#/components/schemas/BadRequestError"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ValidationError"
+                    }
                   ]
                 }
               }
@@ -1552,185 +1796,208 @@
       }
     },
     "/workflows": {
-  "get": {
-    "summary": "List Workflows",
-    "operationId": "listWorkflows",
-    "tags": ["workflow"],
-    "parameters": [
-      {
-        "name": "X-API-KEY",
-        "in": "header",
-        "required": true,
-        "schema": {
-          "type": "string"
-        },
-        "description": "Your API key for authentication."
-      },
-      {
-        "name": "page",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "default": 1
-        },
-        "description": "Page number for pagination."
-      },
-      {
-        "name": "per_page",
-        "in": "query",
-        "required": false,
-        "schema": {
-          "type": "integer",
-          "minimum": 1,
-          "maximum": 100,
-          "default": 30
-        },
-        "description": "Number of items per page."
-      }
-    ],
-    "responses": {
-      "200": {
-        "description": "List of workflows retrieved successfully",
-        "content": {
-          "application/json": {
+      "get": {
+        "summary": "List Workflows",
+        "operationId": "listWorkflows",
+        "tags": [
+          "workflow"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
             "schema": {
-              "type": "object",
-              "properties": {
-                "items": {
-                  "type": "array",
-                  "items": {
-                    "type": "object",
-                    "properties": {
-                      "id": {
-                        "type": "integer",
-                        "description": "Unique identifier for the workflow"
-                      },
-                      "workspace_id": {
-                        "type": "integer",
-                        "description": "ID of the workspace this workflow belongs to"
-                      },
-                      "user_id": {
-                        "type": "integer",
-                        "nullable": true,
-                        "description": "ID of the user who created this workflow"
-                      },
-                      "name": {
-                        "type": "string",
-                        "description": "Name of the workflow"
-                      },
-                      "is_deleted": {
-                        "type": "boolean",
-                        "description": "Whether the workflow is deleted"
-                      },
-                      "latest_version_number": {
-                        "type": "integer",
-                        "nullable": true,
-                        "description": "The latest version number of the workflow"
-                      },
-                      "release_labels": {
-                        "type": "array",
-                        "items": {
-                          "type": "string"
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Page number for pagination."
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 30
+            },
+            "description": "Number of items per page."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of workflows retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "items": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer",
+                            "description": "Unique identifier for the workflow"
+                          },
+                          "workspace_id": {
+                            "type": "integer",
+                            "description": "ID of the workspace this workflow belongs to"
+                          },
+                          "user_id": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "ID of the user who created this workflow"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Name of the workflow"
+                          },
+                          "is_deleted": {
+                            "type": "boolean",
+                            "description": "Whether the workflow is deleted"
+                          },
+                          "latest_version_number": {
+                            "type": "integer",
+                            "nullable": true,
+                            "description": "The latest version number of the workflow"
+                          },
+                          "release_labels": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Array of release label names associated with the workflow"
+                          }
                         },
-                        "description": "Array of release label names associated with the workflow"
+                        "required": [
+                          "id",
+                          "workspace_id",
+                          "name",
+                          "is_deleted",
+                          "release_labels"
+                        ]
                       }
                     },
-                    "required": ["id", "workspace_id", "name", "is_deleted", "release_labels"]
-                  }
-                },
-                "page": {
-                  "type": "integer",
-                  "description": "Current page number"
-                },
-                "per_page": {
-                  "type": "integer",
-                  "description": "Number of items per page"
-                },
-                "total": {
-                  "type": "integer",
-                  "nullable": true,
-                  "description": "Total number of items"
-                },
-                "pages": {
-                  "type": "integer",
-                  "description": "Total number of pages"
-                },
-                "has_next": {
-                  "type": "boolean",
-                  "description": "Whether there is a next page"
-                },
-                "has_prev": {
-                  "type": "boolean",
-                  "description": "Whether there is a previous page"
-                },
-                "next_num": {
-                  "type": "integer",
-                  "nullable": true,
-                  "description": "Next page number if available"
-                },
-                "prev_num": {
-                  "type": "integer",
-                  "nullable": true,
-                  "description": "Previous page number if available"
+                    "page": {
+                      "type": "integer",
+                      "description": "Current page number"
+                    },
+                    "per_page": {
+                      "type": "integer",
+                      "description": "Number of items per page"
+                    },
+                    "total": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Total number of items"
+                    },
+                    "pages": {
+                      "type": "integer",
+                      "description": "Total number of pages"
+                    },
+                    "has_next": {
+                      "type": "boolean",
+                      "description": "Whether there is a next page"
+                    },
+                    "has_prev": {
+                      "type": "boolean",
+                      "description": "Whether there is a previous page"
+                    },
+                    "next_num": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Next page number if available"
+                    },
+                    "prev_num": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Previous page number if available"
+                    }
+                  },
+                  "required": [
+                    "items",
+                    "page",
+                    "per_page",
+                    "pages",
+                    "has_next",
+                    "has_prev"
+                  ]
                 }
-              },
-              "required": ["items", "page", "per_page", "pages", "has_next", "has_prev"]
+              }
             }
-          }
-        }
-      },
-      "400": {
-        "description": "Bad Request",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Invalid pagination parameters"
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid pagination parameters"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
-              },
-              "required": ["success", "message"]
+              }
             }
-          }
-        }
-      },
-      "401": {
-        "description": "Unauthorized",
-        "content": {
-          "application/json": {
-            "schema": {
-              "type": "object",
-              "properties": {
-                "success": {
-                  "type": "boolean",
-                  "example": false
-                },
-                "message": {
-                  "type": "string",
-                  "example": "Invalid API key"
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Invalid API key"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
                 }
-              },
-              "required": ["success", "message"]
+              }
             }
           }
         }
       }
-    }
-  }
-},
+    },
     "/workflows/{workflow_name}/run": {
       "post": {
         "summary": "Run Workflow",
         "operationId": "runWorkflow",
-        "tags": ["workflow"],
+        "tags": [
+          "workflow"
+        ],
         "parameters": [
           {
             "name": "workflow_name",
@@ -1807,7 +2074,9 @@
     },
     "/spans-bulk": {
       "post": {
-        "tags": ["spans"],
+        "tags": [
+          "spans"
+        ],
         "summary": "Create Spans Bulk",
         "operationId": "createSpansBulk",
         "parameters": [
@@ -1943,7 +2212,11 @@
             "description": "The ID of the created workflow execution."
           }
         },
-        "required": ["success", "message", "workflow_version_execution_id"],
+        "required": [
+          "success",
+          "message",
+          "workflow_version_execution_id"
+        ],
         "description": "Response after initiating a workflow execution."
       },
       "ErrorResponse": {
@@ -1959,7 +2232,10 @@
             "description": "Error message explaining why the request failed."
           }
         },
-        "required": ["success", "error"],
+        "required": [
+          "success",
+          "error"
+        ],
         "description": "Error response format."
       },
       "Base": {
@@ -2001,7 +2277,9 @@
           }
         },
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "Function"
       },
       "FunctionCall": {
@@ -2016,7 +2294,10 @@
           }
         },
         "type": "object",
-        "required": ["name", "arguments"],
+        "required": [
+          "name",
+          "arguments"
+        ],
         "title": "FunctionCall"
       },
       "HTTPValidationError": {
@@ -2058,28 +2339,43 @@
           }
         },
         "type": "object",
-        "required": ["loc", "msg", "type"],
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
         "title": "ValidationError"
       },
       "Model": {
         "title": "Model",
         "type": "object",
         "properties": {
-          "provider": { "title": "Provider", "type": "string" },
-          "name": { "title": "Name", "type": "string" },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "name": {
+            "title": "Name",
+            "type": "string"
+          },
           "parameters": {
             "title": "Parameters",
             "default": {},
             "type": "object"
           }
         },
-        "required": ["provider", "name"]
+        "required": [
+          "provider",
+          "name"
+        ]
       },
       "Metadata": {
         "title": "Metadata",
         "type": "object",
         "properties": {
-          "model": { "$ref": "#/components/schemas/Model" },
+          "model": {
+            "$ref": "#/components/schemas/Model"
+          },
           "customField": {
             "type": "string"
           }
@@ -2089,15 +2385,24 @@
             "title": "Model",
             "type": "object",
             "properties": {
-              "provider": { "title": "Provider", "type": "string" },
-              "name": { "title": "Name", "type": "string" },
+              "provider": {
+                "title": "Provider",
+                "type": "string"
+              },
+              "name": {
+                "title": "Name",
+                "type": "string"
+              },
               "parameters": {
                 "title": "Parameters",
                 "default": {},
                 "type": "object"
               }
             },
-            "required": ["provider", "name"]
+            "required": [
+              "provider",
+              "name"
+            ]
           }
         }
       },
@@ -2105,46 +2410,93 @@
         "properties": {
           "version": {
             "anyOf": [
-              { "type": "integer", "exclusiveMinimum": 0.0 },
-              { "type": "null" }
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0.0
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Version"
           },
           "workspace_id": {
-            "anyOf": [{ "type": "integer" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Workspace Id"
           },
           "label": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Label"
           },
           "provider": {
             "anyOf": [
-              { "type": "string", "enum": ["openai", "anthropic"] },
-              { "type": "null" }
+              {
+                "type": "string",
+                "enum": [
+                  "openai",
+                  "anthropic"
+                ]
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Provider"
           },
           "input_variables": {
             "anyOf": [
               {
-                "additionalProperties": { "type": "string" },
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "type": "object"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Input Variables"
           },
           "metadata_filters": {
             "anyOf": [
               {
-                "additionalProperties": { "type": "string" },
+                "additionalProperties": {
+                  "type": "string"
+                },
                 "type": "object"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Metadata Filters",
             "description": "Optional dictionary of key values used for A/B release labels."
+          },
+          "model": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Modal",
+            "description": "Optional model name used for returning default parameters with llm_kwargs."
           }
         },
         "type": "object",
@@ -2164,11 +2516,21 @@
                 "propertyName": "type"
               },
               "oneOf": [
-                { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ThinkingContent" },
-                { "$ref": "#/components/schemas/ImageContent" },
-                { "$ref": "#/components/schemas/MediaContent" },
-                { "$ref": "#/components/schemas/MediaVariable" }
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                }
               ]
             },
             "title": "Content",
@@ -2176,25 +2538,34 @@
           },
           "input_variables": {
             "default": [],
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "title": "Input Variables",
             "type": "array"
           },
           "template_format": {
             "default": "f-string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "type": "string"
           },
           "type": {
             "const": "completion",
             "default": "completion",
-            "enum": ["completion"],
+            "enum": [
+              "completion"
+            ],
             "title": "Type",
             "type": "string"
           }
         },
-        "required": ["content"],
+        "required": [
+          "content"
+        ],
         "title": "Completion Template",
         "type": "object"
       },
@@ -2203,13 +2574,20 @@
           "type": {
             "const": "text",
             "default": "text",
-            "enum": ["text"],
+            "enum": [
+              "text"
+            ],
             "title": "Type",
             "type": "string"
           },
-          "text": { "title": "Text", "type": "string" }
+          "text": {
+            "title": "Text",
+            "type": "string"
+          }
         },
-        "required": ["text"],
+        "required": [
+          "text"
+        ],
         "title": "TextContent",
         "type": "object"
       },
@@ -2218,26 +2596,45 @@
           "type": {
             "const": "thinking",
             "default": "thinking",
-            "enum": ["thinking"],
+            "enum": [
+              "thinking"
+            ],
             "title": "Type",
             "type": "string"
           },
-          "thinking": { "title": "Text", "type": "string" }
+          "thinking": {
+            "title": "Text",
+            "type": "string"
+          }
         },
-        "required": ["thinking"],
+        "required": [
+          "thinking"
+        ],
         "title": "ThinkingContent",
         "type": "object"
       },
       "ImageURL": {
         "properties": {
-          "url": { "type": "string", "title": "Url" },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
           "detail": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Detail"
           }
         },
         "type": "object",
-        "required": ["url"],
+        "required": [
+          "url"
+        ],
         "title": "ImageURL"
       },
       "Media": {
@@ -2252,10 +2649,15 @@
             "title": "Type",
             "description": "Type of the media. For example, image/png"
           },
-          "url": { "type": "string", "title": "Url" }
+          "url": {
+            "type": "string",
+            "title": "Url"
+          }
         },
         "type": "object",
-        "required": ["url"],
+        "required": [
+          "url"
+        ],
         "title": "ImageURL"
       },
       "ImageContent": {
@@ -2263,18 +2665,31 @@
           "type": {
             "const": "image_url",
             "default": "image_url",
-            "enum": ["image_url"],
+            "enum": [
+              "image_url"
+            ],
             "title": "Type",
             "type": "string"
           },
-          "image_url": { "$ref": "#/components/schemas/ImageURL" },
+          "image_url": {
+            "$ref": "#/components/schemas/ImageURL"
+          },
           "image_variable": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Image Variable"
           }
         },
-        "required": ["image_url"],
+        "required": [
+          "image_url"
+        ],
         "title": "ImageContent",
         "type": "object"
       },
@@ -2283,13 +2698,19 @@
           "type": {
             "const": "media",
             "default": "media",
-            "enum": ["media"],
+            "enum": [
+              "media"
+            ],
             "title": "Type",
             "type": "string"
           },
-          "media": { "$ref": "#/components/schemas/Media" }
+          "media": {
+            "$ref": "#/components/schemas/Media"
+          }
         },
-        "required": ["media"],
+        "required": [
+          "media"
+        ],
         "title": "MediaContent",
         "type": "object"
       },
@@ -2298,7 +2719,9 @@
           "type": {
             "const": "media_variable",
             "default": "media_variable",
-            "enum": ["media_variable"],
+            "enum": [
+              "media_variable"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -2308,31 +2731,46 @@
             "description": "Name of the media variable"
           }
         },
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "MediaVariable",
         "type": "object"
       },
       "SystemMessage": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables",
             "default": []
           },
           "template_format": {
             "type": "string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "default": "f-string"
           },
           "content": {
             "items": {
               "oneOf": [
-                { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" },
-                { "$ref": "#/components/schemas/MediaContent" },
-                { "$ref": "#/components/schemas/MediaVariable" }
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                }
               ],
               "discriminator": {
                 "propertyName": "type",
@@ -2345,37 +2783,63 @@
             "type": "array",
             "title": "Content"
           },
-          "role": { "const": "system", "title": "Role", "default": "system" },
+          "role": {
+            "const": "system",
+            "title": "Role",
+            "default": "system"
+          },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           }
         },
         "type": "object",
-        "required": ["content"],
+        "required": [
+          "content"
+        ],
         "title": "SystemMessage"
       },
       "UserMessage": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables",
             "default": []
           },
           "template_format": {
             "type": "string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "default": "f-string"
           },
           "content": {
             "items": {
               "oneOf": [
-                { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" },
-                { "$ref": "#/components/schemas/MediaContent" },
-                { "$ref": "#/components/schemas/MediaVariable" }
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                }
               ],
               "discriminator": {
                 "propertyName": "type",
@@ -2388,27 +2852,45 @@
             "type": "array",
             "title": "Content"
           },
-          "role": { "const": "user", "title": "Role", "default": "user" },
+          "role": {
+            "const": "user",
+            "title": "Role",
+            "default": "user"
+          },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           }
         },
         "type": "object",
-        "required": ["content"],
+        "required": [
+          "content"
+        ],
         "title": "UserMessage"
       },
       "AssistantMessage": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables",
             "default": []
           },
           "template_format": {
             "type": "string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -2417,9 +2899,15 @@
               {
                 "items": {
                   "oneOf": [
-                    { "$ref": "#/components/schemas/TextContent" },
-                    { "$ref": "#/components/schemas/ThinkingContent" },
-                    { "$ref": "#/components/schemas/ImageContent" }
+                    {
+                      "$ref": "#/components/schemas/TextContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ThinkingContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ImageContent"
+                    }
                   ],
                   "discriminator": {
                     "propertyName": "type",
@@ -2432,7 +2920,9 @@
                 },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Content"
           },
@@ -2443,24 +2933,39 @@
           },
           "function_call": {
             "anyOf": [
-              { "$ref": "#/components/schemas/FunctionCall" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/FunctionCall"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Function Call",
             "deprecated": true,
             "description": "This field is deprecated. Please use `tool_calls` field to specify tool calls."
           },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           },
           "tool_calls": {
             "anyOf": [
               {
-                "items": { "$ref": "#/components/schemas/ToolCall" },
+                "items": {
+                  "$ref": "#/components/schemas/ToolCall"
+                },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Tool Calls"
           }
@@ -2471,14 +2976,19 @@
       "FunctionMessage": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables",
             "default": []
           },
           "template_format": {
             "type": "string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -2487,8 +2997,12 @@
               {
                 "items": {
                   "oneOf": [
-                    { "$ref": "#/components/schemas/TextContent" },
-                    { "$ref": "#/components/schemas/ImageContent" }
+                    {
+                      "$ref": "#/components/schemas/TextContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ImageContent"
+                    }
                   ],
                   "discriminator": {
                     "propertyName": "type",
@@ -2500,7 +3014,9 @@
                 },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "title": "Content"
           },
@@ -2509,33 +3025,51 @@
             "title": "Role",
             "default": "function"
           },
-          "name": { "type": "string", "title": "Name" }
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
         },
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "FunctionMessage"
       },
       "DeveloperMessage": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables",
             "default": []
           },
           "template_format": {
             "type": "string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "default": "f-string"
           },
           "content": {
             "items": {
               "oneOf": [
-                { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ImageContent" },
-                { "$ref": "#/components/schemas/MediaContent" },
-                { "$ref": "#/components/schemas/MediaVariable" }
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                }
               ],
               "discriminator": {
                 "propertyName": "type",
@@ -2548,20 +3082,40 @@
             "type": "array",
             "title": "Content"
           },
-          "role": { "const": "developer", "title": "Role", "default": "developer" },
+          "role": {
+            "const": "developer",
+            "title": "Role",
+            "default": "developer"
+          },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           }
         },
         "type": "object",
-        "required": ["content"],
+        "required": [
+          "content"
+        ],
         "title": "DeveloperMessage"
       },
       "MessageFunctionCall": {
-        "properties": { "name": { "type": "string", "title": "Name" } },
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          }
+        },
         "type": "object",
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "MessageFunctionCall"
       },
       "ChatPrompt": {
@@ -2581,13 +3135,27 @@
                 "propertyName": "role"
               },
               "oneOf": [
-                { "$ref": "#/components/schemas/SystemMessage" },
-                { "$ref": "#/components/schemas/UserMessage" },
-                { "$ref": "#/components/schemas/AssistantMessage" },
-                { "$ref": "#/components/schemas/FunctionMessage" },
-                { "$ref": "#/components/schemas/ToolMessage" },
-                { "$ref": "#/components/schemas/PlaceholderMessage" },
-                { "$ref": "#/components/schemas/DeveloperMessage" }
+                {
+                  "$ref": "#/components/schemas/SystemMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/UserMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/AssistantMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/FunctionMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/ToolMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/PlaceholderMessage"
+                },
+                {
+                  "$ref": "#/components/schemas/DeveloperMessage"
+                }
               ]
             },
             "title": "Messages",
@@ -2596,10 +3164,14 @@
           "functions": {
             "anyOf": [
               {
-                "items": { "$ref": "#/components/schemas/Function" },
+                "items": {
+                  "$ref": "#/components/schemas/Function"
+                },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "default": null,
             "title": "Functions"
@@ -2607,28 +3179,44 @@
           "tools": {
             "anyOf": [
               {
-                "items": { "$ref": "#/components/schemas/Tool" },
+                "items": {
+                  "$ref": "#/components/schemas/Tool"
+                },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "default": null,
             "title": "Tools"
           },
           "function_call": {
             "anyOf": [
-              { "type": "string" },
-              { "$ref": "#/components/schemas/MessageFunctionCall" },
-              { "type": "null" }
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/MessageFunctionCall"
+              },
+              {
+                "type": "null"
+              }
             ],
             "default": null,
             "title": "Function Call"
           },
           "tool_choice": {
             "anyOf": [
-              { "type": "string" },
-              { "$ref": "#/components/schemas/ChatToolChoice" },
-              { "type": "null" }
+              {
+                "type": "string"
+              },
+              {
+                "$ref": "#/components/schemas/ChatToolChoice"
+              },
+              {
+                "type": "null"
+              }
             ],
             "default": null,
             "title": "Tool Choice"
@@ -2636,29 +3224,45 @@
           "type": {
             "const": "chat",
             "default": "chat",
-            "enum": ["chat"],
+            "enum": [
+              "chat"
+            ],
             "title": "Type",
             "type": "string"
           },
           "input_variables": {
             "default": [],
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "title": "Input Variables",
             "type": "array"
           }
         },
-        "required": ["messages"],
+        "required": [
+          "messages"
+        ],
         "title": "Chat Template",
         "type": "object"
       },
       "GetPromptTemplateResponse": {
         "properties": {
-          "id": { "type": "integer", "title": "Id" },
-          "prompt_name": { "type": "string", "title": "Prompt Name" },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name"
+          },
           "prompt_template": {
             "oneOf": [
-              { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPrompt" }
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
             ],
             "title": "Prompt Template",
             "discriminator": {
@@ -2671,23 +3275,48 @@
           },
           "metadata": {
             "anyOf": [
-              { "$ref": "#/components/schemas/Metadata" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/Metadata"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "commit_message": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Commit Message"
           },
           "llm_kwargs": {
-            "anyOf": [{ "type": "object" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Llm Kwargs",
             "description": "When you optionally specify `provider` in the body, `llm_kwargs` will be returned for that specific provider and you can pass these kwargs to the provider's API directly."
           },
-          "version": { "type": "integer", "title": "Version" }
+          "version": {
+            "type": "integer",
+            "title": "Version"
+          }
         },
         "type": "object",
-        "required": ["id", "prompt_name", "prompt_template"],
+        "required": [
+          "id",
+          "prompt_name",
+          "prompt_template"
+        ],
         "title": "GetPromptTemplateResponse"
       },
       "GetPromptTemplateLabelResponse": {
@@ -2697,10 +3326,18 @@
             "items": {
               "type": "object",
               "properties": {
-                "prompt_version_id": { "type": "integer" },
-                "prompt_version_number": { "type": "integer" },
-                "release_label": { "type": "string" },
-                "release_label_id": { "type": "integer" }
+                "prompt_version_id": {
+                  "type": "integer"
+                },
+                "prompt_version_number": {
+                  "type": "integer"
+                },
+                "release_label": {
+                  "type": "string"
+                },
+                "release_label_id": {
+                  "type": "integer"
+                }
               },
               "required": [
                 "prompt_version_id",
@@ -2713,7 +3350,9 @@
           }
         },
         "type": "object",
-        "required": ["release_labels"],
+        "required": [
+          "release_labels"
+        ],
         "title": "GetPromptTemplateLabelResponse"
       },
       "BasePromptTemplate": {
@@ -2725,22 +3364,30 @@
             "title": "Prompt Name"
           },
           "tags": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Tags",
             "default": []
           }
         },
         "type": "object",
-        "required": ["prompt_name"],
+        "required": [
+          "prompt_name"
+        ],
         "title": "BasePromptTemplate"
       },
       "PromptVersion": {
         "properties": {
           "prompt_template": {
             "oneOf": [
-              { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPrompt" }
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
             ],
             "title": "Prompt Template",
             "discriminator": {
@@ -2753,20 +3400,31 @@
           },
           "commit_message": {
             "anyOf": [
-              { "type": "string", "maxLength": 72 },
-              { "type": "null" }
+              {
+                "type": "string",
+                "maxLength": 72
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Commit Message"
           },
           "metadata": {
             "anyOf": [
-              { "$ref": "#/components/schemas/Metadata" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/Metadata"
+              },
+              {
+                "type": "null"
+              }
             ]
           }
         },
         "type": "object",
-        "required": ["prompt_template"],
+        "required": [
+          "prompt_template"
+        ],
         "title": "PromptVersion"
       },
       "CreatePromptTemplate": {
@@ -2774,35 +3432,62 @@
           "prompt_template": {
             "$ref": "#/components/schemas/BasePromptTemplate"
           },
-          "prompt_version": { "$ref": "#/components/schemas/PromptVersion" },
+          "prompt_version": {
+            "$ref": "#/components/schemas/PromptVersion"
+          },
           "release_labels": {
-            "type": ["array", "null"],
-            "items": { "type": "string" },
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
             "title": "Release Labels"
           }
         },
         "type": "object",
-        "required": ["prompt_template", "prompt_version"],
+        "required": [
+          "prompt_template",
+          "prompt_version"
+        ],
         "title": "CreatePromptTemplate"
       },
       "CreatePromptTemplateResponse": {
         "properties": {
-          "id": { "type": "integer", "title": "Id" },
-          "prompt_name": { "type": "string", "title": "Prompt Name" },
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name"
+          },
           "tags": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Tags"
           },
           "release_labels": {
-            "type": ["array", "null"],
-            "items": { "type": "string" },
+            "type": [
+              "array",
+              "null"
+            ],
+            "items": {
+              "type": "string"
+            },
             "title": "Release Labels"
           },
           "prompt_template": {
             "oneOf": [
-              { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPrompt" }
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
             ],
             "title": "Prompt Template",
             "discriminator": {
@@ -2815,55 +3500,94 @@
           },
           "metadata": {
             "anyOf": [
-              { "$ref": "#/components/schemas/Metadata" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/Metadata"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "commit_message": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Commit Message"
           }
         },
         "type": "object",
-        "required": ["id", "prompt_name", "tags", "prompt_template"],
+        "required": [
+          "id",
+          "prompt_name",
+          "tags",
+          "prompt_template"
+        ],
         "title": "CreatePromptTemplateResponse"
       },
       "ToolCall": {
         "properties": {
-          "id": { "type": "string", "title": "Id" },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
           "type": {
             "const": "function",
             "title": "Type",
             "default": "function"
           },
-          "function": { "$ref": "#/components/schemas/FunctionCall" }
+          "function": {
+            "$ref": "#/components/schemas/FunctionCall"
+          }
         },
         "type": "object",
-        "required": ["id", "function"],
+        "required": [
+          "id",
+          "function"
+        ],
         "title": "ToolCall"
       },
       "ToolMessage": {
         "properties": {
           "input_variables": {
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "type": "array",
             "title": "Input Variables",
             "default": []
           },
           "template_format": {
             "type": "string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "default": "f-string"
           },
           "content": {
             "items": {
               "oneOf": [
-                { "$ref": "#/components/schemas/TextContent" },
-                { "$ref": "#/components/schemas/ThinkingContent" },
-                { "$ref": "#/components/schemas/ImageContent" },
-                { "$ref": "#/components/schemas/MediaContent" },
-                { "$ref": "#/components/schemas/MediaVariable" }
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                }
               ],
               "discriminator": {
                 "propertyName": "type",
@@ -2877,15 +3601,32 @@
             "type": "array",
             "title": "Content"
           },
-          "role": { "const": "tool", "title": "Role", "default": "tool" },
-          "tool_call_id": { "type": "string", "title": "Tool Call Id" },
+          "role": {
+            "const": "tool",
+            "title": "Role",
+            "default": "tool"
+          },
+          "tool_call_id": {
+            "type": "string",
+            "title": "Tool Call Id"
+          },
           "name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Name"
           }
         },
         "type": "object",
-        "required": ["content", "tool_call_id"],
+        "required": [
+          "content",
+          "tool_call_id"
+        ],
         "title": "ToolMessage"
       },
       "Tool": {
@@ -2895,10 +3636,14 @@
             "title": "Type",
             "default": "function"
           },
-          "function": { "$ref": "#/components/schemas/Function" }
+          "function": {
+            "$ref": "#/components/schemas/Function"
+          }
         },
         "type": "object",
-        "required": ["function"],
+        "required": [
+          "function"
+        ],
         "title": "Tool"
       },
       "ChatToolChoice": {
@@ -2908,16 +3653,26 @@
             "title": "Type",
             "default": "function"
           },
-          "function": { "$ref": "#/components/schemas/MessageFunctionCall" }
+          "function": {
+            "$ref": "#/components/schemas/MessageFunctionCall"
+          }
         },
         "type": "object",
-        "required": ["function"],
+        "required": [
+          "function"
+        ],
         "title": "ChatToolChoice"
       },
       "ListPromptTemplates": {
         "properties": {
-          "has_next": { "type": "boolean", "title": "Has Next" },
-          "has_prev": { "type": "boolean", "title": "Has Prev" },
+          "has_next": {
+            "type": "boolean",
+            "title": "Has Next"
+          },
+          "has_prev": {
+            "type": "boolean",
+            "title": "Has Prev"
+          },
           "items": {
             "items": {
               "$ref": "#/components/schemas/GetPromptTemplateResponse"
@@ -2925,11 +3680,26 @@
             "type": "array",
             "title": "Items"
           },
-          "next_num": { "type": "integer", "title": "Next Num" },
-          "prev_num": { "type": "integer", "title": "Prev Num" },
-          "page": { "type": "integer", "title": "Page" },
-          "pages": { "type": "integer", "title": "Pages" },
-          "total": { "type": "integer", "title": "Total" }
+          "next_num": {
+            "type": "integer",
+            "title": "Next Num"
+          },
+          "prev_num": {
+            "type": "integer",
+            "title": "Prev Num"
+          },
+          "page": {
+            "type": "integer",
+            "title": "Page"
+          },
+          "pages": {
+            "type": "integer",
+            "title": "Pages"
+          },
+          "total": {
+            "type": "integer",
+            "title": "Total"
+          }
         },
         "type": "object",
         "required": [
@@ -2948,13 +3718,18 @@
         "properties": {
           "input_variables": {
             "default": [],
-            "items": { "type": "string" },
+            "items": {
+              "type": "string"
+            },
             "title": "Input Variables",
             "type": "array"
           },
           "template_format": {
             "default": "f-string",
-            "enum": ["f-string", "jinja2"],
+            "enum": [
+              "f-string",
+              "jinja2"
+            ],
             "title": "Template Format",
             "type": "string"
           },
@@ -2970,13 +3745,19 @@
                     "propertyName": "type"
                   },
                   "oneOf": [
-                    { "$ref": "#/components/schemas/TextContent" },
-                    { "$ref": "#/components/schemas/ImageContent" }
+                    {
+                      "$ref": "#/components/schemas/TextContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ImageContent"
+                    }
                   ]
                 },
                 "type": "array"
               },
-              { "type": "null" }
+              {
+                "type": "null"
+              }
             ],
             "default": null,
             "title": "Content"
@@ -2989,20 +3770,33 @@
           "role": {
             "const": "placeholder",
             "default": "placeholder",
-            "enum": ["placeholder"],
+            "enum": [
+              "placeholder"
+            ],
             "title": "Role",
             "type": "string"
           },
-          "name": { "title": "Name", "type": "string" }
+          "name": {
+            "title": "Name",
+            "type": "string"
+          }
         },
-        "required": ["name"],
+        "required": [
+          "name"
+        ],
         "title": "PlaceholderMessage",
         "type": "object"
       },
       "LogRequest": {
         "properties": {
-          "provider": { "title": "Provider", "type": "string" },
-          "model": { "title": "Model", "type": "string" },
+          "provider": {
+            "title": "Provider",
+            "type": "string"
+          },
+          "model": {
+            "title": "Model",
+            "type": "string"
+          },
           "input": {
             "discriminator": {
               "mapping": {
@@ -3012,8 +3806,12 @@
               "propertyName": "type"
             },
             "oneOf": [
-              { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPrompt" }
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
             ],
             "title": "Input"
           },
@@ -3026,8 +3824,12 @@
               "propertyName": "type"
             },
             "oneOf": [
-              { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPrompt" }
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
             ],
             "title": "Output"
           },
@@ -3048,25 +3850,42 @@
           },
           "tags": {
             "default": [],
-            "items": { "maxLength": 512, "type": "string" },
+            "items": {
+              "maxLength": 512,
+              "type": "string"
+            },
             "title": "Tags",
             "type": "array"
           },
           "metadata": {
-            "additionalProperties": { "type": "string" },
+            "additionalProperties": {
+              "type": "string"
+            },
             "default": {},
             "title": "Metadata",
             "type": "object"
           },
           "prompt_name": {
-            "anyOf": [{ "type": "string" }, { "type": "null" }],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Prompt Name"
           },
           "prompt_version_number": {
             "anyOf": [
-              { "exclusiveMinimum": 0, "type": "integer" },
-              { "type": "null" }
+              {
+                "exclusiveMinimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
             ],
             "default": null,
             "title": "Prompt Version Number"
@@ -3120,12 +3939,18 @@
       },
       "LogRequestResponse": {
         "properties": {
-          "id": { "title": "Id", "type": "integer" },
+          "id": {
+            "title": "Id",
+            "type": "integer"
+          },
           "prompt_version": {
             "$ref": "#/components/schemas/PromptVersion"
           }
         },
-        "required": ["id", "prompt_version"],
+        "required": [
+          "id",
+          "prompt_version"
+        ],
         "title": "LogRequestResponse",
         "type": "object"
       },
@@ -3134,13 +3959,20 @@
           "success": {
             "const": false,
             "default": false,
-            "enum": [false],
+            "enum": [
+              false
+            ],
             "title": "Success",
             "type": "boolean"
           },
-          "message": { "title": "Message", "type": "string" }
+          "message": {
+            "title": "Message",
+            "type": "string"
+          }
         },
-        "required": ["message"],
+        "required": [
+          "message"
+        ],
         "title": "BadRequestError",
         "type": "object"
       },
@@ -3148,8 +3980,12 @@
         "properties": {
           "prompt_template": {
             "oneOf": [
-              { "$ref": "#/components/schemas/CompletionPrompt" },
-              { "$ref": "#/components/schemas/ChatPrompt" }
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
             ],
             "discriminator": {
               "propertyName": "type",
@@ -3161,13 +3997,19 @@
           },
           "metadata": {
             "anyOf": [
-              { "$ref": "#/components/schemas/Metadata" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/Metadata"
+              },
+              {
+                "type": "null"
+              }
             ]
           }
         },
         "type": "object",
-        "required": ["prompt_template"],
+        "required": [
+          "prompt_template"
+        ],
         "title": "PromptBlueprint"
       },
       "SpanKind": {
@@ -3206,7 +4048,11 @@
             "title": "Trace State"
           }
         },
-        "required": ["trace_id", "span_id", "trace_state"],
+        "required": [
+          "trace_id",
+          "span_id",
+          "trace_state"
+        ],
         "title": "SpanContext"
       },
       "SpanStatus": {
@@ -3221,7 +4067,9 @@
             "nullable": true
           }
         },
-        "required": ["status_code"],
+        "required": [
+          "status_code"
+        ],
         "title": "SpanStatus"
       },
       "SpanResource": {
@@ -3239,7 +4087,10 @@
             "title": "Schema URL"
           }
         },
-        "required": ["attributes", "schema_url"],
+        "required": [
+          "attributes",
+          "schema_url"
+        ],
         "title": "SpanResource"
       },
       "Span": {
@@ -3296,14 +4147,27 @@
           },
           "log_request": {
             "anyOf": [
-              { "$ref": "#/components/schemas/LogRequest" },
-              { "type": "null" }
+              {
+                "$ref": "#/components/schemas/LogRequest"
+              },
+              {
+                "type": "null"
+              }
             ],
             "title": "Log Request",
             "nullable": true
           }
         },
-        "required": ["name", "context", "kind", "start_time", "end_time", "status", "attributes", "resource"],
+        "required": [
+          "name",
+          "context",
+          "kind",
+          "start_time",
+          "end_time",
+          "status",
+          "attributes",
+          "resource"
+        ],
         "title": "Span"
       },
       "CreateSpansBulk": {
@@ -3317,7 +4181,9 @@
             "title": "Spans"
           }
         },
-        "required": ["spans"],
+        "required": [
+          "spans"
+        ],
         "title": "CreateSpansBulk"
       },
       "CreateSpansBulkResponse": {
@@ -3343,7 +4209,10 @@
             "nullable": true
           }
         },
-        "required": ["success", "spans"],
+        "required": [
+          "success",
+          "spans"
+        ],
         "title": "CreateSpansBulkResponse"
       }
     }
