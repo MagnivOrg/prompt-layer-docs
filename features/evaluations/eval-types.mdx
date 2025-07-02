@@ -111,6 +111,30 @@ Resource Quotas:
 - Memory consumption: 128MiB
 ```
 
+### Conversation Simulator
+
+The _Conversation Simulator_ evaluation type automates the back-and-forth between your AI agent and simulated users to test conversational AI performance. This is particularly useful for evaluating multi-turn conversations where context maintenance, goal achievement, and user interaction patterns are critical.
+
+When setting up the conversation simulator:
+
+* Select your AI agent prompt template from the Prompt Registry
+* Pass in user details or context variables from your dataset
+* Define a test persona that challenges your AI with specific behaviors or constraints
+
+**Example Test Persona:**
+```
+User is nervous about seeing the doctor, hasn't been in a long time, 
+won't share phone number until asked three times for it
+```
+
+**Optional Advanced Configuration:**
+
+* **User Goes First**: By default, the AI agent initiates the conversation. You can enable this setting to have the simulated user start the conversation instead.
+
+* **Conversation Samples**: You can provide sample conversations to help guide the simulated user's responses. These samples help maintain consistent voice and interaction patterns, ensuring the simulated user behaves realistically and consistently with your expected user base.
+
+The conversation results are returned as a JSON list of messages that can then be evaluated using other eval types like LLM Assertions to assess success criteria.
+
 ## Simple Evals
 
 <img width="450" src="/images/equality-comparison-eval.png" />
