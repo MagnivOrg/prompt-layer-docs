@@ -1,0 +1,26 @@
+---
+title: "Create Dataset Version from File"
+openapi: "POST /api/public/v2/dataset-versions/from-file"
+---
+
+Create a new dataset version by uploading a CSV or JSON file. The file is processed asynchronously and webhooks are sent when complete. Files are uploaded to AWS S3 for processing.
+
+### Authentication
+
+This endpoint requires API key authentication only.
+
+### Asynchronous Processing
+
+This endpoint initiates an asynchronous job to process the uploaded file. The actual dataset version creation happens in the background. A draft dataset (version_number = -1) is created immediately, and upon successful processing, it's assigned a proper version number.
+
+### Webhooks
+
+The following webhooks are triggered during the process:
+
+- `dataset_version_created_by_file` - Sent when the dataset version is successfully created
+- `dataset_version_created_by_file_failed` - Sent if the dataset creation fails
+
+### Notes
+
+- Maximum file size: 100MB
+- Failed drafts are automatically cleaned up

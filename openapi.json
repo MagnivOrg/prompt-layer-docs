@@ -7,9 +7,7 @@
   "paths": {
     "/prompt-templates/{identifier}": {
       "post": {
-        "tags": [
-          "prompt-templates"
-        ],
+        "tags": ["prompt-templates"],
         "summary": "Get Prompt Template by ID",
         "operationId": "get_prompt_templates__prompt_identifier__post",
         "parameters": [
@@ -76,10 +74,7 @@
     },
     "/prompt-templates/{identifier}/labels": {
       "get": {
-        "tags": [
-          "prompt-templates",
-          "release-labels"
-        ],
+        "tags": ["prompt-templates", "release-labels"],
         "summary": "Get Prompt Template Labels",
         "operationId": "get_prompt_templates_labels_prompt_identifier__post",
         "parameters": [
@@ -122,10 +117,7 @@
     },
     "/prompts/{prompt_id}/label": {
       "post": {
-        "tags": [
-          "prompts",
-          "labels"
-        ],
+        "tags": ["prompts", "labels"],
         "summary": "Create a new label for a prompt",
         "operationId": "create_prompt_label",
         "parameters": [
@@ -162,10 +154,7 @@
                     "type": "string"
                   }
                 },
-                "required": [
-                  "prompt_version_number",
-                  "name"
-                ]
+                "required": ["prompt_version_number", "name"]
               }
             }
           }
@@ -211,10 +200,7 @@
     },
     "/prompt-labels/{prompt_label_id}": {
       "patch": {
-        "tags": [
-          "prompt-templates",
-          "release-labels"
-        ],
+        "tags": ["prompt-templates", "release-labels"],
         "summary": "Move Prompt Template Labels",
         "operationId": "prompt_templates_labels_prompt_label_id__patch",
         "parameters": [
@@ -248,9 +234,7 @@
                     "type": "integer"
                   }
                 },
-                "required": [
-                  "prompt_version_number"
-                ]
+                "required": ["prompt_version_number"]
               }
             }
           }
@@ -294,10 +278,7 @@
         }
       },
       "delete": {
-        "tags": [
-          "prompt-templates",
-          "release-labels"
-        ],
+        "tags": ["prompt-templates", "release-labels"],
         "summary": "Delete Prompt Template Label",
         "operationId": "delete_prompt_templates_labels_prompt_label_id",
         "parameters": [
@@ -336,10 +317,7 @@
     },
     "/rest/prompt-templates": {
       "post": {
-        "tags": [
-          "rest",
-          "prompt-templates"
-        ],
+        "tags": ["rest", "prompt-templates"],
         "summary": "Publish Prompt Template",
         "operationId": "publish_prompt_template_rest_prompt_templates_post",
         "parameters": [
@@ -391,9 +369,7 @@
       "post": {
         "summary": "Track Metadata",
         "operationId": "trackMetadata",
-        "tags": [
-          "metadata"
-        ],
+        "tags": ["metadata"],
         "requestBody": {
           "required": true,
           "content": {
@@ -415,11 +391,7 @@
                     "description": "A dictionary of metadata items to associate with the request. Can include session_ids, user_ids, location, etc."
                   }
                 },
-                "required": [
-                  "api_key",
-                  "request_id",
-                  "metadata"
-                ]
+                "required": ["api_key", "request_id", "metadata"]
               }
             }
           }
@@ -439,10 +411,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -460,9 +429,7 @@
       "post": {
         "summary": "Track Group",
         "operationId": "trackGroup",
-        "tags": [
-          "group"
-        ],
+        "tags": ["group"],
         "requestBody": {
           "required": true,
           "content": {
@@ -483,11 +450,7 @@
                     "description": "The unique identifier for the group to be associated with the request."
                   }
                 },
-                "required": [
-                  "api_key",
-                  "request_id",
-                  "group_id"
-                ]
+                "required": ["api_key", "request_id", "group_id"]
               }
             }
           }
@@ -507,10 +470,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -528,9 +488,7 @@
       "post": {
         "summary": "Track Prompt",
         "operationId": "trackPrompt",
-        "tags": [
-          "prompt"
-        ],
+        "tags": ["prompt"],
         "requestBody": {
           "required": true,
           "content": {
@@ -573,11 +531,7 @@
                     "optional": true
                   }
                 },
-                "required": [
-                  "api_key",
-                  "prompt_name",
-                  "request_id"
-                ]
+                "required": ["api_key", "prompt_name", "request_id"]
               }
             }
           }
@@ -597,10 +551,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -618,9 +569,7 @@
       "post": {
         "summary": "Track Score",
         "operationId": "trackScore",
-        "tags": [
-          "score"
-        ],
+        "tags": ["score"],
         "requestBody": {
           "required": true,
           "content": {
@@ -648,11 +597,7 @@
                     "description": "Your PromptLayer API Key."
                   }
                 },
-                "required": [
-                  "request_id",
-                  "score",
-                  "api_key"
-                ]
+                "required": ["request_id", "score", "api_key"]
               }
             }
           }
@@ -672,10 +617,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -693,9 +635,7 @@
       "delete": {
         "summary": "Delete Reports by Name",
         "operationId": "deleteReportsByName",
-        "tags": [
-          "reports"
-        ],
+        "tags": ["reports"],
         "parameters": [
           {
             "name": "report_name",
@@ -731,10 +671,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -752,9 +689,7 @@
       "post": {
         "summary": "Create Evaluation Pipeline",
         "operationId": "createEvaluationPipeline",
-        "tags": [
-          "reports"
-        ],
+        "tags": ["reports"],
         "parameters": [
           {
             "name": "X-API-KEY",
@@ -784,10 +719,7 @@
                     "description": "The ID of the dataset on which the report will be based. The dataset must be within an accessible workspace to the user."
                   }
                 },
-                "required": [
-                  "name",
-                  "test_dataset_id"
-                ]
+                "required": ["name", "test_dataset_id"]
               }
             }
           }
@@ -811,11 +743,7 @@
                       "description": "The ID of the created report."
                     }
                   },
-                  "required": [
-                    "success",
-                    "message",
-                    "report_id"
-                  ]
+                  "required": ["success", "message", "report_id"]
                 }
               }
             }
@@ -833,9 +761,7 @@
       "post": {
         "summary": "Run Full Evaluation",
         "operationId": "runReport",
-        "tags": [
-          "reports"
-        ],
+        "tags": ["reports"],
         "parameters": [
           {
             "name": "report_id",
@@ -870,23 +796,15 @@
                     "maxLength": 255
                   },
                   "dataset_id": {
-                    "type": [
-                      "integer",
-                      "null"
-                    ],
+                    "type": ["integer", "null"],
                     "description": "The ID of the dataset to use for the report. If not provided, uses the evaluation pipeline's default dataset."
                   },
                   "refresh_dataset": {
-                    "type": [
-                      "boolean",
-                      "null"
-                    ],
+                    "type": ["boolean", "null"],
                     "description": "Whether to refresh the dataset before running the report. Only applicable for dynamic datasets."
                   }
                 },
-                "required": [
-                  "name"
-                ]
+                "required": ["name"]
               }
             }
           }
@@ -907,10 +825,7 @@
                       "description": "The ID of the created final report."
                     }
                   },
-                  "required": [
-                    "success",
-                    "report_id"
-                  ]
+                  "required": ["success", "report_id"]
                 }
               }
             }
@@ -929,10 +844,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -951,10 +863,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -973,10 +882,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -995,10 +901,7 @@
                       "type": "string"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -1010,9 +913,7 @@
       "get": {
         "summary": "Get Evaluation",
         "operationId": "getReport",
-        "tags": [
-          "reports"
-        ],
+        "tags": ["reports"],
         "parameters": [
           {
             "name": "report_id",
@@ -1058,16 +959,10 @@
                           "type": "string"
                         },
                         "comment": {
-                          "type": [
-                            "string",
-                            "null"
-                          ]
+                          "type": ["string", "null"]
                         },
                         "is_blueprint": {
-                          "type": [
-                            "boolean",
-                            "null"
-                          ]
+                          "type": ["boolean", "null"]
                         },
                         "deleted": {
                           "type": "boolean"
@@ -1081,66 +976,39 @@
                           "format": "date-time"
                         },
                         "score": {
-                          "type": [
-                            "object",
-                            "null"
-                          ],
+                          "type": ["object", "null"],
                           "description": "Report score data"
                         },
                         "score_configuration": {
-                          "type": [
-                            "object",
-                            "null"
-                          ],
+                          "type": ["object", "null"],
                           "description": "Score configuration settings"
                         },
                         "score_matrix": {
-                          "type": [
-                            "array",
-                            "null"
-                          ],
+                          "type": ["array", "null"],
                           "description": "Score matrix for custom scoring"
                         },
                         "score_calculation_error": {
-                          "type": [
-                            "string",
-                            "null"
-                          ],
+                          "type": ["string", "null"],
                           "description": "Error message if score calculation failed"
                         },
                         "parent_report_id": {
-                          "type": [
-                            "integer",
-                            "null"
-                          ]
+                          "type": ["integer", "null"]
                         },
                         "dataset_id": {
-                          "type": [
-                            "integer",
-                            "null"
-                          ]
+                          "type": ["integer", "null"]
                         },
                         "user_id": {
-                          "type": [
-                            "integer",
-                            "null"
-                          ]
+                          "type": ["integer", "null"]
                         },
                         "workspace_id": {
                           "type": "integer"
                         },
                         "prompt_registry_id": {
-                          "type": [
-                            "integer",
-                            "null"
-                          ],
+                          "type": ["integer", "null"],
                           "description": "ID of associated prompt registry"
                         },
                         "prompt_version_number": {
-                          "type": [
-                            "integer",
-                            "null"
-                          ],
+                          "type": ["integer", "null"],
                           "description": "Version number of associated prompt"
                         }
                       },
@@ -1155,10 +1023,7 @@
                     },
                     "status": {
                       "type": "string",
-                      "enum": [
-                        "RUNNING",
-                        "COMPLETED"
-                      ],
+                      "enum": ["RUNNING", "COMPLETED"],
                       "description": "Overall status of the report execution"
                     },
                     "stats": {
@@ -1193,9 +1058,7 @@
                           ]
                         }
                       },
-                      "required": [
-                        "status_counts"
-                      ]
+                      "required": ["status_counts"]
                     }
                   },
                   "required": [
@@ -1222,9 +1085,7 @@
       "get": {
         "summary": "Get Evaluation Score",
         "operationId": "getReportScore",
-        "tags": [
-          "reports"
-        ],
+        "tags": ["reports"],
         "parameters": [
           {
             "name": "report_id",
@@ -1263,10 +1124,7 @@
                       "type": "object",
                       "properties": {
                         "overall_score": {
-                          "type": [
-                            "number",
-                            "null"
-                          ],
+                          "type": ["number", "null"],
                           "description": "The overall score of the report"
                         },
                         "score_type": {
@@ -1293,16 +1151,10 @@
                                   "type": "string"
                                 },
                                 "score": {
-                                  "type": [
-                                    "number",
-                                    "null"
-                                  ]
+                                  "type": ["number", "null"]
                                 },
                                 "score_type": {
-                                  "type": [
-                                    "string",
-                                    "null"
-                                  ]
+                                  "type": ["string", "null"]
                                 },
                                 "num_skipped": {
                                   "type": "integer"
@@ -1321,16 +1173,10 @@
                                         "type": "string"
                                       },
                                       "score": {
-                                        "type": [
-                                          "number",
-                                          "null"
-                                        ]
+                                        "type": ["number", "null"]
                                       },
                                       "score_type": {
-                                        "type": [
-                                          "string",
-                                          "null"
-                                        ]
+                                        "type": ["string", "null"]
                                       },
                                       "num_skipped": {
                                         "type": "integer"
@@ -1348,10 +1194,7 @@
                                   "description": "Score matrix from custom scoring logic"
                                 },
                                 "configuration": {
-                                  "type": [
-                                    "object",
-                                    "null"
-                                  ],
+                                  "type": ["object", "null"],
                                   "description": "Custom scoring configuration"
                                 }
                               }
@@ -1375,11 +1218,7 @@
                       ]
                     }
                   },
-                  "required": [
-                    "success",
-                    "message",
-                    "score"
-                  ]
+                  "required": ["success", "message", "score"]
                 }
               }
             }
@@ -1399,13 +1238,11 @@
         }
       }
     },
-    "/dataset-from-filter-params": {
-      "post": {
-        "summary": "Create Dataset from History",
-        "operationId": "createDatasetFromFilterParams",
-        "tags": [
-          "dataset"
-        ],
+    "/api/public/v2/datasets": {
+      "get": {
+        "summary": "List Datasets",
+        "operationId": "listDatasets",
+        "tags": ["datasets"],
         "parameters": [
           {
             "name": "X-API-KEY",
@@ -1414,7 +1251,165 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key to authorize the operation."
+            "description": "API key or JWT token for authentication. Use 'X-API-KEY' header for API key or 'Authorization: Bearer' header for JWT."
+          },
+          {
+            "name": "dataset_group_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific dataset group ID"
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific prompt ID"
+          },
+          {
+            "name": "prompt_version_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific prompt version ID"
+          },
+          {
+            "name": "prompt_label_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific prompt label ID"
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific workspace ID. If not provided, uses the current user's workspace"
+          },
+          {
+            "name": "report_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific report ID (includes parent report ID)"
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Number of items per page"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "datasets": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Dataset"
+                      }
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "per_page": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "pages": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "datasets",
+                    "page",
+                    "per_page",
+                    "total",
+                    "pages"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/dataset-groups": {
+      "post": {
+        "summary": "Create Dataset Group",
+        "operationId": "createDatasetGroup",
+        "tags": ["datasets"],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key or JWT token for authentication. Use 'X-API-KEY' header for API key or 'Authorization: Bearer' header for JWT."
           }
         ],
         "requestBody": {
@@ -1426,121 +1421,111 @@
                 "properties": {
                   "name": {
                     "type": "string",
-                    "description": "The name of the dataset to be created."
+                    "minLength": 1,
+                    "description": "Name of the dataset group. Must be unique within the workspace."
                   },
                   "workspace_id": {
                     "type": "integer",
-                    "description": "The ID of the workspace under which the dataset will be stored."
-                  },
-                  "q": {
-                    "type": "string",
-                    "description": "The search query for filtering the data."
-                  },
-                  "start_time": {
-                    "type": "string",
-                    "description": "The start time for the dataset's time range filter."
-                  },
-                  "end_time": {
-                    "type": "string",
-                    "description": "The end time for the dataset's time range filter."
-                  },
-                  "tags_and": {
-                    "type": "array",
-                    "items": {
+                    "minimum": 1,
+                    "description": "ID of the workspace where the dataset group will be created"
+                  }
+                },
+                "required": ["name", "workspace_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dataset group created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
                       "type": "string"
                     },
-                    "description": "A list of tags to filter by. This will perform an AND operation."
-                  },
-                  "tags_or": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
+                    "dataset_group": {
+                      "$ref": "#/components/schemas/DatasetGroup"
                     },
-                    "description": "A list of tags to filter by. This will perform an OR operation."
+                    "dataset": {
+                      "$ref": "#/components/schemas/Dataset"
+                    }
                   },
-                  "metadata_and": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "description": "A list of metadata key-value pairs to filter by."
-                  },
-                  "metadata_or": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "description": "A list of metadata key-value pairs to filter by."
-                  },
-                  "scores": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string"
-                        },
-                        "operator": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "description": "Score thresholds and conditions for filtering request logs."
-                  },
-                  "starred": {
-                    "type": "boolean",
-                    "description": "Only include favorited requests."
-                  },
-                  "prompt_template": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "version_numbers": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "description": "Filters requests by the specified prompt template, defaulting to its latest version if no versions are specified."
-                  },
-                  "limit": {
+                  "required": ["success", "message", "dataset_group", "dataset"]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid workspace_id or dataset with this name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/dataset-versions/from-file": {
+      "post": {
+        "summary": "Create Dataset Version from File",
+        "operationId": "createDatasetVersionFromFile",
+        "tags": ["datasets"],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication. This endpoint supports API key authentication only."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_group_id": {
                     "type": "integer",
-                    "description": "The maximum number of rows that will be included in the dataset."
+                    "minimum": 1,
+                    "description": "ID of the dataset group where the new version will be created"
+                  },
+                  "file_name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "description": "Name of the file being uploaded (must end with .csv or .json)"
+                  },
+                  "file_content_base64": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "Base64 encoded content of the file. Maximum file size: 100MB. Supported formats: CSV, JSON"
                   }
                 },
                 "required": [
-                  "name",
-                  "workspace_id"
+                  "dataset_group_id",
+                  "file_name",
+                  "file_content_base64"
                 ]
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Dataset created successfully",
+          "201": {
+            "description": "Dataset version creation job queued",
             "content": {
               "application/json": {
                 "schema": {
@@ -1554,32 +1539,217 @@
                     },
                     "dataset_id": {
                       "type": "integer",
-                      "description": "The ID of the created dataset."
+                      "description": "ID of the created draft dataset"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message",
-                    "dataset_id"
-                  ]
+                  "required": ["success", "message", "dataset_id"]
                 }
               }
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid file format, file too large, or invalid base64 encoding",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           },
-          "401": {
-            "description": "Unauthorized"
+          "403": {
+            "description": "Access denied to this dataset group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset group not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to upload file or create dataset version",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/dataset-versions/from-filter-params": {
+      "post": {
+        "summary": "Create Dataset Version from Filter Params",
+        "operationId": "createDatasetVersionFromFilterParams",
+        "tags": ["datasets"],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication. This endpoint supports API key authentication only."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_group_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "ID of the dataset group where the new version will be created"
+                  },
+                  "variables_to_parse": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "List of variables to parse from the request logs"
+                  },
+                  "prompt_id": {
+                    "type": "integer",
+                    "description": "Filter by specific prompt ID"
+                  },
+                  "prompt_version_id": {
+                    "type": "integer",
+                    "description": "Filter by specific prompt version ID"
+                  },
+                  "prompt_label_id": {
+                    "type": "integer",
+                    "description": "Filter by specific prompt label ID"
+                  },
+                  "workspace_id": {
+                    "type": "integer",
+                    "description": "Filter by specific workspace ID"
+                  },
+                  "start_time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Filter logs after this timestamp (ISO format)"
+                  },
+                  "end_time": {
+                    "type": "string",
+                    "format": "date-time",
+                    "description": "Filter logs before this timestamp (ISO format)"
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Filter by specific tags"
+                  },
+                  "metadata": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "string"
+                    },
+                    "description": "Filter by metadata key-value pairs"
+                  },
+                  "scores": {
+                    "type": "object",
+                    "additionalProperties": {
+                      "type": "object",
+                      "properties": {
+                        "min": {
+                          "type": "number"
+                        },
+                        "max": {
+                          "type": "number"
+                        }
+                      }
+                    },
+                    "description": "Filter by score ranges"
+                  }
+                },
+                "required": ["dataset_group_id"]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dataset version creation job queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "dataset_id": {
+                      "type": "integer",
+                      "description": "ID of the created draft dataset"
+                    },
+                    "dataset_group_id": {
+                      "type": "integer",
+                      "description": "ID of the dataset group"
+                    },
+                    "version_number": {
+                      "type": "integer",
+                      "description": "Version number of the dataset (-1 for draft)"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "dataset_id",
+                    "dataset_group_id",
+                    "version_number"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied to this dataset group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset group not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
           }
         }
       }
     },
     "/prompt-templates": {
       "get": {
-        "tags": [
-          "prompt-templates"
-        ],
+        "tags": ["prompt-templates"],
         "summary": "Get All",
         "operationId": "get_all_prompt_templates__get",
         "parameters": [
@@ -1625,9 +1795,7 @@
     },
     "/log-request": {
       "post": {
-        "tags": [
-          "request"
-        ],
+        "tags": ["request"],
         "summary": "Log Request",
         "operationId": "logRequest",
         "parameters": [
@@ -1697,9 +1865,7 @@
       "get": {
         "summary": "Get Workflow Version Execution Results",
         "operationId": "getWorkflowVersionExecutionResults",
-        "tags": [
-          "workflow"
-        ],
+        "tags": ["workflow"],
         "parameters": [
           {
             "name": "workflow_version_execution_id",
@@ -1799,9 +1965,7 @@
       "get": {
         "summary": "List Workflows",
         "operationId": "listWorkflows",
-        "tags": [
-          "workflow"
-        ],
+        "tags": ["workflow"],
         "parameters": [
           {
             "name": "X-API-KEY",
@@ -1956,10 +2120,7 @@
                       "example": "Invalid pagination parameters"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -1980,10 +2141,7 @@
                       "example": "Invalid API key"
                     }
                   },
-                  "required": [
-                    "success",
-                    "message"
-                  ]
+                  "required": ["success", "message"]
                 }
               }
             }
@@ -1995,9 +2153,7 @@
       "post": {
         "summary": "Run Workflow",
         "operationId": "runWorkflow",
-        "tags": [
-          "workflow"
-        ],
+        "tags": ["workflow"],
         "parameters": [
           {
             "name": "workflow_name",
@@ -2074,9 +2230,7 @@
     },
     "/spans-bulk": {
       "post": {
-        "tags": [
-          "spans"
-        ],
+        "tags": ["spans"],
         "summary": "Create Spans Bulk",
         "operationId": "createSpansBulk",
         "parameters": [
@@ -2212,11 +2366,7 @@
             "description": "The ID of the created workflow execution."
           }
         },
-        "required": [
-          "success",
-          "message",
-          "workflow_version_execution_id"
-        ],
+        "required": ["success", "message", "workflow_version_execution_id"],
         "description": "Response after initiating a workflow execution."
       },
       "ErrorResponse": {
@@ -2232,10 +2382,7 @@
             "description": "Error message explaining why the request failed."
           }
         },
-        "required": [
-          "success",
-          "error"
-        ],
+        "required": ["success", "error"],
         "description": "Error response format."
       },
       "Base": {
@@ -2277,9 +2424,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "Function"
       },
       "FunctionCall": {
@@ -2294,10 +2439,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name",
-          "arguments"
-        ],
+        "required": ["name", "arguments"],
         "title": "FunctionCall"
       },
       "HTTPValidationError": {
@@ -2339,11 +2481,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "loc",
-          "msg",
-          "type"
-        ],
+        "required": ["loc", "msg", "type"],
         "title": "ValidationError"
       },
       "Model": {
@@ -2364,10 +2502,7 @@
             "type": "object"
           }
         },
-        "required": [
-          "provider",
-          "name"
-        ]
+        "required": ["provider", "name"]
       },
       "Metadata": {
         "title": "Metadata",
@@ -2399,10 +2534,7 @@
                 "type": "object"
               }
             },
-            "required": [
-              "provider",
-              "name"
-            ]
+            "required": ["provider", "name"]
           }
         }
       },
@@ -2446,10 +2578,7 @@
             "anyOf": [
               {
                 "type": "string",
-                "enum": [
-                  "openai",
-                  "anthropic"
-                ]
+                "enum": ["openai", "anthropic"]
               },
               {
                 "type": "null"
@@ -2546,26 +2675,19 @@
           },
           "template_format": {
             "default": "f-string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "type": "string"
           },
           "type": {
             "const": "completion",
             "default": "completion",
-            "enum": [
-              "completion"
-            ],
+            "enum": ["completion"],
             "title": "Type",
             "type": "string"
           }
         },
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "Completion Template",
         "type": "object"
       },
@@ -2574,9 +2696,7 @@
           "type": {
             "const": "text",
             "default": "text",
-            "enum": [
-              "text"
-            ],
+            "enum": ["text"],
             "title": "Type",
             "type": "string"
           },
@@ -2585,9 +2705,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "text"
-        ],
+        "required": ["text"],
         "title": "TextContent",
         "type": "object"
       },
@@ -2596,9 +2714,7 @@
           "type": {
             "const": "thinking",
             "default": "thinking",
-            "enum": [
-              "thinking"
-            ],
+            "enum": ["thinking"],
             "title": "Type",
             "type": "string"
           },
@@ -2607,9 +2723,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "thinking"
-        ],
+        "required": ["thinking"],
         "title": "ThinkingContent",
         "type": "object"
       },
@@ -2632,9 +2746,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "url"
-        ],
+        "required": ["url"],
         "title": "ImageURL"
       },
       "Media": {
@@ -2655,9 +2767,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "url"
-        ],
+        "required": ["url"],
         "title": "ImageURL"
       },
       "ImageContent": {
@@ -2665,9 +2775,7 @@
           "type": {
             "const": "image_url",
             "default": "image_url",
-            "enum": [
-              "image_url"
-            ],
+            "enum": ["image_url"],
             "title": "Type",
             "type": "string"
           },
@@ -2687,9 +2795,7 @@
             "title": "Image Variable"
           }
         },
-        "required": [
-          "image_url"
-        ],
+        "required": ["image_url"],
         "title": "ImageContent",
         "type": "object"
       },
@@ -2698,9 +2804,7 @@
           "type": {
             "const": "media",
             "default": "media",
-            "enum": [
-              "media"
-            ],
+            "enum": ["media"],
             "title": "Type",
             "type": "string"
           },
@@ -2708,9 +2812,7 @@
             "$ref": "#/components/schemas/Media"
           }
         },
-        "required": [
-          "media"
-        ],
+        "required": ["media"],
         "title": "MediaContent",
         "type": "object"
       },
@@ -2719,9 +2821,7 @@
           "type": {
             "const": "media_variable",
             "default": "media_variable",
-            "enum": [
-              "media_variable"
-            ],
+            "enum": ["media_variable"],
             "title": "Type",
             "type": "string"
           },
@@ -2731,9 +2831,7 @@
             "description": "Name of the media variable"
           }
         },
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "MediaVariable",
         "type": "object"
       },
@@ -2749,10 +2847,7 @@
           },
           "template_format": {
             "type": "string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -2801,9 +2896,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "SystemMessage"
       },
       "UserMessage": {
@@ -2818,10 +2911,7 @@
           },
           "template_format": {
             "type": "string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -2870,9 +2960,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "UserMessage"
       },
       "AssistantMessage": {
@@ -2887,10 +2975,7 @@
           },
           "template_format": {
             "type": "string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -2985,10 +3070,7 @@
           },
           "template_format": {
             "type": "string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -3031,9 +3113,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "FunctionMessage"
       },
       "DeveloperMessage": {
@@ -3048,10 +3128,7 @@
           },
           "template_format": {
             "type": "string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -3100,9 +3177,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "content"
-        ],
+        "required": ["content"],
         "title": "DeveloperMessage"
       },
       "MessageFunctionCall": {
@@ -3113,9 +3188,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "MessageFunctionCall"
       },
       "ChatPrompt": {
@@ -3224,9 +3297,7 @@
           "type": {
             "const": "chat",
             "default": "chat",
-            "enum": [
-              "chat"
-            ],
+            "enum": ["chat"],
             "title": "Type",
             "type": "string"
           },
@@ -3239,9 +3310,7 @@
             "type": "array"
           }
         },
-        "required": [
-          "messages"
-        ],
+        "required": ["messages"],
         "title": "Chat Template",
         "type": "object"
       },
@@ -3312,11 +3381,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "prompt_name",
-          "prompt_template"
-        ],
+        "required": ["id", "prompt_name", "prompt_template"],
         "title": "GetPromptTemplateResponse"
       },
       "GetPromptTemplateLabelResponse": {
@@ -3350,9 +3415,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "release_labels"
-        ],
+        "required": ["release_labels"],
         "title": "GetPromptTemplateLabelResponse"
       },
       "BasePromptTemplate": {
@@ -3373,9 +3436,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "prompt_name"
-        ],
+        "required": ["prompt_name"],
         "title": "BasePromptTemplate"
       },
       "PromptVersion": {
@@ -3422,9 +3483,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "prompt_template"
-        ],
+        "required": ["prompt_template"],
         "title": "PromptVersion"
       },
       "CreatePromptTemplate": {
@@ -3436,10 +3495,7 @@
             "$ref": "#/components/schemas/PromptVersion"
           },
           "release_labels": {
-            "type": [
-              "array",
-              "null"
-            ],
+            "type": ["array", "null"],
             "items": {
               "type": "string"
             },
@@ -3447,10 +3503,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "prompt_template",
-          "prompt_version"
-        ],
+        "required": ["prompt_template", "prompt_version"],
         "title": "CreatePromptTemplate"
       },
       "CreatePromptTemplateResponse": {
@@ -3471,10 +3524,7 @@
             "title": "Tags"
           },
           "release_labels": {
-            "type": [
-              "array",
-              "null"
-            ],
+            "type": ["array", "null"],
             "items": {
               "type": "string"
             },
@@ -3521,12 +3571,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "prompt_name",
-          "tags",
-          "prompt_template"
-        ],
+        "required": ["id", "prompt_name", "tags", "prompt_template"],
         "title": "CreatePromptTemplateResponse"
       },
       "ToolCall": {
@@ -3545,10 +3590,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "id",
-          "function"
-        ],
+        "required": ["id", "function"],
         "title": "ToolCall"
       },
       "ToolMessage": {
@@ -3563,10 +3605,7 @@
           },
           "template_format": {
             "type": "string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "default": "f-string"
           },
@@ -3623,10 +3662,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "content",
-          "tool_call_id"
-        ],
+        "required": ["content", "tool_call_id"],
         "title": "ToolMessage"
       },
       "Tool": {
@@ -3641,9 +3677,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "function"
-        ],
+        "required": ["function"],
         "title": "Tool"
       },
       "ChatToolChoice": {
@@ -3658,9 +3692,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "function"
-        ],
+        "required": ["function"],
         "title": "ChatToolChoice"
       },
       "ListPromptTemplates": {
@@ -3726,10 +3758,7 @@
           },
           "template_format": {
             "default": "f-string",
-            "enum": [
-              "f-string",
-              "jinja2"
-            ],
+            "enum": ["f-string", "jinja2"],
             "title": "Template Format",
             "type": "string"
           },
@@ -3770,9 +3799,7 @@
           "role": {
             "const": "placeholder",
             "default": "placeholder",
-            "enum": [
-              "placeholder"
-            ],
+            "enum": ["placeholder"],
             "title": "Role",
             "type": "string"
           },
@@ -3781,9 +3808,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "name"
-        ],
+        "required": ["name"],
         "title": "PlaceholderMessage",
         "type": "object"
       },
@@ -3947,10 +3972,7 @@
             "$ref": "#/components/schemas/PromptVersion"
           }
         },
-        "required": [
-          "id",
-          "prompt_version"
-        ],
+        "required": ["id", "prompt_version"],
         "title": "LogRequestResponse",
         "type": "object"
       },
@@ -3959,9 +3981,7 @@
           "success": {
             "const": false,
             "default": false,
-            "enum": [
-              false
-            ],
+            "enum": [false],
             "title": "Success",
             "type": "boolean"
           },
@@ -3970,9 +3990,7 @@
             "type": "string"
           }
         },
-        "required": [
-          "message"
-        ],
+        "required": ["message"],
         "title": "BadRequestError",
         "type": "object"
       },
@@ -4007,9 +4025,7 @@
           }
         },
         "type": "object",
-        "required": [
-          "prompt_template"
-        ],
+        "required": ["prompt_template"],
         "title": "PromptBlueprint"
       },
       "SpanKind": {
@@ -4025,11 +4041,7 @@
       },
       "StatusCode": {
         "type": "string",
-        "enum": [
-          "StatusCode.ERROR",
-          "StatusCode.OK",
-          "StatusCode.UNSET"
-        ],
+        "enum": ["StatusCode.ERROR", "StatusCode.OK", "StatusCode.UNSET"],
         "title": "StatusCode"
       },
       "SpanContext": {
@@ -4048,11 +4060,7 @@
             "title": "Trace State"
           }
         },
-        "required": [
-          "trace_id",
-          "span_id",
-          "trace_state"
-        ],
+        "required": ["trace_id", "span_id", "trace_state"],
         "title": "SpanContext"
       },
       "SpanStatus": {
@@ -4067,9 +4075,7 @@
             "nullable": true
           }
         },
-        "required": [
-          "status_code"
-        ],
+        "required": ["status_code"],
         "title": "SpanStatus"
       },
       "SpanResource": {
@@ -4087,10 +4093,7 @@
             "title": "Schema URL"
           }
         },
-        "required": [
-          "attributes",
-          "schema_url"
-        ],
+        "required": ["attributes", "schema_url"],
         "title": "SpanResource"
       },
       "Span": {
@@ -4181,9 +4184,7 @@
             "title": "Spans"
           }
         },
-        "required": [
-          "spans"
-        ],
+        "required": ["spans"],
         "title": "CreateSpansBulk"
       },
       "CreateSpansBulkResponse": {
@@ -4209,11 +4210,81 @@
             "nullable": true
           }
         },
-        "required": [
-          "success",
-          "spans"
-        ],
+        "required": ["success", "spans"],
         "title": "CreateSpansBulkResponse"
+      },
+      "Dataset": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Dataset ID"
+          },
+          "dataset_group_id": {
+            "type": "integer",
+            "description": "Associated dataset group ID"
+          },
+          "version_number": {
+            "type": "integer",
+            "description": "Version number of the dataset"
+          },
+          "column_names": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of column names in the dataset"
+          },
+          "filter_params": {
+            "type": "object",
+            "nullable": true,
+            "description": "Filter parameters used to create the dataset"
+          },
+          "is_deleted": {
+            "type": "boolean",
+            "description": "Whether the dataset is deleted"
+          },
+          "user_id": {
+            "type": "integer",
+            "description": "ID of the user who created the dataset"
+          },
+          "dataset_group": {
+            "$ref": "#/components/schemas/DatasetGroup",
+            "description": "Associated dataset group information"
+          }
+        },
+        "required": [
+          "id",
+          "dataset_group_id",
+          "version_number",
+          "column_names",
+          "is_deleted",
+          "user_id"
+        ],
+        "title": "Dataset"
+      },
+      "DatasetGroup": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Dataset group ID"
+          },
+          "name": {
+            "type": "string",
+            "description": "Dataset group name"
+          },
+          "workspace_id": {
+            "type": "integer",
+            "description": "Associated workspace ID"
+          },
+          "is_deleted": {
+            "type": "boolean",
+            "description": "Whether the dataset group is deleted"
+          }
+        },
+        "required": ["id", "name", "workspace_id", "is_deleted"],
+        "title": "DatasetGroup"
       }
     }
   }

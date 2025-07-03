@@ -27,46 +27,77 @@ graph TD
 This approach enables two powerful use cases:
 
 ### 1. Nightly Evaluations (Production Monitoring)
+
 Run scheduled evaluations to ensure nothing has changed in your production system. The score can be sent to Slack or your alerting system with a direct link to the evaluation pipeline. This helps detect production issues by sampling a wide range of requests and comparing against expected performance.
 
 ### 2. CI/CD Integration
+
 Trigger evaluations in your CI/CD pipeline (GitHub, GitLab, etc.) whenever relevant PRs are created. Wait for the evaluation score before proceeding with deployment, to make sure that your changes do not break anything.
 
 ## Step-by-Step Implementation
 
 ### Step 1: Create a Dataset
 
-To run evaluations, you'll need a dataset against which to test your prompts. You can create datasets from your request history programmatically via the API or directly on the dashboard by uploading a csv file.
+To run evaluations, you'll need a dataset against which to test your prompts. PromptLayer now provides a comprehensive set of APIs for dataset management:
 
-- **Endpoint**: `/dataset-from-filter-params`
-- **Description**: Create a dataset in PromptLayer programmatically from your request history.
-- **Payload Filters**: Include the required `name` parameter and `workspace_id`. Optionally define `start_time` and `end_time` to filter requests within a specific timeframe. Use `metadata` for key-value filtering, `prompt_template` for template-specific requests, and `tags` for additional categorization.
+#### 1.1 Create a Dataset Group
 
-#### Example Payload
+First, create a dataset group to organize your datasets:
+
+- **Endpoint**: `POST /api/public/v2/dataset-groups`
+- **Description**: Create a new dataset group within a workspace
+- **Authentication**: JWT or API key
+- **Docs Link**: [Create Dataset Group](../../reference/create-dataset-group)
 
 ```json
 {
-    "name": "production-sample-dataset",
-    "workspace_id": 32,
-    "tags_and": ["prod"],
-    "metadata": [
-        {
-            "key": "environment",
-            "value": "production"
-        }
-    ],
-    "prompt_template": {
-        "name": "my_prompt_template",
-        "version_numbers": [11, 12]
-    },
-    "limit": 100
+  "name": "Production Evaluation Datasets",
+  "workspace_id": 32
 }
 ```
 
-We will be updating the endpoints for datasets soon to enable:
-- More intuitive dataset creation
-- Uploading datasets from CSV files via API
-- Enhanced filtering options
+#### 1.2 Create a Dataset Version
+
+Once you have a dataset group, you can create dataset versions using two methods:
+
+##### Option A: From Request History
+
+Create a dataset from your existing request logs:
+
+- **Endpoint**: `POST /api/public/v2/dataset-versions/from-filter-params`
+- **Description**: Create a dataset version by filtering request logs
+- **Authentication**: API key only
+- **Docs Link**: [Create Dataset Version from Filter Params](../../reference/create-dataset-version-from-filter-params)
+
+```json
+{
+  "dataset_group_id": 123,
+  "tags": ["prod"],
+  "metadata": {
+    "environment": "production"
+  },
+  "prompt_id": 456,
+  "start_time": "2024-01-01T00:00:00Z",
+  "end_time": "2024-01-31T23:59:59Z"
+}
+```
+
+##### Option B: From File Upload
+
+Upload a CSV or JSON file to create a dataset:
+
+- **Endpoint**: `POST /api/public/v2/dataset-versions/from-file`
+- **Description**: Create a dataset version by uploading a file
+- **Authentication**: API key only
+- **Docs Link**: [Create Dataset Version from File](../../reference/create-dataset-version-from-file)
+
+```json
+{
+  "dataset_group_id": 123,
+  "file_name": "test_cases.csv",
+  "file_content_base64": "aW5wdXQsZXhwZWN0ZWRfb3V0cHV0LHNjb3JlCiJIZWxsbyIsIldvcmxkIiwxLjAK..."
+}
+```
 
 ### Step 2: Create an Evaluation Pipeline
 
@@ -77,8 +108,8 @@ But this method is less user-friendly and does not provide the same level of con
 
 ```json
 {
-    "name": "Nightly Production Evaluation",
-    "test_dataset_id": 123
+  "name": "Nightly Production Evaluation",
+  "test_dataset_id": 123
 }
 ```
 
@@ -139,8 +170,8 @@ Once your pipeline is configured, trigger it programmatically using the run endp
 
 ```json
 {
-    "name": "Nightly Eval - 2024-12-15",
-    "dataset_id": 123,
+  "name": "Nightly Eval - 2024-12-15",
+  "dataset_id": 123
 }
 ```
 
@@ -149,6 +180,7 @@ Once your pipeline is configured, trigger it programmatically using the run endp
 You have two options for monitoring evaluation progress:
 
 #### Option A: Polling
+
 Continuously check the report status until completion:
 
 - **Endpoint**: `GET /reports/{report_id}`
@@ -173,6 +205,7 @@ Continuously check the report status until completion:
 ```
 
 #### Option B: Webhooks
+
 Listen for the `report_finished` webhook event for real-time notifications when evaluations complete.
 
 ### Step 6: Get the Score
@@ -187,26 +220,26 @@ Once the evaluation is complete, retrieve the final score:
 
 ```json
 {
-    "success": true,
-    "message": "success",
-    "score": {
-        "overall_score": 87.5,
-        "score_type": "multi_column",
-        "has_custom_scoring": false,
-        "details": {
-            "columns": [
-                {
-                    "column_name": "Accuracy Check",
-                    "score": 90.0,
-                    "score_type": "boolean"
-                },
-                {
-                    "column_name": "Safety Check",
-                    "score": 85.0,
-                    "score_type": "boolean"
-                }
-            ]
+  "success": true,
+  "message": "success",
+  "score": {
+    "overall_score": 87.5,
+    "score_type": "multi_column",
+    "has_custom_scoring": false,
+    "details": {
+      "columns": [
+        {
+          "column_name": "Accuracy Check",
+          "score": 90.0,
+          "score_type": "boolean"
+        },
+        {
+          "column_name": "Safety Check",
+          "score": 85.0,
+          "score_type": "boolean"
         }
+      ]
     }
+  }
 }
 ```

@@ -1,0 +1,29 @@
+---
+title: "Create Dataset Version from Request History"
+openapi: "POST /api/public/v2/dataset-versions/from-filter-params"
+---
+
+Create a new dataset version by filtering existing request logs. The dataset is populated asynchronously based on the provided filter parameters.
+
+### Authentication
+
+This endpoint requires API key authentication only.
+
+### Asynchronous Processing
+
+This endpoint initiates an asynchronous job to process the request logs based on the filter parameters. The actual dataset version creation happens in the background. A draft dataset (version_number = -1) is created immediately.
+
+### Webhooks
+
+The following webhook is triggered when the process completes:
+
+- `dataset_version_created_from_filter_params` - Sent when the dataset version is successfully created, includes:
+  - `dataset_id`: ID of the created dataset
+  - `rows_added`: Number of rows added to the dataset
+  - `dataset_version_number`: Final version number assigned
+
+### Notes
+
+- If an existing draft dataset exists for the dataset group, it will be updated with new filter params
+- If no matching request logs are found, an empty dataset version is created
+- Failed drafts are automatically cleaned up
