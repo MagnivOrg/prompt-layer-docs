@@ -3,33 +3,8 @@ title: "Create Dataset Group"
 openapi: "POST /api/public/v2/dataset-groups"
 ---
 
-This endpoint allows you to create a new dataset group. When a dataset group is created, an initial draft dataset (version_number = -1) is automatically created.
+Create a new dataset group within a workspace. When a dataset group is created, an initial draft dataset (version_number = -1) is automatically created. Dataset group names must be unique within a workspace. Supports both JWT and API key authentication.
 
 ### Authentication
 
 This endpoint requires JWT or API key authentication.
-
-### Example Response
-
-```json
-{
-  "success": true,
-  "message": "Dataset group created successfully",
-  "dataset_group": {
-    "id": 10,
-    "name": "Customer Support Dataset",
-    "workspace_id": 123,
-    "is_deleted": false,
-    "datasets": []
-  },
-  "dataset": {
-    "id": 1,
-    "dataset_group_id": 10,
-    "version_number": -1,
-    "column_names": [],
-    "filter_params": null,
-    "is_deleted": false,
-    "user_id": 5
-  }
-}
-```

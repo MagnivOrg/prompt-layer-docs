@@ -131,7 +131,6 @@
         "reference/create-dataset-group",
         "reference/create-dataset-version-from-file",
         "reference/create-dataset-version-from-filter-params",
-        "reference/dataset-from-filter-params",
         "reference/create-reports",
         "reference/run-report",
         "reference/get-report",

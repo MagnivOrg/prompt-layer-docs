@@ -3,6 +3,8 @@ title: "Create Dataset Version from File"
 openapi: "POST /api/public/v2/dataset-versions/from-file"
 ---
 
+Create a new dataset version by uploading a CSV or JSON file. The file is processed asynchronously and webhooks are sent when complete. Files are uploaded to AWS S3 for processing.
+
 ### Authentication
 
 This endpoint requires API key authentication only.

@@ -1238,177 +1238,9 @@
         }
       }
     },
-    "/dataset-from-filter-params": {
-      "post": {
-        "summary": "Create Dataset from History",
-        "operationId": "createDatasetFromFilterParams",
-        "tags": ["dataset"],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key to authorize the operation."
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "name": {
-                    "type": "string",
-                    "description": "The name of the dataset to be created."
-                  },
-                  "workspace_id": {
-                    "type": "integer",
-                    "description": "The ID of the workspace under which the dataset will be stored."
-                  },
-                  "q": {
-                    "type": "string",
-                    "description": "The search query for filtering the data."
-                  },
-                  "start_time": {
-                    "type": "string",
-                    "description": "The start time for the dataset's time range filter."
-                  },
-                  "end_time": {
-                    "type": "string",
-                    "description": "The end time for the dataset's time range filter."
-                  },
-                  "tags_and": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "A list of tags to filter by. This will perform an AND operation."
-                  },
-                  "tags_or": {
-                    "type": "array",
-                    "items": {
-                      "type": "string"
-                    },
-                    "description": "A list of tags to filter by. This will perform an OR operation."
-                  },
-                  "metadata_and": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "description": "A list of metadata key-value pairs to filter by."
-                  },
-                  "metadata_or": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "key": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "string"
-                        }
-                      }
-                    },
-                    "description": "A list of metadata key-value pairs to filter by."
-                  },
-                  "scores": {
-                    "type": "array",
-                    "items": {
-                      "type": "object",
-                      "properties": {
-                        "name": {
-                          "type": "string"
-                        },
-                        "operator": {
-                          "type": "string"
-                        },
-                        "value": {
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "description": "Score thresholds and conditions for filtering request logs."
-                  },
-                  "starred": {
-                    "type": "boolean",
-                    "description": "Only include favorited requests."
-                  },
-                  "prompt_template": {
-                    "type": "object",
-                    "properties": {
-                      "name": {
-                        "type": "string"
-                      },
-                      "version_numbers": {
-                        "type": "array",
-                        "items": {
-                          "type": "integer"
-                        }
-                      }
-                    },
-                    "description": "Filters requests by the specified prompt template, defaulting to its latest version if no versions are specified."
-                  },
-                  "limit": {
-                    "type": "integer",
-                    "description": "The maximum number of rows that will be included in the dataset."
-                  }
-                },
-                "required": ["name", "workspace_id"]
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Dataset created successfully",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "dataset_id": {
-                      "type": "integer",
-                      "description": "The ID of the created dataset."
-                    }
-                  },
-                  "required": ["success", "message", "dataset_id"]
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          }
-        }
-      }
-    },
     "/api/public/v2/datasets": {
       "get": {
         "summary": "List Datasets",
-        "description": "Retrieve a paginated list of datasets based on various filtering criteria. This endpoint allows you to retrieve datasets with various filtering options including dataset group, prompt, report, and workspace filters. Supports both JWT and API key authentication.",
         "operationId": "listDatasets",
         "tags": ["datasets"],
         "parameters": [
@@ -1567,7 +1399,6 @@
     "/api/public/v2/dataset-groups": {
       "post": {
         "summary": "Create Dataset Group",
-        "description": "Create a new dataset group within a workspace. When a dataset group is created, an initial draft dataset (version_number = -1) is automatically created. Dataset group names must be unique within a workspace. Supports both JWT and API key authentication.",
         "operationId": "createDatasetGroup",
         "tags": ["datasets"],
         "parameters": [
@@ -1646,7 +1477,6 @@
     "/api/public/v2/dataset-versions/from-file": {
       "post": {
         "summary": "Create Dataset Version from File",
-        "description": "Create a new dataset version by uploading a CSV or JSON file. The file is processed asynchronously and webhooks are sent when complete. Files are uploaded to AWS S3 for processing. A draft dataset (version_number = -1) is created immediately, and upon successful processing, it's assigned a proper version number. Failed drafts are automatically cleaned up. Maximum file size: 100MB.\n\n**Webhooks:**\n- `dataset_version_created_by_file` - Sent when the dataset version is successfully created\n- `dataset_version_created_by_file_failed` - Sent if the dataset creation fails\n\n**File Format Requirements:**\n- CSV: Standard CSV format with headers, UTF-8 encoding recommended\n- JSON: Array of objects with consistent keys",
         "operationId": "createDatasetVersionFromFile",
         "tags": ["datasets"],
         "parameters": [
@@ -1763,7 +1593,6 @@
     "/api/public/v2/dataset-versions/from-filter-params": {
       "post": {
         "summary": "Create Dataset Version from Filter Params",
-        "description": "Create a new dataset version by filtering existing request logs. The dataset is populated asynchronously based on the provided filter parameters. A draft dataset (version_number = -1) is created immediately. The job processes request logs matching the filter criteria and saves them to S3. If an existing draft exists for the dataset group, it will be updated with new filter params. Empty datasets are created if no matching logs are found.\n\n**Webhooks:**\n- `dataset_version_created_from_filter_params` - Sent when the dataset version is successfully created, includes dataset_id, rows_added, and dataset_version_number",
         "operationId": "createDatasetVersionFromFilterParams",
         "tags": ["datasets"],
         "parameters": [
@@ -4452,13 +4281,6 @@
           "is_deleted": {
             "type": "boolean",
             "description": "Whether the dataset group is deleted"
-          },
-          "datasets": {
-            "type": "array",
-            "items": {
-              "$ref": "#/components/schemas/Dataset"
-            },
-            "description": "Array of datasets in this group"
           }
         },
         "required": ["id", "name", "workspace_id", "is_deleted"],

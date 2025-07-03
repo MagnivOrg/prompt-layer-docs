@@ -3,37 +3,8 @@ title: "List Datasets"
 openapi: "GET /api/public/v2/datasets"
 ---
 
-This endpoint allows you to retrieve datasets with various filtering options including dataset group, prompt, report, and workspace filters.
+Retrieve a paginated list of datasets based on various filtering criteria. This endpoint allows you to retrieve datasets with various filtering options including dataset group, prompt, report, and workspace filters. Supports both JWT and API key authentication.
 
 ### Authentication
 
 This endpoint requires JWT or API key authentication.
-
-### Example Response
-
-```json
-{
-  "success": true,
-  "message": "success",
-  "datasets": [
-    {
-      "id": 1,
-      "dataset_group_id": 10,
-      "version_number": 1,
-      "column_names": ["input", "output", "score"],
-      "filter_params": null,
-      "is_deleted": false,
-      "user_id": 5,
-      "dataset_group": {
-        "id": 10,
-        "name": "Customer Support Dataset",
-        "workspace_id": 123
-      }
-    }
-  ],
-  "page": 1,
-  "per_page": 20,
-  "total": 1,
-  "pages": 1
-}
-```
