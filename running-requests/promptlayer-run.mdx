@@ -12,6 +12,29 @@ The `run()` method is a core function of the PromptLayer SDK, allowing you to ex
 > **Note**: For any LLM provider you plan to use, you must set its corresponding API key as an environment variable (for example, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY` etc.).  
 > The PromptLayer client does not support passing these keys directly in code. If the relevant environment variables are not set, any requests to those LLM providers will fail.
 
+> For using Gemini models through Vertex AI with pl.run:
+> 
+> **Python SDK**: Set these environment variables:
+- `GOOGLE_GENAI_USE_VERTEXAI=true`
+- `GOOGLE_CLOUD_PROJECT="<google_cloud_project_id>"`
+- `GOOGLE_CLOUD_LOCATION="region"`
+- `GOOGLE_APPLICATION_CREDENTIALS="path/to/google_service_account_file.json"`
+>
+> **JavaScript SDK**: Set these environment variables:
+- `VERTEX_AI_PROJECT_ID="<google_cloud_project_id>"`
+- `VERTEX_AI_PROJECT_LOCATION="region"`
+- `GOOGLE_APPLICATION_CREDENTIALS="path/to/google_service_account_file.json"`
+
+> For using Claude models through Vertex AI with pl.run:
+>
+> **Python SDK**: Set these environment variables:
+- `ANTHROPIC_VERTEX_PROJECT_ID="<google_cloud_project_id>"`
+- `CLOUD_ML_REGION="region"`
+- `GOOGLE_APPLICATION_CREDENTIALS="path/to/google_service_account_file.json"`
+>
+> **JavaScript SDK**: Set these environment variables:
+- `GOOGLE_APPLICATION_CREDENTIALS="path/to/google_service_account_file.json"`
+- `CLOUD_ML_REGION="region"` 
 <CodeGroup>
 
 ```python Python
