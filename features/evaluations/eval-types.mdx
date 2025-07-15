@@ -63,7 +63,7 @@ return message + JSON.stringify(columns);
 **Python Runtime**
 
 ```
-The Python runtime runs Python 3.12.0 with no filesystem or network access. Only the standard library is available. Here are the resource quotas:
+The Python runtime runs Python 3.12.0 with no filesystem. Runtime does have network access. Only the standard library is available. Here are the resource quotas:
 
 - Input code size: 1MiB
 - Size of stdin: 10MiB
@@ -74,14 +74,13 @@ The Python runtime runs Python 3.12.0 with no filesystem or network access. Only
 - Environment variable value size: 100KiB
 - Number of arguments: 100
 - Argument size: 100KiB
-- Execution duration: 30 seconds
 - Memory consumption: 128MiB
 ```
 
 **JavaScript Runtime**
 
 ```
-The JavaScript runtime is built on Mozilla's SpiderMonkey engine with no filesystem or network access. It is not node or deno. Available APIs include:
+The JavaScript runtime is built on Mozilla's SpiderMonkey engine with no filesystem. Runtime does have network access. It is not node or deno. Available APIs include:
 
 - Legacy Encoding: atob, btoa, decodeURI, encodeURI, decodeURIComponent, encodeURIComponent
 - Streams: ReadableStream, ReadableStreamBYOBReader, ReadableStreamBYOBRequest, ReadableStreamDefaultReader, ReadableStreamDefaultController, ReadableByteStreamController, WritableStream, ByteLengthQueuingStrategy, CountQueuingStrategy, TransformStream
@@ -107,7 +106,6 @@ Resource Quotas:
 - Environment variable value size: 100KiB
 - Number of arguments: 100
 - Argument size: 100KiB
-- Execution duration: 30 seconds
 - Memory consumption: 128MiB
 ```
 
