@@ -76,6 +76,8 @@ console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].cont
 - `group_id` / `groupId` (int, optional): Group ID to associate with this run.
 - `model_parameter_overrides` / `modelParameterOverrides` (Union[Dict[str, Any], None], optional): Model-specific parameter overrides.
 - `stream` (bool, default=False): Whether to stream the response.
+- `provider` (str, optional): The LLM provider to use (e.g., "openai", "anthropic", "google"). This is useful if you want to override the provider specified in the prompt template.
+- `model` (str, optional): The model to use (e.g., "gpt-4o", "claude-3-7-sonnet-latest", "gemini-2.5-flash"). This is useful if you want to override the model specified in the prompt template.
 
 ## Return Value
 
