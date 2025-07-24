@@ -97,7 +97,14 @@ To stream the response:
 
 ```python Python
 for chunk in pl.run(prompt_name="your-prompt", stream=True):
-    print(chunk.content)
+    # Access raw streaming response
+    print(chunk["raw_response"])
+    
+    # Access progressively built prompt blueprint
+    if chunk["prompt_blueprint"]:
+        current_response = chunk["prompt_blueprint"]["prompt_template"]["messages"][-1]
+        if current_response.get("content"):
+            print(f"Current response: {current_response['content']}")
 ```
 
 ```js JavaScript
@@ -107,11 +114,22 @@ const stream = await pl.run({
 });
 
 for await (const chunk of stream) {
-  console.log(chunk.content);
+  // Access raw streaming response
+  console.log(chunk.raw_response);
+  
+  // Access progressively built prompt blueprint
+  if (chunk.prompt_blueprint) {
+    const currentResponse = chunk.prompt_blueprint.prompt_template.messages.slice(-1)[0];
+    if (currentResponse.content) {
+      console.log("Current response:", currentResponse.content);
+    }
+  }
 }
 ```
 
 </CodeGroup>
+
+When streaming is enabled, each chunk includes both the raw streaming response and the progressively built `prompt_blueprint`, allowing you to track how the response is constructed in real-time. The `request_id` is only included in the final chunk.
 
 ### Using Different Versions or Release Labels
 

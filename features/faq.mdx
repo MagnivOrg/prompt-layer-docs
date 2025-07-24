@@ -29,7 +29,45 @@ Yes, we take great pride in staying up to date. PromptLayer is 1-to-1 with OpenA
 
 ## Does PromptLayer support streaming?
 
-Streaming requests are supported on the PromptLayer Python SDK (both with OpenAI and Antrhopic).
+Yes, streaming requests are supported on the PromptLayer Python and JS SDK. PromptLayer now includes `prompt_blueprint` support in streaming responses, providing both raw streaming data and progressively built structured responses.
+
+When streaming is enabled, each chunk includes:
+- `raw_response`: The raw streaming response from the LLM provider
+- `prompt_blueprint`: The progressively built prompt blueprint showing the current state of the response
+- `request_id`: Only included in the final chunk to indicate completion
+
+Example usage for OpenAI:
+```python
+for chunk in pl.run(prompt_name="your-prompt", stream=True):
+    # Access raw streaming response
+    print(chunk["raw_response"])
+    
+    # Access progressively built prompt blueprint
+    if chunk["prompt_blueprint"]:
+        current_response = chunk["prompt_blueprint"]["prompt_template"]["messages"][-1]
+        if current_response.get("content"):
+            print(f"Current response: {current_response['content']}")
+```
+
+Example usage for Anthropic:
+```python
+for chunk in pl.run(prompt_name="your-prompt", stream=True):
+    raw_chunk = chunk["raw_response"]
+    
+    # Handle Anthropic streaming event types
+    if raw_chunk.get("type") == "content_block_delta":
+        delta = raw_chunk.get("delta", {})
+        if delta.get("type") == "text_delta":
+            print(f"Streaming content: {delta.get('text', '')}")
+    
+    # Access progressively built prompt blueprint
+    if chunk["prompt_blueprint"]:
+        current_response = chunk["prompt_blueprint"]["prompt_template"]["messages"][-1]
+        if current_response.get("content") and len(current_response["content"]) > 0:
+            text_content = current_response["content"][0].get("text", "")
+            if text_content:
+                print(f"Current response: {text_content}")
+```
 
 If you are using [LangChain](/languages/langchain), streaming is only supported when you use the `PromptLayerCallbackHandler`. Streaming is not supported through the PromptLayer-specific LLMs (the old way to use LangChain).
 

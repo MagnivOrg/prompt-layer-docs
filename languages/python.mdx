@@ -264,13 +264,20 @@ async def main():
 
     final_response = ""
     async for response in response_generator:
-        print("streaming response", response)
+        # Access raw streaming response
+        print("Raw streaming response:", response["raw_response"])
+        
+        # Access progressively built prompt blueprint
+        if response["prompt_blueprint"]:
+            current_response = response["prompt_blueprint"]["prompt_template"]["messages"][-1]
+            if current_response.get("content"):
+                print(f"Current response: {current_response['content']}")
 
 # Run the async function
 asyncio.run(main())
 ```
 
-In this example, replace "TestPrompt" with the name of your prompt template, and provide any required input variables.
+In this example, replace "TestPrompt" with the name of your prompt template, and provide any required input variables. When streaming is enabled, each chunk includes both the raw streaming response and the progressively built `prompt_blueprint`, allowing you to track how the response is constructed in real-time.
 
 ### Supported Methods: Synchronous vs. Asynchronous
 
