@@ -29,6 +29,129 @@ print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"]
 
 With this approach, you can update from one provider to another (e.g., OpenAI to Anthropic) without any code changes.
 
+## Streaming Support
+
+PromptLayer now supports streaming responses with prompt_blueprint integration. When streaming is enabled, each chunk includes both the raw streaming response and the progressively built prompt_blueprint, allowing you to track how the response is constructed in real-time.
+
+### OpenAI Streaming Example
+
+```python
+import promptlayer
+
+# Initialize PromptLayer client
+promptlayer_client = promptlayer.PromptLayer()
+
+# Run with streaming enabled
+response_stream = promptlayer_client.run(
+    prompt_name="ai-poet",
+    input_variables={'topic': 'food'},
+    stream=True
+)
+
+# Process streaming chunks
+for chunk in response_stream:
+    # Access the raw streaming response
+    raw_chunk = chunk["raw_response"]
+    
+    # Access the progressively built prompt blueprint
+    prompt_blueprint = chunk["prompt_blueprint"]
+    
+    if raw_chunk.choices and raw_chunk.choices[0].delta.content:
+        print(f"Streaming content: {raw_chunk.choices[0].delta.content}")
+    
+    # The prompt_blueprint shows the current state of the response
+    if prompt_blueprint and prompt_blueprint["prompt_template"]["messages"]:
+        current_response = prompt_blueprint["prompt_template"]["messages"][-1]
+        if current_response.get("content"):
+            print(f"Current response: {current_response['content']}")
+```
+
+### Anthropic Streaming Example
+
+```python
+import promptlayer
+
+# Initialize PromptLayer client
+promptlayer_client = promptlayer.PromptLayer()
+
+# Run with streaming enabled for Anthropic
+response_stream = promptlayer_client.run(
+    prompt_name="helpful-assistant",
+    input_variables={'task': 'prompt engineering tip'},
+    stream=True
+)
+
+# Process streaming chunks
+for chunk in response_stream:
+    # Access the raw streaming response
+    raw_chunk = chunk["raw_response"]
+    
+    # Access the progressively built prompt blueprint
+    prompt_blueprint = chunk["prompt_blueprint"]
+    
+    # Handle different Anthropic streaming event types
+    if raw_chunk.get("type") == "content_block_delta":
+        delta = raw_chunk.get("delta", {})
+        if delta.get("type") == "text_delta":
+            print(f"Streaming content: {delta.get('text', '')}")
+    
+    # The prompt_blueprint shows the current state of the response
+    if prompt_blueprint and prompt_blueprint["prompt_template"]["messages"]:
+        current_response = prompt_blueprint["prompt_template"]["messages"][-1]
+        if current_response.get("content") and len(current_response["content"]) > 0:
+            # Get the text content from the current response
+            text_content = current_response["content"][0].get("text", "")
+            if text_content:
+                print(f"Current response: {text_content}")
+```
+
+### Key Features of Streaming with Prompt Blueprint
+
+- **Progressive Building**: Each streaming chunk includes the current state of the prompt_blueprint, showing how the response is built incrementally
+- **Real-time Access**: You can access both the raw streaming data and the structured prompt blueprint format simultaneously
+- **Consistent Format**: The prompt_blueprint maintains the same standardized format across all streaming chunks
+- **Final State**: The last chunk contains the complete prompt_blueprint with the full response
+
+### Streaming Response Structure
+
+Each streaming chunk contains:
+
+```python
+{
+    "request_id": None,  # Present only in the final chunk
+    "raw_response": ChatCompletionChunk(...),  # Raw streaming response from provider
+    "prompt_blueprint": {
+        "prompt_template": {
+            "type": "chat",
+            "messages": [
+                {
+                    "role": "assistant",
+                    "content": [
+                        {"type": "text", "text": "Current response text..."}
+                    ],
+                    "input_variables": [],
+                    "template_format": "f-string"
+                }
+            ],
+            "input_variables": []
+        },
+        "metadata": {
+            "model": {
+                "provider": "openai",
+                "name": "gpt-4o",
+                "parameters": {
+                    "temperature": 1,
+                    "stream": True,
+                    # ... other parameters
+                }
+            }
+        }
+    }
+}
+```
+
+The `request_id` is only included in the final chunk, indicating the completion of the streaming response.
+
 ## Placeholder Messages
 
 Placeholder Messages are a powerful feature that allows you to inject messages into a prompt template at runtime. By using the `placeholder` role, you can define placeholders within your prompt template that can be replaced with full messages when the prompt is executed.

@@ -22,7 +22,14 @@ response_stream = promptlayer_client.run(
 ) 
 
 for data in response_stream:
+    # Access raw streaming response
     print(data["raw_response"])
+    
+    # Access progressively built prompt blueprint
+    if data["prompt_blueprint"]:
+        current_response = data["prompt_blueprint"]["prompt_template"]["messages"][-1]
+        if current_response.get("content"):
+            print(f"Current response: {current_response['content']}")
 ```
 
 ```js Javascript
@@ -37,11 +44,22 @@ const responseStream = await promptLayerClient.run({
 });
 
 for await (const message of responseStream) {
-    console.log(message)
+    // Access raw streaming response
+    console.log(message.raw_response);
+    
+    // Access progressively built prompt blueprint
+    if (message.prompt_blueprint) {
+        const currentResponse = message.prompt_blueprint.prompt_template.messages.slice(-1)[0];
+        if (currentResponse.content) {
+            console.log("Current response:", currentResponse.content);
+        }
+    }
 }
 ```
 
 </CodeGroup>
+
+When streaming is enabled, each chunk includes both the raw streaming response and the progressively built `prompt_blueprint`, allowing you to track how the response is constructed in real-time. The `request_id` is only included in the final chunk, indicating completion of the streaming response.
 
 Learn more about [OpenAI streams](https://cookbook.openai.com/examples/how_to_stream_completions).
 
