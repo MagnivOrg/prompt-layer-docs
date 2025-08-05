@@ -2852,6 +2852,20 @@
             ],
             "title": "Modal",
             "description": "Optional model name used for returning default parameters with llm_kwargs."
+          },
+          "model_parameter_overrides": {
+            "anyOf": [
+              {
+                "additionalProperties": true,
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model Parameter Overrides",
+            "description": "Optional dictionary of model parameter overrides to use with the prompt template. This will override the parameters at runtime for the specified model and will try to make sure the model supports these parameters. For example, if you supply `maxOutputTokens` for OpenAI, it will be converted to `max_completion_tokens`."
           }
         },
         "type": "object",
