@@ -5,6 +5,6 @@ openapi: "GET /workflow-version-execution-results"
 
 Retrieve the execution results of a specific Agent version. You can include all output nodes by setting the `return_all_outputs` query parameter to `true`.
 
-This endpoint returns a status code of `200` when the agent has finished execution. If the agent is still in the process of running, it will return a status code of `202`.
+This endpoint returns a status code of `200` when the agent has finished execution. If the agent is still in the process of running, it will return a status code of `204` and empty body.
 
 Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
