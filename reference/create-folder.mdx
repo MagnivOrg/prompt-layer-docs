@@ -1,0 +1,6 @@
+---
+title: "Create Folder"
+openapi: "POST /api/public/v2/folders"
+---
+
+Creates a new folder in the workspace. Folders can be nested within other folders by providing a parent_id. The folder name must be unique within its parent folder (or at the root level if no parent is specified).
