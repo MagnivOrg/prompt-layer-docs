@@ -164,7 +164,7 @@ Once your pipeline is configured, trigger it programmatically using the run endp
 
 - **Endpoint**: `POST /reports/{report_id}/run`
 - **Description**: Execute the evaluation pipeline with optional dataset refresh
-- **Docs Link**: [Run Evaluation Pipeline](../reference/run-report)
+- **Docs Link**: [Run Evaluation Pipeline](../../reference/run-report)
 
 #### Example Payload
 
@@ -185,7 +185,7 @@ Continuously check the report status until completion:
 
 - **Endpoint**: `GET /reports/{report_id}`
 - **Description**: Retrieve the status and results of a specific report by its ID.
-- **Docs Link**: [Get Report Status](../reference/get-report)
+- **Docs Link**: [Get Report Status](../../reference/get-report)
 
 ```bash
 # Response includes status: "RUNNING" or "COMPLETED"
@@ -214,7 +214,7 @@ Once the evaluation is complete, retrieve the final score:
 
 - **Endpoint**: `GET /reports/{report_id}/score`
 - **Description**: Fetch the score of a specific report by its ID.
-- **Docs Link**: [Get Evaluation Score](../reference/get-report-score)
+- **Docs Link**: [Get Evaluation Score](../../reference/get-report-score)
 
 #### Example Response
 
