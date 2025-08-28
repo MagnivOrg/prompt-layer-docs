@@ -161,6 +161,16 @@ The _Absolute Numeric Distance_ evaluation type allows you to select two differe
 
 The _LLM Assertion_ evaluation type enables you to run an assertion on a column using natural language prompts. You can create prompts such as "Does this contain an API key?", "Is this sensitive content?", or "Is this in English?". Our system uses a backend prompt template that processes your assertion and returns either true or false. Assertions should be framed as questions.
 
+### AI Data Extract
+
+The _AI Data Extract_ evaluation type uses AI/LLM to extract specific information from data sources. You can describe what you want to extract using natural language queries, whether the content is JSON, XML, or just unstructured text.
+
+Example queries:
+* "Extract the product name"
+* "Find the customer's email address"
+* "Get all mentioned dates"
+* "Extract the total price including tax"
+
 ### Cosine Similarity
 
 _Cosine Similarity_ allows you to compare the vector distance between two columns. The system takes the two columns you supply, converts them into strings, and then embeds them using OpenAI's embedding vectors. It then calculates the cosine similarity, resulting in a number between 0 and 1. This metric is useful for understanding how semantically similar two bodies of text are, which can be valuable in assessing topic adherence or content similarity.
@@ -177,6 +187,66 @@ The _JSON Extraction_ evaluation type allows you to define a JSON path and extra
 
 The _Parse Value_ column type enables you to convert another column into one of the following value types: string, number, Boolean, or JSON.
 
+### Apply Diff
+
+The _Apply Diff_ evaluation type applies diff patches to original content, similar to git merge operations. This helper function requires two source columns: the original content and a diff patch to apply.
+
+This evaluation type is particularly powerful when combined with code generation workflows or document editing pipelines where AI agents generate incremental changes rather than complete replacements. It enables sophisticated multi-step workflows where agents can review and refine each other's outputs.
+
+Using diff formats often saves context and leads to better results for editing large content.
+
+**Diff Format Details**
+
+The diff patch must be in the standard **unified diff** format, including file headers and hunk headers, as used by tools like `git` and described in the [unidiff documentation](https://pypi.org/project/unidiff/).
+
+If you are using an LLM to generate the diffs, copy and paste the following text into your prompt for format specifics:
+
+```markdown
+## Unified Diff Specification (strict unidiff)
+
+Produce a valid **unified diff** with file headers and hunk headers. Only modifications of existing text are supported (no file creation or deletion).
+
+### File headers (required)
+- Old (source):  \`--- a/<filename>\`
+- New (target):  \`+++ b/<filename>\`
+- Use consistent prefixes \`a/\` and \`b/\`.
+
+### Hunk headers (required for every changed region)
+- Format: \`@@ -<start_old>,<len_old> +<start_new>,<len_new> @@\`
+  - \`<start_old>\` / \`<start_new>\` are 1-based line numbers.
+  - \`<len_old>\` / \`<len_new>\` are the line counts for the hunk in old/new.
+  - Multiple hunks per file are allowed; order them top-to-bottom.
+
+### Hunk body line prefixes (strict)
+- \`' '\` (space)  = unchanged context line
+- \`-\`          = line removed from source
+- \`+\`          = line added in target
+- Preserve original whitespace and line endings exactly.
+
+### Rules
+- The concatenation of all **context + removed** lines in each hunk must appear **verbatim and contiguously** in the source file.
+- Keep context minimal but sufficient for unambiguous matching (usually 1-3 lines around changes).
+- Multiple files may be patched in one diff, but each requires its own \`---\` / \`+++\` headers and hunks.
+- If no changes are needed, output an empty string (no diff).
+
+### Example
+--- a/essay.txt
++++ b/essay.txt
+@@ -1,4 +1,4 @@
+ This is a simple essay.
+-It has a bad sentence.
++It has a better sentence.
+ The end.`}
+          title="Copy diff specification"
+        />
+      </div>
+    ),
+    render: HelperFunctionBlocks.ApplyDiffBlock,
+    weight: 5,
+  },
+};
+```
+
 ### Static Value
 
 The _Static Value_ evaluation type allows you to pre-populate a column with a specific value. This is useful for adding constant values or context that you may need to use later in one of the other columns in your evaluation pipeline.
@@ -192,41 +262,6 @@ The _Coalesce_ evaluation type allows you to take multiple different columns and
 ### Count
 
 The _Count_ evaluation type allows you to select a source column and count either the characters, words, or paragraphs within it. This will output a numeric value, which can be useful for analyzing the length or complexity of LLM outputs.
-
-### AI Data Extract
-
-The _AI Data Extract_ evaluation type uses AI/LLM to extract specific information from data sources. You can describe what you want to extract using natural language queries, making it accessible for both technical and non-technical users.
-
-When setting up AI Data Extract:
-* Select a source column containing the data to extract from
-* Write a natural language query describing what information to extract
-
-Example queries:
-* "Extract the product name"
-* "Find the customer's email address"
-* "Get all mentioned dates"
-* "Extract the total price including tax"
-
-This evaluation type is particularly useful for:
-* Extracting structured data from unstructured text
-* Parsing specific fields from documents
-* Finding and extracting information based on semantic understanding rather than pattern matching
-
-### Apply Diff
-
-The _Apply Diff_ evaluation type applies diff patches to original content, similar to git merge operations. This helper function requires two source columns: the original content and a diff patch to apply.
-
-When configuring Apply Diff:
-* Select the first source column containing the original content
-* Select the second source column containing the diff patch
-
-Use cases include:
-* Applying code changes from diff patches
-* Merging text modifications
-* Processing incremental updates to content
-* Version control-like operations on text/code
-
-This evaluation type is particularly powerful when combined with code generation workflows or document editing pipelines where AI agents generate incremental changes rather than complete replacements. It enables sophisticated multi-step workflows where agents can review and refine each other's outputs.
 
 
 Please reach out to us if you have any other evaluation types you would like to see on the platform. We are always looking to expand our evaluation capabilities to better serve your needs.
