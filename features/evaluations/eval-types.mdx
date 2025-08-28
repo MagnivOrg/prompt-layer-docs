@@ -193,5 +193,40 @@ The _Coalesce_ evaluation type allows you to take multiple different columns and
 
 The _Count_ evaluation type allows you to select a source column and count either the characters, words, or paragraphs within it. This will output a numeric value, which can be useful for analyzing the length or complexity of LLM outputs.
 
+### AI Data Extract
+
+The _AI Data Extract_ evaluation type uses AI/LLM to extract specific information from data sources. You can describe what you want to extract using natural language queries, making it accessible for both technical and non-technical users.
+
+When setting up AI Data Extract:
+* Select a source column containing the data to extract from
+* Write a natural language query describing what information to extract
+
+Example queries:
+* "Extract the product name"
+* "Find the customer's email address"
+* "Get all mentioned dates"
+* "Extract the total price including tax"
+
+This evaluation type is particularly useful for:
+* Extracting structured data from unstructured text
+* Parsing specific fields from documents
+* Finding and extracting information based on semantic understanding rather than pattern matching
+
+### Apply Diff
+
+The _Apply Diff_ evaluation type applies diff patches to original content, similar to git merge operations. This helper function requires two source columns: the original content and a diff patch to apply.
+
+When configuring Apply Diff:
+* Select the first source column containing the original content
+* Select the second source column containing the diff patch
+
+Use cases include:
+* Applying code changes from diff patches
+* Merging text modifications
+* Processing incremental updates to content
+* Version control-like operations on text/code
+
+This evaluation type is particularly powerful when combined with code generation workflows or document editing pipelines where AI agents generate incremental changes rather than complete replacements. It enables sophisticated multi-step workflows where agents can review and refine each other's outputs.
+
 
 Please reach out to us if you have any other evaluation types you would like to see on the platform. We are always looking to expand our evaluation capabilities to better serve your needs.
