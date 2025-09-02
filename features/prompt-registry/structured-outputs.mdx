@@ -118,10 +118,74 @@ response = pl.run(
 
 For more information on template variables, see our [Template Variables documentation](/features/prompt-registry/template-variables).
 
+## Dynamic Schema Injection with Variable Type
+
+For advanced use cases, you can inject entire schema sections dynamically at runtime using the `variable` type. This allows you to define different schemas based on runtime conditions without creating multiple prompt templates.
+
+### How It Works
+
+1. In the schema editor, select "variable" as the type for a field
+2. Specify a variable name (e.g., `userSchema`)
+3. At runtime, pass the complete schema object for that variable
+
+### Example: Dynamic User Schema
+
+In your prompt template schema:
+
+```json
+{
+  "type": "object",
+  "properties": {
+    "user_data": {
+      "type": "variable",
+      "name": "userSchema"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "timestamp": { "type": "string" },
+        "version": { "type": "string" }
+      }
+    }
+  }
+}
+```
+
+At runtime, provide the complete schema:
+
+```python
+response = pl.run(
+   prompt_name="dynamic_processor",
+   input_variables={
+       "userSchema": {
+           "type": "object",
+           "properties": {
+               "name": { "type": "string" },
+               "age": { "type": "number" },
+               "preferences": {
+                   "type": "array",
+                   "items": { "type": "string" }
+               }
+           },
+           "required": ["name", "age"]
+       }
+   }
+)
+```
+
+The `user_data` field will be replaced entirely with the schema you provide, allowing different structures for different use cases.
+
+### Important Notes
+
+- Variable schemas only work with Jinja2 template format
+- The entire field is replaced with the provided schema object
+- Ensure the injected schema is valid JSON schema syntax
+
 ### Best Practices
 
 - For enum values: Use `{name: "variable_name", type: "enum_variable"}` in JSON mode or the variable selector in interactive mode
 - For text variables: Include them within quotes as `{{ variable_name }}` in both modes
+- For dynamic schemas: Use `type: "variable"` with a descriptive variable name
 - Only Jinja2 format works for variables in structured outputs
 - Ensure all variables used in the schema are provided
 - Use proper JSON formatting with variables
