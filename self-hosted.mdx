@@ -1,0 +1,268 @@
+---
+title: "Self-Hosted PromptLayer"
+description: "Deploy PromptLayer in your own infrastructure for complete data control and compliance"
+icon: "server"
+---
+
+# Self-Hosted PromptLayer
+
+<Note>
+Self-hosted PromptLayer is an **Enterprise-only** feature. [Contact us](mailto:hello@promptlayer.com) to learn more about licensing and custom installation support.
+</Note>
+
+PromptLayer can be deployed entirely within your own infrastructure, giving you complete control over your data while maintaining all the powerful features of our cloud platform. Our self-hosted solution inherits the same SOC 2, HIPAA, and GDPR compliance standards as our cloud offering.
+
+## Architecture Overview
+
+![PromptLayer Architecture](/images/promptlayer_architecture.png)
+
+### Core Components
+
+Our self-hosted architecture consists of fully dockerized services designed for scalability and reliability:
+
+#### **Frontend**
+The web interface for accessing PromptLayer's dashboard, analytics, and management features. Connects directly to the Backend API Service for all operations.
+
+#### **Backend API Service**
+The core Python Flask application that handles all API requests, authentication, and business logic. This service orchestrates communication between all other components and serves as the primary entry point for both the frontend and SDK integrations.
+
+#### **PostgreSQL Database (v15)**
+The primary relational database storing all metadata, configurations, user data, and system state. We use PostgreSQL 15 for its robust performance, reliability, and advanced features.
+
+#### **Object Storage**
+High-performance storage for request/response data, logs, and large payloads. Supports both Amazon S3 and Google Cloud Storage, allowing you to use your existing cloud storage infrastructure.
+
+#### **Redis/Valkey (v8.1.0)**
+In-memory data store using Valkey 8.1.0 (Redis-compatible) for:
+- Job queue management
+- Caching frequently accessed data
+- Session management
+- Real-time data processing
+
+#### **Background Services**
+
+- **APScheduler**: Handles scheduled tasks, periodic jobs, and cron-like operations
+- **Celery Background Workers**: Distributed task queue for asynchronous processing, data pipelines, and heavy computations
+- **Redis Queue Background Workers**: Lightweight job processing for real-time operations and quick tasks
+
+#### **Code Executor**
+Isolated Docker container environment for safely executing code blocks in evaluations and the agents builder. Provides sandboxed execution with resource limits and security controls.
+
+## System Requirements
+
+### Minimum Infrastructure
+
+For a production deployment, you'll need:
+
+- **5+ backend nodes** for core services (exact number depends on scale)
+- **2 Redis/Valkey instances** 
+- **1 PostgreSQL instance** (with recommended replication for production)
+- **Object storage** (S3 or GCS bucket)
+
+<Info>
+We provide consultation to help determine the optimal number of backend nodes and resource allocation based on your expected usage patterns and scale requirements.
+</Info>
+
+### Supported Platforms
+
+- **PostgreSQL**: Version 15
+- **Redis**: Valkey 8.1.0 (Redis-compatible)
+- **Object Storage**: Amazon S3, Google Cloud Storage
+- **Container Runtime**: Docker, Kubernetes
+
+## Deployment Options
+
+### Cloud Providers
+
+We provide pre-built Docker images with Helm charts for:
+
+<CardGroup cols={2}>
+  <Card title="AWS" icon="aws">
+    Optimized for Amazon Web Services with EKS, RDS, and S3 integration
+  </Card>
+  <Card title="Google Cloud" icon="google">
+    Designed for Google Cloud Platform with GKE, Cloud SQL, and GCS
+  </Card>
+</CardGroup>
+
+<Note>
+While we officially support AWS and GCP, we can work with other cloud providers based on your requirements. Contact our team for custom deployment options.
+</Note>
+
+### Deployment Methods
+
+1. **Kubernetes with Helm** (Recommended for production)
+   - Full orchestration and scaling capabilities
+   - Built-in health checks and auto-recovery
+   - Horizontal pod autoscaling support
+
+2. **Docker Compose** (Development/testing)
+   - Quick setup for evaluation
+   - Suitable for single-node deployments
+
+3. **Custom Installation**
+   - Available with enterprise support
+   - Tailored to your specific infrastructure
+
+## Security & Authentication
+
+### Authentication Methods
+
+- **Built-in Authentication**: Default user management system with secure password policies
+- **Single Sign-On (SSO)**: Integration via Auth0 supporting:
+  - SAML 2.0
+  - OAuth 2.0 / OpenID Connect
+  - Active Directory / LDAP
+
+### Compliance & Security
+
+Our self-hosted solution maintains the same security standards as our cloud platform:
+
+- **SOC 2 Type II** compliant architecture
+- **HIPAA** ready configurations
+- **GDPR** compliant data handling
+- Encryption at rest and in transit
+- API key management with role-based access control
+- Audit logging and compliance reporting
+
+## Scaling & Performance
+
+### Auto-scaling Configuration
+
+We expose parameters for automatic scaling based on:
+- CPU utilization
+- Memory usage  
+- Queue depth
+- Request rate
+
+Our team provides consultation to help configure auto-scaling rules optimized for your usage patterns.
+
+### High Availability
+
+- Multi-node backend deployment
+- Redis replication with automatic failover
+- PostgreSQL streaming replication
+- Load balancing across service instances
+
+## Monitoring & Maintenance
+
+### Observability
+
+We recommend **Datadog** for comprehensive monitoring, providing:
+- Real-time metrics and dashboards
+- Log aggregation and analysis
+- APM tracing
+- Custom alerts and notifications
+
+Alternative monitoring solutions can be integrated based on your existing infrastructure.
+
+### Updates & Upgrades
+
+We follow industry best practices for updates:
+
+- **Versioned Docker images** with detailed release notes
+- **Rolling updates** via Kubernetes
+- **Automated database migrations** with rollback capabilities
+- **GitOps-compatible** deployment workflows
+
+<Warning>
+Always review release notes and test updates in a staging environment before applying to production.
+</Warning>
+
+## Data Management
+
+### Migration Support
+
+- **Export from Cloud**: We provide full data export from PromptLayer Cloud for migration to self-hosted
+- **Import tools**: Automated scripts for importing existing data
+- **Zero-downtime migration**: Support for gradual migration strategies
+
+### Backup & Recovery
+
+- Automated backup schedules for PostgreSQL and object storage
+- Point-in-time recovery capabilities
+- Disaster recovery playbooks
+- Data retention policies configurable to your requirements
+
+## Licensing & Support
+
+### License Tiers
+
+<CardGroup cols={2}>
+  <Card title="Basic Self-Hosted" icon="server">
+    - Software license
+    - Documentation access
+    - Community support
+    - Quarterly updates
+  </Card>
+  <Card title="Enterprise Support" icon="building">
+    - Priority support SLA
+    - Custom installation assistance
+    - Dedicated success manager
+    - Training and onboarding
+  </Card>
+</CardGroup>
+
+### Professional Services
+
+Our team offers additional services to ensure successful deployment:
+
+- **Installation Support**: Expert assistance with initial setup
+- **Architecture Review**: Optimization recommendations for your use case
+- **Custom Integration**: Tailored solutions for unique requirements
+- **Training**: Comprehensive onboarding for your team
+
+## Getting Started
+
+<Steps>
+  <Step title="Contact Sales">
+    [Reach out to our team](mailto:hello@promptlayer.com) to discuss your requirements and obtain a license.
+  </Step>
+  <Step title="Architecture Planning">
+    Work with our solutions team to design your deployment architecture.
+  </Step>
+  <Step title="Deployment">
+    Receive access to Docker images, Helm charts, and deployment guides.
+  </Step>
+  <Step title="Configuration">
+    Configure authentication, monitoring, and scaling parameters.
+  </Step>
+  <Step title="Migration">
+    Import existing data from PromptLayer Cloud if applicable.
+  </Step>
+  <Step title="Go Live">
+    Launch your self-hosted PromptLayer instance with ongoing support.
+  </Step>
+</Steps>
+
+## Frequently Asked Questions
+
+<AccordionGroup>
+  <Accordion title="How long does deployment typically take?">
+    Initial deployment can be completed in 1-2 days with our pre-built Helm charts. Custom installations may take 3+ days depending on requirements.
+  </Accordion>
+  
+  <Accordion title="Can I use my existing PostgreSQL and Redis instances?">
+    Yes, as long as they meet our version requirements (PostgreSQL 15+, Valkey/Redis 8.1.0+). We'll help validate compatibility during setup.
+  </Accordion>
+  
+  <Accordion title="What happens to my data if I switch from cloud to self-hosted?">
+    We provide complete data export tools and migration support. Your data remains intact and accessible throughout the transition.
+  </Accordion>
+  
+  <Accordion title="How are updates handled?">
+    We release versioned Docker images quarterly with security patches as needed. You control when and how updates are applied to your instance.
+  </Accordion>
+  
+  <Accordion title="Is there a difference in features between cloud and self-hosted?">
+    Self-hosted PromptLayer includes all core features of our cloud platform. Some cloud-specific integrations may require additional configuration.
+  </Accordion>
+</AccordionGroup>
+
+## Contact Us
+
+Ready to deploy PromptLayer in your infrastructure? Our enterprise team is here to help.
+
+<Card title="Get Started" icon="rocket" href="mailto:hello@promptlayer.com">
+  Contact our team to discuss your self-hosted deployment requirements and get a customized solution.
+</Card>
