@@ -1,18 +1,59 @@
 ---
-title: "Shared Workspaces"
+title: "Organizations & Workspaces"
 icon: "handshake-simple"
 ---
 
 # Overview
 
-The Shared Workspaces feature in PromptLayer is a collaborative tool designed to enhance teamwork and efficiency. It allows users to organize and share various data such as requests, prompt templates, and evaluations, in a central workspace. With Shared Workspaces, admins can create workspaces for multiple teams throughout their company for easy collaboration across the entire organization.
+The Organizations & Workspaces feature in PromptLayer provides a comprehensive system for team collaboration and resource management. Organizations serve as the top-level container for your company, while workspaces allow you to organize projects, teams, and resources within your organization.
 
 ## Key Features
 
-- **Data Organization**: Centralize all your team's data in one shared workspace.
-- **Collaboration**: Work together with your team, share resources, and streamline your workflow.
+- **Organization Management**: Centralized control over your entire company's PromptLayer usage
+- **Workspace Organization**: Create multiple workspaces for different teams, projects, or environments
+- **Role-Based Access Control**: Manage permissions at both organization and workspace levels
+- **Resource Sharing**: Share prompts, evaluations, and other resources across your team
+- **Billing Management**: Consolidated billing and usage tracking at the organization level
 
-## Getting Started
+## Organizations
+
+### What is an Organization?
+
+An organization represents your company or top-level entity in PromptLayer. It provides:
+- Centralized billing and subscription management
+- User management across all workspaces
+- Organization-wide settings and configurations
+- Usage tracking and analytics
+
+### Organization Roles
+
+Organizations support different user roles:
+- **Owner**: Full administrative access, billing management, and ability to manage all workspaces
+- **Admin**: Can manage users, create workspaces, and access all workspace data
+- **Member**: Default role with access to assigned workspaces
+
+### Managing Your Organization
+
+To access organization settings:
+1. Click on your organization name in the top navigation
+2. Select "Organization Settings" from the dropdown
+3. From here you can:
+   - Manage organization members
+   - View billing and subscription details
+   - Configure organization-wide settings
+   - Monitor usage across all workspaces
+
+## Workspaces
+
+### What is a Workspace?
+
+Workspaces are collaborative environments within your organization where teams can:
+- Share prompt templates and evaluations
+- Collaborate on projects
+- Organize resources by team or project
+- Maintain separate environments (dev, staging, production)
+
+### Creating a Workspace
 
 You can create a new workspace by clicking the 'Create Workspace' button from the workspace dropdown.
 
@@ -22,8 +63,62 @@ Choose a unique name for your workspace to enhance its identity and ease of reco
 
 ![Create Workspaces Modal](/images/workspaces-create-modal.png)
 
-## Workspace Management
+### Workspace Management
 
-Upon creating a workspace, you'll be designated as the administrator. This role empowers you to invite new members, dismiss current members, and also gives you the ability to delete the workspace.
+Upon creating a workspace, you'll be designated as the workspace administrator. This role empowers you to:
+- Invite new members to the workspace
+- Manage member permissions
+- Remove members from the workspace
+- Configure workspace-specific settings
+- Delete the workspace if needed
 
 ![Workspaces Management](/images/workspaces-management.png)
+
+### Workspace Roles and Permissions
+
+Each workspace supports granular permission control:
+- **Workspace Admin**: Full control over workspace settings and members
+- **Editor**: Can create, edit, and delete resources within the workspace
+- **Viewer**: Read-only access to workspace resources
+
+## Best Practices
+
+### Organization Structure
+
+1. **By Team**: Create workspaces for each team (e.g., Engineering, Data Science, Product)
+2. **By Project**: Separate workspaces for different projects or products
+3. **By Environment**: Maintain separate workspaces for development, staging, and production
+
+### Access Management
+
+- Regularly review workspace memberships
+- Use the principle of least privilege when assigning roles
+- Remove access promptly when team members change roles or leave
+
+### Resource Organization
+
+- Use consistent naming conventions across workspaces
+- Document workspace purposes and ownership
+- Regularly archive or clean up unused workspaces
+
+## Migration and Setup
+
+### For New Users
+
+1. Your first organization is created automatically when you sign up
+2. Create your first workspace for your initial project
+3. Invite team members as needed
+
+### For Existing Users
+
+If you're upgrading from a personal account:
+1. Your existing resources will be migrated to a default workspace
+2. You can create additional workspaces to better organize your resources
+3. Invite team members to collaborate
+
+## Billing and Limits
+
+- Billing is managed at the organization level
+- Workspace limits depend on your subscription plan
+- Usage is tracked across all workspaces in your organization
+- Contact support for enterprise plans with unlimited workspaces
