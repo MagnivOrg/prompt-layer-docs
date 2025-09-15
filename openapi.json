@@ -1592,12 +1592,11 @@
                   "workspace_id": {
                     "type": "integer",
                     "minimum": 1,
-                    "description": "ID of the workspace where the dataset group will be created"
+                    "description": "Optional: ID of the workspace where the dataset group will be created. If not provided, uses the workspace associated with your API key."
                   }
                 },
                 "required": [
-                  "name",
-                  "workspace_id"
+                  "name"
                 ]
               }
             }
