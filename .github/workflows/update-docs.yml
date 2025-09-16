@@ -74,7 +74,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run Claude Code to update documentation
-        uses: anthropics/claude-code-action@v1.0
+        uses: anthropics/claude-code-action@v1
         with:
           api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
