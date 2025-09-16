@@ -27,7 +27,7 @@ jobs:
       - name: Checkout docs repository
         uses: actions/checkout@v4
         with:
-          token: ${{ secrets.GH_READ_TOKEN }}
+          token: ${{ github.token }}
           fetch-depth: 0  # Get full history for better git operations
 
       - name: Compute lookback window
