@@ -73,6 +73,14 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
+      - name: Verify repository checkouts
+        run: |
+          echo "Current directory: $(pwd)"
+          echo "Directory contents:"
+          ls -la
+          echo "Repos directory contents:"
+          ls -la repos/ || echo "No repos directory found"
+
       - name: Run Claude Code to update documentation
         uses: anthropics/claude-code-action@v1
         with:
