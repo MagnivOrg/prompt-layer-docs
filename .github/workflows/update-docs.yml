@@ -78,63 +78,23 @@ jobs:
         with:
           api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
-            You are maintaining the PromptLayer documentation in this repository. Your task is to review recent commits and update the documentation based on user-facing changes.
+            Read the CLAUDE.md file in this repository for documentation update policy and guidelines.
 
             ## Context
             - Time window: commits since "${{ env.SINCE }}" (UTC) until now
             - Today's date: ${{ env.TODAY }}
-            - Repositories to examine (local paths):
-              - repos/prompt-layer-front-end (Frontend application)
-              - repos/prompt-layer-api (Backend API)
-              - repos/prompt-layer-library (Python SDK)
-              - repos/prompt-layer-js (JavaScript SDK)
-            - Documentation to update: Various files in this repository
-            - Follow the policy in CLAUDE.md for what counts as user-facing
+            - Repositories checked out in local paths:
+              - repos/prompt-layer-front-end
+              - repos/prompt-layer-api
+              - repos/prompt-layer-library
+              - repos/prompt-layer-js
 
             ## Task
-            1. For each repository, examine commits since "${{ env.SINCE }}" using git log:
-               - Use: git log --since="${{ env.SINCE }}" --no-merges --oneline
-               - Review commit messages and diffs to detect user-facing changes
-               - Apply the Decision Framework from CLAUDE.md strictly
-
-            2. Apply the Decision Framework to each commit:
-               - Does this introduce a NEW capability? (not just improve existing)
-               - Would this influence a purchase decision?
-               - Do users need instructions to use this?
-               - Is this part of our public API/SDK?
-
-            3. For changes that pass the framework, update the appropriate documentation:
-               - API changes → Update API reference docs
-               - SDK changes → Update SDK guides
-               - New features → Add feature documentation
-               - Integrations → Update integration docs
-               - Breaking changes → Update migration guides
-
-            4. Documentation updates should:
-               - Explain WHAT the feature does
-               - Show HOW to use it with examples
-               - Include any configuration needed
-               - Note any breaking changes or deprecations
-
-            ## Important Guidelines
-            - STRICT: Focus on features that expand WHAT users can do, not HOW WELL
-            - Most commits should NOT result in documentation changes
-            - Skip ALL UI/UX improvements, performance enhancements, bug fixes
-            - Skip internal refactoring, test updates, dependency updates
-            - Skip internal API routes (/api/dashboard/v2/*, /api/internal/*)
-            - Only document PUBLIC API changes (/api/v1/*, SDK methods)
-            - Only document truly NEW capabilities or breaking changes
-            - If no user-facing changes found, make no edits
-
-            ## Documentation Structure
-            The docs repository contains:
-            - `/api/` - API reference documentation
-            - `/sdks/` - SDK guides and references
-            - `/features/` - Feature documentation
-            - `/integrations/` - Integration guides
-            - `/guides/` - How-to guides and tutorials
-
-            Update the appropriate files based on the type of change detected.
+            1. Read CLAUDE.md to understand the documentation policy
+            2. For each repository, examine commits since "${{ env.SINCE }}" using git log
+            3. Apply the Decision Framework from CLAUDE.md strictly to identify user-facing changes
+            4. Update appropriate documentation files if any changes qualify
+            5. If no user-facing changes are found, make no edits
 
       - name: Check for changes
         id: check-changes
