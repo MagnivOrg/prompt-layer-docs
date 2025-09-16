@@ -1,0 +1,249 @@
+name: Update Documentation
+
+on:
+  schedule:
+    - cron: '0 9 * * *'  # Runs daily at 09:00 UTC
+  workflow_dispatch:  # Allows manual triggering
+
+permissions:
+  contents: write
+  pull-requests: write
+  issues: write
+  id-token: write
+  actions: read
+
+concurrency:
+  group: update-documentation
+  cancel-in-progress: false
+
+jobs:
+  update-docs:
+    runs-on: ubuntu-latest
+    timeout-minutes: 30
+    env:
+      GH_TOKEN: ${{ github.token }}
+
+    steps:
+      - name: Checkout docs repository
+        uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.GITHUB_TOKEN }}
+          fetch-depth: 0  # Get full history for better git operations
+
+      - name: Compute lookback window
+        run: |
+          echo "SINCE=$(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)" >> $GITHUB_ENV
+          echo "TODAY=$(date -u +%F)" >> $GITHUB_ENV
+          echo "Looking for commits since: $(date -u -d '24 hours ago' +%Y-%m-%dT%H:%M:%SZ)"
+
+      - name: Checkout prompt-layer-front-end
+        uses: actions/checkout@v4
+        with:
+          repository: MagnivOrg/prompt-layer-front-end
+          token: ${{ secrets.GH_READ_TOKEN }}
+          path: repos/prompt-layer-front-end
+          fetch-depth: 0  # Get full history for better git log
+
+      - name: Checkout prompt-layer-api
+        uses: actions/checkout@v4
+        with:
+          repository: MagnivOrg/prompt-layer-api
+          token: ${{ secrets.GH_READ_TOKEN }}
+          path: repos/prompt-layer-api
+          fetch-depth: 0
+
+      - name: Checkout prompt-layer-python-sdk
+        uses: actions/checkout@v4
+        with:
+          repository: MagnivOrg/prompt-layer-library
+          token: ${{ secrets.GH_READ_TOKEN }}
+          path: repos/prompt-layer-library
+          fetch-depth: 0
+
+      - name: Checkout prompt-layer-javascript-sdk
+        uses: actions/checkout@v4
+        with:
+          repository: MagnivOrg/prompt-layer-js
+          token: ${{ secrets.GH_READ_TOKEN }}
+          path: repos/prompt-layer-js
+          fetch-depth: 0
+
+      - name: Configure git identity
+        run: |
+          git config --global user.name "github-actions[bot]"
+          git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
+
+      - name: Run Claude Code to update documentation
+        uses: anthropics/claude-code@v1
+        with:
+          api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          prompt: |
+            You are maintaining the PromptLayer documentation in this repository. Your task is to review recent commits and update the documentation based on user-facing changes.
+
+            ## Context
+            - Time window: commits since "${{ env.SINCE }}" (UTC) until now
+            - Today's date: ${{ env.TODAY }}
+            - Repositories to examine (local paths):
+              - repos/prompt-layer-front-end (Frontend application)
+              - repos/prompt-layer-api (Backend API)
+              - repos/prompt-layer-library (Python SDK)
+              - repos/prompt-layer-js (JavaScript SDK)
+            - Documentation to update: Various files in this repository
+            - Follow the policy in CLAUDE.md for what counts as user-facing
+
+            ## Task
+            1. For each repository, examine commits since "${{ env.SINCE }}" using git log:
+               - Use: git log --since="${{ env.SINCE }}" --no-merges --oneline
+               - Review commit messages and diffs to detect user-facing changes
+               - Apply the Decision Framework from CLAUDE.md strictly
+
+            2. Apply the Decision Framework to each commit:
+               - Does this introduce a NEW capability? (not just improve existing)
+               - Would this influence a purchase decision?
+               - Do users need instructions to use this?
+               - Is this part of our public API/SDK?
+
+            3. For changes that pass the framework, update the appropriate documentation:
+               - API changes → Update API reference docs
+               - SDK changes → Update SDK guides
+               - New features → Add feature documentation
+               - Integrations → Update integration docs
+               - Breaking changes → Update migration guides
+
+            4. Documentation updates should:
+               - Explain WHAT the feature does
+               - Show HOW to use it with examples
+               - Include any configuration needed
+               - Note any breaking changes or deprecations
+
+            ## Important Guidelines
+            - STRICT: Focus on features that expand WHAT users can do, not HOW WELL
+            - Most commits should NOT result in documentation changes
+            - Skip ALL UI/UX improvements, performance enhancements, bug fixes
+            - Skip internal refactoring, test updates, dependency updates
+            - Skip internal API routes (/api/dashboard/v2/*, /api/internal/*)
+            - Only document PUBLIC API changes (/api/v1/*, SDK methods)
+            - Only document truly NEW capabilities or breaking changes
+            - If no user-facing changes found, make no edits
+
+            ## Documentation Structure
+            The docs repository contains:
+            - `/api/` - API reference documentation
+            - `/sdks/` - SDK guides and references
+            - `/features/` - Feature documentation
+            - `/integrations/` - Integration guides
+            - `/guides/` - How-to guides and tutorials
+
+            Update the appropriate files based on the type of change detected.
+
+          claude_args: |
+            --max-turns 15
+            --add-dir repos/prompt-layer-front-end
+            --add-dir repos/prompt-layer-api
+            --add-dir repos/prompt-layer-library
+            --add-dir repos/prompt-layer-js
+            --allowedTools "Bash(git:*)"
+            --allowedTools "Bash(cat:*)"
+            --allowedTools "Bash(head:*)"
+            --allowedTools "Bash(tail:*)"
+            --allowedTools "Bash(grep:*)"
+            --allowedTools "Bash(rg:*)"
+            --allowedTools "Bash(find:*)"
+            --allowedTools "Bash(ls:*)"
+            --allowedTools "Read"
+            --allowedTools "Edit"
+            --allowedTools "Write"
+            --allowedTools "Grep"
+            --allowedTools "Glob"
+
+      - name: Check for changes
+        id: check-changes
+        run: |
+          if [[ -n $(git status --porcelain) ]]; then
+            echo "changes=true" >> $GITHUB_OUTPUT
+            echo "Changed files:"
+            git status --porcelain
+          else
+            echo "changes=false" >> $GITHUB_OUTPUT
+            echo "No documentation updates needed"
+          fi
+
+      - name: Create or update PR
+        if: steps.check-changes.outputs.changes == 'true'
+        run: |
+          # Use a consistent branch name for today
+          BRANCH="docs/auto-update-${{ env.TODAY }}"
+
+          # Check if branch exists on remote
+          if git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
+            # Branch exists, fetch and checkout
+            git fetch origin "$BRANCH"
+            git checkout "$BRANCH"
+            git pull origin "$BRANCH"
+          else
+            # Create new branch
+            git checkout -b "$BRANCH"
+          fi
+
+          # Add and commit changes
+          git add .
+          git commit -m "docs: automated documentation update for ${{ env.TODAY }}
+
+          This automated update includes user-facing changes from:
+          - prompt-layer-front-end
+          - prompt-layer-api
+          - prompt-layer-library (Python SDK)
+          - prompt-layer-js (JavaScript SDK)
+
+          Time window: ${{ env.SINCE }} to now
+          Generated by GitHub Actions bot using Claude Code"
+
+          # Push the branch
+          git push -u origin "$BRANCH"
+
+          # Check if PR already exists for this branch
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' || echo "")
+
+          if [ -z "$PR_NUMBER" ]; then
+            # Create new PR
+            gh pr create \
+              --title "docs: automated update - ${{ env.TODAY }}" \
+              --body "## Automated Documentation Update
+
+          This PR contains automated documentation updates based on user-facing changes from the last 24 hours.
+
+          ### Time Window
+          - Since: ${{ env.SINCE }}
+          - Generated: $(date -u +%Y-%m-%dT%H:%M:%SZ)
+
+          ### Repositories Scanned
+          - \`prompt-layer-front-end\` (Frontend)
+          - \`prompt-layer-api\` (Backend API)
+          - \`prompt-layer-library\` (Python SDK)
+          - \`prompt-layer-js\` (JavaScript SDK)
+
+          ### What Gets Documented
+          Per our documentation policy (CLAUDE.md):
+          - ✅ NEW features and capabilities
+          - ✅ Public API/SDK changes
+          - ✅ Breaking changes and deprecations
+          - ✅ New integrations or model support
+          - ❌ UI/UX improvements
+          - ❌ Bug fixes and performance enhancements
+          - ❌ Internal refactoring
+
+          ### Review Checklist
+          - [ ] New features are properly documented
+          - [ ] API/SDK changes include examples
+          - [ ] Breaking changes are clearly marked
+          - [ ] Documentation follows our standards
+          - [ ] No unrelated files were modified
+
+          Generated by Claude Code Documentation Bot" \
+              --base main \
+              --head "$BRANCH"
+          else
+            # PR already exists, just add a comment about the update
+            gh pr comment "$PR_NUMBER" --body "📝 Documentation updated with latest changes from ${{ env.TODAY }}"
+            echo "Updated existing PR #$PR_NUMBER"
+          fi
