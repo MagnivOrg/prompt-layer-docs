@@ -73,28 +73,33 @@ jobs:
           git config --global user.name "github-actions[bot]"
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
-      - name: Run Claude Code to update documentation
-        uses: anthropics/claude-code-action@v1
-        with:
-          anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
-          prompt: |
-            Read the CLAUDE.md file in this repository for documentation update policy and guidelines.
+      # TEMPORARY: Skip Claude Code for testing
+      - name: Create test change
+        run: |
+          echo "Test change at $(date)" >> test-docs-update.md
 
-            ## Context
-            - Time window: commits since "${{ env.SINCE }}" (UTC) until now
-            - Today's date: ${{ env.TODAY }}
-            - Repositories checked out in local paths:
-              - repos/prompt-layer-front-end
-              - repos/prompt-layer-api
-              - repos/prompt-layer-library
-              - repos/prompt-layer-js
+      # - name: Run Claude Code to update documentation
+      #   uses: anthropics/claude-code-action@v1
+      #   with:
+      #     anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+      #     prompt: |
+      #       Read the CLAUDE.md file in this repository for documentation update policy and guidelines.
 
-            ## Task
-            1. Read CLAUDE.md to understand the documentation policy
-            2. For each repository, examine commits since "${{ env.SINCE }}" using git log
-            3. Apply the Decision Framework from CLAUDE.md strictly to identify user-facing changes
-            4. Update appropriate documentation files if any changes qualify
-            5. If no user-facing changes are found, make no edits
+      #       ## Context
+      #       - Time window: commits since "${{ env.SINCE }}" (UTC) until now
+      #       - Today's date: ${{ env.TODAY }}
+      #       - Repositories checked out in local paths:
+      #         - repos/prompt-layer-front-end
+      #         - repos/prompt-layer-api
+      #         - repos/prompt-layer-library
+      #         - repos/prompt-layer-js
+
+      #       ## Task
+      #       1. Read CLAUDE.md to understand the documentation policy
+      #       2. For each repository, examine commits since "${{ env.SINCE }}" using git log
+      #       3. Apply the Decision Framework from CLAUDE.md strictly to identify user-facing changes
+      #       4. Update appropriate documentation files if any changes qualify
+      #       5. If no user-facing changes are found, make no edits
 
       - name: Check for changes
         id: check-changes
