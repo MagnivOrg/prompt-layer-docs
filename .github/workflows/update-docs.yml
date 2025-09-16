@@ -74,7 +74,7 @@ jobs:
           git config --global user.email "41898282+github-actions[bot]@users.noreply.github.com"
 
       - name: Run Claude Code to update documentation
-        uses: anthropics/claude-code@v1
+        uses: anthropics/claude-code-action@v1.0
         with:
           api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           prompt: |
@@ -135,26 +135,6 @@ jobs:
             - `/guides/` - How-to guides and tutorials
 
             Update the appropriate files based on the type of change detected.
-
-          claude_args: |
-            --max-turns 15
-            --add-dir repos/prompt-layer-front-end
-            --add-dir repos/prompt-layer-api
-            --add-dir repos/prompt-layer-library
-            --add-dir repos/prompt-layer-js
-            --allowedTools "Bash(git:*)"
-            --allowedTools "Bash(cat:*)"
-            --allowedTools "Bash(head:*)"
-            --allowedTools "Bash(tail:*)"
-            --allowedTools "Bash(grep:*)"
-            --allowedTools "Bash(rg:*)"
-            --allowedTools "Bash(find:*)"
-            --allowedTools "Bash(ls:*)"
-            --allowedTools "Read"
-            --allowedTools "Edit"
-            --allowedTools "Write"
-            --allowedTools "Grep"
-            --allowedTools "Glob"
 
       - name: Check for changes
         id: check-changes
