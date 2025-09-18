@@ -81,10 +81,19 @@ jobs:
           echo "Repos directory contents:"
           ls -la repos/ || echo "No repos directory found"
 
+      - name: Ensure we're in docs root directory
+        run: |
+          echo "Setting working directory to docs root"
+          cd ${{ github.workspace }}
+          pwd
+          echo "Verifying repos are accessible:"
+          ls -la repos/
+
       - name: Run Claude Code to update documentation
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          working-directory: ${{ github.workspace }}
           prompt: |
             Read the CLAUDE.md file in this repository for documentation update policy and guidelines.
 
