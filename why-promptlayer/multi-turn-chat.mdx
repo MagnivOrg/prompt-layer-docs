@@ -17,7 +17,7 @@ The stateless approach particularly shines when it comes to systematic evaluatio
 
 ## Implementation Pattern
 
-Here's the core pattern for implementing stateless multi-turn chat:
+Here's the core pattern for implementing stateless multi-turn chat using [`promptlayer_client.run()`](/running-requests/promptlayer-run):
 
 ### Basic Conversation (No Tools)
 
@@ -81,7 +81,7 @@ def run_conversation(user_question):
 
 ### Conversation with Tools
 
-The AI can make multiple tool calls before responding, accumulating results in a separate message buffer.
+The AI can make multiple tool calls before responding, accumulating results in a separate message buffer. For a deeper understanding of when and how to use tool calling, check out our blog post on [tool calling with LLMs](https://blog.promptlayer.com/tool-calling-with-llms-how-and-when-to-use-it/).
 
 - Start with empty history and empty tool messages
 - Loop:
@@ -218,7 +218,7 @@ This allows the AI to perform complex operations (like searching, then filtering
 
 ### Using Message Placeholders
 
-[Message Placeholders](/features/prompt-registry/placeholder-messages) are crucial for injecting conversation context into your prompts. They allow you to dynamically insert the conversation history into your prompt template:
+[Message Placeholders](/features/prompt-registry/placeholder-messages) are crucial for injecting conversation context into your prompts. They allow you to dynamically insert the conversation history into your prompt template. For more details on template variables and dynamic prompts, see our [Template Variables](/features/prompt-registry/template-variables) guide:
 
 ```python
 # In your prompt template, use placeholders:
@@ -259,7 +259,7 @@ promptlayer_client.run(
 
 ## Handling Tool Calls
 
-For agents that use tools, maintain tool state externally:
+For agents that use tools, maintain tool state externally. See our [Tool Calling](/features/prompt-registry/tool-calling) documentation for setting up tool definitions in your prompts:
 
 ```python
 def handle_tool_execution(agent_response, tool_registry):
@@ -298,3 +298,5 @@ Learn more about setting up comprehensive evaluations in our [Evaluation and Ran
 - Explore [Message Placeholders](/features/prompt-registry/placeholder-messages) for dynamic prompt construction
 - Set up [Evaluations](/why-promptlayer/evaluation-and-ranking) for your conversational flows
 - Learn about [Agent development](/why-promptlayer/agents) for complex workflows
+- Read our guide on [Tool Calling](/features/prompt-registry/tool-calling) for implementing tool-enabled assistants
+- Check out [Structured Outputs](/features/prompt-registry/structured-outputs) for formatted responses
