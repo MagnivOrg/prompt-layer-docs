@@ -13,9 +13,7 @@ Traditional conversational AI systems often maintain complex internal state, mak
 
 The best way to build reliable conversational AI is to treat each turn as a black box. You provide inputs (conversation history, current query, available tools) and receive outputs (response, tool calls, next actions). This approach optimizes for rapid development and iteration - you're simply crafting prompts in natural language and validating outputs. By building your conversational system around this principle, you enable quick prompt iterations and fast feedback cycles, which are essential for developing robust multi-turn interactions.
 
-### Benefits of Stateless Architecture
-
-For a deeper dive into evaluating multi-turn conversations, check out our blog post on [best practices for evaluating back-and-forth conversational AI](https://blog.promptlayer.com/best-practi-to-evaluate-back-and-forth-conversational-ai-in-promptlayer/). The stateless approach particularly shines when it comes to systematic evaluation of conversation flows ([learn more about evaluating conversational AI](/why-promptlayer/evaluation-and-ranking)).
+The stateless approach particularly shines when it comes to systematic evaluation of conversation flows. For a deeper dive into evaluating multi-turn conversations, check out our blog post on [best practices for evaluating back-and-forth conversational AI](https://blog.promptlayer.com/best-practi-to-evaluate-back-and-forth-conversational-ai-in-promptlayer/).
 
 ## Implementation Pattern
 
@@ -265,4 +263,3 @@ class StatelessSupportAgent:
 - Explore [Message Placeholders](/features/prompt-registry/placeholder-messages) for dynamic prompt construction
 - Set up [Evaluations](/why-promptlayer/evaluation-and-ranking) for your conversational flows
 - Learn about [Agent development](/why-promptlayer/agents) for complex workflows
-- Read about [conversation simulation](https://blog.promptlayer.com/best-practi-to-evaluate-back-and-forth-conversational-ai-in-promptlayer/) for testing
