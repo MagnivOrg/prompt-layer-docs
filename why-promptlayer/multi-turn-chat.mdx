@@ -20,62 +20,74 @@ The stateless approach particularly shines when it comes to systematic evaluatio
 Here's the core pattern for implementing stateless multi-turn chat:
 
 ```python
-def run_conversation(initial_inputs):
-    conversation_history = []
-    current_inputs = initial_inputs
+def run_conversation(user_question):
+    chat_history = []
+    ai_in_progress = []  # For handling multiple tool calls
 
     while True:
         # Each turn is stateless - all state passed via inputs
-        results = promptlayer_client.run(
-            "MyAgent",
+        # Using a prompt template (you can also use run_agent for more complex workflows)
+        result = promptlayer_client.run(
+            prompt_name="conversational-assistant",
             input_variables={
-                "conversation_history": conversation_history,
-                "current_input": current_inputs,
-                "ai_in_progress": []  # For handling multiple tool calls
-            }
+                "user_question": user_question,
+                "chat_history": chat_history,
+                "ai_in_progress": ai_in_progress
+            },
+            tags=["multi-turn-chat"]
         )
 
+        # Extract the assistant's last message
+        last_message = result["prompt_blueprint"]["prompt_template"]["messages"][-1]
+
         # Check if conversation should end
-        if results.get("action") == "END_CONVERSATION":
-            return results
+        if last_message.get("function_call", {}).get("name") == "end_conversation":
+            return last_message
 
         # Handle tool calls
-        if results.get("tool_calls"):
+        if last_message.get("tool_calls"):
             tool_results = []
-            for tool_call in results["tool_calls"]:
+            for tool_call in last_message["tool_calls"]:
                 tool_result = execute_tool(tool_call)
-                tool_results.append(tool_result)
+                tool_results.append({
+                    "tool": tool_call["function"]["name"],
+                    "result": tool_result
+                })
 
-            # Update inputs with tool results
-            current_inputs = {
-                **current_inputs,
-                "tool_results": tool_results,
-                "last_response": results
-            }
+            # Update ai_in_progress with tool results
+            ai_in_progress.extend(tool_results)
         else:
-            # Regular conversation turn
-            current_inputs = {
-                **current_inputs,
-                "last_response": results
-            }
+            # Regular conversation turn - add to history
+            chat_history.append({
+                "role": "user",
+                "content": [{"type": "text", "text": user_question}]
+            })
+            chat_history.append(last_message)
 
-        # Update conversation history
-        conversation_history.append({
-            "turn": len(conversation_history) + 1,
-            "input": current_inputs,
-            "output": results
-        })
+            # Get next user input (in real implementation)
+            user_question = get_next_user_input()
+            if not user_question:
+                break
+
+            # Clear ai_in_progress for next turn
+            ai_in_progress = []
+
+    return last_message
 ```
 
-## Designing Your Stateless Agent
+<Note>
+You can also implement this pattern using agents for more complex workflows with multiple nodes and conditional logic. See [Running Agents](/running-requests/promptlayer-run-agent) for details on using `promptlayer_client.run_agent()`.
+</Note>
 
-Your agent should be designed to receive all necessary state through input variables:
+## Designing Your Stateless Prompt
+
+Your prompt template should be designed to receive all necessary state through input variables:
 
 ### Required Input Variables
 
-1. **conversation_history**: Array of previous turns
-2. **current_input**: The current user message or context
-3. **ai_in_progress**: List of ongoing tool calls and responses (for parallel tool execution)
+1. **chat_history**: Array of previous messages in the conversation
+2. **user_question**: The current user message or query
+3. **ai_in_progress**: List of ongoing tool calls and their results (for handling tool execution)
 
 ### Using Message Placeholders
 
@@ -84,13 +96,13 @@ Your agent should be designed to receive all necessary state through input varia
 ```python
 # In your prompt template, use a placeholder
 # Role: placeholder
-# Content: {{conversation_history}}
+# Content: {{chat_history}}
 
-# When calling the agent
+# When calling the prompt
 promptlayer_client.run(
-    prompt_name="stateless-chat-agent",
+    prompt_name="stateless-chat-assistant",
     input_variables={
-        "conversation_history": [
+        "chat_history": [
             {
                 "role": "user",
                 "content": [{"type": "text", "text": "What's the weather?"}]
@@ -100,7 +112,8 @@ promptlayer_client.run(
                 "content": [{"type": "text", "text": "I'll check the weather for you."}]
             }
         ],
-        "current_query": "How about tomorrow?"
+        "user_question": "How about tomorrow?",
+        "ai_in_progress": []
     }
 )
 ```
@@ -172,20 +185,27 @@ def test_weather_query_with_history():
     """Test how agent responds to weather query with context"""
 
     test_history = [
-        {"role": "user", "content": "I'm in New York"},
-        {"role": "assistant", "content": "Got it, you're in New York."}
+        {
+            "role": "user",
+            "content": [{"type": "text", "text": "I'm in New York"}]
+        },
+        {
+            "role": "assistant",
+            "content": [{"type": "text", "text": "Got it, you're in New York."}]
+        }
     ]
 
-    response = promptlayer_client.run(
-        "weather-agent",
+    result = promptlayer_client.run(
+        prompt_name="weather-assistant",
         input_variables={
-            "conversation_history": test_history,
-            "current_input": "What's the weather like?",
+            "chat_history": test_history,
+            "user_question": "What's the weather like?",
             "ai_in_progress": []
         }
     )
 
-    assert "New York" in response["content"]
+    last_message = result["prompt_blueprint"]["prompt_template"]["messages"][-1]
+    assert "New York" in last_message["content"][0]["text"]
 ```
 
 ## Integration with Evaluation
@@ -209,53 +229,61 @@ class StatelessSupportAgent:
         self.client = promptlayer_client
         self.max_turns = 20
 
-    def run_conversation(self, user_query):
-        state = {
-            "history": [],
-            "user_info": self.get_user_context(),
-            "turn_count": 0
-        }
+    def run_conversation(self, initial_question):
+        chat_history = []
+        ai_in_progress = []
+        user_question = initial_question
+        turn_count = 0
 
-        while state["turn_count"] < self.max_turns:
+        while turn_count < self.max_turns:
             # Run stateless turn
-            response = self.client.run(
-                "support-agent",
+            result = self.client.run(
+                prompt_name="support-agent",
                 input_variables={
-                    "conversation_history": state["history"],
-                    "current_query": user_query,
-                    "user_context": state["user_info"],
-                    "available_tools": ["search_kb", "create_ticket", "escalate"]
-                }
+                    "chat_history": chat_history,
+                    "user_question": user_question,
+                    "ai_in_progress": ai_in_progress,
+                    "user_context": self.get_user_context()
+                },
+                tags=["support", "multi-turn"]
             )
 
-            # Process response
-            if response.get("action") == "END_CONVERSATION":
-                return self.format_final_response(response, state)
+            # Extract assistant's response
+            last_message = result["prompt_blueprint"]["prompt_template"]["messages"][-1]
+
+            # Check for conversation end
+            if last_message.get("function_call", {}).get("name") == "end_conversation":
+                return self.format_final_response(last_message)
 
             # Handle tool calls
-            if response.get("tool_calls"):
-                tool_results = self.execute_tools(response["tool_calls"])
-                state["history"].append({
-                    "role": "tool",
-                    "content": tool_results
-                })
-
-            # Update state
-            state["history"].append({
-                "role": "assistant",
-                "content": response["content"]
-            })
-            state["turn_count"] += 1
-
-            # Get next user input (in real implementation)
-            user_query = self.get_next_user_input()
-            if user_query:
-                state["history"].append({
+            if last_message.get("tool_calls"):
+                tool_results = []
+                for tool_call in last_message["tool_calls"]:
+                    tool_result = self.execute_tool(tool_call)
+                    tool_results.append({
+                        "tool": tool_call["function"]["name"],
+                        "result": tool_result
+                    })
+                ai_in_progress.extend(tool_results)
+            else:
+                # Add messages to history
+                chat_history.append({
                     "role": "user",
-                    "content": user_query
+                    "content": [{"type": "text", "text": user_question}]
                 })
+                chat_history.append(last_message)
 
-        return self.handle_max_turns_reached(state)
+                # Get next user input
+                user_question = self.get_next_user_input()
+                if not user_question:
+                    break
+
+                # Clear ai_in_progress for next turn
+                ai_in_progress = []
+
+            turn_count += 1
+
+        return self.handle_max_turns_reached(chat_history)
 ```
 
 ## Next Steps
