@@ -9,6 +9,10 @@ Building reliable conversational AI systems requires careful management of state
 
 Traditional conversational AI systems often maintain complex internal state, making them difficult to debug, test, and scale. The stateless approach treats each turn of the conversation as an independent, deterministic function that receives all necessary context through input variables.
 
+### The Black Box Approach
+
+The best way to build reliable conversational AI is to treat each turn as a black box. You provide inputs (conversation history, current query, available tools) and receive outputs (response, tool calls, next actions). This approach optimizes for rapid development and iteration - you're simply crafting prompts in natural language and validating outputs. By building your conversational system around this principle, you enable quick prompt iterations and fast feedback cycles, which are essential for developing robust multi-turn interactions.
+
 ### Benefits of Stateless Architecture
 
 - **Deterministic Behavior**: Each turn produces predictable outputs given the same inputs
