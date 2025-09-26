@@ -1,0 +1,270 @@
+---
+title: "Multi-Turn Chat"
+icon: "messages"
+---
+
+Building reliable conversational AI systems requires careful management of state and conversation history. This guide explains how to implement multi-turn chat using PromptLayer's stateless approach, which enhances reliability and makes your agents easier to test and debug.
+
+## Why Stateless Turns?
+
+Traditional conversational AI systems often maintain complex internal state, making them difficult to debug, test, and scale. The stateless approach treats each turn of the conversation as an independent, deterministic function that receives all necessary context through input variables.
+
+### Benefits of Stateless Architecture
+
+- **Deterministic Behavior**: Each turn produces predictable outputs given the same inputs
+- **Easier Testing**: You can test individual turns in isolation
+- **Better Debugging**: Full visibility into what each turn receives and produces
+- **Simplified Evaluation**: Enables systematic evaluation of conversation flows ([learn more about evaluating conversational AI](/why-promptlayer/evaluation-and-ranking))
+- **Improved Reliability**: No hidden state that can become corrupted or inconsistent
+
+For a deeper dive into evaluating multi-turn conversations, check out our blog post on [best practices for evaluating back-and-forth conversational AI](https://blog.promptlayer.com/best-practi-to-evaluate-back-and-forth-conversational-ai-in-promptlayer/).
+
+## Implementation Pattern
+
+Here's the core pattern for implementing stateless multi-turn chat:
+
+```python
+def run_conversation(initial_inputs):
+    conversation_history = []
+    current_inputs = initial_inputs
+
+    while True:
+        # Each turn is stateless - all state passed via inputs
+        results = promptlayer_client.run(
+            "MyAgent",
+            input_variables={
+                "conversation_history": conversation_history,
+                "current_input": current_inputs,
+                "ai_in_progress": []  # For handling multiple tool calls
+            }
+        )
+
+        # Check if conversation should end
+        if results.get("action") == "END_CONVERSATION":
+            return results
+
+        # Handle tool calls
+        if results.get("tool_calls"):
+            tool_results = []
+            for tool_call in results["tool_calls"]:
+                tool_result = execute_tool(tool_call)
+                tool_results.append(tool_result)
+
+            # Update inputs with tool results
+            current_inputs = {
+                **current_inputs,
+                "tool_results": tool_results,
+                "last_response": results
+            }
+        else:
+            # Regular conversation turn
+            current_inputs = {
+                **current_inputs,
+                "last_response": results
+            }
+
+        # Update conversation history
+        conversation_history.append({
+            "turn": len(conversation_history) + 1,
+            "input": current_inputs,
+            "output": results
+        })
+```
+
+## Designing Your Stateless Agent
+
+Your agent should be designed to receive all necessary state through input variables:
+
+### Required Input Variables
+
+1. **conversation_history**: Array of previous turns
+2. **current_input**: The current user message or context
+3. **ai_in_progress**: List of ongoing tool calls and responses (for parallel tool execution)
+
+### Using Message Placeholders
+
+[Message Placeholders](/features/prompt-registry/placeholder-messages) are crucial for injecting conversation context into your prompts. They allow you to dynamically insert the conversation history into your prompt template:
+
+```python
+# In your prompt template, use a placeholder
+# Role: placeholder
+# Content: {{conversation_history}}
+
+# When calling the agent
+promptlayer_client.run(
+    prompt_name="stateless-chat-agent",
+    input_variables={
+        "conversation_history": [
+            {
+                "role": "user",
+                "content": [{"type": "text", "text": "What's the weather?"}]
+            },
+            {
+                "role": "assistant",
+                "content": [{"type": "text", "text": "I'll check the weather for you."}]
+            }
+        ],
+        "current_query": "How about tomorrow?"
+    }
+)
+```
+
+## Handling Tool Calls
+
+For agents that use tools, maintain tool state externally:
+
+```python
+def handle_tool_execution(agent_response, tool_registry):
+    """Execute tools and prepare results for next turn"""
+
+    if not agent_response.get("tool_calls"):
+        return None
+
+    tool_results = []
+    for call in agent_response["tool_calls"]:
+        tool = tool_registry.get(call["name"])
+        if tool:
+            result = tool.execute(call["arguments"])
+            tool_results.append({
+                "tool": call["name"],
+                "call_id": call["id"],
+                "result": result
+            })
+
+    return tool_results
+```
+
+## Best Practices
+
+### 1. Keep History Manageable
+Implement a sliding window or summarization strategy to prevent context from growing too large:
+
+```python
+def truncate_history(history, max_turns=10):
+    """Keep only the most recent N turns"""
+    if len(history) > max_turns:
+        # Optionally summarize older turns
+        summary = summarize_old_turns(history[:-max_turns])
+        return [{"role": "system", "content": summary}] + history[-max_turns:]
+    return history
+```
+
+### 2. Structure Your State
+Use consistent structures for passing state:
+
+```python
+class ConversationState:
+    def __init__(self):
+        self.history = []
+        self.context = {}
+        self.tool_results = []
+
+    def to_input_variables(self):
+        """Convert to format expected by agent"""
+        return {
+            "conversation_history": self.history,
+            "context": self.context,
+            "pending_tools": self.tool_results
+        }
+```
+
+### 3. Test Individual Turns
+Since each turn is stateless, you can easily test specific scenarios:
+
+```python
+def test_weather_query_with_history():
+    """Test how agent responds to weather query with context"""
+
+    test_history = [
+        {"role": "user", "content": "I'm in New York"},
+        {"role": "assistant", "content": "Got it, you're in New York."}
+    ]
+
+    response = promptlayer_client.run(
+        "weather-agent",
+        input_variables={
+            "conversation_history": test_history,
+            "current_input": "What's the weather like?",
+            "ai_in_progress": []
+        }
+    )
+
+    assert "New York" in response["content"]
+```
+
+## Integration with Evaluation
+
+The stateless approach makes it easy to evaluate your conversational AI:
+
+1. **Record real conversations** as sequences of inputs and outputs
+2. **Replay conversations** with modified parameters to test variations
+3. **Evaluate individual turns** for quality and correctness
+4. **Test edge cases** by crafting specific conversation states
+
+Learn more about setting up comprehensive evaluations in our [Evaluation and Ranking](/why-promptlayer/evaluation-and-ranking) guide.
+
+## Example: Customer Support Agent
+
+Here's a complete example of a stateless customer support agent:
+
+```python
+class StatelessSupportAgent:
+    def __init__(self, promptlayer_client):
+        self.client = promptlayer_client
+        self.max_turns = 20
+
+    def run_conversation(self, user_query):
+        state = {
+            "history": [],
+            "user_info": self.get_user_context(),
+            "turn_count": 0
+        }
+
+        while state["turn_count"] < self.max_turns:
+            # Run stateless turn
+            response = self.client.run(
+                "support-agent",
+                input_variables={
+                    "conversation_history": state["history"],
+                    "current_query": user_query,
+                    "user_context": state["user_info"],
+                    "available_tools": ["search_kb", "create_ticket", "escalate"]
+                }
+            )
+
+            # Process response
+            if response.get("action") == "END_CONVERSATION":
+                return self.format_final_response(response, state)
+
+            # Handle tool calls
+            if response.get("tool_calls"):
+                tool_results = self.execute_tools(response["tool_calls"])
+                state["history"].append({
+                    "role": "tool",
+                    "content": tool_results
+                })
+
+            # Update state
+            state["history"].append({
+                "role": "assistant",
+                "content": response["content"]
+            })
+            state["turn_count"] += 1
+
+            # Get next user input (in real implementation)
+            user_query = self.get_next_user_input()
+            if user_query:
+                state["history"].append({
+                    "role": "user",
+                    "content": user_query
+                })
+
+        return self.handle_max_turns_reached(state)
+```
+
+## Next Steps
+
+- Explore [Message Placeholders](/features/prompt-registry/placeholder-messages) for dynamic prompt construction
+- Set up [Evaluations](/why-promptlayer/evaluation-and-ranking) for your conversational flows
+- Learn about [Agent development](/why-promptlayer/agents) for complex workflows
+- Read about [conversation simulation](https://blog.promptlayer.com/best-practi-to-evaluate-back-and-forth-conversational-ai-in-promptlayer/) for testing
