@@ -105,6 +105,7 @@
           "icon": "vial-circle-check"
         },
         "why-promptlayer/agents",
+        "why-promptlayer/multi-turn-chat",
         "why-promptlayer/fine-tuning",
         "why-promptlayer/analytics",
         "why-promptlayer/evaluation-and-ranking",
