@@ -197,7 +197,15 @@ You can also implement this pattern using agents for more complex workflows with
 
 ## Designing Your Stateless Prompt
 
-Your prompt template should be designed to receive all necessary state through input variables:
+Your prompt template should be designed to receive all necessary state through input variables. Here's an example of a properly configured multi-turn assistant with tools:
+
+![Multi-turn assistant with tools prompt configuration](/images/multi-turn-assistant-with-tools-prompt.png)
+
+Notice how the prompt template includes:
+- A system message with instructions and tool usage behavior
+- Placeholder for `{{chat_history}}` to inject conversation context
+- User message with `{{user_question}}`
+- Placeholder for `{{ai_in_progress}}` to handle tool interactions
 
 ### Required Input Variables
 
