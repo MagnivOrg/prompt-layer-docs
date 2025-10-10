@@ -195,7 +195,7 @@ Yes, PromptLayer supports Deepseek models through custom base URLs. Configure it
 
 ## Does PromptLayer support MCP?
 
-Yes, PromptLayer supports MCP functions in agents. The MCP Action node allows you to invoke remote functions hosted on your MCP server. To use it, configure the node with your MCP server’s base URL and authentication token. Then, select the target function from the available list—PromptLayer will automatically introspect the function schema. Input parameters can be dynamically mapped from outputs of previous nodes, enabling full integration with the rest of your agent workflow. Function calls are executed at runtime, and outputs are passed downstream like any other node result.
+Yes, PromptLayer supports MCP functions in agents. The MCP Action node allows you to invoke remote functions hosted on your MCP server. To use it, configure the node with your MCP server's base URL and authentication token. Then, select the target function from the available list—PromptLayer will automatically introspect the function schema. Input parameters can be dynamically mapped from outputs of previous nodes, enabling full integration with the rest of your agent workflow. Function calls are executed at runtime, and outputs are passed downstream like any other node result.
 
 <iframe
     src="https://www.loom.com/embed/92ab94394c6b46fb966f29f16b72cd31?sid=81976fe8-5998-473c-b9ec-4470bab8b0c4"
@@ -203,3 +203,57 @@ Yes, PromptLayer supports MCP functions in agents. The MCP Action node allows yo
     allowFullScreen={true}
     style={{width: "100%", height: "400px"}}
 ></iframe>
+
+## How do I use web search and other pre-built tools from OpenAI Responses API?
+
+OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer. These tools enable your prompts to access real-time information and search through files—all without writing custom function definitions.
+
+### Available Pre-Built Tools
+
+- **Web Search** — Get fast, up-to-date answers with citations from the web
+- **File Search** — Search through uploaded files and documents
+
+### How to Add Pre-Built Tools in PromptLayer
+
+Follow these steps to enable OpenAI's pre-built tools in your PromptLayer prompts:
+
+1. **Open your prompt in the Prompt Registry** and navigate to the prompt editor
+
+2. **Switch to the Responses API**:
+   - Click the **LLM Provider** settings at the bottom of the editor
+   - Change the **API** dropdown from **Chat Completions API** to **Responses API**
+
+3. **Open the Function & Output Schema Editor**:
+   - Click the **Functions & Output** button at the bottom of the editor
+
+4. **Add a pre-built tool**:
+   - Click the **Built-in tools** button (on the right side)
+   - Browse available tools like **Web Search**, **Code Interpreter**, or **Image Generation**
+   - Click **Add Tool** for the tool you want to use
+   - The tool will appear in your **Function definitions** list with a checkmark
+
+5. **Configure tool_choice** (optional):
+   - Set **tool_choice** to **auto** to let the model decide when to use the tool
+   - Or select a specific tool to force its use
+
+6. **Save and run your prompt**:
+   - Close the modal and click **Run** to test your prompt
+   - The model will automatically use the pre-built tool when appropriate
+   - You'll see tool usage indicators like **"Preparing search parameters..."** or **"Found web results for: [query]"** in the response
+
+### Example: Web Search in Action
+
+When you add the **Web Search** tool and ask a question like "What is PromptLayer?", you'll see:
+
+- A **Thinking** section showing the model's reasoning process
+- **Web search status updates** like "Preparing search parameters..." and "Found web results for: PromptLayer what is PromptLayer"
+- A **comprehensive answer with citations** pulled from current web sources
+- A **sources indicator** (e.g., "1 source") showing where the information came from
+
+The model will use web search automatically when it needs up-to-date information to answer your query accurately.
+
+### Learn More
+
+- [OpenAI Web Search Guide](https://platform.openai.com/docs/guides/tools-web-search)
+- [OpenAI Responses API Announcement](https://openai.com/index/new-tools-for-building-agents/)
+- [Deep Research API Cookbook](https://cookbook.openai.com/examples/deep_research_api/introduction_to_deep_research_api)
