@@ -1961,6 +1961,15 @@
               "type": "integer",
               "title": "Per Page"
             }
+          },
+          {
+            "in": "query",
+            "name": "release_label",
+            "schema": {
+              "type": "string",
+              "title": "Release Label"
+            },
+            "description": "Filter prompt templates by release label (e.g., 'prod', 'dev', 'staging')"
           }
         ],
         "responses": {
