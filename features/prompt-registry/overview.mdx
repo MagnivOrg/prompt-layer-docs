@@ -430,16 +430,16 @@ const all_prompts = promptLayerClient.templates.all({ page: 2 })
 
 </CodeGroup>
 
-You can filter prompts by release label using the `release_label` argument. This will return all prompts that have that release label:
+You can filter prompts by release label using the `label` argument. This will return all prompts that have that release label:
 
 <CodeGroup>
 
 ```python Python SDK
-all_prompts = templates.all(release_label="prod")
+all_prompts = templates.all(label="prod")
 ```
 
 ```js JavaScript
-const all_prompts = promptLayerClient.templates.all({ release_label: "prod" })
+const all_prompts = promptLayerClient.templates.all({ label: "prod" })
 ```
 
 </CodeGroup>

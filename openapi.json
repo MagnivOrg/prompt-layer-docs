@@ -1964,10 +1964,10 @@
           },
           {
             "in": "query",
-            "name": "release_label",
+            "name": "label",
             "schema": {
               "type": "string",
-              "title": "Release Label"
+              "title": "Label"
             },
             "description": "Filter prompt templates by release label (e.g., 'prod', 'dev', 'staging')"
           }
