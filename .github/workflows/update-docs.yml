@@ -94,6 +94,7 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           working-directory: ${{ github.workspace }}
+          skip_permission_requests: true
           prompt: |
             Read the CLAUDE.md file in this repository for documentation update policy and guidelines.
 
