@@ -128,6 +128,96 @@ Here is how it would look like on the dashbaord:
 
 <img src="/images/anthropic-test.png" />
 
+## Error Handling
+
+PromptLayer provides robust error handling with configurable error behavior for JavaScript/TypeScript applications.
+
+### Using `throwOnError`
+
+By default, PromptLayer throws errors when API requests fail. You can control this behavior using the `throwOnError` parameter:
+
+```js
+import { PromptLayer } from "promptlayer";
+
+// Default behavior: throws errors on API failures
+const promptLayerClient = new PromptLayer({ 
+  apiKey: "pl_****", 
+  throwOnError: true 
+});
+
+// Alternative: logs warnings instead of throwing errors
+const promptLayerClient = new PromptLayer({ 
+  apiKey: "pl_****", 
+  throwOnError: false 
+});
+```
+
+**Example with error handling:**
+
+```js
+import { PromptLayer } from "promptlayer";
+
+const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+
+try {
+  // Attempt to get a template that might not exist
+  const template = await promptLayerClient.templates.get("NonExistentTemplate");
+  console.log(template);
+} catch (error) {
+  console.error("Failed to get template:", error.message);
+}
+```
+
+**Example with warnings (throwOnError: false):**
+
+```js
+import { PromptLayer } from "promptlayer";
+
+// Initialize with throwOnError: false to get warnings instead of errors
+const promptLayerClient = new PromptLayer({ 
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+  throwOnError: false 
+});
+
+// This will log a warning instead of throwing an error if the template doesn't exist
+const template = await promptLayerClient.templates.get("NonExistentTemplate");
+// Returns null if not found, with a warning logged to console
+```
+
+### Automatic Retry Mechanism
+
+PromptLayer includes a built-in retry mechanism using the industry-standard [p-retry](https://github.com/sindresorhus/p-retry) library to handle transient failures gracefully. This ensures your application remains resilient when temporary issues occur.
+
+**Retry Behavior:**
+
+- **Total Attempts**: 4 attempts (1 initial + 3 retries)
+- **Exponential Backoff**: Retries wait progressively longer between attempts (2s, 4s, 8s)
+- **Max Wait Time**: 15 seconds maximum wait between retries
+
+**What Triggers Retries:**
+- **5xx Server Errors**: Internal server errors, service unavailable, etc.
+- **429 RateLimit Errors**: API RateLimit Error.
+- **Network Errors**: Connection failures (ENOTFOUND, ECONNREFUSED, ETIMEDOUT, etc.)
+
+**What Fails Immediately (No Retries):**
+- **4xx Client Errors**: Bad requests, authentication errors, not found, validation errors, etc. except for 429 Ratelimit error.
+
+<Info>
+The retry mechanism operates transparently in the background. You don't need to implement retry logic yourself - PromptLayer handles it automatically for recoverable errors.
+</Info>
+
+### Logging
+
+PromptLayer logs info to the console before each retry attempt. When a retry occurs, you'll see log messages like:
+
+```
+INFO: Retrying PromptLayer API request in 2.0 seconds...
+INFO: Retrying PromptLayer API request in 4.0 seconds...
+INFO: Retrying PromptLayer API request in 8.0 seconds...
+```
+
+To capture these logs in your application, you can monitor `console.info` output or use a logging library that intercepts console methods.
+
 ## Edge
 
 PromptLayer can be used with Edge functions. Please use either our Javascript library or REST library directly.
