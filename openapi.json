@@ -4304,7 +4304,8 @@
           "parameters": {
             "default": {},
             "title": "Parameters",
-            "type": "object"
+            "type": "object",
+            "description": "Model parameters including temperature, max_tokens, etc. Can also include structured output configuration via response_format.json_schema. See documentation for structured output examples."
           },
           "tags": {
             "default": [],
@@ -4321,7 +4322,8 @@
             },
             "default": {},
             "title": "Metadata",
-            "type": "object"
+            "type": "object",
+            "description": "Custom key-value pairs for tracking additional request information. Keys are limited to 1024 characters."
           },
           "prompt_name": {
             "anyOf": [

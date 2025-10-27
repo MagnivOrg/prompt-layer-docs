@@ -4,3 +4,42 @@ openapi: "POST /log-request"
 ---
 
 Log a request to the system. This is useful for logging requests from custom LLM providers.
+
+## Using Structured Outputs
+
+When logging requests that use structured outputs (JSON schemas), include the schema configuration in the `parameters` field using the `response_format.json_schema` structure.
+
+**Example:**
+
+```json
+{
+  "provider": "openai",
+  "model": "gpt-4",
+  "parameters": {
+    "temperature": 0.7,
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "YourSchemaName",
+        "schema": {
+          "type": "object",
+          "properties": {
+            "field1": {"type": "string"}
+          },
+          "required": ["field1"]
+        }
+      }
+    }
+  }
+}
+```
+
+For complete examples with OpenAI, Anthropic, Google Gemini, and detailed implementation guidance, see:
+
+**[Logging Structured Outputs Guide →](/features/prompt-history/structured-output-logging)**
+
+## Related Documentation
+
+- [Custom Logging Guide](/features/prompt-history/custom-logging) - General guide to logging requests
+- [Structured Outputs in Prompt Registry](/features/prompt-registry/structured-outputs) - Creating prompts with structured outputs
+- [Metadata Documentation](/features/prompt-history/metadata) - Using metadata for tracking

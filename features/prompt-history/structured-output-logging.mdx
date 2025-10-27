@@ -1,0 +1,385 @@
+---
+title: "Logging Structured Outputs"
+icon: "brackets-curly"
+---
+
+## Overview
+
+When logging requests that use structured outputs (JSON schemas), you need to include the schema configuration in the `parameters` field of your `/log-request` call. This allows PromptLayer to properly track and display your structured output configurations alongside your request history.
+
+## When to Use This
+
+Use structured output logging when you're:
+- Making API calls with JSON schema validation (OpenAI, Anthropic, Google, etc.)
+- Tracking requests that enforce specific response formats
+- Analyzing how different schema configurations affect model outputs
+- Building applications that require reliable, parseable JSON responses
+
+## Basic Structure
+
+The structured output configuration goes in the `parameters` field of your log request, using the `response_format` key with `json_schema` configuration:
+
+```json
+{
+  "provider": "openai",
+  "model": "gpt-4",
+  "input": {...},
+  "output": {...},
+  "parameters": {
+    "temperature": 0.7,
+    "response_format": {
+      "type": "json_schema",
+      "json_schema": {
+        "name": "YourSchemaName",
+        "description": "Description of what this schema represents",
+        "schema": {
+          "type": "object",
+          "properties": {
+            // Your JSON schema properties
+          },
+          "required": ["field1", "field2"],
+          "additionalProperties": false
+        },
+        "strict": true
+      }
+    }
+  }
+}
+```
+
+## Complete Examples
+
+### OpenAI with Structured Outputs
+
+```python
+import promptlayer
+from datetime import datetime
+
+promptlayer.api_key = "your_api_key"
+
+# Make your OpenAI call with structured outputs
+response = openai.chat.completions.create(
+    model="gpt-4",
+    messages=[{"role": "user", "content": "Generate a recipe for chocolate cake"}],
+    response_format={
+        "type": "json_schema",
+        "json_schema": {
+            "name": "Recipe",
+            "description": "A structured recipe format",
+            "schema": {
+                "type": "object",
+                "properties": {
+                    "recipe_name": {"type": "string"},
+                    "ingredients": {
+                        "type": "array",
+                        "items": {
+                            "type": "object",
+                            "properties": {
+                                "name": {"type": "string"},
+                                "amount": {"type": "string"}
+                            },
+                            "required": ["name", "amount"]
+                        }
+                    },
+                    "instructions": {
+                        "type": "array",
+                        "items": {"type": "string"}
+                    }
+                },
+                "required": ["recipe_name", "ingredients", "instructions"],
+                "additionalProperties": False
+            },
+            "strict": True
+        }
+    }
+)
+
+# Log the request to PromptLayer
+promptlayer.log_request(
+    provider="openai",
+    model="gpt-4",
+    input={
+        "type": "chat",
+        "messages": [{"role": "user", "content": "Generate a recipe for chocolate cake"}]
+    },
+    output={
+        "type": "chat",
+        "messages": [{"role": "assistant", "content": response.choices[0].message.content}]
+    },
+    request_start_time=datetime.now(),
+    request_end_time=datetime.now(),
+    parameters={
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "Recipe",
+                "description": "A structured recipe format",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "recipe_name": {"type": "string"},
+                        "ingredients": {
+                            "type": "array",
+                            "items": {
+                                "type": "object",
+                                "properties": {
+                                    "name": {"type": "string"},
+                                    "amount": {"type": "string"}
+                                },
+                                "required": ["name", "amount"]
+                            }
+                        },
+                        "instructions": {
+                            "type": "array",
+                            "items": {"type": "string"}
+                        }
+                    },
+                    "required": ["recipe_name", "ingredients", "instructions"],
+                    "additionalProperties": False
+                },
+                "strict": True
+            }
+        }
+    },
+    tags=["structured-output", "recipe-generation"]
+)
+```
+
+### Google Gemini with Structured Outputs
+
+```python
+import promptlayer
+from datetime import datetime
+
+promptlayer.api_key = "your_api_key"
+
+# Log a Google Gemini request with structured outputs
+promptlayer.log_request(
+    provider="google",
+    model="gemini-2.0-flash-lite-preview-02-05",
+    input={
+        "type": "chat",
+        "messages": [{"role": "user", "content": "Create a product listing"}]
+    },
+    output={
+        "type": "chat",
+        "messages": [{"role": "assistant", "content": "..."}]
+    },
+    request_start_time=datetime.now(),
+    request_end_time=datetime.now(),
+    parameters={
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "ProductListing",
+                "description": "Product information structure",
+                "schema": {
+                    "type": "object",
+                    "properties": {
+                        "product_name": {"type": "string"},
+                        "price": {"type": "number"},
+                        "description": {"type": "string"},
+                        "features": {
+                            "type": "array",
+                            "items": {"type": "string"}
+                        }
+                    },
+                    "required": ["product_name", "price"],
+                    "additionalProperties": False
+                },
+                "strict": False
+            }
+        },
+        "temperature": 0,
+        "maxOutputTokens": 256
+    },
+    tags=["google", "structured-output"]
+)
+```
+
+### JavaScript/TypeScript Example
+
+```javascript
+import Promptlayer from 'promptlayer';
+
+const promptlayer = new Promptlayer({ apiKey: 'your_api_key' });
+
+// Make your API call with structured outputs
+const response = await openai.chat.completions.create({
+  model: 'gpt-4',
+  messages: [{ role: 'user', content: 'Extract contact information' }],
+  response_format: {
+    type: 'json_schema',
+    json_schema: {
+      name: 'ContactInfo',
+      description: 'Structured contact information',
+      schema: {
+        type: 'object',
+        properties: {
+          name: { type: 'string' },
+          email: { type: 'string' },
+          phone: { type: 'string' }
+        },
+        required: ['name', 'email'],
+        additionalProperties: false
+      },
+      strict: true
+    }
+  }
+});
+
+// Log to PromptLayer
+await promptlayer.logRequest({
+  provider: 'openai',
+  model: 'gpt-4',
+  input: {
+    type: 'chat',
+    messages: [{ role: 'user', content: 'Extract contact information' }]
+  },
+  output: {
+    type: 'chat',
+    messages: [{ role: 'assistant', content: response.choices[0].message.content }]
+  },
+  request_start_time: new Date().toISOString(),
+  request_end_time: new Date().toISOString(),
+  parameters: {
+    response_format: {
+      type: 'json_schema',
+      json_schema: {
+        name: 'ContactInfo',
+        description: 'Structured contact information',
+        schema: {
+          type: 'object',
+          properties: {
+            name: { type: 'string' },
+            email: { type: 'string' },
+            phone: { type: 'string' }
+          },
+          required: ['name', 'email'],
+          additionalProperties: false
+        },
+        strict: true
+      }
+    }
+  },
+  tags: ['structured-output', 'contact-extraction']
+});
+```
+
+## REST API Example
+
+If you're calling the `/log-request` endpoint directly via REST API:
+
+```bash
+curl -X POST https://api.promptlayer.com/log-request \
+  -H "Content-Type: application/json" \
+  -H "X-API-KEY: your_api_key" \
+  -d '{
+    "provider": "openai",
+    "model": "gpt-4",
+    "input": {
+      "type": "chat",
+      "messages": [{"role": "user", "content": "Generate a user profile"}]
+    },
+    "output": {
+      "type": "chat",
+      "messages": [{"role": "assistant", "content": "{\"name\":\"John\",\"age\":30}"}]
+    },
+    "request_start_time": "2024-01-15T10:00:00Z",
+    "request_end_time": "2024-01-15T10:00:02Z",
+    "parameters": {
+      "temperature": 0.7,
+      "response_format": {
+        "type": "json_schema",
+        "json_schema": {
+          "name": "UserProfile",
+          "description": "User profile information",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "name": {"type": "string"},
+              "age": {"type": "number"},
+              "email": {"type": "string"}
+            },
+            "required": ["name", "age"],
+            "additionalProperties": false
+          },
+          "strict": true
+        }
+      }
+    },
+    "tags": ["user-profile", "structured-output"]
+  }'
+```
+
+## Schema Configuration Details
+
+### Key Fields
+
+- **`name`** (required): A descriptive name for your schema (e.g., "Recipe", "ContactInfo")
+- **`description`** (optional): Explains what the schema represents
+- **`schema`** (required): The actual JSON schema definition following JSON Schema specification
+- **`strict`** (optional): When `true`, enforces strict validation (supported by some providers like OpenAI)
+
+### Schema Best Practices
+
+1. **Use clear property names**: Make your schema self-documenting
+2. **Specify required fields**: Use the `required` array to mark mandatory properties
+3. **Set `additionalProperties: false`**: Prevents unexpected fields in the response
+4. **Use descriptive types**: Leverage JSON Schema's type system (string, number, array, object, boolean)
+5. **Add validation constraints**: Use `minLength`, `maxLength`, `minimum`, `maximum`, etc. when appropriate
+
+## Tracking Schema Variations
+
+Use tags and metadata to track different schema versions:
+
+```python
+promptlayer.log_request(
+    # ... other parameters ...
+    parameters={
+        "response_format": {
+            "type": "json_schema",
+            "json_schema": {
+                "name": "Recipe_v2",  # Version in name
+                # ... schema definition ...
+            }
+        }
+    },
+    tags=["structured-output", "recipe-v2", "production"],
+    metadata={
+        "schema_version": "2.0",
+        "environment": "production"
+    }
+)
+```
+
+## Common Issues and Solutions
+
+### Issue: Schema not showing in PromptLayer dashboard
+
+**Solution**: Ensure the `response_format` is nested correctly within the `parameters` field, not at the top level of your log request.
+
+### Issue: Provider rejects the schema
+
+**Solution**: Different providers have different schema support levels:
+- **OpenAI**: Full support with `strict: true` mode
+- **Anthropic**: Supports basic JSON mode
+- **Google**: Supports schemas with some limitations
+
+Check your provider's documentation for specific schema requirements.
+
+### Issue: Response doesn't match schema
+
+**Solution**:
+1. Verify your schema is valid JSON Schema
+2. Test with `strict: true` if your provider supports it
+3. Check that your prompt clearly instructs the model about the expected format
+4. Review logged requests in PromptLayer to debug schema mismatches
+
+## See Also
+
+- [Structured Outputs in Prompt Registry](/features/prompt-registry/structured-outputs) - Creating prompts with structured outputs
+- [Custom Logging Guide](/features/prompt-history/custom-logging) - General guide to logging requests
+- [Log Request API Reference](/reference/log-request) - Full API specification
+- [Metadata Documentation](/features/prompt-history/metadata) - Using metadata for tracking
+- [Tagging Requests](/features/prompt-history/tagging-requests) - Organizing requests with tags
