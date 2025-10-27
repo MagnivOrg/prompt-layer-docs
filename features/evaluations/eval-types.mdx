@@ -109,6 +109,26 @@ Resource Quotas:
 - Memory consumption: 128MiB
 ```
 
+### Coding Agent
+
+The _Coding Agent_ evaluation type uses an AI coding agent (such as [Claude Code](https://www.claude.com/product/claude-code)) in a secure, sandboxed environment for each row in your dataset. Instead of writing code directly, you provide natural language instructions describing what you want to accomplish, and the AI coding agent handles the implementation.
+
+**How it works:**
+
+You provide a **natural language prompt** describing the task you want to accomplish. The coding agent executes in an isolated sandbox with access to:
+
+* **variables.json** - Automatically injected file containing all column values from previous cells in that row
+* **File attachments** - Any files you upload (CSV, JSON, text files, etc.) are available in the sandbox
+* **Network access** - Can make API calls and fetch external data
+
+The agent returns the result which populates the cell for that row.
+
+**Example use cases:**
+
+* **Data transformation**: "Parse the JSON response from the API column and extract all user emails into a comma-separated list"
+* **File processing**: "Read the attached sales_data.csv and calculate the total revenue for products in the 'Electronics' category"
+* **API integration**: "Use the api_key from variables.json to fetch user details from https://api.example.com/users/{user_id} and return their account status"
+
 ### Conversation Simulator
 
 The _Conversation Simulator_ evaluation type automates the back-and-forth between your AI agent and simulated users to test conversational AI performance. This is particularly useful for evaluating multi-turn conversations where context maintenance, goal achievement, and user interaction patterns are critical.
