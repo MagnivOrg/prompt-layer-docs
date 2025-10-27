@@ -18,10 +18,10 @@ import { PromptLayer } from "promptlayer";
 const promptLayerClient = new PromptLayer();
 ```
 
-Optionally, you can specify the API key in the client.
+Optionally, you can specify the API key and base URL in the client.
 
 ```js
-const promptLayerClient = new PromptLayer({ apiKey: "pl_****" });
+const promptLayerClient = new PromptLayer({ apiKey: "pl_****", baseURL: "https://api.promptlayer.com" });
 ```
 
 <Warning>PromptLayer's JavaScript library is not compatible with client-side (browser) environments. It is designed for use exclusively in server-side runtimes such as Node.js, Bun, or Deno.</Warning>
