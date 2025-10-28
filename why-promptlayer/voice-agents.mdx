@@ -224,36 +224,9 @@ This makes debugging failed conversations straightforward—you can see exactly 
 
 ## Best Practices for Voice Agent Evaluation
 
-### 1. Test Diverse Personas
-
-Create evaluation datasets covering:
-- **Cooperative customers**: Clear requests, provides information readily
-- **Difficult customers**: Vague, frustrated, reluctant to share details
-- **Edge cases**: Background noise, accents, technical jargon, interruptions
-
-### 2. Measure What Matters
-
-Track metrics aligned with business goals:
-- **Information capture rate**: % of calls collecting all required fields (name, phone, service, date)
-- **Task completion**: % of calls successfully addressing customer need
-- **Escalation rate**: % requiring human intervention
-- **Customer satisfaction**: Post-call survey scores
-
-### 3. Iterate Based on Data
-
-Use PromptLayer analytics to identify improvement opportunities:
-- Find low-scoring conversations and understand why they failed
-- Test prompt variations addressing common failure modes
-- Backtest against production data before deploying
-- Monitor changes with A/B tests rather than all-or-nothing rollouts
-
-### 4. Build Regression Test Suites
-
-Every time you discover a conversation the agent handles poorly:
-1. Add anonymized version to evaluation dataset
-2. Update prompt to handle it correctly
-3. Re-run full test suite to ensure no regressions
-4. Deploy with confidence knowing all previous scenarios still work
+Test with diverse conversation scenarios (cooperative customers, difficult cases, edge cases) and track metrics aligned with your business goals:
+- **Conversation quality**: Information capture rate, task completion, customer satisfaction
+- **Continuous improvement**: Build regression test suites from failed conversations, backtest new prompts against production data
 
 ## Getting Started
 
