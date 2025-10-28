@@ -1,0 +1,243 @@
+---
+title: "Voice Agents"
+icon: "microphone"
+---
+
+Voice agents represent a powerful evolution in AI-powered customer interactions, combining speech-to-text (STT), language understanding, and text-to-speech (TTS) to create natural conversational experiences. PromptLayer provides comprehensive tools to help you build, observe, and continuously evaluate voice agents—from prompt management and multi-step workflows to rigorous testing and cost tracking.
+
+## How PromptLayer Helps with Voice Agents
+
+Building a production-ready voice agent (like an after-hours appointment assistant or customer support line) requires careful orchestration of multiple AI components. PromptLayer serves as your central platform for:
+
+- **[Prompt Engineering & Version Control](/features/prompt-registry/overview)**: Iterate rapidly on conversation prompts without code deployments
+- **[Multi-Step Workflow Design](/why-promptlayer/agents)**: Build complex voice agent logic with visual drag-and-drop interfaces
+- **Comprehensive [Observability](/why-promptlayer/analytics)**: Track every interaction with full context of what was said and how the agent responded
+- **[Rigorous Evaluation](/features/evaluations/overview)**: Test conversation flows, measure quality, and catch issues before they reach customers
+- **Cost Optimization**: Monitor token usage and latency across all voice interactions
+
+Whether you're using [ElevenLabs](https://elevenlabs.io) for text-to-speech, [VAPI](https://vapi.ai) for telephony integration, [Hume AI](https://hume.ai) for emotion analysis, or OpenAI's Realtime API, PromptLayer helps you manage the conversational intelligence at the heart of your voice agent.
+
+## Prompt Management for Voice Conversations
+
+The quality of your voice agent starts with well-crafted prompts. PromptLayer's [Prompt Registry](/features/prompt-registry/overview) acts as a content management system for all conversation logic, enabling your team to iterate without engineering involvement.
+
+### Versioned Conversation Templates
+
+Design your voice agent's system prompts, conversation flow, and response templates visually in the dashboard. Each change creates a new version with full history, making it easy to:
+
+- Track who changed what and when
+- Compare prompt versions side-by-side with diff views
+- Roll back to previous versions if needed
+- Test new conversation approaches without affecting production
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(api_key="your_api_key")
+
+# Run with conversation context using the production version
+result = pl.run(
+    prompt_name="customer-service-assistant",
+    prompt_release_label="production",
+    input_variables={
+        "customer_query": transcribed_text,
+        "business_hours": "Monday-Friday 8 AM - 6 PM",
+        "current_time": "7:30 PM"
+    },
+    tags=["voice-agent", "after-hours"]
+)
+```
+
+```javascript JavaScript
+import { PromptLayer } from "promptlayer";
+
+const pl = new PromptLayer({ apiKey: "your_api_key" });
+
+// Run with conversation context using the production version
+const result = await pl.run({
+  promptName: "customer-service-assistant",
+  promptReleaseLabel: "production",
+  inputVariables: {
+    customer_query: transcribedText,
+    business_hours: "Monday-Friday 8 AM - 6 PM",
+    current_time: "7:30 PM"
+  },
+  tags: ["voice-agent", "after-hours"]
+});
+```
+
+</CodeGroup>
+
+### A/B Testing Conversation Strategies
+
+Use [Dynamic Release Labels](/features/prompt-registry/dynamic-release-labels) to test different conversation approaches in production. For example, test two different greeting styles:
+
+- **Version A**: Warm and conversational ("Hi there! Thanks for calling...")
+- **Version B**: Professional and concise ("Thank you for calling. How can I help?")
+
+Route 50% of calls to each version and use PromptLayer's analytics to determine which yields better customer satisfaction scores or appointment booking rates.
+
+## Building Multi-Step Voice Workflows
+
+Voice agents often require complex logic: transcribe speech → understand intent → fetch information → generate response → synthesize speech. PromptLayer's [Agents](/why-promptlayer/agents) feature lets you design these workflows visually.
+
+### Agent Workflow Example
+
+Here's how you might structure a voice agent workflow in PromptLayer:
+
+1. **Input Node**: Receives transcribed customer query from your STT service
+2. **Prompt Template Node**: Processes the query with your conversation prompt
+3. **Conditional Logic**: Branches based on customer intent
+   - If asking about hours → Provide recorded answer
+   - If upset (detected via sentiment) → Route to empathetic response path
+   - If requesting appointment → Proceed to booking flow
+4. **Callback Endpoint Node**: Calls external APIs (e.g., ElevenLabs for TTS, your scheduling system)
+5. **Output Node**: Returns final response to speak to the customer
+
+### Integrating Voice APIs with PromptLayer Agents
+
+PromptLayer Agents let you orchestrate your entire voice workflow visually. Within your agent, use **Callback Endpoint Nodes** to integrate external voice services like ElevenLabs for text-to-speech, OpenAI's Realtime API for voice-enabled responses, or your own telephony platform.
+
+These callback nodes can:
+- Convert your agent's text responses to speech (TTS)
+- Call your scheduling system to check appointment availability
+- Trigger webhooks to your voice platform (VAPI, Twilio, etc.)
+- Return results that feed into subsequent nodes in your workflow
+
+All of these integrations are logged and traced by PromptLayer, giving you full visibility into your voice agent's execution flow.
+
+## Evaluating Voice Agent Quality
+
+Rigorous evaluation is critical for voice agents where mistakes directly impact customer experience. PromptLayer's [Evaluations](/features/evaluations/overview) framework provides multiple approaches to test and improve conversation quality.
+
+### 1. Conversation Simulator (Text Content)
+
+The [Conversation Simulator](/features/evaluations/eval-types#conversation-simulator) tests the **conversational content and logic** of your voice agent—not the audio quality itself. Define realistic customer personas and let PromptLayer simulate entire text-based conversations:
+
+```python
+# Define a test persona
+difficult_customer_persona = """
+You are a frustrated customer calling after hours about a missed appointment.
+You are upset and won't provide your phone number until the assistant apologizes.
+You speak in short, terse sentences.
+"""
+
+# The simulator will automatically:
+# 1. Generate user messages based on the persona
+# 2. Get text responses from your voice agent prompt
+# 3. Continue the conversation for 8-10 turns
+# 4. Return full transcript as JSON
+```
+
+This helps you test the **conversation quality** (what your agent says):
+- Context retention across multiple turns
+- Goal achievement (did agent collect name, phone, and appointment time?)
+- Handling difficult personalities
+- Recovery from misunderstandings
+
+<Note>
+The Conversation Simulator evaluates text content only. For voice-specific quality (pronunciation, tone, audio clarity), you'll need to test with actual voice output using your TTS provider's tools.
+</Note>
+
+### 2. Dataset-Driven Testing
+
+Create evaluation datasets from typical customer queries:
+
+| Input Query | Expected Behavior | Expected Information |
+|-------------|-------------------|---------------------|
+| "What are your hours tomorrow?" | Provide hours, offer to take message | Must mention opening time |
+| "Do you service electric vehicles?" | Provide info or offer callback | Must not make false claims |
+| "I need an emergency tow" | Urgent tone, provide emergency number | Must prioritize urgency |
+
+Run your agent against each test case and use PromptLayer's evaluation types including LLM-based assertions to judge subjective quality criteria (e.g., "Does this response address the customer's question directly?" or "Is the tone appropriate?"). PromptLayer will score your agent's responses automatically, giving you pass/fail metrics across hundreds of test cases.
+
+### 3. Human Feedback Integration
+
+For production calls, capture customer satisfaction scores using the [Scoring API](/features/prompt-history/scoring-requests):
+
+<CodeGroup>
+
+```python Python
+# After call completes, log customer rating
+pl.track.score(
+    request_id=voice_call_request_id,
+    score=customer_rating  # 0-100 scale (or convert 1-5 stars)
+)
+```
+
+```javascript JavaScript
+// Track customer satisfaction
+await pl.track.score({
+  requestId: voiceCallRequestId,
+  score: customerRating  // 0-100
+});
+```
+
+</CodeGroup>
+
+Aggregate these scores by prompt version to identify which conversation approaches yield higher satisfaction.
+
+### 4. Voice-Specific Quality Checks
+
+#### Speech Content Parity
+
+Verify your TTS output matches intended text:
+
+1. Generate audio with ElevenLabs/OpenAI TTS
+2. Transcribe it back with Whisper
+3. Compare transcript to original text
+4. Flag mismatches indicating pronunciation issues
+
+#### Latency Benchmarks
+
+PromptLayer evaluations automatically track and display latency for each request, helping you monitor response times throughout your voice agent workflow. You can use PromptLayer's analytics to ensure your agent stays under acceptable thresholds (typically under 2000ms for voice interactions) and identify any bottlenecks in your LLM processing.
+
+## Observability for Voice Interactions
+
+PromptLayer's [Observability](/platform/observability) suite gives you full visibility into every voice interaction, even though the audio itself flows through external services.
+
+### What You Can Track
+
+- **Full Conversation Context**: See the transcribed text of what customers said and how your agent responded
+- **Prompt Versions Used**: Know exactly which prompt template was active for each call
+- **Token Usage & Costs**: Track spending per conversation, per shop location, or per time period
+- **Latency Breakdown**: Identify slow points in your workflow (STT, LLM, TTS)
+- **Metadata Filtering**: Tag calls with `customer_id`, `shop_location`, `call_type` for granular analysis
+
+### Traces for Multi-Step Workflows
+
+When using PromptLayer Agents for voice workflows, [traces](/running-requests/traces) show each step:
+
+```
+Voice Call Trace #1234
+├─ Input: "I need an oil change for tomorrow"
+├─ Node 1: Intent Classification → "appointment_request"
+├─ Node 2: Slot Filling Prompt → extracted {service: "oil change", timeframe: "tomorrow"}
+├─ Node 3: Availability Check (Callback) → slots available at 9 AM, 2 PM
+├─ Node 4: Confirmation Prompt → "We have openings at 9 AM or 2 PM..."
+└─ Output: Confirmation message + collected phone number
+```
+
+This makes debugging failed conversations straightforward—you can see exactly where logic went wrong.
+
+## Best Practices for Voice Agent Evaluation
+
+Test with diverse conversation scenarios (cooperative customers, difficult cases, edge cases) and track metrics aligned with your business goals:
+- **Conversation quality**: Information capture rate, task completion, customer satisfaction
+- **Continuous improvement**: Build regression test suites from failed conversations, backtest new prompts against production data
+
+## Getting Started
+
+To begin building voice agents with PromptLayer:
+
+1. **Create voice agent prompts** in the [Prompt Registry](/features/prompt-registry/overview)
+2. **Design multi-step workflows** with [Agents](/why-promptlayer/agents) if needed
+3. **Build evaluation datasets** covering your expected call types
+4. **Set up evaluation pipelines** with relevant quality checks
+5. **Integrate with your voice platform** (VAPI, ElevenLabs, etc.) via API
+6. **Monitor production calls** using observability and analytics
+7. **Iterate based on data** using A/B tests and regression testing
+
+PromptLayer provides the prompt management, workflow orchestration, observability, and evaluation infrastructure you need to build production-ready voice agents that continuously improve over time.
