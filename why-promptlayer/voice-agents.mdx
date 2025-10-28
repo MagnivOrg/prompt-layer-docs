@@ -151,27 +151,7 @@ Create evaluation datasets from typical customer queries:
 | "Do you service electric vehicles?" | Provide info or offer callback | Must not make false claims |
 | "I need an emergency tow" | Urgent tone, provide emergency number | Must prioritize urgency |
 
-Run your agent against each test case and use PromptLayer's evaluation types:
-
-### LLM-Based Assertions
-
-Use AI to judge subjective quality criteria:
-
-```python
-# Example LLM Assertion evaluation
-evaluation_prompt = """
-Does this voice agent response:
-1. Address the customer's question directly?
-2. Use a sympathetic tone for upset customers?
-3. Provide accurate information about shop hours?
-
-Response: {ai_response}
-
-Answer with yes/no for each criterion.
-"""
-```
-
-PromptLayer will score your agent's responses automatically, giving you pass/fail metrics across hundreds of test cases.
+Run your agent against each test case and use PromptLayer's evaluation types including LLM-based assertions to judge subjective quality criteria (e.g., "Does this response address the customer's question directly?" or "Is the tone appropriate?"). PromptLayer will score your agent's responses automatically, giving you pass/fail metrics across hundreds of test cases.
 
 ### 3. Human Feedback Integration
 
