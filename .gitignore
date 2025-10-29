@@ -1,3 +1,4 @@
+*.sw*
 .DS_Store
 package.json
 package-lock.json
