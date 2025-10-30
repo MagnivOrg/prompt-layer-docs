@@ -3,63 +3,111 @@ title: "Quickstart"
 icon: "flag-checkered"
 ---
 
-Learn how to use PromptLayer in minutes.
+Start using PromptLayer in minutes.
 
-## Creation
-Create a new prompt by clicking "New" then selecting "Prompt."
+<Info>
+[An account must be created](https://dashboard.promptlayer.com/create-account)
+to use this Quickstart.
+</Info>
+
+## Prompts
+### Creation
+Within the home of a workspace, a new Prompt can be created by clicking "New" 
+then selecting "Prompt."
 
 {/* TODO: image, showing selected prompt "New" button */}
 
-You will be presented with two panels, one labeled "System" and another labeled
-"User."
+This presents two Prompts, with default Roles for the model to exhibit: 
+"System" and "User."
 
 {/* TODO: image, showing new prompt panel w/ System and User */}
 
 <AccordionGroup>
     <Accordion
-    defaultOpen='true'
     title='"User" and "System" Explained'
     >
         ### System
-        A system prompt is a specialized type of prompt used in AI language models that 
+        A System Prompt is a specialized type of Prompt used in AI language models that 
         sets the overall context, behavior, or persona for the AI's responses. It acts 
         as a foundational instruction set that guides the model's conduct throughout an 
         interaction, often without being directly visible to the end-user.
 
-        Learn more about [System Prompts]().
+        Learn more about [System Prompts](https://www.promptlayer.com/glossary/system-prompt).
 
         ### User
         User prompts are the specific instructions or questions a user provides to an AI 
-        system to elicit a desired response. These prompts are dynamic and vary with 
+        system to elicit a desired response. These Prompts are dynamic and vary with 
         each interaction, reflecting the user's immediate needs and goals. They can 
         range from simple requests for information to complex instructions for 
         generating creative content.
 
-        Learn more about [User prompts]().
+        Learn more about [User Prompts](https://blog.promptlayer.com/system-prompt-vs-user-prompt-a-comprehensive-guide-for-ai-prompts/#what-is-a-user-prompt).
+    </Accordion>
+</AccordionGroup>
+{/* TODO: gif, showing filled in text */}
+
+### Versioning
+Each new saved edit of a Prompt creates a version.
+
+{/* TODO: gif of saving a new edit */}
+
+<AccordionGroup>
+    <Accordion
+    title='"Versioning" Explained'
+    >
     </Accordion>
 </AccordionGroup>
 
 
-Fill out the text areas
+#### Diffing
+Two versions of a Prompt can be diffed by selecting a version, then hovering 
+another. This will reveal the clickable "View Diff" button.
 
-{/* TODO: image, showing filled in text */}
-{/* TODO: system prompt codeblock copy and paste */}
-{/* TODO: user prompt codeblock copy and paste */}
+{/* TODO: gif of viewing a diff between two versions */}
 
-## Versioning
-Each new saved edit of a prompt automatically creates a new version
+<AccordionGroup>
+    <Accordion
+    title='"Diffing" Explained'
+    >
+    "Diffing" is a common software engineering mechanic that is employed to 
+    compare two verisons of some text. It isolates and visualizes the specific 
+    additions, deletions, and modifications made, providing granular detail on 
+    what has changed.
 
-## Releases
-Under date a new version is saved is the button to click for creating a new
-release label
+    **When applied to Prompt Engineering, diffing helps identify precisely what 
+    modifications in a Prompt led to a different or improved AI output.**
+    </Accordion>
+</AccordionGroup>
+
+#### AI Prompt Writer
+New versions of a Prompt can be generated with AI within the Editor.
+
+#### Switch Models
+A Prompt's model can be changed.
+
+#### Prompt Blueprint
+{/* TODO: section */}
+
+### Releases
+Under date a new is the button to click for creating a new release label.
 
 ## Agents
-Navigate to the Home Page, click "New" then select "Agent."
+Within the home of a workspace, a new agent can be created by clicking "New" 
+then selecting "Agent."
 
 ## Evals
-{/* TODO: High Level Overview */}
+Evaluations can be added for both Prompts and Agents.
+
+### Prompts
+{/* TODO: gif, adding an evaluation to a prompt */}
+
+### Agents
+{/* TODO: gif, adding an evaluation to an agent */}
 
 ## Analytics
+### Logs
+### Tracing and Spans
+### Observability
 {/* TODO: High Level Overview (refer to Notion doc) */}
 
 ## Further Reading
