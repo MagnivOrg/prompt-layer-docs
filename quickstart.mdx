@@ -86,7 +86,39 @@ New versions of a Prompt can be generated with AI within the Editor.
 A Prompt's model can be changed.
 
 #### Prompt Blueprint
-{/* TODO: section */}
+Prompts can be exported to be utilized within other applications like ChatGPT, 
+Anthropic, etc. with its "Prompt Blueprint." 
+
+{/* TODO: gif, demonstrating export with not-undefined data */}
+
+<AccordionGroup>
+    <Accordion
+    title='"Prompt Blueprints" are a PromptLayer format'
+    >
+    Defined by PromptLayer, "Prompt Blueprints" format the information
+    that build a Prompt (e.g.: the "User" and "System" roles) by surrounding 
+    its text.
+
+    Excerpt from a Blueprint:
+    ```
+    ...
+    "role": "system",
+    "content": [
+      {
+        "type": "text",
+        "text": "### Bakery Chatbot System Prompt \n\n#### Persona & 
+                 Goal\nYou are a friendly, sweet, and helpful 
+                 assistant...",
+        ...
+      }
+    ],
+    ...
+    ```
+
+    Learn more about "[Prompt Blueprints](https://docs.promptlayer.com/running-requests/prompt-blueprints)"
+    and its format.
+    </Accordion>
+</AccordionGroup>
 
 ### Releases
 Under date a new is the button to click for creating a new release label.
