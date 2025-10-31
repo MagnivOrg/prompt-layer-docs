@@ -182,7 +182,7 @@ Depending on if you set `return_all_outputs` or not, you will either return the 
 
 ## Run Agents with Callback Webhooks
 
-Instead of polling for results, you can provide a `callback_url` when initiating the agent run. This is ideal for long-running agents and integrations that support webhooks (like Zapier's callback URL pattern).
+Instead of polling for results, you can provide a `callback_url` when initiating the agent run. This is ideal for long-running agents and webhook-based integrations.
 
 **How it works:**
 
@@ -221,4 +221,4 @@ When the agent completes, PromptLayer will POST the execution results to your ca
 }
 ```
 
-This approach eliminates the need for polling and handles timeouts gracefully, making it perfect for Zapier integrations and other webhook-based systems. 
+This approach eliminates the need for polling and handles timeouts gracefully, making it perfect for webhook-based integrations. 

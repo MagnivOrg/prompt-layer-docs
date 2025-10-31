@@ -45,7 +45,7 @@ The request body expects a JSON object with the following structure:
 
 ## Asynchronous Execution with Callbacks
 
-For long-running Agents, you can provide a `callback_url` parameter to receive results asynchronously. This pattern is ideal for integrations like Zapier that have request timeout limits but support callback URLs (using `z.generateCallbackUrl()`).
+For long-running Agents, you can provide a `callback_url` parameter to receive results asynchronously. This pattern is ideal for webhook-based integrations that have request timeout limits but support callback URLs.
 
 ### Example Request with Callback
 
