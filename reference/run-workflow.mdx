@@ -31,5 +31,39 @@ The request body expects a JSON object with the following structure:
   "input_variables": {
     "string": "any"
   },
-  "return_all_outputs": "boolean (default: false)"
+  "return_all_outputs": "boolean (default: false)",
+  "callback_url": "string (optional)"
 }
+```
+
+### Parameters
+
+- **workflow_label_name** (string, optional): The label of the specific Agent version to run.
+- **workflow_version_number** (integer, optional): The version number of the Agent to run.
+- **metadata** (object, optional): Additional metadata to attach to the execution.
+- **input_variables** (object, optional): Input variables for the Agent execution.
+- **return_all_outputs** (boolean, optional, default: false): Whether to return all node outputs or just the final output.
+- **callback_url** (string, optional): An HTTP URL where execution results will be POSTed when the Agent completes. When provided, the API returns HTTP 202 (Accepted) immediately and sends results to this URL asynchronously. Ideal for long-running agents and webhook-based integrations.
+
+## Response
+
+**Status Code**: 201 (Created) or 202 (Accepted) if `callback_url` is provided
+
+When a `callback_url` is provided, PromptLayer will POST the following to your callback URL when the agent completes:
+
+```json
+{
+  "workflow_version_execution_id": "integer",
+  "final_output": {
+    "Node Name": {
+      "status": "SUCCESS | FAILURE",
+      "value": "any",
+      "error_message": "string | null",
+      "raw_error_message": "string | null",
+      "is_output_node": "boolean"
+    }
+  }
+}
+```
+
+The `final_output` structure matches the response from the [GET /workflow-version-execution-results](/reference/workflow-version-execution-results) endpoint.
