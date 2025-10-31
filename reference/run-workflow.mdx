@@ -31,5 +31,61 @@ The request body expects a JSON object with the following structure:
   "input_variables": {
     "string": "any"
   },
-  "return_all_outputs": "boolean (default: false)"
+  "return_all_outputs": "boolean (default: false)",
+  "callback_url": "string (optional)"
 }
+```
+
+### Parameters
+
+- **workflow_label_name** (string, optional): The label of the specific Agent version to run.
+- **workflow_version_number** (integer, optional): The version number of the Agent to run.
+- **metadata** (object, optional): Additional metadata to attach to the execution.
+- **input_variables** (object, optional): Input variables for the Agent execution.
+- **return_all_outputs** (boolean, optional, default: false): Whether to return all node outputs or just the final output.
+- **callback_url** (string, optional): An HTTP URL where execution results will be POSTed when the Agent completes. Use this for long-running Agents to avoid timeouts (e.g., with Zapier's callback URL pattern).
+
+## Asynchronous Execution with Callbacks
+
+When you provide a `callback_url`, the API will:
+
+1. **Return immediately** with HTTP 202 (Accepted) and the `workflow_version_execution_id`
+2. **Execute the Agent asynchronously** in the background
+3. **POST the results** to your callback URL when complete
+
+This pattern is ideal for integrations like Zapier that have request timeout limits but support callback URLs (using `z.generateCallbackUrl()`).
+
+### Callback Payload
+
+When the Agent completes, PromptLayer will POST the following JSON to your callback URL:
+
+```json
+{
+  "workflow_version_execution_id": "integer",
+  "final_output": {
+    "Node Name": {
+      "status": "SUCCESS | FAILURE",
+      "value": "any",
+      "error_message": "string | null",
+      "raw_error_message": "string | null",
+      "is_output_node": "boolean"
+    }
+  }
+}
+```
+
+The `final_output` structure matches the response from the [GET /workflow-version-execution-results](/reference/workflow-version-execution-results) endpoint.
+
+## Response
+
+### Without callback_url
+
+**Status Code**: 201 (Created)
+
+Returns the execution results synchronously.
+
+### With callback_url
+
+**Status Code**: 202 (Accepted)
+
+Returns immediately with the execution ID. Results will be POSTed to the callback URL when ready.
