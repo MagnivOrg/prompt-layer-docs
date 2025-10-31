@@ -22,28 +22,26 @@ This presents two Prompts, with default Roles for the model to exhibit:
 
 {/* TODO: image, showing new prompt panel w/ System and User */}
 
-<AccordionGroup>
-    <Accordion
-    title='"User" and "System" Explained'
-    >
-        ### System
-        A System Prompt is a specialized type of Prompt used in AI language models that 
-        sets the overall context, behavior, or persona for the AI's responses. It acts 
-        as a foundational instruction set that guides the model's conduct throughout an 
-        interaction, often without being directly visible to the end-user.
+<Accordion
+title='"User" and "System" Explained'
+>
+    ### System
+    A System Prompt is a specialized type of Prompt used in AI language models that 
+    sets the overall context, behavior, or persona for the AI's responses. It acts 
+    as a foundational instruction set that guides the model's conduct throughout an 
+    interaction, often without being directly visible to the end-user.
 
-        Learn more about [System Prompts](https://www.promptlayer.com/glossary/system-prompt).
+    Learn more about [System Prompts](https://www.promptlayer.com/glossary/system-prompt).
 
-        ### User
-        User prompts are the specific instructions or questions a user provides to an AI 
-        system to elicit a desired response. These Prompts are dynamic and vary with 
-        each interaction, reflecting the user's immediate needs and goals. They can 
-        range from simple requests for information to complex instructions for 
-        generating creative content.
+    ### User
+    User prompts are the specific instructions or questions a user provides to an AI 
+    system to elicit a desired response. These Prompts are dynamic and vary with 
+    each interaction, reflecting the user's immediate needs and goals. They can 
+    range from simple requests for information to complex instructions for 
+    generating creative content.
 
-        Learn more about [User Prompts](https://blog.promptlayer.com/system-prompt-vs-user-prompt-a-comprehensive-guide-for-ai-prompts/#what-is-a-user-prompt).
-    </Accordion>
-</AccordionGroup>
+    Learn more about [User Prompts](https://blog.promptlayer.com/system-prompt-vs-user-prompt-a-comprehensive-guide-for-ai-prompts/#what-is-a-user-prompt).
+</Accordion>
 {/* TODO: gif, showing filled in text */}
 
 ### Versioning
@@ -51,13 +49,10 @@ Each new saved edit of a Prompt creates a version.
 
 {/* TODO: gif of saving a new edit */}
 
-<AccordionGroup>
-    <Accordion
-    title='"Versioning" Explained'
-    >
-    </Accordion>
-</AccordionGroup>
-
+<Accordion
+title='"Versioning" Explained'
+>
+</Accordion>
 
 #### Diffing
 Two versions of a Prompt can be diffed by selecting a version, then hovering 
@@ -65,19 +60,17 @@ another. This will reveal the clickable "View Diff" button.
 
 {/* TODO: gif of viewing a diff between two versions */}
 
-<AccordionGroup>
-    <Accordion
-    title='"Diffing" Explained'
-    >
-    "Diffing" is a common software engineering mechanic that is employed to 
-    compare two verisons of some text. It isolates and visualizes the specific 
-    additions, deletions, and modifications made, providing granular detail on 
-    what has changed.
+<Accordion
+title='"Diffing" Explained'
+>
+"Diffing" is a common software engineering mechanic that is employed to 
+compare two verisons of some text. It isolates and visualizes the specific 
+additions, deletions, and modifications made, providing granular detail on 
+what has changed.
 
-    **When applied to Prompt Engineering, diffing helps identify precisely what 
-    modifications in a Prompt led to a different or improved AI output.**
-    </Accordion>
-</AccordionGroup>
+**When applied to Prompt Engineering, diffing helps identify precisely what 
+modifications in a Prompt led to a different or improved AI output.**
+</Accordion>
 
 #### AI Prompt Writer
 New versions of a Prompt can be generated with AI within the Editor.
@@ -91,110 +84,100 @@ Anthropic, etc. with its "Prompt Blueprint."
 
 {/* TODO: gif, demonstrating export with not-undefined data */}
 
-<AccordionGroup>
-    <Accordion
-    title='"Prompt Blueprints" are a PromptLayer format'
-    >
-    Defined by PromptLayer, "Prompt Blueprints" format the information
-    that build a Prompt (e.g.: the "User" and "System" roles) by surrounding 
-    its text.
+<Accordion
+title='"Prompt Blueprints" are a PromptLayer format'
+>
+Defined by PromptLayer, "Prompt Blueprints" format the information
+that build a Prompt (e.g.: the "User" and "System" roles) by surrounding 
+its text.
 
-    Excerpt from a Blueprint:
-    ```
+Excerpt from a Blueprint:
+```
+...
+"role": "system",
+"content": [
+  {
+    "type": "text",
+    "text": "### Bakery Chatbot System Prompt \n\n#### Persona & 
+             Goal\nYou are a friendly, sweet, and helpful 
+             assistant...",
     ...
-    "role": "system",
-    "content": [
-      {
-        "type": "text",
-        "text": "### Bakery Chatbot System Prompt \n\n#### Persona & 
-                 Goal\nYou are a friendly, sweet, and helpful 
-                 assistant...",
-        ...
-      }
-    ],
-    ...
-    ```
+  }
+],
+...
+```
 
-    Learn more about "[Prompt Blueprints](https://docs.promptlayer.com/running-requests/prompt-blueprints)"
-    and its format.
-    </Accordion>
-</AccordionGroup>
+Learn more about "[Prompt Blueprints](https://docs.promptlayer.com/running-requests/prompt-blueprints)"
+and its format.
+</Accordion>
 
 ### Releases
 Under date is the button clickable for creating a new release label.
 
-<AccordionGroup>
-    <Accordion
-    title='"Release Labeling" Explained'
-    >
-    "Releases Labeling" is a process in software engineering that provides 
-    a structured approach to building, testing, and deploying new versions of 
-    software. It supports the engineering process to ensure that software is 
-    stable, meets quality standards, and is delivered to users efficiently.
+<Accordion
+title='"Release Labeling" Explained'
+>
+"Releases Labeling" is a process in software engineering that provides 
+a structured approach to building, testing, and deploying new versions of 
+software. It supports the engineering process to ensure that software is 
+stable, meets quality standards, and is delivered to users efficiently.
 
-    **When applied to Prompt Engineering, release labels can guide the 
-    development process of Prompts to their final stage.** Labels like 
-    "testing," "under evaluation," or "finalized" provide clarity as Prompts 
-    are versioned. Labeling ensures that the correct version is being tested
-    or provided to users.
-    </Accordion>
-</AccordionGroup>
+**When applied to Prompt Engineering, release labels can guide the 
+development process of Prompts to their final stage.** Labels like 
+"testing," "under evaluation," or "finalized" provide clarity as Prompts 
+are versioned. Labeling ensures that the correct version is being tested
+or provided to users.
+</Accordion>
 
 #### A/B Testing
 Hovering a Prompt version reveals the "Start A/B Test" button.
 
 {/* TODO: image, A/B test */}
 
-<AccordionGroup>
-    <Accordion
-    title='"A/B Testing" Explained'
-    >
-    A/B Testing is a method for data-driven decision-making in digital 
-    marketing, product design, and other fields. It identifies which of two 
-    verions of a item being tested perform better by comparing measured 
-    user responses to both.
+<Accordion
+title='"A/B Testing" Explained'
+>
+A/B Testing is a method for data-driven decision-making in digital 
+marketing, product design, and other fields. It identifies which of two 
+verions of a item being tested perform better by comparing measured 
+user responses to both.
 
-    **When applied to Prompt Engineering, A/B testing can uncover subtle user
-    behavior patterns.** It can validate assumptions about phrasing or structure
-    and build a data-backed history of what language works best across different
-    contexts or models.
-    </Accordion>
-</AccordionGroup>
+**When applied to Prompt Engineering, A/B testing can uncover subtle user
+behavior patterns.** It can validate assumptions about phrasing or structure
+and build a data-backed history of what language works best across different
+contexts or models.
+</Accordion>
 
 ## Agents
 Within the home of a workspace, a new agent can be created by clicking "New" 
 then selecting "Agent."
 
-<AccordionGroup>
-    <Accordion
-    title='"Agents" Explained'
-    >
-    Agents are software programs that perceive their environment, make 
-    decisions, and take actions autonomously to achieve a goal. These agents can
-    range from simple systems like a thermostat to complex digital assistants 
-    that can execute multi-step tasks with minimal human intervention. 
+<Accordion
+title='"Agents" Explained'
+>
+Agents are software programs that perceive their environment, make 
+decisions, and take actions autonomously to achieve a goal. These agents can
+range from simple systems like a thermostat to complex digital assistants 
+that can execute multi-step tasks with minimal human intervention. 
 
-    Unlike a Prompt, an Agent can independently plan and adapt its actions to
-    achieve an objective over an extended period.
-    </Accordion>
-</AccordionGroup>
+Unlike a Prompt, an Agent can independently plan and adapt its actions to
+achieve an objective over an extended period.
+</Accordion>
 
 ## Evals
 Evaluations can be added for both Prompts and Agents.
 
-<AccordionGroup>
-    <Accordion
-    title='"Evaluations" Explained'
-    >
-    Evaluations are systematic "quality checks" for AI systems, used to measure 
-    and improve their performance, accuracy, reliability, and safety. They are a
-    set of structured processes and data used to test how well an AI performs a 
-    specific task and to identify areas for improvement, ensuring the AI works 
-    as intended and meets business goals.  
+<Accordion
+title='"Evaluations" Explained'
+>
+Evaluations are systematic "quality checks" for AI systems, used to measure 
+and improve their performance, accuracy, reliability, and safety. They are a
+set of structured processes and data used to test how well an AI performs a 
+specific task and to identify areas for improvement, ensuring the AI works 
+as intended and meets business goals.  
 
-    Learn more about "[Evaluations](https://docs.promptlayer.com/features/evaluations/overview)."
-    </Accordion>
-</AccordionGroup>
+Learn more about "[Evaluations](https://docs.promptlayer.com/features/evaluations/overview)."
+</Accordion>
 
 ### Prompts
 {/* TODO: gif, adding an evaluation to an agent */}
