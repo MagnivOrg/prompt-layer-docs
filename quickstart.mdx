@@ -203,10 +203,88 @@ Evaluations can be added for both Prompts and Agents.
 {/* TODO: gif, adding an evaluation to an agent */}
 
 ## Analytics
+Within a workspace, Analytics are viewable by clicking the "Analytics" icon.
+
+{/* TODO: gif, image of the Analtics icon */}
+
+<Accordion
+title='"Analytics" Explained'
+>
+"Analytics" describes a methodology used in software engineering to improve
+software quality and engineering processes. It uses human interpretation of 
+data, purposefully created by the software for humans to improve it.
+
+Many website developers use analytics to re-order elements on a page to ensure 
+vistors become customers, negating the visitors' confusion in purchase 
+decision-making. Websites are built with the ability to determine which 
+elements are viewed, or engaged with, allowing for optimization of thier 
+ordering or design.
+
+**When applied to Prompt Engineering, analytics can enhance how Prompts are
+designed, tested, and maintained.** Careful consideration of analytics can 
+identify what language patterns drive stronger responses and reduce costs.
+
+Learn more about "[Analytics](https://docs.promptlayer.com/why-promptlayer/analytics#analytics)."
+</Accordion>
+
 ### Logs
-### Tracing and Spans
+Within a workspace, Logs are viewable by clicking the "Live Logs" icon. Each
+request to a model creates a Log.
+
+<Accordion
+title='"Logs" Explained'
+>
+"Logs" are the composite data provided by the installation of Analytics code
+into some software. 
+
+**In the context of Prompt Engineering, this reference remains the same, but
+are of a Prompt, rather than an application.** 
+</Accordion>
+
+{/*
+#### View Logs By Prompt 
+When a prompt is selected, clicking the "Analytics & Logs" panel reveals the
+Logs.
+*/}
+
+### Tracing
+Within a workspace, Traces are viewable by clicking the "Live Logs" icon, then 
+navigating to "Trace" at the top of the logs. Selecting a Trace will reveal
+its Spans.
+
+{/* TODO: confirm/deny, the above tracing is only for Agents, thus add 
+Agents heading */}
+{/* TODO: Leave out the word "Span" in the above, and just explain it in the 
+toggle, so spans can be black boxed */}
+
+<Accordion
+title='"Tracing" and "Spans" Explained'
+>
+In software engineering, tracing is the process of tracking any action within
+some software end-to-end through the system. Spans are the individual actions
+that make up a trace. Both are created by writing software that specifically
+emit Spans to build a Trace.
+
+**When applied to Prompt Engineering, tracing and spans visualize the reasoning
+chain that form final outputs, revealing how specific components contribute to 
+them.** A pipeline must be purposefully built with this capability.
+</Accordion> 
+
 ### Observability
-{/* TODO: High Level Overview (refer to Notion doc) */}
+Logs and Traces are updated in real time, enabling Observability.
+
+<Accordion
+title='"Observability" Explained'
+>
+Observability is a sub-practice of software engineering, where engineers
+understand a system's internal state by analyzing the external data it 
+generates, such as logs, metrics, and traces.
+
+**When applied to Prompt Engineering, obervability is the basis for inferring
+how to refine a Prompt and diagnose subtle issues.**
+
+Learn more about [Observability](https://www.promptlayer.com/platform/observability).
+</Accordion> 
 
 ## Further Reading
 
