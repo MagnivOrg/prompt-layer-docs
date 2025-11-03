@@ -3828,6 +3828,19 @@
             "type": "array",
             "title": "Tags",
             "default": []
+          },
+          "folder_id": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Folder Id",
+            "description": "The ID of the folder to publish the prompt template into. If not provided, the prompt will be published to the root level."
           }
         },
         "type": "object",
