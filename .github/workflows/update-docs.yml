@@ -94,8 +94,9 @@ jobs:
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
           additional_permissions: |
-            Bash(git log:*)
-            Bash(git -C:*)
+            Bash(git -C repos/* log:*)
+            Bash(git -C repos/* show:*)
+            Bash(git -C repos/* diff:*)
           prompt: |
             Read the CLAUDE.md file in this repository for documentation update policy and guidelines.
 
