@@ -5,6 +5,11 @@ icon: "flag-checkered"
 
 Start using PromptLayer in minutes.
 
+PromptLayer unifies every step of prompt development in one place — creation, 
+versioning, testing, and evaluation — so technical and non-technical teams can 
+collaborate seamlessly. Each feature is designed to help you move faster while 
+maintaining visibility and control.
+
 <Warning>
 [An account must be created](https://dashboard.promptlayer.com/create-account)
 to use this Quickstart.
@@ -12,6 +17,11 @@ to use this Quickstart.
 
 ## Prompts
 ### Creation
+Creating a prompt in PromptLayer feels intuitive. Whether you’re an engineer or
+not, you can manage the full lifecycle visually — no code required, no setup 
+friction. Every prompt you create is instantly versioned, ready for evaluation, 
+and deployable in production environments.
+
 Within the home of a workspace, a new Prompt can be created by clicking "New" 
 then selecting "Prompt."
 
@@ -58,7 +68,15 @@ generating creative content.
 Learn more about [User Prompts](https://blog.promptlayer.com/system-prompt-vs-user-prompt-a-comprehensive-guide-for-ai-prompts/#what-is-a-user-prompt).
 </Accordion>
 
+PromptLayer treats prompts as living artifacts — structured, reusable, and ready 
+for deployment across your applications.
+
 ### Versioning
+Versioning keeps your workflow transparent and reliable. You can iterate safely, 
+track changes visually, and deploy updates to production without touching code. 
+Every version you save is recorded and ready to compare, test, and roll back 
+instantly.
+
 Each new saved edit of a Prompt creates a version.
 
 <Steps>
@@ -102,6 +120,11 @@ Prompt versions are deployed to users.
 </Accordion>
 
 #### Diffing
+Diffing makes prompt iteration measurable. You can instantly visualize what 
+changed, why it changed, and how those changes affect model outputs. It’s built 
+for experimentation — helping teams optimize quickly while staying grounded in 
+real data.
+
 Two versions of a Prompt can be diffed by selecting a version, then hovering
 another. This will reveal the clickable "View Diff" button.
 
@@ -137,6 +160,11 @@ modifications in a Prompt led to a different or improved AI output.**
 </Accordion>
 
 #### AI Prompt Writer
+The AI Prompt Writer accelerates iteration. Instead of rewriting from scratch, 
+you can describe your intention and instantly produce multiple improved drafts. 
+It turns experimentation into a creative workflow — accessible to anyone on 
+your team.
+
 New versions of a Prompt can be generated with AI within the Editor.
 
 <Steps>
@@ -153,7 +181,9 @@ New versions of a Prompt can be generated with AI within the Editor.
 </Steps>
 
 #### Switch Models
-A Prompt's model can be changed.
+PromptLayer supports flexible experimentation across providers. You can switch 
+between OpenAI, Anthropic, Gemini, or others — testing performance in one 
+workflow without rewriting prompts or updating code.
 
 <Steps>
     <Step
@@ -172,8 +202,6 @@ A Prompt's model can be changed.
         ![Prompt editor showing the Save button to confirm the new model choice](/images/quickstart/switch-model-save.png)
     </Step>
 </Steps>
-
-
 
 #### Prompt Blueprint
 Prompts can be exported to be utilized within other applications like ChatGPT,
@@ -220,6 +248,8 @@ Learn more about "[Prompt Blueprints](https://docs.promptlayer.com/running-reque
 and its format.
 </Accordion>
 
+Blueprints make your work portable.
+
 ### Releases
 Under the date is the button clickable for creating a new release label.
 
@@ -257,6 +287,10 @@ are versioned. Labeling ensures that the correct version is being tested
 or provided to users.
 </Accordion>
 
+Release labels turn version control into an organized production pipeline. You 
+can tag versions as *testing*, *staging*, or *production*, giving teams clear 
+visibility into progress and deployment state.
+
 #### A/B Testing
 Hovering a Prompt version reveals the "Start A/B Test" button.
 
@@ -288,9 +322,17 @@ and build a data-backed history of what language works best across different
 contexts or models.
 </Accordion>
 
+PromptLayer simplifies A/B testing — compare outputs, validate assumptions, and 
+promote winning versions directly from your dashboard. Each test can run on live 
+traffic or pre-set datasets, turning intuition into measurable results.
+
 ## Agents
 Within the home of a workspace, a new agent can be created by clicking "New"
 then selecting "Agent."
+
+Agents extend your prompts into orchestrated systems. You can chain prompts, 
+connect tools, and design complex reasoning flows visually — all tracked, 
+versioned, and auditable in one interface.
 
 <Steps>
     <Step
@@ -330,11 +372,19 @@ Evaluations can be added for both Prompts and Agents.
 and improve their performance, accuracy, reliability, and safety. They are a
 set of structured processes and data used to test how well an AI performs a
 specific task and to identify areas for improvement, ensuring the AI works 
-as intended and meets business goals.  
+as intended and meets business goals.
+
+Evals help you measure performance with precision. You can run structured tests,
+track metrics, and benchmark model behavior across datasets or live sessions. 
+Everything you need to improve quality is built in — no setup required.
 
 Learn more about [Evaluations](https://docs.promptlayer.com/features/evaluations/overview).
 
 ## Analytics
+Analytics give teams visibility into what’s working. Cost, latency, and quality 
+metrics update in real time, helping you identify bottlenecks and optimize 
+faster — all within the same interface you use to build.
+
 Within a workspace, Analytics are viewable by clicking the "Analytics" icon.
 
 <Steps>
@@ -399,7 +449,15 @@ into some software.
 are of a Prompt, rather than an application.** 
 </Accordion>
 
+Logs provide full traceability of every request. You can inspect inputs, 
+outputs, latency, and cost across environments to understand exactly how your 
+models behave in production.
+
 #### View Logs By Prompt
+Detailed per-prompt logs make debugging seamless. You can move from an issue 
+report to a live fix in just a few clicks — inspect, replay, and deploy 
+improvements instantly.
+
 When a prompt is selected, clicking the "Analytics & Logs" panel reveals the
 Logs.
 
@@ -417,6 +475,10 @@ Logs.
 </Steps>
 
 ### Tracing
+Tracing provides end-to-end visibility. You can see how requests flow through 
+agents and prompts, locate inefficiencies, and understand model reasoning at a 
+granular level — all in real time.
+
 Within a workspace, Traces are viewable by clicking the "Live Logs" icon, then
 navigating to "Trace" at the top of the logs. Selecting a Trace will reveal
 its Spans.
@@ -468,6 +530,10 @@ generates, such as logs, metrics, and traces.
 how to refine a Prompt and diagnose subtle issues.**
 
 Learn more about [Observability](https://www.promptlayer.com/platform/observability).
+
+Observability in PromptLayer connects every layer of your LLM stack — from 
+dataset to output — so you can diagnose, optimize, and refine continuously. It’s 
+built to help teams learn from data and scale responsibly.
 
 ## Further Reading
 - [Quickstart - Pt. 2](https://docs.promptlayer.com/quickstart-part-two)
