@@ -6,5 +6,8 @@ node_modules/
 .vscode
 repos/
 output.txt
-.envintegration_tests/api_keys.py
+.env
+
+# API Keys and sensitive testing files
+integration_tests/api_keys.py
 integration_tests/__pycache__/
