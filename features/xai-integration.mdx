@@ -32,7 +32,7 @@ For easier model selection in the Playground and Prompt Registry, you can create
 3. Click **Create Custom Model**
 4. Configure each model:
    - **Provider**: Select the xAI provider you created
-   - **Model Name**: Enter the Grok model identifier (e.g., `grok-3`)
+   - **Model Name**: Enter the Grok model identifier (e.g., `grok-4-fast-reasoning`, `grok-3`)
    - **Display Name**: A friendly name like "Grok 2" or "Grok Beta"
    - **Model Type**: Chat
 5. Repeat for each model you want to use
@@ -45,9 +45,11 @@ This allows you to select Grok models directly from the dropdown instead of typi
 
 xAI regularly updates their model offerings. Example models include:
 
-- **`grok-3`**: Latest Grok model with advanced reasoning capabilities
+- **`grok-4-fast-reasoning`**: Latest Grok 4 with fast reasoning (2M context)
+- **`grok-4-fast-non-reasoning`**: Grok 4 optimized for speed (2M context)
+- **`grok-code-fast-1`**: Specialized for code generation tasks
+- **`grok-3`**: Grok 3 with advanced reasoning capabilities
 - **`grok-2-vision-1212`**: Grok 2 with vision capabilities
-- **`grok-2-1212`**: Previous generation Grok 2 model
 
 For the complete and up-to-date list of available models and their capabilities, visit [xAI's official model documentation](https://docs.x.ai/docs/models).
 
@@ -83,34 +85,29 @@ Some OpenAI parameters may not be compatible with Grok models. If you encounter 
 
 ## SDK Usage
 
-You can also use Grok models programmatically with the PromptLayer SDK:
+Once you've set up your xAI custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
 
 ```python
 from promptlayer import PromptLayer
 
 promptlayer = PromptLayer(api_key="pl_****")
 
-# Use Grok through custom provider
-OpenAI = promptlayer.openai.OpenAI
-
-client = OpenAI(
-    base_url="https://api.x.ai/v1",
-    api_key="your_xai_api_key"
+# Run a prompt template that uses your xAI custom provider
+# (Your template should be configured to use a Grok model like grok-4-fast-reasoning)
+response = promptlayer.run(
+    prompt_name="your-grok-prompt",
+    input_variables={"topic": "quantum computing"}
 )
 
-response = client.chat.completions.create(
-    model="grok-3",
-    messages=[
-        {"role": "user", "content": "Explain quantum computing in simple terms"}
-    ]
-    # Note: Avoid unsupported parameters like 'seed'
-)
+# Access the response
+print(response["raw_response"].choices[0].message.content)
 
-print(response.choices[0].message.content)
+# The request is automatically logged with request_id
+print(f"Request ID: {response['request_id']}")
 ```
 
 <Info>
-Because xAI uses OpenAI-compatible endpoints, you can use Grok with most PromptLayer features that support OpenAI, including streaming and prompt templates. Just be mindful of parameter compatibility differences.
+Using `pl.run()` ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use, and it handles any parameter compatibility differences automatically based on your template configuration.
 </Info>
 
 ## Related Documentation

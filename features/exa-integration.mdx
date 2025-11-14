@@ -82,35 +82,28 @@ Exa models in PromptLayer support:
 
 ## SDK Usage
 
-You can also use Exa models programmatically with the PromptLayer SDK:
+Once you've set up your Exa custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
 
 ```python
 from promptlayer import PromptLayer
 
 promptlayer = PromptLayer(api_key="pl_****")
 
-# Use Exa through custom provider
-OpenAI = promptlayer.openai.OpenAI
-
-client = OpenAI(
-    base_url="https://api.exa.ai",
-    api_key="your_exa_api_key"
+# Run a prompt template that uses your Exa custom provider
+response = promptlayer.run(
+    prompt_name="your-exa-prompt",
+    input_variables={"query": "latest developments in AI safety"}
 )
 
-response = client.chat.completions.create(
-    model="exa-research",
-    messages=[
-        {"role": "user", "content": "What are the latest developments in AI safety?"}
-    ]
-)
+# Access the response
+print(response["raw_response"].choices[0].message.content)
 
-# Exa returns multiple choices - the final answer is in the last choice
-final_response = [choice for choice in response.choices if choice.finish_reason == "stop"][0]
-print(final_response.message.content)
+# The request is automatically logged with request_id
+print(f"Request ID: {response['request_id']}")
 ```
 
 <Info>
-Because Exa uses OpenAI-compatible endpoints, you can use it with any PromptLayer feature that supports OpenAI, including streaming, prompt templates, and `pl.run()`.
+Using `pl.run()` ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
 </Info>
 
 ## Related Documentation
