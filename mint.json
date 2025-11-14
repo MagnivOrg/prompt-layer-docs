@@ -87,9 +87,9 @@
           "pages": [
             "features/supported-providers",
             "features/custom-providers",
-            "features/openrouter-integration",
             "features/exa-integration",
-            "features/xai-integration"
+            "features/xai-integration",
+            "features/openrouter-integration"
           ],
           "icon": "plug"
         },
