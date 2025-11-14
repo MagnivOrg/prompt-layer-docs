@@ -1,0 +1,120 @@
+---
+title: "xAI (Grok)"
+icon: "bolt"
+---
+
+[xAI](https://x.ai/) provides the Grok family of large language models that can be integrated with PromptLayer through custom providers. Grok models offer advanced reasoning capabilities and real-time knowledge through X (Twitter) integration.
+
+## Setting Up xAI as a Custom Provider
+
+To use Grok models in PromptLayer:
+
+1. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
+2. Click **Create Custom Provider**
+3. Configure the provider with the following details:
+   - **Name**: xAI (or your preferred name)
+   - **Client**: OpenAI
+   - **Base URL**: `https://api.x.ai/v1`
+   - **API Key**: Your xAI API key (get one at [x.ai](https://x.ai))
+
+**TODO: ADD SCREENSHOT OF XAI CUSTOM PROVIDER MODAL**
+
+<Note>
+xAI uses OpenAI-compatible endpoints, which is why we select OpenAI as the client type.
+</Note>
+
+## Creating Custom Models (Recommended)
+
+For easier model selection in the Playground and Prompt Registry, you can create custom models:
+
+1. In **Settings → Custom Providers and Models**, find your xAI provider in the list
+2. Click on the xAI row to expand it
+3. Click **Create Custom Model**
+4. Configure each model:
+   - **Provider**: Select the xAI provider you created
+   - **Model Name**: Enter the Grok model identifier (e.g., `grok-2-1212`)
+   - **Display Name**: A friendly name like "Grok 2" or "Grok Beta"
+   - **Model Type**: Chat
+5. Repeat for each model you want to use
+
+**TODO: ADD SCREENSHOT OF CREATING XAI CUSTOM MODEL**
+
+This allows you to select Grok models directly from the dropdown instead of typing them manually.
+
+## Available Models
+
+xAI regularly updates their model offerings. Example models include:
+
+- **`grok-2-1212`**: Latest Grok 2 model with improved reasoning
+- **`grok-2-vision-1212`**: Grok 2 with vision capabilities
+- **`grok-beta`**: Beta access to experimental features
+
+For the complete and up-to-date list of available models and their capabilities, visit [xAI's official model documentation](https://docs.x.ai/docs/models).
+
+## Using Grok in PromptLayer
+
+### In the Playground
+
+After setup, you can use Grok models in the PromptLayer Playground:
+
+1. Open the Playground
+2. Select your xAI provider from the provider dropdown
+3. Choose your desired Grok model
+4. Start querying with your prompts
+
+**TODO: ADD SCREENSHOT OF USING GROK IN PLAYGROUND**
+
+### In the Prompt Registry
+
+Grok models work seamlessly with PromptLayer's Prompt Registry:
+
+- Select Grok models when creating or editing prompt templates
+- Use templates with Grok models in evaluations
+- Track and analyze xAI API usage alongside other providers
+
+### Parameter Compatibility
+
+<Warning>
+Some OpenAI parameters may not be compatible with Grok models. If you encounter errors:
+- Remove unsupported parameters like `seed`
+- Check [xAI's documentation](https://docs.x.ai/docs/models) for supported parameters
+- Use the Playground to test parameter compatibility before deploying
+</Warning>
+
+## SDK Usage
+
+You can also use Grok models programmatically with the PromptLayer SDK:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
+
+# Use Grok through custom provider
+OpenAI = promptlayer.openai.OpenAI
+
+client = OpenAI(
+    base_url="https://api.x.ai/v1",
+    api_key="your_xai_api_key"
+)
+
+response = client.chat.completions.create(
+    model="grok-2-1212",
+    messages=[
+        {"role": "user", "content": "Explain quantum computing in simple terms"}
+    ]
+    # Note: Avoid unsupported parameters like 'seed'
+)
+
+print(response.choices[0].message.content)
+```
+
+<Info>
+Because xAI uses OpenAI-compatible endpoints, you can use Grok with most PromptLayer features that support OpenAI, including streaming and prompt templates. Just be mindful of parameter compatibility differences.
+</Info>
+
+## Related Documentation
+
+- [Custom Providers](/features/custom-providers)
+- [Supported Providers](/features/supported-providers)
+- [xAI Official Documentation](https://docs.x.ai/docs/models)
