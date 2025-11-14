@@ -1,0 +1,107 @@
+---
+title: "OpenRouter"
+icon: "route"
+---
+
+[OpenRouter](https://openrouter.ai) provides access to a wide variety of cutting-edge models through a unified API, including models like DeepSeek, Claude, GPT-4, and many others that may not be available through standard providers.
+
+## Setting Up OpenRouter as a Custom Provider
+
+To use OpenRouter models in PromptLayer:
+
+1. **Get an OpenRouter API Key**: Sign up at [OpenRouter](https://openrouter.ai) and obtain your API key from their dashboard
+2. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
+3. Click **Create Custom Provider**
+4. Configure the provider with the following details:
+   - **Name**: OpenRouter
+   - **Client**: OpenAI (OpenRouter uses OpenAI-compatible endpoints)
+   - **Base URL**: `https://openrouter.ai/api/v1`
+   - **API Key**: Your OpenRouter API key
+
+## Creating Custom Models (Recommended)
+
+For easier model selection in the Playground and Prompt Registry, you can save specific OpenRouter models:
+
+1. In **Settings → Custom Providers and Models**, find your OpenRouter provider in the list
+2. Click on the OpenRouter row to expand it
+3. Click **Create Custom Model** in the expanded section
+4. Configure each model:
+   - **Model Name**: Enter the OpenRouter model identifier (e.g., `deepseek/deepseek-chat`, `anthropic/claude-3.5-sonnet`)
+   - **Display Name**: A friendly name like "DeepSeek Chat" or "Claude 3.5 Sonnet"
+   - **Model Type**: Chat
+5. Repeat for each model you want to use
+
+The full list of available models can be found in [OpenRouter's documentation](https://openrouter.ai/docs#models).
+
+## Available Models
+
+OpenRouter regularly updates their model offerings and provides access to many providers. Example models include:
+
+- **`deepseek/deepseek-chat`**: DeepSeek's latest chat model
+- **`anthropic/claude-3.5-sonnet`**: Claude 3.5 Sonnet via OpenRouter
+- **`openai/gpt-4-turbo`**: GPT-4 Turbo via OpenRouter
+- **`google/gemini-pro-1.5`**: Gemini Pro 1.5 via OpenRouter
+- **`meta-llama/llama-3.1-405b`**: Llama 3.1 405B via OpenRouter
+
+For the complete and up-to-date list of available models, visit [OpenRouter's models documentation](https://openrouter.ai/docs#models).
+
+## Using OpenRouter in PromptLayer
+
+### In the Playground
+
+After setup, you can use OpenRouter models in the PromptLayer Playground:
+
+1. Open the Playground
+2. Select your OpenRouter provider from the provider dropdown
+3. Choose your desired model (or type the model identifier)
+4. Start querying with your prompts
+
+### In the Prompt Registry
+
+OpenRouter models work seamlessly with PromptLayer's Prompt Registry:
+
+- Select OpenRouter models when creating or editing prompt templates
+- Use templates with OpenRouter models in evaluations
+- Track and analyze OpenRouter API usage alongside other providers
+
+### Key Benefits
+
+OpenRouter provides:
+
+- **Wide Model Selection**: Access to models from multiple providers through one API
+- **Automatic Rate Limiting and Failover**: OpenRouter handles rate limiting between providers
+- **Cost Optimization**: Compare pricing across different models and providers
+- **Model Availability**: Access to models that might not be directly available in your region
+
+## SDK Usage
+
+Once you've set up your OpenRouter custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
+
+# Run a prompt template that uses your OpenRouter custom provider
+response = promptlayer.run(
+    prompt_name="your-openrouter-prompt",
+    input_variables={"query": "your input"}
+)
+
+# Access the response
+print(response["raw_response"].choices[0].message.content)
+
+# The request is automatically logged with request_id
+print(f"Request ID: {response['request_id']}")
+```
+
+<Info>
+Using [`promptlayer.run()`](/running-requests/promptlayer-run) ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
+</Info>
+
+## Related Documentation
+
+- [Custom Providers](/features/custom-providers)
+- [Supported Providers](/features/supported-providers)
+- [OpenRouter Official Documentation](https://openrouter.ai/docs)
+
