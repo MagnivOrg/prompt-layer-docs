@@ -6,4 +6,5 @@ node_modules/
 .vscode
 repos/
 output.txt
-.env
+.envintegration_tests/api_keys.py
+integration_tests/__pycache__/
