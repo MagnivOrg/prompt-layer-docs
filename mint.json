@@ -81,9 +81,18 @@
           ],
           "icon": "cassette-tape"
         },
-        "features/custom-providers",
-        "features/supported-providers",
         "onboarding-guides/deployment-strategies",
+        {
+          "group": "Models & Integrations",
+          "pages": [
+            "features/supported-providers",
+            "features/custom-providers",
+            "features/exa-integration",
+            "features/xai-integration",
+            "features/openrouter-integration"
+          ],
+          "icon": "plug"
+        },
         "features/faq"
       ]
     },

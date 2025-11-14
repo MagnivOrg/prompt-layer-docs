@@ -47,39 +47,8 @@ After setup, your custom models seamlessly integrate with PromptLayer's features
 
 Custom providers give you complete control over your model infrastructure while maintaining all the benefits of PromptLayer's prompt management and observability features.
 
-## Examples
+## Example Integrations
 
-### OpenRouter
+Looking for specific integration guides? See our detailed setup instructions for [OpenRouter](/features/openrouter-integration), [Exa](/features/exa-integration), and [xAI (Grok)](/features/xai-integration).
 
-[OpenRouter](https://openrouter.ai) provides access to a wide variety of cutting-edge models through a unified API, including models like DeepSeek, Claude, GPT-4, and many others that may not be available through standard providers.
-
-**Configuration Instructions:**
-
-1. **Get an OpenRouter API Key**: Sign up at [OpenRouter](https://openrouter.ai) and obtain your API key from their dashboard.
-
-2. **Add OpenRouter as a Custom Provider** in PromptLayer:
-   - Navigate to **Settings → Custom Providers and Models**
-   - Click **Add Custom Provider**
-   - Configure with these settings:
-     - **Name**: OpenRouter
-     - **Client**: OpenAI (OpenRouter uses OpenAI-compatible endpoints)
-     - **Base URL**: `https://openrouter.ai/api/v1`
-     - **API Key**: Your OpenRouter API key
-
-3. **Save Custom OpenRouter Models** (Recommended):
-   - In **Settings → Custom Providers and Models**, find your OpenRouter provider in the list
-   - Click on the OpenRouter row to expand it
-   - Click **Create Custom Model** in the expanded section
-   - Configure each model:
-     - **Model Name**: Enter the OpenRouter model identifier (e.g., `deepseek/deepseek-chat`, `anthropic/claude-3.5-sonnet`)
-     - **Display Name**: A friendly name like "DeepSeek Chat" or "Claude 3.5 Sonnet"
-     - **Model Type**: Choose "Chat" for most models
-   - Repeat for each model you want to use
-   - The full list of available models can be found in [OpenRouter's documentation](https://openrouter.ai/docs#models)
-
-4. **Use Your Models**:
-   - Your custom models will now appear in the model dropdown in the Playground
-   - Select your models directly from the dropdown - no manual typing needed
-   - All requests will be routed through OpenRouter
-
-OpenRouter automatically handles rate limiting and failover between providers, making it an excellent choice for accessing multiple models through a single integration.
+Follow the steps above to configure any OpenAI-compatible provider as a custom provider in PromptLayer.

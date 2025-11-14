@@ -1,0 +1,107 @@
+---
+title: "Exa"
+icon: "magnifying-glass"
+---
+
+[Exa](https://exa.ai/) provides AI-powered web search and research models that can be integrated with PromptLayer through custom providers. Exa's models excel at finding relevant information, generating research reports, and providing cited answers from web sources.
+
+## Setting Up Exa as a Custom Provider
+
+To use Exa models in PromptLayer:
+
+1. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
+2. Click **Create Custom Provider**
+3. Configure the provider with the following details:
+   - **Name**: Exa (or your preferred name)
+   - **Client**: OpenAI
+   - **Base URL**: `https://api.exa.ai`
+   - **API Key**: Your Exa API key (get one at [exa.ai](https://exa.ai))
+
+<Note>
+Exa uses OpenAI-compatible endpoints, which is why we select OpenAI as the client type.
+</Note>
+
+## Creating Custom Models (Recommended)
+
+For easier model selection in the Playground and Prompt Registry, you can create custom models:
+
+1. In **Settings → Custom Providers and Models**, find your Exa provider in the list
+2. Click on the Exa row to expand it
+3. Click **Create Custom Model**
+4. Configure each model:
+   - **Provider**: Select the Exa provider you created
+   - **Model Name**: Enter the Exa model identifier (e.g., `exa`, `exa-research`)
+   - **Display Name**: A friendly name like "Exa Answer" or "Exa Research"
+   - **Model Type**: Chat
+5. Repeat for each model you want to use
+
+This allows you to select Exa models directly from the dropdown instead of typing them manually.
+
+## Available Models
+
+Exa regularly updates their model offerings. Example models include:
+
+- **`exa`**: Fast answer generation with web search
+- **`exa-research`**: In-depth research with comprehensive citations
+- **`exa-research-pro`**: Advanced research capabilities
+
+For the complete and up-to-date list of available models, visit [Exa's official documentation](https://docs.exa.ai/reference/openai-sdk).
+
+## Using Exa in PromptLayer
+
+### In the Playground
+
+After setup, you can use Exa models in the PromptLayer Playground:
+
+1. Open the Playground
+2. Select your Exa provider from the provider dropdown
+3. Choose your desired Exa model
+4. Start querying with your prompts
+
+### In the Prompt Registry
+
+Exa models work seamlessly with PromptLayer's Prompt Registry:
+
+- Select Exa models when creating or editing prompt templates
+- Use templates with Exa models in evaluations
+- Track and analyze Exa API usage alongside other providers
+
+### Key Features
+
+Exa models in PromptLayer support:
+
+- **Citations**: Exa responses include source citations for research and fact-checking
+- **Research Capabilities**: Deep web search for comprehensive answers
+- **Web Search Integration**: Real-time access to current web information
+
+## SDK Usage
+
+Once you've set up your Exa custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
+
+# Run a prompt template that uses your Exa custom provider
+response = promptlayer.run(
+    prompt_name="your-exa-prompt",
+    input_variables={"query": "latest developments in AI safety"}
+)
+
+# Access the response
+print(response["raw_response"].choices[0].message.content)
+
+# The request is automatically logged with request_id
+print(f"Request ID: {response['request_id']}")
+```
+
+<Info>
+Using [`promptlayer.run()`](/running-requests/promptlayer-run) ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
+</Info>
+
+## Related Documentation
+
+- [Custom Providers](/features/custom-providers)
+- [Supported Providers](/features/supported-providers)
+- [Exa Official Documentation](https://docs.exa.ai/reference/openai-sdk)

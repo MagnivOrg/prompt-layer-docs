@@ -7,3 +7,7 @@ node_modules/
 repos/
 output.txt
 .env
+
+# API Keys and sensitive testing files
+integration_tests/api_keys.py
+integration_tests/__pycache__/
