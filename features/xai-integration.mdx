@@ -32,7 +32,7 @@ For easier model selection in the Playground and Prompt Registry, you can create
 3. Click **Create Custom Model**
 4. Configure each model:
    - **Provider**: Select the xAI provider you created
-   - **Model Name**: Enter the Grok model identifier (e.g., `grok-2-1212`)
+   - **Model Name**: Enter the Grok model identifier (e.g., `grok-3`)
    - **Display Name**: A friendly name like "Grok 2" or "Grok Beta"
    - **Model Type**: Chat
 5. Repeat for each model you want to use
@@ -45,9 +45,9 @@ This allows you to select Grok models directly from the dropdown instead of typi
 
 xAI regularly updates their model offerings. Example models include:
 
-- **`grok-2-1212`**: Latest Grok 2 model with improved reasoning
+- **`grok-3`**: Latest Grok model with advanced reasoning capabilities
 - **`grok-2-vision-1212`**: Grok 2 with vision capabilities
-- **`grok-beta`**: Beta access to experimental features
+- **`grok-2-1212`**: Previous generation Grok 2 model
 
 For the complete and up-to-date list of available models and their capabilities, visit [xAI's official model documentation](https://docs.x.ai/docs/models).
 
@@ -99,7 +99,7 @@ client = OpenAI(
 )
 
 response = client.chat.completions.create(
-    model="grok-2-1212",
+    model="grok-3",
     messages=[
         {"role": "user", "content": "Explain quantum computing in simple terms"}
     ]
