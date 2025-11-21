@@ -14,6 +14,8 @@ When an event occurs, we send a POST request with a payload in this structure:
   "event_type": "string",
   "details": "object",
   "user_id": "number",
+  "user_name": "string or null",
+  "user_email": "string or null",
   "workspace_id": "number",
   "timestamp": "ISO 8601 format timestamp",
 }
@@ -32,7 +34,10 @@ We notify you for these events:
 | `prompt_template_label_moved`        | When a release label is moved between prompt template versions. | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`old_prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
 | `prompt_template_updated`            | When a snippet imported in a prompt template is updated.        | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li></ul> |
 | `agent_run_finished`                 | When an agent (workflow) run is completed. <br/><br/> Note: This event may fire multiple times for the same execution and is not triggered for runs from the dashboard, only when called via SDK or API. | <ul><li>`agent_name` (string)</li><li>`agent_id` (number)</li><li>`agent_execution_id` (number)</li></ul> |
-| `report_finished`                    | When a evaluation report is completed. | <ul><li>`report_id` (number)</li><li>`report_name` (string)</li></ul> | 
+| `report_finished`                    | When a evaluation report is completed. | <ul><li>`report_id` (number)</li><li>`report_name` (string)</li></ul> |
+| `dataset_version_created_by_file`    | When a dataset version is successfully created from a file upload. | <ul><li>`dataset_id` (number)</li><li>`dataset_version_number` (number)</li></ul> |
+| `dataset_version_created_by_file_failed` | When dataset file processing fails. | <ul><li>`error_message` (string)</li></ul> |
+| `dataset_version_created_from_filter_params` | When a dataset version is created from filter parameters. | <ul><li>`dataset_id` (number)</li><li>`rows_added` (number)</li><li>`dataset_version_number` (number)</li></ul> | 
 
 ### Example Payload
 
@@ -47,6 +52,8 @@ We notify you for these events:
     "prompt_template_label":"prod"
   },
   "user_id":1,
+  "user_name":"John Doe",
+  "user_email":"john.doe@example.com",
   "workspace_id":1,
   "timestamp":"2023-12-01T22:05:57.924833"
 }
