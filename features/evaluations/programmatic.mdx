@@ -34,6 +34,150 @@ Run scheduled evaluations to ensure nothing has changed in your production syste
 
 Trigger evaluations in your CI/CD pipeline (GitHub, GitLab, etc.) whenever relevant PRs are created. Wait for the evaluation score before proceeding with deployment, to make sure that your changes do not break anything.
 
+## Complete Example: Building an Evaluation Pipeline
+
+Here's a complete example of building an evaluation pipeline from scratch using the API:
+
+```python
+import requests
+import json
+
+API_KEY = "your_api_key"
+BASE_URL = "https://api.promptlayer.com"
+
+headers = {
+    "X-API-Key": API_KEY,
+    "Content-Type": "application/json"
+}
+
+# Step 1: Create a dataset group
+dataset_group_response = requests.post(
+    f"{BASE_URL}/api/public/v2/dataset-groups",
+    headers=headers,
+    json={"name": "QA Test Dataset Group"}
+)
+dataset_group_id = dataset_group_response.json()["id"]
+
+# Step 2: Create a dataset version (from CSV)
+csv_content = """question,expected_answer
+What is the capital of France?,Paris
+Who wrote Romeo and Juliet?,William Shakespeare
+What is 2+2?,4"""
+
+import base64
+encoded_csv = base64.b64encode(csv_content.encode()).decode()
+
+dataset_response = requests.post(
+    f"{BASE_URL}/api/public/v2/dataset-versions/from-file",
+    headers=headers,
+    json={
+        "dataset_group_id": dataset_group_id,
+        "file_name": "test_qa.csv",
+        "file_content_base64": encoded_csv
+    }
+)
+dataset_id = dataset_response.json()["id"]
+
+# Step 3: Create the evaluation pipeline (report)
+report_response = requests.post(
+    f"{BASE_URL}/reports",
+    headers=headers,
+    json={
+        "dataset_group_id": dataset_group_id,
+        "name": "QA Evaluation Pipeline"
+    }
+)
+report_id = report_response.json()["report_id"]
+
+# Step 4: Add columns to the pipeline
+
+# Column 1: Prompt Template to generate answers
+requests.post(
+    f"{BASE_URL}/report-columns",
+    headers=headers,
+    json={
+        "report_id": report_id,
+        "column_type": "PROMPT_TEMPLATE",
+        "name": "AI Answer",
+        "configuration": {
+            "template": {
+                "name": "qa_answerer",
+                "version_number": null
+            },
+            "prompt_template_variable_mappings": {
+                "question": "question"  # Maps to dataset column
+            },
+            "engine": {
+                "provider": "openai",
+                "model": "gpt-4",
+                "parameters": {"temperature": 0.3}
+            }
+        }
+    }
+)
+
+# Column 2: Compare AI answer with expected answer
+requests.post(
+    f"{BASE_URL}/report-columns",
+    headers=headers,
+    json={
+        "report_id": report_id,
+        "column_type": "COMPARE",
+        "name": "Exact Match",
+        "configuration": {
+            "source1": "AI Answer",
+            "source2": "expected_answer"
+        }
+    }
+)
+
+# Column 3: LLM assertion for semantic correctness
+requests.post(
+    f"{BASE_URL}/report-columns",
+    headers=headers,
+    json={
+        "report_id": report_id,
+        "column_type": "LLM_ASSERTION",
+        "name": "Semantically Correct",
+        "configuration": {
+            "source": "AI Answer",
+            "assertion": "Is this answer semantically equivalent to the expected answer?"
+        }
+    }
+)
+
+# Step 5: Run the evaluation
+run_response = requests.post(
+    f"{BASE_URL}/reports/{report_id}/run",
+    headers=headers,
+    json={
+        "name": "QA Eval Run #1",
+        "dataset_id": dataset_id
+    }
+)
+
+# Step 6: Poll for completion
+import time
+while True:
+    status_response = requests.get(
+        f"{BASE_URL}/reports/{report_id}",
+        headers=headers
+    )
+    status = status_response.json()["status"]
+    if status == "COMPLETED":
+        break
+    print(f"Status: {status}, waiting...")
+    time.sleep(5)
+
+# Step 7: Get the final score
+score_response = requests.get(
+    f"{BASE_URL}/reports/{report_id}/score",
+    headers=headers
+)
+score = score_response.json()["score"]["overall_score"]
+print(f"Evaluation complete! Score: {score}%")
+```
+
 ## Step-by-Step Implementation
 
 ### Step 1: Create a Dataset
@@ -100,62 +244,524 @@ Upload a CSV or JSON file to create a dataset:
 
 ### Step 2: Create an Evaluation Pipeline
 
-We highly reccomend building an evaluation pipeline via our dashboard. You can still create your evaluation pipeline (report) by making a POST request to `/reports` with a name and dataset ID.
-But this method is less user-friendly and does not provide the same level of configuration options as the dashboard.
+Create your evaluation pipeline (called a "report" in the API) by making a POST request to `/reports`:
 
-#### Example Payload
+- **Endpoint**: `POST /reports`
+- **Description**: Creates a new evaluation pipeline
+- **Authentication**: JWT or API key
+- **Docs Link**: [Create Reports](../../reference/create-reports)
+
+#### Request Payload
 
 ```json
 {
-  "name": "Nightly Production Evaluation",
-  "test_dataset_id": 123
+  "dataset_group_id": 123,           // Required: ID of the dataset group
+  "name": "My Evaluation Pipeline",  // Optional: Pipeline name (auto-generated if not provided)
+  "folder_id": null,                 // Optional: Folder ID for organization
+  "dataset_version_number": null     // Optional: Specific version (uses latest if not specified)
+}
+```
+
+#### Response
+
+```json
+{
+  "success": true,
+  "report_id": 456  // Use this ID for adding columns and running evaluations
 }
 ```
 
 ### Step 3: Configure Pipeline Steps
 
-The evaluation pipeline consists of steps, each referred to as a "report column". Configure these by making POST requests to `/report-columns` for each desired step.
+The evaluation pipeline consists of steps, each referred to as a "report column". Columns execute sequentially from left to right, where each column can reference the outputs of previous columns.
 
-#### Example: Prompt Template Step
+- **Endpoint**: `POST /report-columns`
+- **Description**: Add a step to your evaluation pipeline
+- **Authentication**: JWT or API key
 
-```json
-{
-    "column_type": "PROMPT_TEMPLATE",
-    "name": "prompt response",
-    "configuration": {
-        "engine": {
-            "provider": "openai",
-            "model": "gpt-4",
-            "parameters": {
-                "temperature": 0.1,
-                "max_tokens": 512
-            }
-        },
-        "template": {
-            "name": "my_prompt_template",
-            "version_number": null
-        },
-        "prompt_template_variable_mappings": {
-            "query": "variable.query",
-            "context": "variable.context"
-        }
-    },
-    "report_id": report_id
-}
-```
-
-#### Example: API Endpoint Step
+#### Basic Request Structure
 
 ```json
 {
-    "column_type": "ENDPOINT",
-    "name": "RAG-Enhancement",
-    "configuration": {
-        "url": "https://api.example.com/enhance"
-    },
-    "report_id": report_id
+  "report_id": 456,              // Required: The report ID from Step 2
+  "column_type": "COLUMN_TYPE",  // Required: Type of evaluation (see Column Types Reference)
+  "name": "Column Name",         // Required: Display name for this step
+  "configuration": {},           // Required: Type-specific configuration
+  "position": null               // Optional: Column position (auto-assigned if not provided)
 }
 ```
+
+## Column Types Reference
+
+Below is a complete reference of all available column types and their configurations. Each column type serves a specific purpose in your evaluation pipeline.
+
+### Primary Column Types
+
+#### PROMPT_TEMPLATE
+Executes a prompt template from your Prompt Registry.
+
+```json
+{
+  "column_type": "PROMPT_TEMPLATE",
+  "name": "Generate Response",
+  "configuration": {
+    "template": {
+      "name": "my_prompt_template",     // Required: Template name
+      "version_number": null,            // Optional: Specific version (null for latest)
+      "label": null                      // Optional: Use specific label
+    },
+    "prompt_template_variable_mappings": {
+      "input_var": "column_name"        // Map template variables to columns
+    },
+    "engine": {                         // Optional: Override template's default engine
+      "provider": "openai",
+      "model": "gpt-4",
+      "parameters": {
+        "temperature": 0.7,
+        "max_tokens": 500
+      }
+    },
+    "verbose": false,                   // Optional: Include detailed response info
+    "return_template_only": false       // Optional: Return template without executing
+  },
+  "report_id": 456
+}
+```
+
+#### ENDPOINT
+Calls a custom API endpoint with data from previous columns.
+
+```json
+{
+  "column_type": "ENDPOINT",
+  "name": "Custom Evaluator",
+  "configuration": {
+    "url": "https://api.example.com/evaluate",  // Required: Endpoint URL
+    "headers": {                                 // Optional: Custom headers
+      "Authorization": "Bearer token"
+    },
+    "timeout": 30                                // Optional: Timeout in seconds
+  },
+  "report_id": 456
+}
+```
+
+#### MCP
+Executes functions on a Model Context Protocol (MCP) server.
+
+```json
+{
+  "column_type": "MCP",
+  "name": "MCP Function",
+  "configuration": {
+    "server_url": "https://mcp.example.com",    // Required: MCP server URL
+    "function_name": "analyze_text",            // Required: Function to execute
+    "auth": {                                    // Optional: Authentication
+      "type": "bearer",
+      "token": "your_token"
+    },
+    "input_mappings": {                         // Map function inputs to columns
+      "text": "response_column"
+    }
+  },
+  "report_id": 456
+}
+```
+
+#### HUMAN
+Allows manual human input for evaluation.
+
+```json
+{
+  "column_type": "HUMAN",
+  "name": "Human Review",
+  "configuration": {
+    "input_type": "text",              // Required: "text" or "numeric"
+    "prompt": "Rate the response quality",  // Optional: Instructions for reviewer
+    "min": 0,                          // For numeric: minimum value
+    "max": 10                          // For numeric: maximum value
+  },
+  "report_id": 456
+}
+```
+
+#### CODE_EXECUTION
+Executes Python or JavaScript code for custom logic.
+
+```json
+{
+  "column_type": "CODE_EXECUTION",
+  "name": "Custom Processing",
+  "configuration": {
+    "language": "python",              // Required: "python" or "javascript"
+    "code": "# Access data dict\nresult = len(data['response'])\nreturn result"
+  },
+  "report_id": 456
+}
+```
+
+#### CODING_AGENT
+Uses an AI coding agent to process data.
+
+```json
+{
+  "column_type": "CODING_AGENT",
+  "name": "AI Processing",
+  "configuration": {
+    "prompt": "Extract all email addresses from the response column",
+    "files": []                       // Optional: File attachments (base64 encoded)
+  },
+  "report_id": 456
+}
+```
+
+#### CONVERSATION_SIMULATOR
+Simulates multi-turn conversations for testing.
+
+```json
+{
+  "column_type": "CONVERSATION_SIMULATOR",
+  "name": "Conversation Test",
+  "configuration": {
+    "agent_template": {
+      "name": "support_agent",
+      "version_number": null
+    },
+    "test_persona": "User is frustrated and needs quick help",
+    "user_goes_first": false,         // Optional: Who starts the conversation
+    "max_turns": 10,                  // Optional: Maximum conversation turns
+    "conversation_samples": []         // Optional: Example conversations
+  },
+  "report_id": 456
+}
+```
+
+#### WORKFLOW
+Executes a PromptLayer workflow.
+
+```json
+{
+  "column_type": "WORKFLOW",
+  "name": "Run Workflow",
+  "configuration": {
+    "workflow_id": 123,               // Required: Workflow ID
+    "input_mappings": {               // Map workflow inputs to columns
+      "input_param": "source_column"
+    }
+  },
+  "report_id": 456
+}
+```
+
+### Evaluation Column Types
+
+#### LLM_ASSERTION
+Uses an LLM to evaluate assertions about the data.
+
+```json
+{
+  "column_type": "LLM_ASSERTION",
+  "name": "Quality Check",
+  "configuration": {
+    "source": "response_column",      // Required: Column to evaluate
+    "assertion": "Is this response professional and helpful?"  // Required: Question to evaluate
+  },
+  "report_id": 456
+}
+```
+
+#### AI_DATA_EXTRACTION
+Extracts specific data using AI.
+
+```json
+{
+  "column_type": "AI_DATA_EXTRACTION",
+  "name": "Extract Info",
+  "configuration": {
+    "source": "response_column",      // Required: Column to extract from
+    "extraction_prompt": "Extract all product names mentioned"  // Required: What to extract
+  },
+  "report_id": 456
+}
+```
+
+#### COMPARE
+Compares two columns for equality.
+
+```json
+{
+  "column_type": "COMPARE",
+  "name": "Response Match",
+  "configuration": {
+    "source1": "expected_output",     // Required: First column
+    "source2": "actual_output"        // Required: Second column
+  },
+  "report_id": 456
+}
+```
+
+#### CONTAINS
+Checks if a column contains specific text.
+
+```json
+{
+  "column_type": "CONTAINS",
+  "name": "Contains Check",
+  "configuration": {
+    "source": "response_column",      // Required: Column to search in
+    "value": "error",                 // Option 1: Static value to search for
+    "value_source": "expected_column" // Option 2: Column containing search value
+  },
+  "report_id": 456
+}
+```
+
+#### REGEX
+Matches a regular expression pattern.
+
+```json
+{
+  "column_type": "REGEX",
+  "name": "Pattern Match",
+  "configuration": {
+    "source": "response_column",      // Required: Column to search
+    "pattern": "\\d{3}-\\d{3}-\\d{4}" // Required: Regex pattern
+  },
+  "report_id": 456
+}
+```
+
+#### REGEX_EXTRACTION
+Extracts text using a regex pattern.
+
+```json
+{
+  "column_type": "REGEX_EXTRACTION",
+  "name": "Extract Pattern",
+  "configuration": {
+    "source": "response_column",      // Required: Column to extract from
+    "pattern": "(\\w+@\\w+\\.\\w+)",  // Required: Extraction pattern
+    "group": 1                        // Optional: Capture group (default: 0)
+  },
+  "report_id": 456
+}
+```
+
+#### COSINE_SIMILARITY
+Calculates semantic similarity between two texts.
+
+```json
+{
+  "column_type": "COSINE_SIMILARITY",
+  "name": "Similarity Score",
+  "configuration": {
+    "source1": "expected_response",   // Required: First text column
+    "source2": "actual_response"      // Required: Second text column
+  },
+  "report_id": 456
+}
+```
+
+#### ABSOLUTE_NUMERIC_DISTANCE
+Calculates absolute distance between numeric values.
+
+```json
+{
+  "column_type": "ABSOLUTE_NUMERIC_DISTANCE",
+  "name": "Score Difference",
+  "configuration": {
+    "source1": "expected_score",      // Required: First numeric column
+    "source2": "actual_score"         // Required: Second numeric column
+  },
+  "report_id": 456
+}
+```
+
+### Helper Column Types
+
+#### JSON_PATH
+Extracts data from JSON using JSONPath.
+
+```json
+{
+  "column_type": "JSON_PATH",
+  "name": "Extract JSON",
+  "configuration": {
+    "source": "json_response",        // Required: Column with JSON data
+    "path": "$.data.items[0].name",   // Required: JSONPath expression
+    "return_all": false                // Optional: Return all matches (default: false)
+  },
+  "report_id": 456
+}
+```
+
+#### XML_PATH
+Extracts data from XML using XPath.
+
+```json
+{
+  "column_type": "XML_PATH",
+  "name": "Extract XML",
+  "configuration": {
+    "source": "xml_response",         // Required: Column with XML data
+    "xpath": "//item[@id='1']/name",  // Required: XPath expression
+    "return_all": false                // Optional: Return all matches
+  },
+  "report_id": 456
+}
+```
+
+#### PARSE_VALUE
+Converts column values to different types.
+
+```json
+{
+  "column_type": "PARSE_VALUE",
+  "name": "Parse to JSON",
+  "configuration": {
+    "source": "response_column",      // Required: Column to parse
+    "target_type": "json"             // Required: "string", "number", "boolean", or "json"
+  },
+  "report_id": 456
+}
+```
+
+#### APPLY_DIFF
+Applies diff patches to content.
+
+```json
+{
+  "column_type": "APPLY_DIFF",
+  "name": "Apply Changes",
+  "configuration": {
+    "original_source": "original_code",  // Required: Original content column
+    "diff_source": "diff_patch"          // Required: Diff patch column
+  },
+  "report_id": 456
+}
+```
+
+#### VARIABLE
+Creates a static value column.
+
+```json
+{
+  "column_type": "VARIABLE",
+  "name": "Static Context",
+  "configuration": {
+    "value": "production",            // Required: Static value
+    "value_type": "string"            // Optional: Value type hint
+  },
+  "report_id": 456
+}
+```
+
+#### ASSERT_VALID
+Validates data types (JSON, number, SQL).
+
+```json
+{
+  "column_type": "ASSERT_VALID",
+  "name": "Validate JSON",
+  "configuration": {
+    "source": "response_column",      // Required: Column to validate
+    "validation_type": "json"         // Required: "json", "number", or "sql"
+  },
+  "report_id": 456
+}
+```
+
+#### COALESCE
+Returns the first non-null value from multiple columns.
+
+```json
+{
+  "column_type": "COALESCE",
+  "name": "First Valid",
+  "configuration": {
+    "sources": ["col1", "col2", "col3"]  // Required: List of columns to coalesce
+  },
+  "report_id": 456
+}
+```
+
+#### COMBINE_COLUMNS
+Combines multiple columns into one.
+
+```json
+{
+  "column_type": "COMBINE_COLUMNS",
+  "name": "Combine Data",
+  "configuration": {
+    "sources": ["col1", "col2"],      // Required: Columns to combine
+    "separator": ", ",                // Optional: Separator (default: ", ")
+    "format": "{col1}: {col2}"        // Optional: Custom format string
+  },
+  "report_id": 456
+}
+```
+
+#### COUNT
+Counts characters, words, or paragraphs.
+
+```json
+{
+  "column_type": "COUNT",
+  "name": "Word Count",
+  "configuration": {
+    "source": "response_column",      // Required: Column to count
+    "count_type": "words"             // Required: "characters", "words", or "paragraphs"
+  },
+  "report_id": 456
+}
+```
+
+#### MATH_OPERATOR
+Performs mathematical operations.
+
+```json
+{
+  "column_type": "MATH_OPERATOR",
+  "name": "Calculate Score",
+  "configuration": {
+    "source1": "score1",              // Required: First operand
+    "source2": "score2",              // Required: Second operand
+    "operator": "+"                   // Required: "+", "-", "*", "/", "%", "**"
+  },
+  "report_id": 456
+}
+```
+
+#### MIN_MAX
+Finds minimum or maximum values.
+
+```json
+{
+  "column_type": "MIN_MAX",
+  "name": "Max Score",
+  "configuration": {
+    "sources": ["score1", "score2", "score3"],  // Required: Columns to compare
+    "operation": "max"                          // Required: "min" or "max"
+  },
+  "report_id": 456
+}
+```
+
+## Column Reference Syntax
+
+When configuring columns that reference other columns, use these formats:
+
+- **Dataset columns**: Use the exact column name from your dataset (e.g., `"question"`, `"expected_output"`)
+- **Previous step columns**: Use the exact name you gave to the column (e.g., `"AI Answer"`, `"Validation Result"`)
+- **Variable columns**: For columns of type VARIABLE, reference them by their name
+
+### Important Notes
+
+1. **Column Order Matters**: Columns execute left to right. A column can only reference columns to its left.
+2. **Column Names**: Must be unique within a pipeline. Use descriptive names.
+3. **Dataset Columns**: Are automatically available as the first columns in your pipeline.
+4. **Error Handling**: If a column fails, subsequent columns that depend on it will also fail.
+5. **Scoring**: If your last column contains all boolean or numeric values, it becomes the evaluation score.
 
 ### Step 4: Trigger the Evaluation
 
