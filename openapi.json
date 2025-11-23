@@ -751,6 +751,7 @@
     "/reports": {
       "post": {
         "summary": "Create Evaluation Pipeline",
+        "description": "Creates a new evaluation pipeline (report) that can be configured with multiple evaluation steps (columns). An evaluation pipeline processes datasets through a series of transformations and evaluations to measure prompt performance.\n\n**Workflow:**\n1. Create a dataset group and dataset first\n2. Create an evaluation pipeline using this endpoint\n3. Add evaluation steps using `/report-columns`\n4. Run the evaluation using `/reports/{report_id}/run`\n5. Monitor progress and retrieve scores\n\n**Note:** While you can create pipelines programmatically, the dashboard provides a more user-friendly interface for initial pipeline design.",
         "operationId": "createEvaluationPipeline",
         "tags": [
           "reports"
@@ -763,7 +764,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key to authorize the operation."
+            "description": "API key to authorize the operation. Can also use JWT authentication."
           }
         ],
         "requestBody": {
@@ -773,58 +774,301 @@
               "schema": {
                 "type": "object",
                 "properties": {
+                  "dataset_group_id": {
+                    "type": "integer",
+                    "description": "The ID of the dataset group containing the dataset versions to evaluate. The dataset group must be within a workspace accessible to the authenticated user.",
+                    "minimum": 1
+                  },
                   "name": {
                     "type": "string",
-                    "description": "The name of the report to be created. Must be between 1 and 255 characters in length.",
+                    "description": "Optional name for the evaluation pipeline. If not provided, a unique name will be auto-generated. Must be between 1 and 255 characters if specified.",
                     "minLength": 1,
                     "maxLength": 255
                   },
-                  "test_dataset_id": {
+                  "folder_id": {
                     "type": "integer",
-                    "description": "The ID of the dataset on which the report will be based. The dataset must be within an accessible workspace to the user."
+                    "description": "Optional folder ID to organize the pipeline within your workspace. If not specified, the pipeline will be created at the root level.",
+                    "minimum": 1,
+                    "nullable": true
+                  },
+                  "dataset_version_number": {
+                    "type": "integer",
+                    "description": "Optional specific dataset version number to use. If not specified, the latest non-draft version will be used. Cannot be -1 (draft version).",
+                    "nullable": true
                   }
                 },
                 "required": [
-                  "name",
-                  "test_dataset_id"
-                ]
+                  "dataset_group_id"
+                ],
+                "example": {
+                  "dataset_group_id": 123,
+                  "name": "QA Evaluation Pipeline",
+                  "folder_id": null,
+                  "dataset_version_number": null
+                }
               }
             }
           }
         },
         "responses": {
-          "200": {
-            "description": "Evaluation Pipeline created successfully",
+          "201": {
+            "description": "Evaluation pipeline created successfully",
             "content": {
               "application/json": {
                 "schema": {
                   "type": "object",
                   "properties": {
                     "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
+                      "type": "boolean",
+                      "description": "Indicates if the operation was successful",
+                      "example": true
                     },
                     "report_id": {
                       "type": "integer",
-                      "description": "The ID of the created report."
+                      "description": "The unique ID of the created evaluation pipeline. Use this ID to add columns and run evaluations.",
+                      "example": 456
                     }
                   },
                   "required": [
                     "success",
-                    "message",
                     "report_id"
-                  ]
+                  ],
+                  "example": {
+                    "success": true,
+                    "report_id": 456
+                  }
                 }
               }
             }
           },
           "400": {
-            "description": "Bad Request"
+            "description": "Bad Request - Invalid parameters, draft dataset version, or no datasets in group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Dataset must have at least one non-draft version"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Access to dataset group not allowed or missing permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Access to this dataset group is not allowed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Dataset group or version not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Dataset group not found"
+                    }
+                  }
+                }
+              }
+            }
           },
           "401": {
-            "description": "Unauthorized"
+            "description": "Unauthorized - Invalid or missing authentication"
+          }
+        }
+      }
+    },
+    "/report-columns": {
+      "post": {
+        "summary": "Add Column to Evaluation Pipeline",
+        "description": "Adds a new evaluation step (column) to an existing evaluation pipeline. Columns execute sequentially from left to right and can reference data from previous columns.\n\n**Column Types Available:**\n- **Primary**: PROMPT_TEMPLATE, ENDPOINT, MCP, HUMAN, CODE_EXECUTION, CODING_AGENT, CONVERSATION_SIMULATOR, WORKFLOW\n- **Evaluation**: LLM_ASSERTION, AI_DATA_EXTRACTION, COMPARE, CONTAINS, REGEX, REGEX_EXTRACTION, COSINE_SIMILARITY, ABSOLUTE_NUMERIC_DISTANCE\n- **Helper**: JSON_PATH, XML_PATH, PARSE_VALUE, APPLY_DIFF, VARIABLE, ASSERT_VALID, COALESCE, COMBINE_COLUMNS, COUNT, MATH_OPERATOR, MIN_MAX\n\nSee the full documentation for detailed configuration requirements for each column type.",
+        "operationId": "addReportColumn",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key to authorize the operation. Can also use JWT authentication."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "report_id": {
+                    "type": "integer",
+                    "description": "The ID of the evaluation pipeline to add this column to.",
+                    "minimum": 1
+                  },
+                  "column_type": {
+                    "type": "string",
+                    "description": "The type of evaluation or transformation this column performs. Must be one of the supported column types.",
+                    "enum": [
+                      "ABSOLUTE_NUMERIC_DISTANCE", "AI_DATA_EXTRACTION", "ASSERT_VALID", "CONVERSATION_SIMULATOR",
+                      "COALESCE", "CODE_EXECUTION", "COMBINE_COLUMNS", "COMPARE", "CONTAINS", "COSINE_SIMILARITY",
+                      "COUNT", "ENDPOINT", "MCP", "HUMAN", "JSON_PATH", "LLM_ASSERTION", "MATH_OPERATOR",
+                      "MIN_MAX", "PARSE_VALUE", "APPLY_DIFF", "PROMPT_TEMPLATE", "REGEX", "REGEX_EXTRACTION",
+                      "VARIABLE", "XML_PATH", "WORKFLOW", "CODING_AGENT"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Display name for this column. Must be unique within the pipeline. This name is used to reference the column in subsequent steps.",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "configuration": {
+                    "type": "object",
+                    "description": "Column-specific configuration. The schema varies based on column_type. See documentation for each type's requirements.",
+                    "additionalProperties": true
+                  },
+                  "position": {
+                    "type": "integer",
+                    "description": "Optional position for the column. If not specified, the column is added at the end. Cannot overwrite dataset columns.",
+                    "minimum": 0,
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "report_id",
+                  "column_type",
+                  "name",
+                  "configuration"
+                ],
+                "example": {
+                  "report_id": 456,
+                  "column_type": "PROMPT_TEMPLATE",
+                  "name": "Generate Answer",
+                  "configuration": {
+                    "template": {
+                      "name": "qa_template",
+                      "version_number": null
+                    },
+                    "prompt_template_variable_mappings": {
+                      "question": "input_question"
+                    },
+                    "engine": {
+                      "provider": "openai",
+                      "model": "gpt-4",
+                      "parameters": {
+                        "temperature": 0.7
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Column added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "report_column": {
+                      "type": "object",
+                      "description": "Details of the created column including its ID and configuration"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid column type, configuration validation failed, or column name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Report already has a column with that name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Cannot overwrite dataset columns or missing permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You can not overwrite dataset columns"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Report not found or not accessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Report not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
           }
         }
       }
