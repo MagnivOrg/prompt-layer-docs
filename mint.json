@@ -148,6 +148,7 @@
         "reference/create-dataset-version-from-file",
         "reference/create-dataset-version-from-filter-params",
         "reference/create-reports",
+        "reference/add-report-columns",
         "reference/run-report",
         "reference/get-report",
         "reference/get-report-score",

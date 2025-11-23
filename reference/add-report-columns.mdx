@@ -1,0 +1,230 @@
+---
+title: "Add Column to Evaluation Pipeline"
+openapi: "POST /report-columns"
+---
+
+This endpoint adds evaluation steps (columns) to an existing evaluation pipeline. Columns execute sequentially from left to right, with each column able to reference outputs from previous columns.
+
+## Important Notes
+
+- **Single Column Per Request**: This endpoint only allows adding one column at a time. To add multiple columns, make separate API calls for each.
+- **Column Order Matters**: Columns execute left to right. A column can only reference columns to its left.
+- **Unique Names Required**: Each column name must be unique within the pipeline.
+- **Dataset Columns Protected**: You cannot overwrite columns that come from the dataset.
+
+## Column Types
+
+### Primary Types
+Execute prompts, call APIs, or gather human input:
+- `PROMPT_TEMPLATE` - Execute a prompt from your registry
+- `ENDPOINT` - Call external API endpoints
+- `MCP` - Execute MCP server functions
+- `HUMAN` - Collect human evaluation input
+- `CODE_EXECUTION` - Run Python or JavaScript code
+- `CODING_AGENT` - Use AI to process data
+- `CONVERSATION_SIMULATOR` - Simulate multi-turn conversations
+- `WORKFLOW` - Execute PromptLayer workflows
+
+### Evaluation Types
+Compare, validate, and score outputs:
+- `LLM_ASSERTION` - Natural language assertions using LLMs
+- `AI_DATA_EXTRACTION` - Extract data using AI
+- `COMPARE` - Compare two columns for equality
+- `CONTAINS` - Check if text contains a value
+- `REGEX` - Match regular expression patterns
+- `REGEX_EXTRACTION` - Extract text using regex
+- `COSINE_SIMILARITY` - Calculate semantic similarity
+- `ABSOLUTE_NUMERIC_DISTANCE` - Calculate numeric difference
+
+### Helper Types
+Transform and manipulate data:
+- `JSON_PATH` - Extract from JSON using JSONPath
+- `XML_PATH` - Extract from XML using XPath
+- `PARSE_VALUE` - Convert between data types
+- `APPLY_DIFF` - Apply diff patches
+- `VARIABLE` - Static values
+- `ASSERT_VALID` - Validate data formats
+- `COALESCE` - First non-null value
+- `COMBINE_COLUMNS` - Combine multiple columns
+- `COUNT` - Count characters/words/paragraphs
+- `MATH_OPERATOR` - Mathematical operations
+- `MIN_MAX` - Find minimum or maximum
+
+## Configuration Examples
+
+### PROMPT_TEMPLATE
+```json
+{
+  "report_id": 456,
+  "column_type": "PROMPT_TEMPLATE",
+  "name": "Generate Response",
+  "configuration": {
+    "template": {
+      "name": "my_prompt",
+      "version_number": null,  // null for latest
+      "label": null            // or specify label
+    },
+    "prompt_template_variable_mappings": {
+      "question": "input_column",  // map template vars to columns
+      "context": "context_column"
+    },
+    "engine": {  // optional: override template engine
+      "provider": "openai",
+      "model": "gpt-4",
+      "parameters": {
+        "temperature": 0.7,
+        "max_tokens": 500
+      }
+    }
+  }
+}
+```
+
+### LLM_ASSERTION
+```json
+{
+  "report_id": 456,
+  "column_type": "LLM_ASSERTION",
+  "name": "Quality Check",
+  "configuration": {
+    "source": "Generate Response",  // column to evaluate
+    "assertion": "Is this response helpful and accurate?"
+  }
+}
+```
+
+### COMPARE
+```json
+{
+  "report_id": 456,
+  "column_type": "COMPARE",
+  "name": "Match Check",
+  "configuration": {
+    "source1": "AI Response",
+    "source2": "Expected Output"
+  }
+}
+```
+
+### CONTAINS
+```json
+{
+  "report_id": 456,
+  "column_type": "CONTAINS",
+  "name": "Error Check",
+  "configuration": {
+    "source": "response_column",
+    "value": "error"  // or use "value_source" for dynamic
+  }
+}
+```
+
+### CODE_EXECUTION
+```json
+{
+  "report_id": 456,
+  "column_type": "CODE_EXECUTION",
+  "name": "Custom Logic",
+  "configuration": {
+    "language": "python",
+    "code": "# Access all columns via 'data' dict\nresult = len(data['response'])\nreturn result"
+  }
+}
+```
+
+### ENDPOINT
+```json
+{
+  "report_id": 456,
+  "column_type": "ENDPOINT",
+  "name": "External API",
+  "configuration": {
+    "url": "https://api.example.com/evaluate",
+    "headers": {
+      "Authorization": "Bearer token"
+    },
+    "timeout": 30
+  }
+}
+```
+
+### JSON_PATH
+```json
+{
+  "report_id": 456,
+  "column_type": "JSON_PATH",
+  "name": "Extract Data",
+  "configuration": {
+    "source": "json_response",
+    "path": "$.data.items[0].name",
+    "return_all": false
+  }
+}
+```
+
+### VARIABLE
+```json
+{
+  "report_id": 456,
+  "column_type": "VARIABLE",
+  "name": "Environment",
+  "configuration": {
+    "value": "production"
+  }
+}
+```
+
+## Batch Adding Columns
+
+Since columns must be added one at a time, here's a pattern for adding multiple columns:
+
+```python
+import requests
+
+columns = [
+    {
+        "column_type": "PROMPT_TEMPLATE",
+        "name": "Generate",
+        "configuration": {...}
+    },
+    {
+        "column_type": "LLM_ASSERTION",
+        "name": "Validate",
+        "configuration": {...}
+    }
+]
+
+for column in columns:
+    response = requests.post(
+        "https://api.promptlayer.com/report-columns",
+        headers={"X-API-KEY": "your_key"},
+        json={
+            "report_id": 456,
+            **column
+        }
+    )
+    if response.status_code != 201:
+        print(f"Failed: {column['name']}")
+        break
+```
+
+## Column Reference Syntax
+
+When configuring columns that reference other columns:
+- **Dataset columns**: Use exact column name from dataset (e.g., `"question"`)
+- **Previous columns**: Use the name you assigned (e.g., `"AI Response"`)
+- **Variable columns**: Reference by their name
+
+## Error Handling
+
+The endpoint validates:
+1. Column type is valid
+2. Column name is unique within the pipeline
+3. Configuration matches the column type schema
+4. Referenced columns exist (for dependent columns)
+5. User has permission to modify the pipeline
+
+Common errors:
+- `400`: Invalid configuration or duplicate column name
+- `403`: Cannot overwrite dataset columns or lacking permissions
+- `404`: Report not found or not accessible
