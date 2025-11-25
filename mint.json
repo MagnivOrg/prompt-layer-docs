@@ -39,7 +39,6 @@
     {
       "group": "Usage Documentation",
       "pages": [
-        "features/prompt-history/sharing-prompts",
         {
           "group": "Prompt Registry",
           "pages": [
@@ -52,9 +51,7 @@
             "features/prompt-registry/input-variable-sets",
             "features/prompt-registry/template-variables",
             "features/prompt-registry/placeholder-messages",
-            "running-requests/prompt-blueprints",
-            "features/prompt-registry/webhooks",
-            "features/prompt-registry/zero-downtime-releases"
+            "running-requests/prompt-blueprints"
           ],
           "icon": "notebook"
         },
@@ -81,7 +78,15 @@
           ],
           "icon": "cassette-tape"
         },
-        "onboarding-guides/deployment-strategies",
+        {
+          "group": "Deployment",
+          "pages": [
+            "onboarding-guides/deployment-strategies",
+            "onboarding-guides/webhooks",
+            "onboarding-guides/zero-downtime-deploys"
+          ],
+          "icon": "ship"
+        },
         {
           "group": "Evaluation",
           "pages": [
@@ -118,8 +123,6 @@
         "why-promptlayer/multi-turn-chat",
         "why-promptlayer/fine-tuning",
         "why-promptlayer/analytics",
-        "why-promptlayer/evaluation-and-ranking",
-        "why-promptlayer/playground",
         "why-promptlayer/shared-workspaces",
         "why-promptlayer/how-it-works"
       ]
