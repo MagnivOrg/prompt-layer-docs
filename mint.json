@@ -56,6 +56,16 @@
           "icon": "notebook"
         },
         {
+          "group": "Evaluation",
+          "pages": [
+            "features/evaluations/getting-started",
+            "features/evaluations/score-card",
+            "features/evaluations/datasets",
+            "features/evaluations/programmatic"
+          ],
+          "icon": "vial-circle-check"
+        },
+        {
           "group": "Running Requests",
           "pages": [
             "running-requests/promptlayer-run",
@@ -86,16 +96,6 @@
             "onboarding-guides/zero-downtime-deploys"
           ],
           "icon": "ship"
-        },
-        {
-          "group": "Evaluation",
-          "pages": [
-            "features/evaluations/getting-started",
-            "features/evaluations/score-card",
-            "features/evaluations/datasets",
-            "features/evaluations/programmatic"
-          ],
-          "icon": "vial-circle-check"
         },
         {
           "group": "Models & Integrations",
