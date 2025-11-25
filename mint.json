@@ -90,7 +90,7 @@
         {
           "group": "Evaluation",
           "pages": [
-            "features/evaluations/building-pipelines",
+            "features/evaluations/getting-started",
             "features/evaluations/score-card",
             "features/evaluations/datasets",
             "features/evaluations/programmatic"
