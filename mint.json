@@ -83,6 +83,16 @@
         },
         "onboarding-guides/deployment-strategies",
         {
+          "group": "Evaluation",
+          "pages": [
+            "features/evaluations/building-pipelines",
+            "features/evaluations/score-card",
+            "features/evaluations/datasets",
+            "features/evaluations/programmatic"
+          ],
+          "icon": "vial-circle-check"
+        },
+        {
           "group": "Models & Integrations",
           "pages": [
             "features/supported-providers",
@@ -102,21 +112,8 @@
         "why-promptlayer/prompt-management",
         "why-promptlayer/advanced-search",
         "why-promptlayer/ab-releases",
-        {
-          "group": "Evaluations",
-          "pages": [
-            "features/evaluations/overview",
-            "features/evaluations/continuous-integration",
-            "features/evaluations/examples",
-            "features/evaluations/building-pipelines",
-            "features/evaluations/eval-types",
-            "features/evaluations/score-card",
-            "features/evaluations/datasets",
-            "features/evaluations/programmatic",
-            "why-promptlayer/voice-agents"
-          ],
-          "icon": "vial-circle-check"
-        },
+        "features/evaluations/overview",
+        "why-promptlayer/voice-agents",
         "why-promptlayer/agents",
         "why-promptlayer/multi-turn-chat",
         "why-promptlayer/fine-tuning",
