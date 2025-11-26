@@ -3,9 +3,15 @@ title: "Quickstart"
 icon: "flag-checkered"
 ---
 
-PromptLayer is the prompt management platform for teams building AI applications. It gives you version control for prompts, observability into every request, and tools to evaluate and improve your AI over time.
+PromptLayer is your workbench for AI engineering. Version, test, and monitor every prompt and agent with robust evals and tracing. Empower domain experts to iterate alongside engineers in the visual editor.
 
-This tutorial walks you through creating an AI application that generates cake recipes. You'll learn how to create prompts, track versions, and deploy to production.
+This tutorial walks you through building an AI application that generates cake recipes. By the end, you'll know how to:
+
+- Create and run prompts in the visual editor
+- Track versions with diffs and commit messages
+- Switch between AI models (OpenAI, Anthropic, etc.)
+- Deploy to production with release labels
+- View logs and debug issues
 
 <Info>
   [Create an account](https://dashboard.promptlayer.com/create-account) to follow along.
@@ -13,7 +19,7 @@ This tutorial walks you through creating an AI application that generates cake r
 
 ## Creating Your First Prompt
 
-Prompts are the core of any AI application. By managing them in PromptLayer instead of hardcoding them, you can edit prompts without deploying code, track every change, and test new versions safely.
+Prompts are the core IP of any AI application. By managing them in PromptLayer instead of hardcoding them, you can edit prompts without deploying code, track every change, and test new versions safely.
 
 From the PromptLayer dashboard, click **New** → **Prompt**.
 
@@ -62,14 +68,27 @@ To test your prompt:
 2. Set `cake_type` to "Chocolate Cake" and `serving_size` to "8"
 3. Click **Run**
 
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Running+a+prompt" alt="Running a prompt in the playground" />
+</Frame>
+
 Save your prompt by clicking **Save Template**.
 
-<Accordion title="Prompt Writing Tips">
-  - Use headers to structure your prompt (`**Section**:`)
-  - Be specific about output format
-  - Include examples when possible
-  
-  PromptLayer supports [Jinja2 templates](/features/prompt-registry/template-variables#jinja2-templates) for more advanced variable logic.
+<Accordion title="Retrieving Prompts in Your Code">
+  Your application fetches prompts from PromptLayer at runtime using the SDK or REST API. This keeps prompts out of your codebase and lets you update them without redeploying. It also means PMs and domain experts can edit prompts directly in the dashboard without waiting for engineering.
+
+  ```python
+  from promptlayer import PromptLayer
+  client = PromptLayer()
+
+  # Fetch and run a prompt by name
+  response = client.run(
+      prompt_name="cake-recipe",
+      input_variables={"cake_type": "Chocolate", "serving_size": "8"}
+  )
+  ```
+
+  See [Deployment Strategies](/onboarding-guides/deployment-strategies) for caching strategies.
 </Accordion>
 
 ## Versioning Your Prompt
@@ -98,6 +117,14 @@ Click **Save Template**. Before saving, PromptLayer shows you a diff of exactly 
 
 You can click any previous version to view it, or hover and click **View Diff** to compare any two versions side by side.
 
+<Accordion title="Prompt Writing Tips">
+  - Use headers to structure your prompt (`**Section**:`)
+  - Be specific about output format
+  - Include examples when possible
+  
+  PromptLayer supports [Jinja2 templates](/features/prompt-registry/template-variables#jinja2-templates) for more advanced variable logic.
+</Accordion>
+
 ### Writing Prompts with AI
 
 Click the magic wand icon to open the AI prompt writer. It can help rewrite or improve your prompts based on your instructions. Try asking it to "add allergy warnings" to the recipe generator.
@@ -106,7 +133,7 @@ Click the magic wand icon to open the AI prompt writer. It can help rewrite or i
   <img src="/new-quickstart-images/prompt-ai-writer-display.png" alt="AI prompt writer" />
 </Frame>
 
-### Switching AI Models
+### Switching LLMs
 
 PromptLayer is model-agnostic. You can switch between OpenAI, Anthropic, Google, and [other providers](/features/supported-providers) without changing your prompt. Click the model name at the bottom of the editor to switch.
 
@@ -114,23 +141,32 @@ PromptLayer is model-agnostic. You can switch between OpenAI, Anthropic, Google,
   <img src="/new-quickstart-images/prompt-switch-model-display.png" alt="Switching models" />
 </Frame>
 
-All prompts work across models, including [function calling and tool use](/features/prompt-registry/tool-calling). PromptLayer also supports [custom models](/features/custom-providers) and [fine-tuned models](/why-promptlayer/fine-tuning).
+All prompts work across models, including [function calling and tool use](/features/prompt-registry/tool-calling). You can also connect [private models or custom hosts](/features/custom-providers), and build [fine-tuned models](/why-promptlayer/fine-tuning).
 
 ## Deploying to Prod
 
-Once your prompt is ready, you can deploy it to production using release labels.
+Once your prompt is ready, PromptLayer can manage which version goes live. Release labels let you control which version is in production, so you can update prompts without touching code.
+
+For engineers: PromptLayer offers several [deployment strategies](/onboarding-guides/deployment-strategies) including our Python or TypeScript SDKs, webhook-driven caching, fully managed agents, or [self-hosted](/self-hosted) deployments.
 
 ### Release Labels
 
-[Release labels](/features/prompt-registry/release-labels) control which prompt version is live. You can mark versions as "production", "staging", or "testing". Your code fetches the prompt by label, so you can update the live version without changing any code.
+Release labels control which prompt version is live. You can mark versions as "production", "staging", or "testing". Your code fetches the prompt by label, so you can update the live version without changing any code.
 
 <Frame>
   <img src="/new-quickstart-images/prompt-release-access.png" alt="Release labels" />
 </Frame>
 
+Learn more about [release labels](/features/prompt-registry/release-labels).
+
 ### A/B Testing
 
-To compare prompt versions in production, assign different labels to different versions and split traffic between them. This lets you test changes on real users before fully rolling out.
+PromptLayer supports A/B testing prompts in production. Common use cases include:
+
+- Testing a new prompt version on 10% of traffic before full rollout
+- Segmenting beta users to receive an experimental prompt based on user metadata
+
+To start an A/B test, assign release labels to different prompt versions and configure traffic splits in the dashboard.
 
 <Frame>
   <img src="/new-quickstart-images/prompt-ab-test-display.png" alt="A/B testing prompts" />
@@ -140,23 +176,46 @@ Learn more about [A/B testing](/why-promptlayer/ab-releases).
 
 ## Building Agents
 
-[Agents](/why-promptlayer/agents) are multi-step AI workflows. Unlike a single prompt, an agent can chain multiple prompts together, use tools, and make decisions based on intermediate results.
+Agents are multi-step AI workflows. Unlike a single prompt, an agent can chain multiple prompts together, use tools, and make decisions based on intermediate results.
+
+For example, you could extend the cake recipe generator into an agent that:
+1. Generates the recipe (using our prompt from earlier)
+2. Scales the ingredients for 100 people
+3. Calculates the total cost based on current grocery prices
+
+Create an agent by clicking **New** → **Agent**.
 
 <Frame>
   <img src="/new-quickstart-images/agent-creation-access.png" alt="Creating an agent" />
 </Frame>
 
-Create an agent by clicking **New** → **Agent**. You can build workflows visually without writing code.
+You can build workflows visually using a drag-and-drop editor. Connect prompts, add conditionals, and loop over data—no code required.
+
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Agent+workflow+editor" alt="Agent workflow editor" />
+</Frame>
+
+Agents are versioned the same way as prompts, with diffs and commit messages. Learn more about [Agents](/why-promptlayer/agents).
 
 ## Evaluations
 
-Evals test how well your prompts perform. You can run automated checks, collect human feedback, or measure accuracy over time.
+Evals test how well your prompts perform. Common use cases include:
 
-Learn more about [Evaluations](/features/evaluations/overview).
+- **LLM-as-judge**: Use AI to score outputs against criteria like tone, accuracy, or formatting
+- **Historical backtests**: Compare a new prompt version against real production data
+- **Model comparisons**: Test the same prompt across GPT-4, Claude, Gemini, etc.
+- **Regression testing**: Automatically run evals when a prompt is updated to catch edge cases
+- **Human grading**: Collect feedback from domain experts on prompt quality
+
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Evaluation+pipeline" alt="Evaluation pipeline" />
+</Frame>
+
+You can build evaluation pipelines visually and connect them to prompts for continuous testing. Learn more about [Evaluations](/features/evaluations/overview).
 
 ## Logs and Analytics
 
-Every prompt run is logged with full request and response details. [Analytics](/why-promptlayer/analytics) show cost, latency, and usage patterns across your prompts.
+Every prompt run is logged with full request and response details. You can attach [metadata](/features/prompt-history/metadata) like user IDs, session IDs, or feature flags to each request, making it easy to debug issues for specific users. [Analytics](/why-promptlayer/analytics) show cost, latency, and usage patterns across your prompts.
 
 <Frame>
   <img src="/new-quickstart-images/analytics-display.png" alt="Analytics dashboard" />
@@ -180,7 +239,7 @@ Use the **Backtest** feature to run a new prompt version against historical inpu
 
 ### Traces and Spans
 
-For agents, [traces](/running-requests/traces) show each step of the workflow as spans. You can see timing, inputs, and outputs for every step.
+For agents, [traces](/running-requests/traces) show each step of the workflow as spans. You can see timing, inputs, and outputs for every step. Traces are OpenTelemetry (OTEL) compatible, so you can integrate with your existing observability stack.
 
 <Frame>
   <img src="/new-quickstart-images/traces-display.png" alt="Trace visualization" />
@@ -188,5 +247,5 @@ For agents, [traces](/running-requests/traces) show each step of the workflow as
 
 ## Next Steps
 
-- [Tutorial Videos](/tutorial-videos)
 - [Quickstart Part 2](/quickstart-part-two) — Integrating with your codebase
+- [Tutorial Videos](/tutorial-videos)
