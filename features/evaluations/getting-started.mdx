@@ -6,3 +6,17 @@ icon: "flag-checkered"
 <Info>
 To read about PromptLayer's view on Evaluations, see the [Why PromptLayer? Evaluations page](../../features/evaluations/overview).
 </Info>
+
+## Introduction
+
+Evaluations are a core feature of PromptLayer, designed to allow teams to test their prompt templates and agents at scale.
+
+At its core, an evaluation is a repeatable pipeline of steps (columns) that you run on a series of data (rows). This allows you to systematically assess the performance of your prompts or agents across various scenarios.
+You can create evaluations directly through the PromptLayer UI, enabling both technical and non-technical team members to collaborate on prompt testing and refinement.
+
+You can also define a score to track the progress as you iterate on your prompts or agents.
+
+There are a few core concepts:
+- ***A dataset***: all evaluations start with a dataset
+- ***An eval pipeline***: a definition of an evaluation and am optional score, defined on a sample of 4 rows from the dataset
+- ***An evaluation report***: the results of running the eval pipeline on the entire dataset

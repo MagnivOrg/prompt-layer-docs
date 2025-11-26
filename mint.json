@@ -59,8 +59,9 @@
           "group": "Evaluation",
           "pages": [
             "features/evaluations/getting-started",
-            "features/evaluations/score-card",
             "features/evaluations/datasets",
+            "features/evaluations/building-pipelines",
+            "features/evaluations/score-card",
             "features/evaluations/programmatic"
           ],
           "icon": "vial-circle-check"
