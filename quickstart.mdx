@@ -3,501 +3,190 @@ title: "Quickstart"
 icon: "flag-checkered"
 ---
 
-This guide teaches you how to start using PromptLayer, in minutes. It assumes no
-prior experience with artificial intelligence.
+PromptLayer is the prompt management platform for teams building AI applications. It gives you version control for prompts, observability into every request, and tools to evaluate and improve your AI over time.
+
+This tutorial walks you through creating an AI application that generates cake recipes. You'll learn how to create prompts, track versions, and deploy to production.
 
 <Info>
-  [Create an account](https://dashboard.promptlayer.com/create-account) to use
-  the Quickstart.
+  [Create an account](https://dashboard.promptlayer.com/create-account) to follow along.
 </Info>
 
-To grasp some of the core features of PromptLayer, we'll build a Cake Recipe
-generator that takes advantage of artificial intelligence to balance a chosen
-type of cake and baking time.
+## Creating Your First Prompt
 
-Having the know-how to create a recipe for any type of cake, within a specific
-amount of time, would be difficult without artificial intelligence. Wikipedia's
-[List of Cakes](https://en.wikipedia.org/wiki/List_of_cakes) is 330 cakes long
-(we used an AI to count it for us), requiring a dedicated human spending years
-to master recipes. To adjust a recipe to a set time, mastery over it is
-necessary. Instead, artificial intelligence can adjust any recipe for us within
-seconds.
+Prompts are the core of any AI application. By managing them in PromptLayer instead of hardcoding them, you can edit prompts without deploying code, track every change, and test new versions safely.
 
-## 1. Creating a Prompt
-
-A prompt, in the context of artificial intelligence, is a carefully crafted
-input provided to an AI model to elicit a specific response or output. It serves
-as the primary means of communication between humans and AI systems, guiding
-the model's behavior and shaping its generated content.
-
-Learn more about [Prompts](https://www.promptlayer.com/glossary/prompt).
-
-Prompts are the core of AI applications. PromptLayer is designed to help you
-decouple this core from code.
-
-Within the home of a workspace, a new Prompt can be created by clicking "New"
-then selecting "Prompt."
+From the PromptLayer dashboard, click **New** → **Prompt**.
 
 <Frame>
-    <img src="/new-quickstart-images/prompt-creation-access.png" alt="Prompt creation access in workspace" data-og-width="2880" width="2880" data-og-height="1624" height="1624" data-path="images/quickstart/prompt-creation-access.png" data-optimize="true" data-opv="3"  />
+  <img src="/new-quickstart-images/prompt-creation-access.png" alt="Creating a new prompt" />
 </Frame>
 
-A new prompt has two default Roles for the model to exhibit: "System" and
-"User."
+A prompt starts with two messages. The **System** message sets the AI's behavior. The **User** message is what gets sent each time you run it.
 
-<Accordion icon="circle-question-mark" title="System and User, Explained">
-  ### "System"
+<Accordion title="System and User Messages">
+  **System message**: Defines the AI's persona, tone, and rules. Think of it as the "instruction manual" that stays constant across all runs. Use it for things like:
+  - Setting a persona ("You are a helpful assistant...")
+  - Defining output format ("Always respond in JSON...")
+  - Establishing guardrails ("Never discuss competitors...")
 
-  A System Prompt is a specialized type of Prompt used in AI language models that
-  sets the overall context, behavior, or persona for the AI's responses. It acts
-  as a foundational instruction set that guides the model's conduct throughout an
-  interaction, often without being directly visible to the end-user.
+  **User message**: The input that changes each time the prompt runs. This is where you put the actual request and any input variables. In production, your code will dynamically fill in this message.
 
-  Learn more about [System Prompts](https://www.promptlayer.com/glossary/system-prompt).
-
-  ### "User"
-
-  User prompts are the specific instructions or questions a user provides to an AI
-  system to elicit a desired response. These Prompts are dynamic and vary with
-  each interaction, reflecting the user's immediate needs and goals. They can
-  range from simple requests for information to complex instructions for
-  generating creative content.
-
-  Learn more about [User Prompts](https://blog.promptlayer.com/system-prompt-vs-user-prompt-a-comprehensive-guide-for-ai-prompts/#what-is-a-user-prompt).
+  Some prompts also use **Assistant** messages to show example responses, which helps the AI understand the expected format.
 </Accordion>
 
-Let's begin building our Cake Recipe Generator. Create a new prompt, then
-replace its contents with the following:
+Replace the default content with:
 
-```markdown System wrap theme={null}
-You are a world-class pastry chef and culinary instructor who specializes in making recipes clear, adaptable, and delicious. Your goal is to generate cake recipes that balance creativity and structure.
+```markdown System
+You are a Michelin-star pastry chef. Generate cake recipes with:
 
-Recipes should always include:
-1. A short description that captures the cake’s essence
-2. A list of ingredients with precise measurements in both metric and US units
-3. Step-by-step instructions written conversationally but clearly
-4. Optional variations or substitutions
-
-Keep instructions simple enough for home bakers, but detailed enough to ensure consistent results.
+**Overview**: One paragraph about the cake
+**Ingredients**: Bullet points with metric and US measurements  
+**Instructions**: Numbered steps with temperatures and timing
+**Variations**: Optional frostings or substitutions
 ```
 
-```markdown User wrap theme={null}
-Create a cake recipe for {{cake_type}} that serves {{serving_size}} people and takes around {{baking_time}} minutes to bake.
+```markdown User
+Create a recipe for {{cake_type}} that serves {{serving_size}} people.
 ```
 
-You'll notice that the User prompt automatically styles the text surrounded by
-double curly braces (e.g.: `{{cake_type}}`) separately from the rest of the
-prompt's text. We have denoted, and PromptLayer is detecting, the usage of
-templates. Within these curly braces, we are utilizing one of the basic building
-blocks of engineering: variability. Roughly, variables are words that exist
-abstractly within some software. As a result, the data associated to a variable
-can be changed. In our case, the usage of variables suggest to PromptLayer that
-when a prompt is ran, these words should be replaced by a value that the
-prompt's run has provided. This will make more sense if we use these variables.
-
-To use the variables we have defined within our prompt, PromptLayer's playground
-provides the ability to create a groupings of values associated with variables
-defined in a prompt. Under "Input Variable Sets" on the right hand side of the
-editor, click "Define input variables."
-
-A modal will appear with titled "Edit Input Variable Set," containing each of
-the variables we have defined:
-
-1. `baking_time`
-2. `cake_type`
-3. `serving_size`
-
-Each variable has an associated "Click to edit," button, which allows us to
-specify a value for that variable. Let's set each of the following values to be
-utilized by PromptLayer when we run our prompt. Do not include the units for
-values (i.e: "minutes" and "persons").
-
-1. `baking_time` = 50 (minutes)
-2. `cake_type` = Chocolate Cake
-3. `serving_size` = 8 (persons)
-
-By filling in these values in the secondary modal that appears when we "Click
-to edit" a particular variable, we make them available to PromptLayer's
-playground for usage when a prompt runs. After clicking "Done," we can "Run"
-our prompt, and the Playground will automatically fill in these values for us,
-resulting in a Cake Recipe for Chocolate Cake takes 50 minutes to bake, and
-serves 8 persons.
-
-Congratulations! You have engineered your first prompt!
-
-These templates that we have denoted with double curly braces have more
-features than variable input. It extends to encompass a range of engineering
-concepts. They are a well-utilized format for adding templates to bodies of
-text. This is the Jinja2 templating language.
-
-Learn more about [Jinja2](/features/prompt-registry/template-variables#jinja2-templates).
-
-<Frame caption="Curly Braces evoking Jinja2 templating, with `cake_type` and `serving_size` recognized as variables.">
-    <img src="/new-quickstart-images/variables-explained.png" alt="Variables" data-og-width="5760" width="5760" data-og-height="3240" height="3240" data-path="images/quickstart/variables-explained.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-Now we can save the our prompt with a message like, "Added base version of Cake
-Recipe Generator," by clicking "Save Template."
-
-## 2. Improving with Versions
-
-Versioning allows teams to safely refine and experiment without losing previous
-work. Every version records what changed, when, and by whom, making it simple to
-compare, test, or revert as your prompt evolves.
-
-<Frame caption="Versions accumulated overtime to the left of a prompt.">
-    <img src="/new-quickstart-images/prompt-versioning-display.png" alt="Prompt version history display" data-og-width="2880" width="2880" data-og-height="1624" height="1624" data-path="images/quickstart/prompt-versioning-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-Let's version our Cake Recipe Generator. Add these changes to the System and
-User roles:
-
-```markdown System wrap theme={null}
-You are a Michelin-star pastry chef and recipe writer. Generate detailed, reliable, and imaginative cake recipes.
-
-Each response must include the following sections formatted with clear headers:
-
-**Overview**: A one-paragraph introduction capturing the cake’s story and mood.
-**Ingredients**: Use bullet points with both metric and US measurements.
-**Instructions**: Numbered steps with exact details (temperature, mixing times, resting periods).
-**Optional Enhancements**: Variations, frostings, or pairings.
-
-Maintain a confident yet friendly tone, suitable for both beginners and enthusiasts.
-```
-
-```markdown User wrap theme={null}
-Generate a recipe for a {{cake_type}} that serves {{serving_size}} people and should be completed within {{baking_time}} minutes.
-```
-
-We have versioned our Cake Recipe Generator from being suitable for personal use
-into a prompt that can be installed in an application, by improving its persona
-sophistication and consistency.
-
-Rather than have our AI adapt the role of "a world-class pastry chef and
-culinary instructor," we instruct it to think along the lines of a "Michelin-star
-pastry chef and recipe writer." Not only does this change refine the AI's
-point-of-view, it also improves its specificity. Specificity is vital when
-writing a prompt, as a particular choice of words can drastically change output.
-Our first prompt is absent of our requirement for the AI to think along the
-lines of a "recipe writer."
-
-We further refine the prompt by explicitly defining "clear headers" for
-different sections of the generated Cake Recipe.
-
-```
-**Overview**: ...
-**Ingredients**: ...
-**Instructions**: ...
-**Optional Enhancements**: ...
-```
-
-This change allows us to be sure every prompt's response by our AI is organized
-the same way. This also helps prevents the AI from failing to include a section.
-
-You may have noticed the usage of double asterisk (e.g.: `**Overview**`) in our
-prompt's new version, and how PromptLayer's editor bolds the text it surrounds
-in the editor. This is provided by PromptLayer's integration of basic Markdown,
-which is a type of formatting that can be introduced to a prompt using plain
-text characters.
-
-Beyond bold text, you can add:
-
-```markdown Markdown Options theme={null}
-# Heading 1
-## Heading 2
-### Heading 3
-#### Heading 4
-*italicized* text
-```
-
-Try these out in the editor to view what their rendered results look like in
-PromptLayer.
-
-This versioned improvement over our first prompt further gains consistency by
-explicating formatting for the AI's response. Rather than simply asking for a
-"short description that captures the cake’s essence," we require "a
-one-paragraph introduction capturing the cake’s story and mood," which clarifies
-the length of output and focus for the subject of the description added to Cake
-Recipes. The first version of the prompt's guideline: "step-by-step
-instructions written conversationally but clearly" loses its vagueness with
-"numbered steps with exact details (temperature, mixing times, resting
-periods)."
-
-### 2.a. Comparing Version's Differences
-
-Inspired by version control tools, the Diff Viewer highlights deletions in red
-and additions in green. This makes it easier to spot subtle edits that alter a
-prompt’s behavior or output.
-
-To clearly view the changes we made between the first version of prompt and the
-second, ensure that you have the latest version selected (it should be
-highlighted blue), then hover the previous version. This will reveal a "View
-Diff" button. Click it view a side-by-side comparision of the two versions.
-
-<Frame caption="The diff of two prompts, presented after clicking &#x22;View Diff&#x22;">
-    <img src="/new-quickstart-images/prompt-diffing-display.png" alt="Prompt diffing comparison view" data-og-width="2880" width="2880" data-og-height="1624" height="1624" data-path="images/quickstart/prompt-diffing-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-### 2.b. Refining Automatically
-
-The AI Prompt Writer helps you rewrite prompts in clear and natural language.
-It suggests better ways to phrase your ideas, helping you get stronger results
-without needing to understand how the AI works under the hood.
-
-<Frame caption="The AI Prompt Writer, accessed by the Magic icon">
-    <img src="/new-quickstart-images/prompt-ai-writer-display.png" alt="Prompt AI writer suggestions" data-og-width="2880" width="2880" data-og-height="1624" height="1624" data-path="images/quickstart/prompt-ai-writer-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-Here's an example prompt you can give to the AI Prompt Writer that can further
-refine the Cake Recipe Generator we have built. Suggested changes  will vary
-between each run of the AI Prompt Writer with this prompt.
-
-```markdown Input for AI Prompt Writer  theme={null}
-Update this prompt to consider allergies
-```
-
-Allergens are a complex consideration to handle. We can leverage AI to ensure we
-completly address this, as it can be a leaned-upon as a source of exhaustive
-thinking.
-
-### 2.c. Switching AIs
-
-PromptLayer keeps prompts independent of AI models. You can switch between
-popular models like GPT-5, Opus, or Gemini directly from the dashboard.
-
-<Frame
-  caption="The Model Configuration Panel, accessed by clicking the current 
-model at the bottom of the Editor."
->
-    <img src="/new-quickstart-images/prompt-switch-model-display.png" alt="Switching models in the prompt editor" data-og-width="2878" width="2878" data-og-height="1622" height="1622" data-path="images/quickstart/prompt-switch-model-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-Switching the model of our Cake Recipe Generator allows us to test the
-each of their responses, and determine which is the most suitable to addressing
-the needs of our prompt's model. By default, your model may be using gpt-4o. A
-switch to GPT-5.1 might improve consistency and creativity, but could be more
-expensive.
-
-We'll keep our model as gpt-4o for the rest of the Quickstart.
-
-<Info>
-  PromptLayer also supports [custom models](/features/custom-providers)
-  and [fine-tuned models](/why-promptlayer/fine-tuning#fine-tuning)
-  for teams that need specialized behavior.
-</Info>
-
-### 2.d. Exporting
-
-Prompts can be exported to be utilized within other AI systems. Access it via
-the settings button at the top of the prompt editor.
-
-<Frame caption="&#x22;Copy to Clipboard,&#x22; accessible via settings">
-    <img src="/new-quickstart-images/prompt-blueprint-display.png" alt="Prompt blueprint export view" data-og-width="2880" width="2880" data-og-height="1620" height="1620" data-path="images/quickstart/prompt-blueprint-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-This exported format of a prompt is known as its "Prompt Blueprint."
-
-<Accordion title="Prompt Blueprints, Explained">
-  Defined by PromptLayer, "Prompt Blueprints" format the information that build a
-  Prompt (e.g.: the "User" and "System" roles) by surrounding its text.
-
-  Excerpt from a Blueprint:
-
-  ```
-  ...
-  "role": "system",
-  "content": [
-    {
-      "type": "text",
-      "text": "### Bakery Chatbot System Prompt \n\n#### Persona & 
-               Goal\nYou are a friendly, sweet, and helpful 
-               assistant...",
-      ...
-    }
-  ],
-  ...
-  ```
-
-  Learn more about "[Prompt Blueprints](/running-requests/prompt-blueprints)"
-  and its format.
-</Accordion>
-
-Copy and paste the Cake Recipe Generator's Prompt Blueprint into a word
-processing application. It should look something like this:
-
-```json  theme={null}
-{
-  ...
-  "prompt_template": {
-    "type": "chat",
-    "messages": [
-      {
-        "role": "system",
-        "content": [
-          {
-            "type": "text",
-            "text": "You are a Michelin-star pastry chef and recipe writer. Generate detailed, reliable, and imaginative cake recipes.\nEach response must include the following sections formatted with clear headers:\nOverview: A one-paragraph introduction capturing the cake’s story and mood.\nIngredients: Use bullet points with both metric and US measurements.\nInstructions: Numbered steps with exact details (temperature, mixing times, resting periods).\nOptional Enhancements: Variations, frostings, or pairings.\nMaintain a confident yet friendly tone, suitable for both beginners and enthusiasts.",
-            "id": null,
-            "annotations": null
-          }
-        ],
-        "name": null,
-        "tool_calls": [],
-        "template_format": "jinja2"
-      },
-      {
-        "role": "user",
-        "content": [
-          {
-            "type": "text",
-            "text": "Generate a recipe for a {{cake_type}} that serves {{serving_size}} people and should be completed within {{baking_time}} minutes.",
-            "id": null,
-            "annotations": null
-          }
-        ],
-        ...
-      }
-    ],
-    ...
-  },
-  ...
-}
-```
-
-### 2.e. Deploying with Labels
-
-Release labels help you control which prompt versions are live. You can mark
-some versions as “testing” and others as “production.” This makes it possible
-to release changes slowly, compare results between two versions, and roll out
-the best one when ready.
+Notice `{{cake_type}}` and `{{serving_size}}`. These are [input variables](/features/prompt-registry/template-variables)—think of them like mad-libs. When you run the prompt, you'll fill these in with real values.
 
 <Frame>
-    <img src="/new-quickstart-images/prompt-release-access.png" alt="Accessing prompt release controls" data-og-width="2880" width="2880" data-og-height="1556" height="1556" data-path="images/quickstart/prompt-release-access.png" data-optimize="true" data-opv="3"  />
+  <img src="/new-quickstart-images/variables-explained.png" alt="Input variables in prompt" />
 </Frame>
 
-We can add a "testing" label to our prompt to mark that we are near-ready for
-installing it in our application.
+### Running Your Prompt
 
-#### Comparing Versions' Results
+To test your prompt:
+1. Click **Define input variables** in the right panel
+2. Set `cake_type` to "Chocolate Cake" and `serving_size` to "8"
+3. Click **Run**
 
-A/B testing lets you compare two or more versions of a prompt to see which one
-performs better. It’s a simple way to test small changes, like wording or tone,
-before rolling them out to production.
+Save your prompt by clicking **Save Template**.
 
-PromptLayer makes A/B testing part of your workflow. You can assign release
-labels such as “A” and “B” to different prompt versions, send each version a
-portion of live traffic, and track which one produces better responses.
-
-<Note>
-  A/B testing prompts requires at least version of the prompt to have a set
-  release label.
-</Note>
-
-This process helps teams learn what works through real data, not guesswork.
-Once the winning version is identified, it can be promoted to production with
-a single click.
-
-<Frame>
-    <img src="/new-quickstart-images/prompt-ab-test-display.png" alt="Starting a prompt A/B test" data-og-width="2880" width="2880" data-og-height="1560" height="1560" data-path="images/quickstart/prompt-ab-test-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-Learn more about [A/B testing](/ab-testing).
-
-We can start an A/B test of our Cake Recipe Generator by hovering any version
-of the prompt, then clicking "Start A/B Test." From here, we can select the
-testing label. This will auto-populate another version of the prompt for the
-labeled prompt to be tested against.
-
-Try editing your A/B test to match the screenshot above.
-
-<Accordion title="Duplcating the Screenshot Walkthrough">
-  First, remove any incorrect versions by clicking the red "-" button. Then click
-  "+ Add Version," select "Version 2" in the drop-down menu, and click "Add."
-  This will duplicate the A/B test in the screenshot.
+<Accordion title="Prompt Writing Tips">
+  - Use headers to structure your prompt (`**Section**:`)
+  - Be specific about output format
+  - Include examples when possible
+  
+  PromptLayer supports [Jinja2 templates](/features/prompt-registry/template-variables#jinja2-templates) for more advanced variable logic.
 </Accordion>
 
-## 3. Creating an Agent
+## Versioning Your Prompt
 
-"Agents" are software programs that perceive their environment, make
-decisions, and take actions autonomously to achieve a goal. These agents can
-range from simple systems like a thermostat to complex digital assistants
-that can execute multi-step tasks with minimal human intervention.
+PromptLayer tracks every change you make to a prompt. Each save creates a new version with a record of what changed, when, and by whom. Your version history appears in the left panel.
 
-Unlike a Prompt, an Agent can independently plan and adapt its actions to
-achieve an objective over an extended period.
-
-Agents can be as simple as a single prompt or as advanced as a multi-step
-workflow. You can build them visually by connecting steps together, with no
-programming needed. Agents are useful for automating tasks or guiding the AI
-through complex processes that unfold over several steps.
-
-<Frame caption="An active A/B test with configured percentages">
-    <img src="/new-quickstart-images/agent-creation-access.png" alt="Agent creation access in workspace" data-og-width="2880" width="2880" data-og-height="1624" height="1624" data-path="images/quickstart/agent-creation-access.png" data-optimize="true" data-opv="3"  />
+<Frame>
+  <img src="/new-quickstart-images/prompt-versioning-display.png" alt="Version history" />
 </Frame>
 
-## 4. Evaluating Performance
+### Editing Prompts
 
-Evals are tests that show how well your prompts or agents perform. You can run
-automated checks, collect feedback from people, or measure accuracy over time.
-Evals make it easy to know when your AI is improving and when it needs work.
+To edit a prompt, make changes in the [Playground](/why-promptlayer/playground) and save. You can edit any message, add new messages, or change model settings.
+
+Let's try it. Add this line to the end of your System message:
+
+```
+Always include a "Baker's Tip" at the end with advice for beginners.
+```
+
+Click **Save Template**. Before saving, PromptLayer shows you a diff of exactly what changed—deletions in red, additions in green. Add a commit message like "Added baker's tip requirement" and save.
+
+<Frame>
+  <img src="/new-quickstart-images/prompt-diffing-display.png" alt="Comparing versions" />
+</Frame>
+
+You can click any previous version to view it, or hover and click **View Diff** to compare any two versions side by side.
+
+### Writing Prompts with AI
+
+Click the magic wand icon to open the AI prompt writer. It can help rewrite or improve your prompts based on your instructions. Try asking it to "add allergy warnings" to the recipe generator.
+
+<Frame>
+  <img src="/new-quickstart-images/prompt-ai-writer-display.png" alt="AI prompt writer" />
+</Frame>
+
+### Switching AI Models
+
+PromptLayer is model-agnostic. You can switch between OpenAI, Anthropic, Google, and [other providers](/features/supported-providers) without changing your prompt. Click the model name at the bottom of the editor to switch.
+
+<Frame>
+  <img src="/new-quickstart-images/prompt-switch-model-display.png" alt="Switching models" />
+</Frame>
+
+All prompts work across models, including [function calling and tool use](/features/prompt-registry/tool-calling). PromptLayer also supports [custom models](/features/custom-providers) and [fine-tuned models](/why-promptlayer/fine-tuning).
+
+## Deploying to Prod
+
+Once your prompt is ready, you can deploy it to production using release labels.
+
+### Release Labels
+
+[Release labels](/features/prompt-registry/release-labels) control which prompt version is live. You can mark versions as "production", "staging", or "testing". Your code fetches the prompt by label, so you can update the live version without changing any code.
+
+<Frame>
+  <img src="/new-quickstart-images/prompt-release-access.png" alt="Release labels" />
+</Frame>
+
+### A/B Testing
+
+To compare prompt versions in production, assign different labels to different versions and split traffic between them. This lets you test changes on real users before fully rolling out.
+
+<Frame>
+  <img src="/new-quickstart-images/prompt-ab-test-display.png" alt="A/B testing prompts" />
+</Frame>
+
+Learn more about [A/B testing](/why-promptlayer/ab-releases).
+
+## Building Agents
+
+[Agents](/why-promptlayer/agents) are multi-step AI workflows. Unlike a single prompt, an agent can chain multiple prompts together, use tools, and make decisions based on intermediate results.
+
+<Frame>
+  <img src="/new-quickstart-images/agent-creation-access.png" alt="Creating an agent" />
+</Frame>
+
+Create an agent by clicking **New** → **Agent**. You can build workflows visually without writing code.
+
+## Evaluations
+
+Evals test how well your prompts perform. You can run automated checks, collect human feedback, or measure accuracy over time.
 
 Learn more about [Evaluations](/features/evaluations/overview).
 
-## 5. Analyzing Performance
+## Logs and Analytics
 
-Analytics help you understand how your prompts and agents are performing. They
-show cost, speed, and quality, so you can make informed changes. Analytics also
-create an audit trail for every run, helping teams track and review all work.
-
-<Frame caption="Access Analytics for your workspace via the Analytics Navigation item in the Sidebar">
-    <img src="/new-quickstart-images/analytics-display.png" alt="Analytics dashboard display" data-og-width="2880" width="2880" data-og-height="1552" height="1552" data-path="images/quickstart/analytics-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-### 5.a. Reviewing Prompt Executions
-
-Within a workspace, Logs are viewable by clicking the "Live Logs" icon. Each
-request to a model creates a Log.
-
-<Frame caption="Access Live Logs for your workspace via the Live Logs Navigation item in the Sidebar">
-    <img src="/new-quickstart-images/logs-display.png" alt="Logs interface display" data-og-width="2880" width="2880" data-og-height="1556" height="1556" data-path="images/quickstart/logs-display.png" data-optimize="true" data-opv="3"  />
-</Frame>
-
-Each prompt run is recorded with full details of what was sent and what came
-back. Logs help teams trace errors, learn from past results, and improve
-performance over time.
-
-#### Drilling into a Prompt
-
-When a prompt is selected, clicking the "Analytics & Logs" panel reveals the
-Logs.
+Every prompt run is logged with full request and response details. [Analytics](/why-promptlayer/analytics) show cost, latency, and usage patterns across your prompts.
 
 <Frame>
-    <img src="/new-quickstart-images/logs-by-prompt-display.png" alt="Logs filtered by prompt" data-og-width="2880" width="2880" data-og-height="1556" height="1556" data-path="images/quickstart/logs-by-prompt-display.png" data-optimize="true" data-opv="3"  />
+  <img src="/new-quickstart-images/analytics-display.png" alt="Analytics dashboard" />
 </Frame>
 
-### 5.b. Reviewing Agent Executions
+### Viewing Logs
 
-Tracing divides complex workflows into clear steps, called spans. You can see
-exactly how long each step takes and where issues may occur, making problem
-solving faster and easier.
+Click **Logs** in the sidebar to see all requests. You can filter by prompt, [search by content](/why-promptlayer/advanced-search), and debug errors.
 
-<Frame caption="Access Traces for your workspace via the Live Logs Navigation item in the Sidebar, then select &#x22;Traces&#x22; at the top, next to requests">
-    <img src="/new-quickstart-images/traces-display.png" alt="Trace visualization display" data-og-width="2880" width="2880" data-og-height="1556" height="1556" data-path="images/quickstart/traces-display.png" data-optimize="true" data-opv="3"  />
+<Frame>
+  <img src="/new-quickstart-images/logs-display.png" alt="Request logs" />
 </Frame>
 
-<Note>
-  Traces are for Agents, not Prompts
-</Note>
+You can also view logs for a specific prompt by clicking **Analytics & Logs** in the prompt editor.
 
-### 5.c. Monitoring Behavior
+<Frame>
+  <img src="/new-quickstart-images/logs-by-prompt-display.png" alt="Logs filtered by prompt" />
+</Frame>
 
-Logs and traces together create observability, or the ability to see inside
-your system. With PromptLayer, every part of your AI process becomes clear and
-understandable, from first draft to production launch.
+Use the **Backtest** feature to run a new prompt version against historical inputs and compare results.
 
-Learn more about [Observability](https://www.promptlayer.com/platform/observability).
+### Traces and Spans
 
-## Further Reading
+For agents, [traces](/running-requests/traces) show each step of the workflow as spans. You can see timing, inputs, and outputs for every step.
 
-* [Tutorial Videos](/tutorial-videos)
-* [Quickstart - Pt. 2](/quickstart-part-two)
+<Frame>
+  <img src="/new-quickstart-images/traces-display.png" alt="Trace visualization" />
+</Frame>
+
+## Next Steps
+
+- [Tutorial Videos](/tutorial-videos)
+- [Quickstart Part 2](/quickstart-part-two) — Integrating with your codebase
