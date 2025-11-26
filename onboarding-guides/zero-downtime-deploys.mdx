@@ -1,0 +1,155 @@
+---
+title: "Zero Downtime Deploys"
+icon: "rocket"
+---
+
+When you need to add new input variables to your prompt template, it's important to keep your source code in sync with the template changes. This guide outlines the process for deploying these updates to your production environment without any downtime.
+
+## Input Variable Handling
+
+The `pl.run()` function handles input variables in the following ways:
+
+### 1. Normal Usage
+
+Provide all required variables as defined in your prompt template:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption"
+   },
+)
+```
+
+### 2. Missing Variables
+
+If you don't provide the required input variables, you'll receive a warning in the console, but the prompt template will still run. The missing variables will be sent to the LLM as unprocessed strings:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={},
+)
+```
+
+```
+WARNING: While getting your prompt template: Some input variables are missing: (`favorite_movie`)
+Undefined variable in message index 1: 'favorite_movie' is undefined
+```
+
+### 3. Extra Variables
+
+If you include extra variables that aren't in the template, they will be ignored:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "release_year": 1994  # This will be ignored if not in template
+   },
+)
+```
+
+In this case, the `release_year` variable will be ignored in the LLM request if it's not part of the current template.
+
+## Zero Downtime Update Process
+
+Follow these steps to safely add new variables to your prompt template without any service interruption:
+
+### Example Scenario
+
+Assume you have a prompt template version tagged with `prod` that uses only one input variable, `favorite_movie`:
+
+```python
+response = pl.run(
+    prompt_name="movie_recommender",
+    prompt_release_label="prod",
+    input_variables={
+        "favorite_movie": "The Shawshank Redemption"
+    },
+)
+```
+
+Now you want to add a new `mood` variable to enhance the recommendations.
+
+### Step-by-Step Process
+
+1. **Create a new template version** with the new `mood` variable in the PromptLayer UI
+
+2. **Apply a unique temporary label** (e.g., `new-var`) to the new version in the UI
+
+3. **Update and deploy your code** to use the new template version and include the new variable:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="new-var",  # Temporary label
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "mood": "uplifting"  # New variable
+   },
+)
+```
+
+4. **Verify the deployment** is working correctly with the new variable
+
+5. **In the PromptLayer UI, move the `prod` label** to the new prompt version
+
+6. **Update your source code** to reference the `prod` prompt version again and deploy:
+
+```python
+response = pl.run(
+   prompt_name="movie_recommender",
+   prompt_release_label="prod",  # Back to prod
+   input_variables={
+       "favorite_movie": "The Shawshank Redemption",
+       "mood": "uplifting"
+   },
+)
+```
+
+7. **Clean up** by deleting the temporary `new-var` label from the PromptLayer UI
+
+## Benefits of This Approach
+
+- **Zero downtime**: Your service remains available throughout the update process
+- **Rollback capability**: You can quickly revert to the previous version if issues arise
+- **Gradual rollout**: You can test the new version with a subset of traffic first
+- **Version control**: Both prompt templates and code changes are versioned and synchronized
+
+## Best Practices
+
+1. **Always test new variables** in a staging environment first
+2. **Use descriptive temporary labels** that indicate the purpose (e.g., `add-mood-var`)
+3. **Document variable changes** in your commit messages and PR descriptions
+4. **Consider using feature flags** for more complex deployments
+5. **Monitor logs** during the deployment for any unexpected warnings
+
+## Automation with CI/CD
+
+You can automate this process using PromptLayer's API in your CI/CD pipeline:
+
+```python
+# Example CI/CD script
+import promptlayer
+
+# Step 1: Create new version and apply temporary label
+pl_client.create_prompt_template_version(...)
+pl_client.apply_label("new-var", ...)
+
+# Step 2: Deploy application code
+# ... deployment logic ...
+
+# Step 3: Move prod label to new version
+pl_client.move_label("prod", to_version=new_version)
+
+# Step 4: Clean up temporary label
+pl_client.delete_label("new-var")
+```
+
+This ensures consistent, repeatable deployments without manual intervention.

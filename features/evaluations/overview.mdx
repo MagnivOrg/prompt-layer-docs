@@ -1,29 +1,48 @@
 ---
-title: "Evals Overview"
+title: "Evaluations"
 icon: "book"
 ---
 
-**We believe that evaluation engineering is half the challenge of building a good prompt.** The Evaluations page is designed to help you iterate, build, and run batch evaluations on top of your prompts. Every prompt and every use case is different.
+<Info>
+To read about how to use the Evaluations feature, see the [Evaluations User Guide](../../features/evaluations/getting-started).
+</Info>
 
-Inspired by the flexibility of tools like Excel, we offer a visual pipeline builder that allows users to construct complex evaluation batches tailored to their specific requirements. Whether you're scoring prompts, running bulk jobs, or conducting regression testing, the Evaluations page provides the tools needed to assess prompt quality effectively. Made for both engineers and subject-matter experts.
+## UI-First Evaluations
 
-## Common Tasks
+PromptLayer's evaluation system is UI-first. We have all the features to run evals [via code](../../reference/create-reports), but we built the system from the ground up to be fully featured and functional in the UI.
 
-- **Scoring Prompts**: Utilize golden datasets for comparing prompt outputs with ground truths and incorporate human or AI evaluators for quality assessment.
-- **One-off Bulk Jobs**: Ideal for prompt experimentation and iteration.
-- **Backtesting**: Use historical data to build datasets and compare how a new prompt version performs against real production examples.
-- **Regression Testing**: Build evaluation pipelines and datasets to prevent edge-case regression on prompt template updates.
-- **Continuous Integration**: Connect evaluation pipelines to prompt templates to automatically run an eval with each new version (and catologue the results). Think of it like a Github action.
+Why? We want evals to be a collaborative experience with multiple stakeholders—technical and non-technical. This fits with our product ethos: interacting with LLMs is a new form of work that needs to be collaborative, transparent, and include multiple stakeholders.
 
-## Examples Use-Cases
+## How It Works
 
-- **Chatbot Enhancements**: Improve chatbot interactions by evaluating responses to user requests against semantic criteria.
-- **RAG System Testing**: Build a RAG pipeline and validate responses against a golden dataset.
-- **SQL Bot Optimization**: Test Natural Language to SQL generation prompts by _actually_ running generated queries against a database (using the API Endpoint step), followed by an evaluation of the results' accuracy.
-- **Improving Summaries**: Combine AI evaluating prompts and human graders to help improve prompts without a ground truth.
+An evaluation is a pipeline of steps (columns) that you run on a series of data. It lets you run a repeatable set of steps on multiple rows and combine them to create a score.
 
-## Additional Resources
+We've spent a lot of time enabling all types of evaluations—both super simple and super sophisticated—to be successful on PromptLayer. You can read more about how it works and how to create your own evals in the [Evaluations User Guide](../../features/evaluations/getting-started).
 
-For a deeper understanding of evaluation approaches, especially for complex LLM applications beyond simple classification or programming tasks, check out our blog post: [How to Evaluate LLM Prompts Beyond Simple Use Cases](https://blog.promptlayer.com/how-to-evaluate-llm-prompts-beyond-simple-use-cases/). This guide explores strategies like Decomposition Testing, working with Negative Examples, and implementing LLM as a Judge Rubric frameworks.
+## Ad-Hoc vs Templated Evals
 
-[Click here to see in-depth examples.](/features/evaluations/examples)
+While you can use evals for any use case, we have a few mental models we like to share:
+
+**Ad-hoc evals** are used to answer one specific question. Maybe you want to analyze some production data or try out a new model. These are one-off. We have also found customer running ad-hoc evals that are not really evals but more like data analysis or data exploration. For example taking a subset of production data and running a prompt on them to categorize the type of query. This is a one-off experiment that leverages the easy to use evals platform on PromptLayer and the fact that we have access to your production data.
+
+**Templated evals** follow a specific rubric that your team will re-run over and over—[either nightly](../../features/evaluations/programmatic) or as part of a big product or feature push. These are more structured and defined, with specific metrics.
+
+## Our Take: Use Assertions
+
+Whatever type of eval you create, we've found the best rubrics are a series of true/false questions. Our LLM Assertion column is perfect for this, but you can create your own rubric too.
+
+Basically, your team should come up with a series of yes/no questions to ask on your data. For example:
+- Does the output have at least one header?
+- Does it reference the correct customer's name?
+
+One advanced trick: earlier in your eval, generate a series of assertions based on information in that row, then use those to judge the output. You can import the dynamically generated assertions into the LLM Assertion column.
+
+That said, use whatever eval type fits your needs. Assertions are just what we've found easiest to understand and build out.
+
+## Use Production Data
+
+Another strong reccomendation is to use production data. We believe the best data is production data. A lot of teams come to us without a dataset or an evaluation, but they have tons of production data. That is a perfect place to start.
+
+We've built a fully featured dataset builder that lets you build really sophisticated datasets from production data.
+
+If you're not using that, you're missing one of the most powerful features of PromptLayer.

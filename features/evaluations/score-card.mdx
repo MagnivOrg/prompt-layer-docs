@@ -3,124 +3,52 @@ title: "Score Card"
 icon: "star"
 ---
 
-The score card feature in PromptLayer allows you to assign a score to each evaluation you run. This score provides a quick and easy way to assess the performance of your prompts and compare different versions.
+Score cards in PromptLayer provide a powerful way to automatically calculate and track evaluation scores for your pipelines. Scores are calculated automatically when an evaluation completes, giving you immediate insights into your prompt performance.
 
-## Configuring the Score Card
+## How Scoring Works
 
-<Frame>
-![Score Card Example](/images/score-card/default.png)
-</Frame>
+When an evaluation pipeline finishes running, PromptLayer automatically calculates a score based on the results. There are two types of scoring methods available:
 
-### Default Configuration
+### Simple Scores
 
-By default, the score is calculated based on the last column in your evaluation results:
+Simple scores are the default scoring method. They automatically aggregate results from selected columns in your pipeline.
 
-- If the last column contains Booleans, the score will be the percentage of `true` values.
-- If the last column contains numbers, the score will be the average of those numbers.
+**How Simple Scoring Works:**
 
-### Custom Column Selection
+1. **Column Selection**: By default, the last column in your pipeline is used for scoring. You can select specific columns to include in the score calculation.
 
-You can customize which columns are included in the score card calculation. When setting up your evaluation pipeline, click the "Score card" button to configure the score card.
+![configure-score-columns-screenshot](./images/evals/configure-scorecard-simple.png)
 
-Here, you can add specific columns to be included in the score calculation:
+2. **Value Aggregation**: For each scoring column, the system:
+   - Collects all completed cell values
+   - Converts values to booleans (for true/false assertions) or numbers
+   - Calculates the mean of all values
 
-- If you add multiple numeric columns, the total score will be the average of the averages for each selected column.
-- If you add multiple Boolean columns, the total score will be the average of the `true` percentages for each selected column.
-- Columns that do not contain numbers or Booleans will not be included in the score calculation.
+3. **Score Types**:
+   - **Boolean scores**: Displayed as a percentage (0-100%) representing the ratio of true values
+   - **Numeric scores**: Displayed as the average of all numeric values
 
-<Frame>
-![Score Card Columns](/images/score-card/columns.png)
-</Frame>
+4. **Final Score**: If multiple columns are selected for scoring, the final score is the mean of all column scores. You will see a breakdown of each column's contribution to the overall score.
 
-These selected columns will also be formatted for more easy viewing in the evaluation report. You will see larger numbers, and check/x icons for booleans.
+![score-columns-screenshot](images/evals/scorecard-simple.png)
 
-### Custom Scoring Logic
+### Matrix Scores
 
-For more advanced scoring needs, you can provide your own custom scoring logic using Python or JavaScript code. The code execution environment is the same as the one used for the code execution evaluation column type [(learn more)](/features/evaluations/eval-types#code-execution).
+Matrix scores provide advanced scoring capabilities using custom code. This allows you to implement complex scoring logic, weighted averages, or custom business rules.
 
-This custom scoring logic can be used to generate a single score number or a drill-down matrix.
+**How Matrix Scoring Works:**
 
-<Frame>
-![Score Card Matrix](/images/score-card/matrix.png)
-</Frame>
+1. **Custom Code Execution**: You provide Python (or JavaScript) code that receives all evaluation data
+2. **Data Access**: Your code receives a `data` variable containing all row results
+3. **Score Calculation**: Your code must return:
+   - A `score` key with a numeric value (required)
+   - Optionally, a `score_matrix` for detailed scoring breakdowns. You can provide multiple matrices if needed
 
-You can optionally return multiple drill-down matrices. This is useful for generating confusion matrices.
 
-<Frame>
-![Score Card Matrices](/images/score-card/matrices.gif)
-</Frame>
+![matrix-score-screenshot](images/evals/scorecard-matrix.png)
 
-Your custom scoring code must return an object with the following keys:
 
-- `score` (required): A number representing the overall score. This is mandatory.
-- `score_matrix` (optional): A list of lists of lists, representing one or more matrices of drilled-down scores. Each cell in these matrices can be a raw value or an object with metadata.
 
-#### Score Matrix Cell Format
+### Updating a Score on a Report
 
-Each cell in the `score_matrix` can be either:
-- A raw value (string or number), or
-- An object with the following properties:
-  - `value`: The actual value of the cell, which can be a string or number.
-  - `positive_metric`: (Optional) A boolean indicating whether an increase in this value is considered positive (`true`). If absent, we default to true.
-
-**Examples**
-- Simple value: `42`
-- Object with metadata: `{"value": 42, "positive_metric": true}`
-
-The optional `positive_metric` property can be used to indicate how changes in the value should be interpreted when comparing evaluations. This is particularly useful for automated reporting and analysis tools.
-
-#### Adding Titles to Score Matrices
-
-To add titles to your score matrices, simply add an extra field to the first row of the matrix and it will automatically be interpreted as the primary title. For example, if you have a matrix like:
-
-```python
-[[1,2],[1,2]]
-```
-
-You can add a title by modifying it to:
-
-```python
-[["Title",1,2],[1,2]]
-```
-
-### Code example
-
-The `data` variable will be available in your scoring code, which is a list containing a dictionary for each row in the evaluation results. The keys in each dictionary correspond to the column names, and the values are the corresponding cell values.
-
-For example:
-
-```py Python
-# The variable `data` is a list of rows.
-# Each row is a dictionary of column name -> value
-# For example: [
-#       {'columnA': 1, 'columnB': 2},
-#       {'columnA': 4, 'columnB': 1}
-#  ]
-#
-# Must return a dictionary with the following structure:
-# {
-#   'score': int,  # Required
-#   'score_matrix': [[[int, int, ...], ...]...],  # Optional - list of lists of lists of integers
-# }
-
-return {
-    'score': len(data),
-    'score_matrix': [[
-        ["Criteria", "Weight", "Value"],
-        ["Correctness", 4, 7],
-        ["Completeness", 3, 6],
-        ["Accuracy", 5, 8],
-        ["Relevance", 4, 9]
-    ]],
-}
-```
-
-## Comparing Evaluation Reports
-
-You can compare two evaluation reports to see how scores and other metrics have changed between runs. Simply click the "Compare" button and select the evaluation reports you want to compare.
-
-The score card and any score matrices will be displayed side-by-side for easy comparison of your prompt's performance over time.
-
-<Frame>
-![Compare Score Cards](/images/score-card/compare.png)
-</Frame>
+By default scores are inhereted on a pipline. However, you can update the score calculation on an existing report by editing the report settings. Changes to scoring will automatically recalculate the score based on the new configuration. 

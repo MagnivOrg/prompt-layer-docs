@@ -5,7 +5,13 @@ icon: "fishing-rod"
 
 Webhooks can be set up to receive notifications about changes to prompt templates. This functionality is particularly useful for storing prompts in cache, allowing for quicker retrieval without slowing down releases.
 
-### Event Payload Format
+## Setting Up Webhooks
+
+To set up a webhook, go to the **Webhook** section in the **Settings** page. Enter the URL of the endpoint you want to send the webhook to and click **Submit**.
+
+![Creating Webhook](/images/webhooks-form.png)
+
+## Event Payload Format
 
 When an event occurs, we send a POST request with a payload in this structure:
 
@@ -21,8 +27,7 @@ When an event occurs, we send a POST request with a payload in this structure:
 }
 ```
 
-### Supported Event Types
-We notify you for these events:
+## Supported Event Types
 
 | Event Type                           | Description                                                     | Details                                                                 |
 |--------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------|
@@ -37,9 +42,9 @@ We notify you for these events:
 | `report_finished`                    | When a evaluation report is completed. | <ul><li>`report_id` (number)</li><li>`report_name` (string)</li></ul> |
 | `dataset_version_created_by_file`    | When a dataset version is successfully created from a file upload. | <ul><li>`dataset_id` (number)</li><li>`dataset_version_number` (number)</li></ul> |
 | `dataset_version_created_by_file_failed` | When dataset file processing fails. | <ul><li>`error_message` (string)</li></ul> |
-| `dataset_version_created_from_filter_params` | When a dataset version is created from filter parameters. | <ul><li>`dataset_id` (number)</li><li>`rows_added` (number)</li><li>`dataset_version_number` (number)</li></ul> | 
+| `dataset_version_created_from_filter_params` | When a dataset version is created from filter parameters. | <ul><li>`dataset_id` (number)</li><li>`rows_added` (number)</li><li>`dataset_version_number` (number)</li></ul> |
 
-### Example Payload
+## Example Payload
 
 ```json
 {
@@ -59,21 +64,15 @@ We notify you for these events:
 }
 ```
 
-### Configuring a Webhook
+## Securing Your Webhook
 
-To set up a webhook, go to the **Webhook** section in the **Settings** page. Enter the URL of the endpoint you want to send the webhook to and click **Submit**.
-
-![Creating Webhook](/images/webhooks-form.png)
-
-### Securing Your Webhook
 When you create a webhook, you'll receive a webhook secret signature that looks like this:
 
 ![Webhook Secret Signature](/images/webhook-secret-signature.png)
 
 This secret is used to verify that incoming webhook requests are authentic and come from PromptLayer. The signature is included in the `X-PromptLayer-Signature` header of each webhook request.
 
-
-#### Verifying Webhook Signatures
+### Verifying Webhook Signatures
 
 Here are code examples showing how to verify the signatures:
 
@@ -135,8 +134,49 @@ export function verifySignature(signature, payload, secretKey) {
     return false;
   }
 }
- 
+
 const isValid = verifySignature(signature, payload, secretKey);
 console.log("Signature is", isValid ? "valid" : "invalid");
 ```
 </CodeGroup>
+
+## Using Webhooks for Caching
+
+Webhooks are particularly useful for maintaining a local cache of prompts, eliminating the need for extra round-trips to PromptLayer. Here's how it works:
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant PL as PromptLayer Server
+  participant APP as Your Application
+  participant DB as Your Cache / DB
+  participant LLM as Model Provider
+
+  PL->>APP: "prompt.updated" webhook
+  APP->>DB: invalidate + store latest prompt
+  user->>APP: request needing AI
+  APP->>DB: fetch prompt
+  APP->>LLM: run prompt
+  APP-->>PL: async track.log (optional queue)
+```
+
+### Implementation Example
+
+1. **Handle webhook events**:
+
+```python
+# pseudocode
+def handle_pl_webhook(event):
+    prompt = event["data"]
+    db.prompts.upsert(prompt["prompt_template_name"], prompt)
+```
+
+2. **Serve traffic from cache**:
+
+```python
+prompt = db.prompts.get("order-summary")
+llm_response = openai.chat.completions.create(...)
+queue.enqueue(track_to_promptlayer, llm_response)
+```
+
+> **Tip:** Most teams push the track_to_promptlayer onto a Redis or SQS queue so as to not block on the logging of a request.

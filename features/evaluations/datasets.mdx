@@ -8,53 +8,20 @@ Datasets are often used for evaluations, but they can also be exported. Each dat
 
 You can create a dataset from your LLM request history or by uploading a dataset file.
 
-## Creating a Dataset from History
+Datasets are also versioned, allowing you to add examples over time.
+
+## Creating a Dataset from Production History
 
 Creating a dataset from your history is straightforward using the Dataset dialogue. Here, you can build a dataset from your request history. The dataset will include metadata, input variable context, tags, and the request response. This is useful for backtesting new prompt versions.
 
 When creating a dataset from your history, several options are available for customization. You have the option to use time filters to narrow down the history included in the dataset by specifying a start and end time. Additionally, you can refine your dataset by including specific metadata or prompt templates, where metadata involves key-value pairs and prompt templates can be specified by name and version numbers. For those seeking more advanced customization, filtering based on a search query, specific scoring criteria, or tags can be used to build your dataset. 
 
+## Uploading a Dataset
 
-## Creating a Dataset File
+You can also upload a dataset file in CSV or JSONL format. The uploaded file should contain the input variables and any expected outputs you want to include in the dataset.
 
-JSON or CSV files are accepted for the dataset input file.
+When uploading a dataset, ensure that the file is properly formatted. For CSV files, each column should represent an input variable or expected output, with the first row containing the headers. For JSONL files, each line should be a valid JSON object representing a single example with key-value pairs for input variables and expected outputs.
 
-### JSON Format
+## Editing a dataset on PromptLayer
 
-In the JSON format, each test case is represented as a separate JSON object. The keys of the object correspond to the input variable names defined in the prompt template. The values represent the specific input values for each test case. Here's an example:
-
-```json
-[
-  {
-    "name": "John Doe",
-    "age": 30,
-    "location": "New York"
-  },
-  {
-    "name": "Jane Smith",
-    "age": 35,
-    "location": "Los Angeles"
-  },
-  {
-    "name": "Michael Johnson",
-    "age": 40,
-    "location": "Chicago"
-  }
-]
-
-```
-
-In the above example, the prompt template may contain input variables like `{name}`, `{age}`, and `{location}`. Each test case object provides the corresponding values for these variables.
-
-### CSV Format
-
-In the CSV format, each test case is represented as a separate row in the CSV file. The column headers correspond to the input variable names defined in the prompt template. The cells in each row represent the specific input values for each test case. Here's an example:
-
-```
-name,age,location
-John Doe,30,New York
-Jane Smith,35,Los Angeles
-Michael Johnson,40,Chicago
-```
-
-In this example, the prompt template may contain input variables like `{name}`, `{age}`, and `{location}`. Each row in the CSV file provides the corresponding values for these variables.
+You can also edit a dataset directly on PromptLayer
