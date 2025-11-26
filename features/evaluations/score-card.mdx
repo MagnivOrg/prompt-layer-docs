@@ -17,6 +17,8 @@ Simple scores are the default scoring method. They automatically aggregate resul
 
 1. **Column Selection**: By default, the last column in your pipeline is used for scoring. You can select specific columns to include in the score calculation.
 
+![configure-score-columns-screenshot](./images/evals/configure-scorecard-simple.png)
+
 2. **Value Aggregation**: For each scoring column, the system:
    - Collects all completed cell values
    - Converts values to booleans (for true/false assertions) or numbers
@@ -28,8 +30,7 @@ Simple scores are the default scoring method. They automatically aggregate resul
 
 4. **Final Score**: If multiple columns are selected for scoring, the final score is the mean of all column scores. You will see a breakdown of each column's contribution to the overall score.
 
-
-[Screenshot placeholder: Show UI where users can select which columns to include in scoring]
+![score-columns-screenshot](images/evals/scorecard-simple.png)
 
 ### Matrix Scores
 
@@ -43,31 +44,8 @@ Matrix scores provide advanced scoring capabilities using custom code. This allo
    - A `score` key with a numeric value (required)
    - Optionally, a `score_matrix` for detailed scoring breakdowns. You can provide multiple matrices if needed
 
-**Matrix Score Code Structure:**
 
-```python
-    # Example: Calculate weighted average
-    total_score = 0
-    total_weight = 0
-
-    for row in data:
-        # Access column values by name
-        accuracy = row.get('accuracy_check', 0)
-        relevance = row.get('relevance_check', 0)
-
-        # Apply custom weights
-        weighted_score = (accuracy * 0.7) + (relevance * 0.3)
-        total_score += weighted_score
-        total_weight += 1
-
-    final_score = total_score / total_weight if total_weight > 0 else 0
-
-    return {
-        'score': final_score,
-        'score_matrix': [...]  # Optional: detailed breakdown
-    }
-```
-
+![matrix-score-screenshot](images/evals/scorecard-matrix.png)
 
 
 
