@@ -3,210 +3,246 @@ title: "Quickstart - Pt 2"
 icon: "square-2"
 ---
 
-<Info>Did you read [Quickstart Part One](/quickstart)?</Info>
+<Info>This continues from [Quickstart Part 1](/quickstart), where we built a cake recipe generator prompt.</Info>
 
-### Streaming
+In Part 1, you created a prompt, tested it in the playground, and learned about versioning. Now let's evaluate prompt quality, test different models, and connect everything to your code.
 
-Streaming responses using `promptlayer_client.run` is easy. Streaming allows the API to return responses incrementally, delivering partial outputs as they're generated rather than waiting for the complete response. This can significantly improve the perceived responsiveness of your application.
+## Evaluating a Prompt
 
-<CodeGroup>
+Before deploying a prompt, you want to know if it's actually good. PromptLayer lets you build evaluation pipelines that score your prompt's outputs automatically.
 
-```python Python
-input_variables = {
-    "topic": "The American Revolution"
-}
+### Creating a Dataset
 
-response_stream = promptlayer_client.run(
-    prompt_name="ai-poet", input_variables=input_variables,
-    stream=True # Add this
-) 
+Evaluations run against a dataset - a collection of test cases with inputs and expected outputs. Let's create one for our cake recipe prompt.
 
-for data in response_stream:
-    # Access raw streaming response
-    print(data["raw_response"])
-    
-    # Access progressively built prompt blueprint
-    if data["prompt_blueprint"]:
-        current_response = data["prompt_blueprint"]["prompt_template"]["messages"][-1]
-        if current_response.get("content"):
-            print(f"Current response: {current_response['content']}")
-```
-
-```js Javascript
-const input_variables = {
-  topic: "The American Revolution"
-};
-
-const responseStream = await promptLayerClient.run({
-  promptName: "ai-poet", 
-  inputVariables: input_variables,
-  stream: true // Add this
-});
-
-for await (const message of responseStream) {
-    // Access raw streaming response
-    console.log(message.raw_response);
-    
-    // Access progressively built prompt blueprint
-    if (message.prompt_blueprint) {
-        const currentResponse = message.prompt_blueprint.prompt_template.messages.slice(-1)[0];
-        if (currentResponse.content) {
-            console.log("Current response:", currentResponse.content);
-        }
-    }
-}
-```
-
-</CodeGroup>
-
-When streaming is enabled, each chunk includes both the raw streaming response and the progressively built `prompt_blueprint`, allowing you to track how the response is constructed in real-time. The `request_id` is only included in the final chunk, indicating completion of the streaming response.
-
-Learn more about [OpenAI streams](https://cookbook.openai.com/examples/how_to_stream_completions).
-
-## Organization
-
-### Workspaces
-
-[Shared workspaces](/why-promptlayer/shared-workspaces) allow you to collaborate with the rest of the team. Use separate workspaces to organize work between projects or deployment environments. We commonly see teams with "Prod" and "Dev" workspaces. Each workspace has its own unique PromptLayer API key, allowing you to maintain separate authentication for different environments.
+Click **New** → **Dataset** and name it "cake-recipes-test".
 
 <Frame>
-![Workspace Selector](/images/quickstart/workspaces.png)
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Creating+dataset" alt="Creating a dataset" />
 </Frame>
 
-### Prompt branching
+Add a few test cases. Each row needs the input variables your prompt expects (`cake_type`, `serving_size`) and optionally an expected output to compare against:
 
-Use "Duplicate" or "Copy a version" to organize and branch your work. You can use this to duplicate a prompt into another workspace or to pop out a version into a brand new prompt template.
-
-<Frame>
-![copy-a-version.png](/images/quickstart/copy-a-version.png)
-</Frame>
-
-## Switching models
-
-An important part of prompt engineering is finding the right model. PromptLayer makes it easy to switch between language models and test them out.
-
-To switch between different models for your prompts, we recommend using our Prompt Blueprint feature.
-
-### Prompt Blueprint
-
-Prompt Blueprint is a model-agnostic data format that allows you to update models in PromptLayer without changing any code.
-
-Instead of using `response["raw_response"]` to access the LLM response (as done in earlier code snippets), we recommend using the standardized `response["prompt_blueprint"]`.
-
-Using it looks something like this:
-
-<CodeGroup>
-
-```python Python
-response = promptlayer_client.run(
-    prompt_name="ai-poet", input_variables=input_variables)
-
-print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+<Accordion title="Sample CSV for cake recipe dataset">
+```csv
+cake_type,serving_size,expected_output
+Chocolate Cake,8,"Should include cocoa or chocolate, have clear measurements"
+Vanilla Birthday Cake,12,"Should be festive, mention frosting options"
+Gluten-Free Lemon Cake,6,"Must not include wheat flour, should use alternatives"
+Vegan Carrot Cake,10,"No eggs or dairy, should suggest substitutes"
 ```
 
-```js JavaScript
-const response = await promptLayerClient.run({
-  promptName: "ai-poet", 
-  inputVariables: input_variables,
-});
-
-console.log(response["prompt_blueprint"]["prompt_template"]["messages"].slice(-1)[0]["content"]);
-```
-
-</CodeGroup>
-
-Using the above code snippet, you can update from OpenAI -> Anthropic without any code changes.
-
-For the exact schema, please look at the `prompt_template` return type of [get-prompt-template](/reference/templates-get).
-
-### Migrating prompts
-
-PromptLayer supports various models beyond OpenAI. You can easily switch between different models by updating the model parameter in your prompt template.
-
-For details on comparing models, see our [blog post on migrating prompts to open source models](https://blog.promptlayer.com/migrating-prompts-to-open-source-models-c21e1d482d6f).
-
-<Accordion title="If you're using a new model, make sure to add the new key to your .env file">
-For better security, you can use environment variables from a .env file:
-
-```txt .env
-OPENAI_API_KEY=sk-<your_openai_api_key>
-PROMPTLAYER_API_KEY=<your_promptlayer_api_key>
-ANTHROPIC_API_KEY=<your_anthropic_api_key>
-GOOGLE_API_KEY=<your_gemini_api_key>
-```
-For more on setting up environment variables in Python, refer to this [guide](https://www.twilio.com/en-us/blog/environment-variables-python).
-
-If you are using Python, we recommend using `python-dotenv`:
-
-<CodeGroup>
-
-```python Python
-pip install python-dotenv
-```
-
-```js Javascript
-npm install dotenv
-```
-
-</CodeGroup>
-
-Create a Python file called `app.py` and load the environment variables:
-
-<CodeGroup>
-
-```python Python
-from dotenv import load_dotenv
-
-load_dotenv()  # Load env vars from .env file
-```
-
-```js Javascript
-require('dotenv').config();
-```
-
-</CodeGroup>
+You can upload this CSV directly or add rows manually in the UI.
 </Accordion>
 
-### Updating the Base URL
+Learn more about [Datasets](/features/evaluations/datasets).
 
-To use your own self-hosted models or those from providers like HuggingFace, add a custom base URL to your workspace. In settings, scroll to "Provider Base URLs".
+### Creating an Eval Pipeline
 
-Models must conform to one of the listed provider model-families.
+Now let's build a pipeline that runs your prompt against each test case and scores the results.
+
+Click **New** → **Evaluation** and select your dataset.
 
 <Frame>
-![Base URL Configuration](/images/quickstart/base-url.png)
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Eval+pipeline+setup" alt="Eval pipeline setup" />
 </Frame>
 
-Base URLs will work locally and in the PromptLayer Playground.
+Add an **LLM-as-judge** scoring column. This uses AI to score each output against criteria you define. For our recipe prompt, we might check:
 
-### Fine-tuning
+- Does the recipe include all required sections (Overview, Ingredients, Instructions)?
+- Are measurements provided in both metric and US units?
+- Is the serving size correct?
 
-PromptLayer makes it incredibly easy to build [fine-tuned](/why-promptlayer/fine-tuning) models. It's specifically useful for fine-tuning a cheaper `gpt-3.5-turbo` model on more expensive `gpt-4` historical request data.
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+LLM+as+judge+configuration" alt="LLM as judge" />
+</Frame>
 
-Be warned, fine-tuning is hard to get right. [We wrote a blog post on why most teams should not rely on fine-tuning.](https://blog.promptlayer.com/why-fine-tuning-is-probably-not-for-you-37d8c4987530)
+<Accordion title="Other evaluation types">
+  Beyond LLM-as-judge, PromptLayer supports:
+  
+  - **Human grading**: Collect scores from domain experts
+  - **Diff comparison**: Compare outputs character-by-character to expected results
+  - **Cosine similarity**: Measure semantic similarity between outputs
+  - **Code evaluators**: Write custom Python scoring functions
+  
+  Agent nodes work the same way in eval pipelines.
+</Accordion>
 
-## Advanced prompt engineering
+Run the evaluation to see scores across all test cases. Learn more about [Evaluations](/features/evaluations/overview).
 
-### A/B releases (Prompt A/B Testing)
+### Testing Different Models
 
-A/B Releases allow you to test different versions of your prompts in production, safely roll out updates, and segment users. With this feature, you can split traffic between prompt versions based on percentages or user segments, enabling gradual rollouts and targeted testing. This functionality is powered by [Dynamic Release Labels](/features/prompt-registry/dynamic-release-labels), which let you overload release labels and dynamically route traffic to different prompt versions based on your configuration. [Learn more](/why-promptlayer/ab-releases).
+Want to see how your prompt performs on Claude vs GPT-4 vs Gemini? Add multiple columns to your eval pipeline, each with a different model override.
 
-### Batch jobs and datasets
+In your pipeline, click **Add Column** and configure each one to use a different model. The pipeline runs your prompt on each model and shows results side by side.
 
-In PromptLayer, you can build datasets by either uploading new data or utilizing historical data. This is a crucial step for running batch jobs and evaluating the performance of your prompts. 
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Model+comparison+columns" alt="Comparing models" />
+</Frame>
 
-Learn more about [datasets](/features/evaluations/datasets). PromptLayer provides tools to label or annotate data, or to build datasets with requests that you have previously logged.
+This helps you find the best price/performance balance for your use case. Learn more about [supported providers](/features/supported-providers).
 
-Once your datasets are ready, you can use the evals page to run a batch job. In this context, the datasets serve as the input variables to the prompt for each run in the batch. 
+## Historical Backtests
 
-### Backtests
+Once your prompt is in production, you'll have real request logs. Use these to test new prompt versions against actual user inputs.
 
-Backtesting is the easiest way to evaluate your prompts, allowing you to assess how new prompt versions would have performed under past conditions. To perform backtests, start by building a dataset from your request history. This can be done in a few clicks on the Datasets page.
+### Creating a Historical Dataset
 
-Once you have your dataset, the next step is to create an evaluation pipeline. This pipeline will feed historical request contexts into your new prompt version and compare the new results to the old results. You can use simple string comparisons or more advanced techniques like cosine similarities to measure differences. For detailed instructions, visit the [backtesting section](/features/evaluations/continuous-integration#backtesting). Backtesting is an effective way to detect potential regressions and validate improvements, ensuring that updates enhance rather than detract from the user experience.
+Go to **Datasets** and click **Add from Request History**. This opens a request log browser where you can filter and select requests.
 
-### Custom evals
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Add+from+request+history" alt="Adding from request history" />
+</Frame>
 
-For some prompts, it's better to build tailored evaluation pipelines that meet your specific requirements. For example, you can use PromptLayer to build end-to-end RAG pipelines or unit test evaluations. 
+Filter by prompt name, date range, metadata, or search content. Select the requests you want and click **Add Requests**. This captures the real inputs your users sent, along with the outputs your current prompt produced.
 
-Custom evaluations can be integrated into your CI/CD pipeline to run on every new version of your prompt. Learn more about [continuous integration](/features/evaluations/continuous-integration) and explore [eval examples here](/features/evaluations/examples). Evaluations provide a robust framework for continuously improving your prompts by rigorously testing them against a variety of scenarios and metrics.
+### Running a Backtest
+
+Create an evaluation that runs your new prompt version against this historical dataset. Add columns for:
+
+- **New prompt output**: The response from your updated prompt version
+- **Diff**: Side-by-side comparison highlighting changes from the original output
+
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Backtest+results" alt="Backtest results" />
+</Frame>
+
+Backtests are powerful because they show impact on real user data without needing to define exact pass/fail criteria upfront. You can quickly spot if a change produces dramatically different outputs.
+
+Learn more about [backtesting](/features/evaluations/continuous-integration#backtesting).
+
+## CI/CD Evaluation
+
+Attach an evaluation pipeline to run automatically every time you save a new prompt version - similar to GitHub Actions running tests on each commit.
+
+When saving a prompt, the commit dialog lets you select an evaluation pipeline. Choose one and click **Next**.
+
+From then on, each new version you create will run through the eval and show its score in the version history. This makes it easy to spot regressions before they reach production.
+
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Version+scores+percentage" alt="Eval scores by version" />
+</Frame>
+
+Learn more about [continuous integration](/features/evaluations/continuous-integration).
+
+## Connecting in Code
+
+PromptLayer serves as the source of truth for your prompts. Your application fetches prompts by name, keeping prompt logic out of your codebase and enabling non-engineers to make changes.
+
+### Installation
+
+<CodeGroup>
+
+```bash Python
+pip install promptlayer
+```
+
+```bash JavaScript
+npm install promptlayer
+```
+
+</CodeGroup>
+
+### Running Prompts
+
+Initialize the client and run a prompt. The SDK fetches the prompt template from PromptLayer, runs it against your configured LLM provider locally, then logs the result back.
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+
+client = PromptLayer()  # Uses PROMPTLAYER_API_KEY env var
+
+response = client.run(
+    prompt_name="cake-recipe",
+    input_variables={
+        "cake_type": "Chocolate Cake",
+        "serving_size": "8"
+    }
+)
+```
+
+```javascript JavaScript
+import { PromptLayer } from "promptlayer";
+
+const client = new PromptLayer();
+
+const response = await client.run({
+    promptName: "cake-recipe",
+    inputVariables: {
+        cake_type: "Chocolate Cake",
+        serving_size: "8"
+    }
+});
+```
+
+</CodeGroup>
+
+<Accordion title="Output Format">
+  The response includes a [prompt blueprint](/running-requests/prompt-blueprints) - a model-agnostic format that works the same whether you're using OpenAI, Anthropic, or any other provider. Access the generated content with:
+  
+  ```python
+  response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"]
+  ```
+  
+  This lets you switch models without changing how you read responses.
+</Accordion>
+
+Use `prompt_release_label="production"` to fetch the version labeled for production. Use `prompt_version=3` to pin to a specific version number. Agents work the same way - just pass the agent name.
+
+<Accordion title="Environment variables">
+Store your API keys as environment variables:
+
+```bash
+export PROMPTLAYER_API_KEY="your-api-key"
+export OPENAI_API_KEY="your-openai-key"
+```
+
+The client reads these automatically.
+</Accordion>
+
+### Metadata and Logging
+
+Add metadata to track requests by user, session, or feature flag:
+
+```python
+response = client.run(
+    prompt_name="cake-recipe",
+    input_variables={"cake_type": "Chocolate", "serving_size": "8"},
+    tags=["production", "recipe-feature"],
+    metadata={
+        "user_id": "user_123",
+        "session_id": "sess_abc"
+    }
+)
+
+# Add a score after reviewing the output
+client.track.score(request_id=response["request_id"], score=95)
+```
+
+This metadata appears in your logs, letting you filter and debug by user or feature. Learn more about [metadata](/features/prompt-history/metadata) and [tagging](/features/prompt-history/tagging-requests).
+
+For agents or complex workflows, enable tracing with `client = PromptLayer(enable_tracing=True)` and use the `@client.traceable` decorator on your functions to see each step as spans. Learn more about [traces](/running-requests/traces).
+
+## Organizations
+
+Use [organizations and workspaces](/why-promptlayer/shared-workspaces) to manage teams and environments. Common setups include separate workspaces for Production, Staging, and Development.
+
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Changelog" alt="Changelog" />
+</Frame>
+
+Key features:
+- **Role-based access control**: Owner, Admin, Editor, and Viewer roles at organization and workspace levels
+- **Audit logs**: Track who changed what and when
+- **Author attribution**: See who created and modified each prompt version
+- **Centralized billing**: Manage usage across all workspaces
+
+Each workspace has its own API key. Switch between workspaces using the dropdown in the top navigation.
+
+## Next Steps
+
+- [Deployment Strategies](/onboarding-guides/deployment-strategies) - Caching, webhooks, and production patterns
+- [Tutorial Videos](/tutorial-videos) - Watch walkthroughs of common workflows
+- [API Reference](/reference) - Full SDK documentation
