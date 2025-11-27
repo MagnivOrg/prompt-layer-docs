@@ -38,6 +38,8 @@ A prompt starts with two messages. The **System** message sets the AI's behavior
   **User message**: The input that changes each time the prompt runs. This is where you put the actual request and any input variables. In production, your code will dynamically fill in this message.
 
   Some prompts also use **Assistant** messages to show example responses, which helps the AI understand the expected format.
+
+  Learn more about [LLM idioms](https://blog.promptlayer.com/llm-idioms/) and why chat formats matter.
 </Accordion>
 
 Replace the default content with:
@@ -69,7 +71,7 @@ To test your prompt:
 3. Click **Run**
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Running+a+prompt" alt="Running a prompt in the playground" />
+  <img src="/new-quickstart-images/running-in-playground.gif" alt="Running a prompt in the playground" />
 </Frame>
 
 Save your prompt by clicking **Save Template**.
@@ -93,15 +95,19 @@ Save your prompt by clicking **Save Template**.
 
 ## Versioning Your Prompt
 
-PromptLayer tracks every change you make to a prompt. Each save creates a new version with a record of what changed, when, and by whom. Your version history appears in the left panel.
+PromptLayer tracks every change you make to a prompt. Each save creates a new version with a record of what changed, when, and by whom.
 
-<Frame>
-  <img src="/new-quickstart-images/prompt-versioning-display.png" alt="Version history" />
-</Frame>
+<Accordion title="Prompt Writing Tips">
+  - Use headers to structure your prompt (`**Section**:`)
+  - Be specific about output format
+  - Include examples when possible
+  
+  PromptLayer supports [Jinja2 templates](/features/prompt-registry/template-variables#jinja2-templates) for more advanced variable logic. For structured outputs, see our guide on [tool calling with LLMs](https://blog.promptlayer.com/tool-calling-with-llms-how-and-when-to-use-it/).
+</Accordion>
 
 ### Editing Prompts
 
-To edit a prompt, make changes in the [Playground](/why-promptlayer/playground) and save. You can edit any message, add new messages, or change model settings.
+To edit a prompt, open it in the editor and make your changes. You can edit any message, add new messages, or change model settings.
 
 Let's try it. Add this line to the end of your System message:
 
@@ -112,25 +118,27 @@ Always include a "Baker's Tip" at the end with advice for beginners.
 Click **Save Template**. Before saving, PromptLayer shows you a diff of exactly what changed: deletions in red, additions in green. Add a commit message like "Added baker's tip requirement" and save.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-diffing-display.png" alt="Comparing versions" />
+  <img src="/new-quickstart-images/bakers-tip.png" alt="Saving with diff view" />
 </Frame>
 
-You can click any previous version to view it, or hover and click **View Diff** to compare any two versions side by side.
+Your version history appears in the left panel. You can click any previous version to view it.
 
-<Accordion title="Prompt Writing Tips">
-  - Use headers to structure your prompt (`**Section**:`)
-  - Be specific about output format
-  - Include examples when possible
-  
-  PromptLayer supports [Jinja2 templates](/features/prompt-registry/template-variables#jinja2-templates) for more advanced variable logic.
-</Accordion>
+<Frame>
+  <img src="/new-quickstart-images/prompt-versioning-display.png" alt="Version history" />
+</Frame>
+
+Hover over a version and click **View Diff** to compare any two versions side by side.
+
+<Frame>
+  <img src="/new-quickstart-images/prompt-diffing-display.png" alt="Comparing versions with diff" />
+</Frame>
 
 ### Writing Prompts with AI
 
 Click the magic wand icon to open the AI prompt writer. It can help rewrite or improve your prompts based on your instructions. Try asking it to "add allergy warnings" to the recipe generator.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-ai-writer-display.png" alt="AI prompt writer" />
+  <img src="/new-quickstart-images/ai-prompt-writer-zoomed.png" alt="AI prompt writer" />
 </Frame>
 
 ### Switching LLMs
