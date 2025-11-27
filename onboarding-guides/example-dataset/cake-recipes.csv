@@ -1,0 +1,6 @@
+cake_type,serving_size,expected_output
+Chocolate Cake,8,"Should include cocoa or chocolate, have clear measurements"
+Vanilla Birthday Cake,12,"Should be festive, mention frosting options"
+Gluten-Free Lemon Cake,6,"Must not include wheat flour, should use alternatives"
+Vegan Carrot Cake,10,"No eggs or dairy, should suggest substitutes"
+
