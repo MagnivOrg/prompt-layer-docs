@@ -146,7 +146,7 @@ Click the magic wand icon to open the AI prompt writer. It can help rewrite or i
 PromptLayer is model-agnostic. You can switch between OpenAI, Anthropic, Google, and [other providers](/features/supported-providers) without changing your prompt. Click the model name at the bottom of the editor to switch.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-switch-model-display.png" alt="Switching models" />
+  <img src="/new-quickstart-images/switching-llms.gif" alt="Switching models" />
 </Frame>
 
 All prompts work across models, including [function calling and tool use](/features/prompt-registry/tool-calling). You can also connect [private models or custom hosts](/features/custom-providers), and build [fine-tuned models](/why-promptlayer/fine-tuning).
@@ -162,7 +162,7 @@ For engineers: PromptLayer offers several [deployment strategies](/onboarding-gu
 Release labels control which prompt version is live. You can mark versions as "production", "staging", or "testing". Your code fetches the prompt by label, so you can update the live version without changing any code.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-release-access.png" alt="Release labels" />
+  <img src="/new-quickstart-images/release-labels-close.png" alt="Release labels" />
 </Frame>
 
 Learn more about [release labels](/features/prompt-registry/release-labels).
@@ -191,19 +191,19 @@ For example, you could extend the cake recipe generator into an agent that:
 2. Scales the ingredients for 100 people
 3. Calculates the total cost based on current grocery prices
 
-Create an agent by clicking **New** → **Agent**.
+Create an agent by clicking **New** → **Agent**. You can build workflows visually using a drag-and-drop editor. Connect prompts, add conditionals, and loop over data. No code required.
 
 <Frame>
-  <img src="/new-quickstart-images/agent-creation-access.png" alt="Creating an agent" />
+  <img src="/new-quickstart-images/recipe-agent.png" alt="Creating an agent" />
 </Frame>
 
-You can build workflows visually using a drag-and-drop editor. Connect prompts, add conditionals, and loop over data. No code required.
+Like prompts, agents are versioned with commit messages and can be retrieved via the SDK.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Agent+workflow+editor" alt="Agent workflow editor" />
+  <img src="/new-quickstart-images/agent-version-list.png" alt="Agent version history" />
 </Frame>
 
-Agents are versioned the same way as prompts, with diffs and commit messages. Learn more about [Agents](/why-promptlayer/agents).
+Learn more about [Agents](/why-promptlayer/agents).
 
 ## Evaluations
 
@@ -216,7 +216,7 @@ Evals test how well your prompts perform. Common use cases include:
 - **Human grading**: Collect feedback from domain experts on prompt quality
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Evaluation+pipeline" alt="Evaluation pipeline" />
+  <img src="/new-quickstart-images/eval-example.png" alt="Evaluation pipeline" />
 </Frame>
 
 You can build evaluation pipelines visually and connect them to prompts for continuous testing. Learn more about [Evaluations](/features/evaluations/overview).
@@ -234,7 +234,7 @@ Every prompt run is logged with full request and response details. You can attac
 Click **Logs** in the sidebar to see all requests. You can filter by prompt, [search by content](/why-promptlayer/advanced-search), and debug errors.
 
 <Frame>
-  <img src="/new-quickstart-images/logs-display.png" alt="Request logs" />
+  <img src="/new-quickstart-images/logs-table.png" alt="Request logs" />
 </Frame>
 
 You can also view logs for a specific prompt by clicking **Analytics & Logs** in the prompt editor.
@@ -243,14 +243,14 @@ You can also view logs for a specific prompt by clicking **Analytics & Logs** in
   <img src="/new-quickstart-images/logs-by-prompt-display.png" alt="Logs filtered by prompt" />
 </Frame>
 
-Use the **Backtest** feature to run a new prompt version against historical inputs and compare results.
+From the logs table, you can select historical requests and click **Backtest** to run a new prompt version against those inputs and compare results.
 
 ### Traces and Spans
 
 For agents, [traces](/running-requests/traces) show each step of the workflow as spans. You can see timing, inputs, and outputs for every step. Traces are OpenTelemetry (OTEL) compatible, so you can integrate with your existing observability stack.
 
 <Frame>
-  <img src="/new-quickstart-images/traces-display.png" alt="Trace visualization" />
+  <img src="/new-quickstart-images/trace-span.png" alt="Trace visualization" />
 </Frame>
 
 ## Next Steps
