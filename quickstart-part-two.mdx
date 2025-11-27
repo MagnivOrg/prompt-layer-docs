@@ -18,7 +18,7 @@ Evaluations run against a dataset - a collection of test cases with inputs and e
 Click **New** → **Dataset** and name it "cake-recipes-test".
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Creating+dataset" alt="Creating a dataset" />
+  <img src="/new-quickstart-images/creating-dataset.png" alt="Creating a dataset" />
 </Frame>
 
 Add a few test cases. Each row needs the input variables your prompt expects (`cake_type`, `serving_size`) and optionally an expected output to compare against:
@@ -32,7 +32,7 @@ Gluten-Free Lemon Cake,6,"Must not include wheat flour, should use alternatives"
 Vegan Carrot Cake,10,"No eggs or dairy, should suggest substitutes"
 ```
 
-You can upload this CSV directly or add rows manually in the UI.
+<a href="/onboarding-guides/example-dataset/cake-recipes.csv" download>Download this CSV</a> or add rows manually in the UI.
 </Accordion>
 
 Learn more about [Datasets](/features/evaluations/datasets).
@@ -43,19 +43,25 @@ Now let's build a pipeline that runs your prompt against each test case and scor
 
 Click **New** → **Evaluation** and select your dataset.
 
-<Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Eval+pipeline+setup" alt="Eval pipeline setup" />
-</Frame>
+First, add a **Prompt Template** column. This runs your prompt against each row in the dataset, using the column values as input variables. The output appears in a new column.
 
-Add an **LLM-as-judge** scoring column. This uses AI to score each output against criteria you define. For our recipe prompt, we might check:
+Next, add an **LLM-as-judge** scoring column. This uses AI to score each output against criteria you define. For our recipe prompt, we might check:
 
 - Does the recipe include all required sections (Overview, Ingredients, Instructions)?
 - Are measurements provided in both metric and US units?
 - Is the serving size correct?
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+LLM+as+judge+configuration" alt="LLM as judge" />
+  <img src="/new-quickstart-images/llm_assertion_config.png" alt="LLM as judge" />
 </Frame>
+
+You can also add an **Equality Comparison** column to compare the prompt output against the `expected_output` column in your dataset.
+
+<Frame>
+  <img src="/new-quickstart-images/eval-pipeline.png" alt="Eval pipeline setup" />
+</Frame>
+
+Run the evaluation to see scores across all test cases. Learn more about [Evaluations](/features/evaluations/overview).
 
 <Accordion title="Other evaluation types">
   Beyond LLM-as-judge, PromptLayer supports:
@@ -68,19 +74,17 @@ Add an **LLM-as-judge** scoring column. This uses AI to score each output agains
   Agent nodes work the same way in eval pipelines.
 </Accordion>
 
-Run the evaluation to see scores across all test cases. Learn more about [Evaluations](/features/evaluations/overview).
-
 ### Testing Different Models
 
-Want to see how your prompt performs on Claude vs GPT-4 vs Gemini? Add multiple columns to your eval pipeline, each with a different model override.
+Want to compare how your prompt performs across GPT, Claude, and Gemini? Create a new evaluation for model comparison.
 
-In your pipeline, click **Add Column** and configure each one to use a different model. The pipeline runs your prompt on each model and shows results side by side.
+Add multiple **Prompt Template** columns, each configured with a different model override. The pipeline runs your prompt on each model and shows results side by side.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Model+comparison+columns" alt="Comparing models" />
+  <img src="/new-quickstart-images/model-comparison.png" alt="Comparing models" />
 </Frame>
 
-This helps you find the best price/performance balance for your use case. Learn more about [supported providers](/features/supported-providers).
+This helps you find the best price/performance balance for your use case. PromptLayer supports all major providers, plus any OpenAI-compatible API via [custom base URLs](/features/custom-providers).
 
 ## Historical Backtests
 
@@ -91,7 +95,7 @@ Once your prompt is in production, you'll have real request logs. Use these to t
 Go to **Datasets** and click **Add from Request History**. This opens a request log browser where you can filter and select requests.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Add+from+request+history" alt="Adding from request history" />
+  <img src="/new-quickstart-images/add-from-request-history.png" alt="Adding from request history" />
 </Frame>
 
 Filter by prompt name, date range, metadata, or search content. Select the requests you want and click **Add Requests**. This captures the real inputs your users sent, along with the outputs your current prompt produced.
@@ -104,7 +108,7 @@ Create an evaluation that runs your new prompt version against this historical d
 - **Diff**: Side-by-side comparison highlighting changes from the original output
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Backtest+results" alt="Backtest results" />
+  <img src="/new-quickstart-images/backtest-results.png" alt="Backtest results" />
 </Frame>
 
 Backtests are powerful because they show impact on real user data without needing to define exact pass/fail criteria upfront. You can quickly spot if a change produces dramatically different outputs.
@@ -120,7 +124,7 @@ When saving a prompt, the commit dialog lets you select an evaluation pipeline. 
 From then on, each new version you create will run through the eval and show its score in the version history. This makes it easy to spot regressions before they reach production.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Version+scores+percentage" alt="Eval scores by version" />
+  <img src="/new-quickstart-images/ci-cd-scores.png" alt="Eval scores by version" />
 </Frame>
 
 Learn more about [continuous integration](/features/evaluations/continuous-integration).
@@ -205,7 +209,7 @@ const response = await client.run({
 After running, head to **Logs** in PromptLayer to see your request with the full input, output, and latency.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Log+from+SDK+run" alt="Log from SDK run" />
+  <img src="/new-quickstart-images/request-log.png" alt="Log from SDK run" />
 </Frame>
 
 Use `prompt_release_label="production"` to fetch the version labeled for production. Use `prompt_version=3` to pin to a specific version number. Agents work the same way - just pass the agent name. Store API keys as environment variables (`PROMPTLAYER_API_KEY`, `OPENAI_API_KEY`) - the client reads these automatically.
@@ -232,7 +236,7 @@ client.track.score(request_id=response["request_id"], score=95)
 Your metadata and tags appear in the log details, letting you filter and search by user or feature.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Log+with+metadata" alt="Log with metadata" />
+  <img src="/new-quickstart-images/metadata-search.png" alt="Log with metadata" />
 </Frame>
 
 Learn more about [metadata](/features/prompt-history/metadata) and [tagging](/features/prompt-history/tagging-requests).
@@ -244,7 +248,7 @@ For agents or complex workflows, enable tracing with `client = PromptLayer(enabl
 Use [organizations and workspaces](/why-promptlayer/shared-workspaces) to manage teams and environments. Common setups include separate workspaces for Production, Staging, and Development.
 
 <Frame>
-  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Changelog" alt="Changelog" />
+  <img src="/new-quickstart-images/changelog.png" alt="Changelog" />
 </Frame>
 
 Key features:
