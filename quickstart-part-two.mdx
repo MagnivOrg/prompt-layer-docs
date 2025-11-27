@@ -125,6 +125,19 @@ From then on, each new version you create will run through the eval and show its
 
 Learn more about [continuous integration](/features/evaluations/continuous-integration).
 
+## Ad-Hoc Batch Runs
+
+Evaluations aren't just for testing prompts - they're one of the best tools for running prompts in batch. Think of it like a spreadsheet where each column can be an AI-powered computation.
+
+Upload a CSV or create a dataset, add prompt columns, run the batch, and export the results. Common use cases:
+
+- **Data labeling**: Run GPT over production data to create labeled training datasets
+- **Research**: Use web search prompts to find information about a list of companies or people
+- **Content generation**: Process hundreds of items (commits, support tickets, reviews) to generate summaries or emails
+- **Data enrichment**: Take a list of names and enrich with company, location, or other attributes
+
+You don't need to build permanent evaluation infrastructure for this. One-off, ad-hoc batch runs are a perfectly valid use case. Create a dataset, add your prompt columns, run it, export, and move on.
+
 ## Connecting in Code
 
 PromptLayer serves as the source of truth for your prompts. Your application fetches prompts by name, keeping prompt logic out of your codebase and enabling non-engineers to make changes.
@@ -183,24 +196,19 @@ const response = await client.run({
   The response includes a [prompt blueprint](/running-requests/prompt-blueprints) - a model-agnostic format that works the same whether you're using OpenAI, Anthropic, or any other provider. Access the generated content with:
   
   ```python
-  response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"]
+  print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
   ```
   
   This lets you switch models without changing how you read responses.
 </Accordion>
 
-Use `prompt_release_label="production"` to fetch the version labeled for production. Use `prompt_version=3` to pin to a specific version number. Agents work the same way - just pass the agent name.
+After running, head to **Logs** in PromptLayer to see your request with the full input, output, and latency.
 
-<Accordion title="Environment variables">
-Store your API keys as environment variables:
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Log+from+SDK+run" alt="Log from SDK run" />
+</Frame>
 
-```bash
-export PROMPTLAYER_API_KEY="your-api-key"
-export OPENAI_API_KEY="your-openai-key"
-```
-
-The client reads these automatically.
-</Accordion>
+Use `prompt_release_label="production"` to fetch the version labeled for production. Use `prompt_version=3` to pin to a specific version number. Agents work the same way - just pass the agent name. Store API keys as environment variables (`PROMPTLAYER_API_KEY`, `OPENAI_API_KEY`) - the client reads these automatically.
 
 ### Metadata and Logging
 
@@ -221,7 +229,13 @@ response = client.run(
 client.track.score(request_id=response["request_id"], score=95)
 ```
 
-This metadata appears in your logs, letting you filter and debug by user or feature. Learn more about [metadata](/features/prompt-history/metadata) and [tagging](/features/prompt-history/tagging-requests).
+Your metadata and tags appear in the log details, letting you filter and search by user or feature.
+
+<Frame>
+  <img src="https://placehold.co/1200x600/e8e8e8/999999?text=Screenshot+needed:+Log+with+metadata" alt="Log with metadata" />
+</Frame>
+
+Learn more about [metadata](/features/prompt-history/metadata) and [tagging](/features/prompt-history/tagging-requests).
 
 For agents or complex workflows, enable tracing with `client = PromptLayer(enable_tracing=True)` and use the `@client.traceable` decorator on your functions to see each step as spans. Learn more about [traces](/running-requests/traces).
 

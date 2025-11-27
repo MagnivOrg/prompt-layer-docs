@@ -151,6 +151,10 @@ PromptLayer is model-agnostic. You can switch between OpenAI, Anthropic, Google,
 
 All prompts work across models, including [function calling and tool use](/features/prompt-registry/tool-calling). You can also connect [private models or custom hosts](/features/custom-providers), and build [fine-tuned models](/why-promptlayer/fine-tuning).
 
+<Note>
+  Any model with a `base_url` can be added as a [custom provider](/features/custom-providers) - including self-hosted models, Azure OpenAI, or any OpenAI-compatible API.
+</Note>
+
 ## Deploying to Prod
 
 Once your prompt is ready, PromptLayer can manage which version goes live. Release labels let you control which version is in production, so you can update prompts without touching code.
