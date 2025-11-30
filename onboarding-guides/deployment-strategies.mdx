@@ -6,9 +6,9 @@ icon: ship
 
 PromptLayer fits into your stack at three levels of sophistication:
 
-1. **`promptlayer_client.run`** – zero-setup SDK sugar  
+1. **`promptlayer_client.run`** – zero-setup SDK sugar
 2. **Webhook-driven caching** – maintain local cache of prompt templates
-3. **Managed Agents** – let PromptLayer orchestrate everything server-side  
+3. **Managed Agents** – let PromptLayer orchestrate everything server-side
 
 
 <Frame>
@@ -57,9 +57,9 @@ const response = await plClient.run({
 3. SDK writes the log back to PromptLayer.
 
 > 💡 **Tip** – If latency is critical, enqueue the log to a background worker and let your request return immediately.
---- 
+---
 
-# Cache prompts with Webhooks 
+# Cache prompts with Webhooks
 
 Eliminate the extra round‑trip by **replicating prompts into your own cache or database**.
 
@@ -86,7 +86,7 @@ sequenceDiagram
 
 1. **Subscribe to webhooks in the UI**
 
-Read more here about webhooks [here](/features/prompt-registry/webhooks).
+Read more here about webhooks [here](/onboarding-guides/webhooks).
 
 2. **Maintain a local cache**
 
@@ -107,7 +107,7 @@ queue.enqueue(track_to_promptlayer, llm_response)
 
 > **Tip:** Most teams push the track_to_promptlayer onto a Redis or SQS queue so as to not block on the logging of a request.
 
-Read the full guide: **[PromptLayer Webhooks ↗](/features/prompt-registry/webhooks)**
+Read the full guide: **[PromptLayer Webhooks ↗](/onboarding-guides/webhooks)**
 
 ---
 
@@ -173,9 +173,10 @@ Learn more: **[Agents documentation ↗](/why-promptlayer/agents)**
 ## Further reading 📚
 
 * **Quickstart** – [Your first prompt](/quickstart)
-* **Webhooks** – [Events & signature verification](/features/prompt-registry/webhooks)
+* **Webhooks** – [Events & signature verification](/onboarding-guides/webhooks)
+* **Zero Downtime Deploys** – [Deploy new variables safely](/onboarding-guides/zero-downtime-deploys)
 * **Agents** – [Concepts & versioning](/why-promptlayer/agents)
-* **CI for prompts** – [Continuous Integration guide](/features/evaluations/ci)
+* **Evaluation** – [Building evaluation pipelines](/features/evaluations/getting-started)
 
 ---
 
