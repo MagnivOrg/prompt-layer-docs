@@ -46,8 +46,9 @@ PromptLayer currently supports the following OpenAI built-in tools:
 
 - **Web Search** — Get fast, up-to-date answers with citations from the web
 - **File Search** — Search through uploaded files and documents using Vector Stores
+- **Code Interpreter** — Write and execute Python code in a secure, sandboxed environment
 
-Additional tools like Code Interpreter and Image Generation may be available depending on your OpenAI API access.
+Additional tools like Image Generation may be available depending on your OpenAI API access.
 
 ### How to Add Built-in Tools in PromptLayer
 
@@ -103,9 +104,18 @@ For the **File Search** tool, you'll need to create and attach Vector Stores con
    - Retrieved context is used to generate informed responses
    - Sources can be traced back to specific documents
 
+### Using Code Interpreter
+
+OpenAI's Code Interpreter tool enables your prompts to write and execute Python code within a secure, sandboxed environment. This powerful feature allows for dynamic problem-solving, data analysis, visualization generation, and file processing—all without writing custom function definitions.
+
+To enable Code Interpreter, follow the steps above to add it as a built-in tool. The tool is configured with `container: { type: "auto" }` by default, which automatically manages the execution environment. The LLM will automatically use Code Interpreter when it needs to perform calculations, analyze data, create visualizations, or process files.
+
+For detailed information about Code Interpreter's capabilities, file handling, and configuration options, see the [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter).
+
 ### Learn More
 
 - [OpenAI Web Search Guide](https://platform.openai.com/docs/guides/tools-web-search)
 - [OpenAI File Search Guide](https://platform.openai.com/docs/guides/tools-file-search)
+- [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter)
 - [OpenAI Responses API Announcement](https://openai.com/index/new-tools-for-building-agents/)
 - [Deep Research API Cookbook](https://cookbook.openai.com/examples/deep_research_api/introduction_to_deep_research_api)
