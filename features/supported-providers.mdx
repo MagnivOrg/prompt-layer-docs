@@ -5,91 +5,67 @@ icon: "list-check"
 
 Below is the list of LLM providers supported in PromptLayer along with key capability notes. For providers not listed or advanced deployments, see [Custom Providers](/features/custom-providers).
 
-Notes:
-- "Playground" includes PromptLayer Playground and running ad-hoc generations.
-- "Prompt Registry" means you can use the provider/models in templates and releases.
-- "Logs" covers request tracking, metadata, scores, and analytics.
-- "Evaluations" indicates first-class support in evaluation pipelines. Some providers are supported via compatible clients; coverage can vary by model.
-
-## Summary
-
-| Provider | Logs | Prompt Registry | Playground | Evaluations | Notes |
-|---|---:|---:|---:|---:|---|
-| OpenAI | ✅ | ✅ | ✅ | ✅ | Supports Chat Completions and Responses API. Function/Tool Calling, JSON/Structured outputs, Vision models supported. Built-in Responses API tools (Web Search, File Search) supported in [Tool Calling](/features/prompt-registry/tool-calling#built-in-tools-openai-responses-api). |
-| OpenAI Azure | ✅ | ✅ | ✅ | ✅ | Use the Azure provider (deployment name, API version). Most OpenAI features apply; some params differ per Azure config. |
-| Anthropic | ✅ | ✅ | ✅ | ✅ | Tool Use supported. Claude 3 family supports images. |
-| Google (Gemini) | ✅ | ✅ | ✅ | ✅ | Multimodal image support. |
-| Vertex AI | ✅ | ✅ | ✅ | ✅ | Gemini and Anthropic Claude via Vertex AI. Configure project/region/credentials. |
-| Amazon Bedrock | ✅ | ✅ | ✅ | ✅ | Supports Anthropic Claude and Meta Llama (plus other families). Feature support varies by model. |
-| Mistral | ✅ | ✅ | ✅ | ✅ | Streaming supported; tool use availability depends on specific model. |
-| Cohere | ✅ | ✅ | ✅ | ✅ | Command/Command-R family supported; feature parity varies by model. |
-| Hugging Face | ✅ | ✅ | ✅ | ✅ | Supported for Playground/Registry/Logs. Evaluation support depends on the selected model/task. |
-| Anthropic Bedrock (Deprecated) | — | — | — | — | Deprecated. Use the native Anthropic provider or access Claude via Amazon Bedrock instead. |
-
-Legend: ✅ Supported • ⚠️ Varies/Partial • — Deprecated/Not applicable
-
 ## Provider Details
 
 ### OpenAI
-- Works across Logs, Prompt Registry, Playground, and Evaluations.
-- Features:
-  - Chat Completions and Responses API are both supported.
-  - Function/Tool Calling (including built-in Responses API tools: Web Search, File Search) — see [Tool Calling](/features/prompt-registry/tool-calling#built-in-tools-openai-responses-api).
-  - JSON mode / structured outputs.
-  - Vision models (e.g., `gpt-4-vision`) — see [FAQ: multimodal](/features/faq#does-promptlayer-support-multi-modal-image-models-like-gpt-4-vision).
-  - Streaming via SDK (Python/JS).
+
+- Chat Completions and Responses API are both supported.
+- Function/Tool Calling (including built-in Responses API tools: Web Search, File Search) — see [Tool Calling](/features/prompt-registry/tool-calling#built-in-tools-openai-responses-api).
+- JSON mode / structured outputs.
+- Vision models (e.g., `gpt-4-vision`) — see [FAQ: multimodal](/features/faq#does-promptlayer-support-multi-modal-image-models-like-gpt-4-vision).
+- Streaming via SDK (Python/JS).
 - Tip: You can also connect via [OpenRouter](/features/custom-providers#openrouter) as a custom provider to access many OpenAI-compatible models.
 
 ### OpenAI Azure
+
 - Same usage as OpenAI but configured with Azure deployment settings.
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
 - Ensure deployment name, API version, and resource URL are correctly configured.
+- Most OpenAI features apply; some params differ per Azure config.
 
 ### Anthropic
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
-- Features:
-  - Tool Use (Anthropic Messages API).
-  - Claude 3 family supports image inputs.
-  - Streaming via SDK.
+
+- Tool Use (Anthropic Messages API).
+- Claude 3 family supports image inputs.
+- Streaming via SDK.
 - If you previously used "Anthropic Bedrock", migrate to the native Anthropic provider or to Claude via Amazon Bedrock.
 
 ### Google (Gemini)
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
+
 - Multimodal support for images.
 - Use either the direct Google provider or Vertex AI based on your infrastructure preference.
 
 ### Vertex AI
-- Gemini and Anthropic Claude served through Google Cloud’s Vertex AI.
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
+
+- Gemini and Anthropic Claude served through Google Cloud's Vertex AI.
 - Configure project, region, and credentials as required by Vertex AI.
 
 ### Amazon Bedrock
+
 - Access Anthropic Claude and Meta Llama (and other families) via AWS Bedrock.
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
 - Capabilities vary per model—some models may not support tools or certain parameters.
 
 ### Mistral
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
+
 - Streaming supported; tool/function-call support depends on the specific model.
 
 ### Cohere
-- Supported across Logs, Prompt Registry, Playground, and Evaluations.
-- Feature availability (streaming, tool use) depends on the chosen model (e.g., Command family).
+
+- Command/Command-R family supported.
+- Feature availability (streaming, tool use) depends on the chosen model.
 
 ### Hugging Face
-- Supported across Logs, Prompt Registry, and Playground.
+
 - Evaluation support varies by model/task—text-generation models generally work best.
 - For endpoints with OpenAI-compatible shims, you can configure via a custom base URL.
 
 ### Anthropic Bedrock (Deprecated)
+
 - This legacy integration is deprecated.
-- Use:
-  - The native Anthropic provider, or
-  - Access Claude via Amazon Bedrock with the Bedrock provider.
+- Use the native Anthropic provider, or access Claude via Amazon Bedrock with the Bedrock provider.
 
 ## OpenAI-compatible Base URL Providers
 
-Many third‑party providers expose an OpenAI‑compatible API. You can connect any such provider by configuring a Provider Base URL that uses the OpenAI client.
+Many third‑party providers expose an OpenAI‑compatible API. You can connect any such provider by configuring a Provider Base URL that uses the OpenAI client. See [Custom Providers](/features/custom-providers) for more details.
 
 How to set up:
 1. Go to your workspace settings → "Provider Base URLs".
