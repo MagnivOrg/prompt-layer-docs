@@ -140,12 +140,13 @@ jobs:
 
       - name: Run Claude Code to update documentation
         id: claude-code
-        if: steps.test-api-key.outputs.api_status != 'invalid' && steps.test-api-key.outputs.api_status != 'no_credits'
+        if: steps.test-api-key.outcome == 'success' || (steps.test-api-key.outcome == 'failure' && steps.test-api-key.outputs.api_status != 'invalid' && steps.test-api-key.outputs.api_status != 'no_credits')
         continue-on-error: true
         working-directory: ${{ github.workspace }}
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
+          show_full_output: true
           additional_permissions: |
             Bash(git -C repos/* log:*)
             Bash(git -C repos/* show:*)
