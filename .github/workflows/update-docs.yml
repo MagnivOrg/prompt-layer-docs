@@ -89,7 +89,60 @@ jobs:
           echo "Verifying repos are accessible:"
           ls -la repos/
 
+      - name: Verify Anthropic API key is configured
+        id: verify-api-key
+        run: |
+          if [ -z "${{ secrets.ANTHROPIC_API_KEY }}" ]; then
+            echo "::error::ANTHROPIC_API_KEY secret is not set in repository secrets!"
+            exit 1
+          fi
+
+      - name: Test Anthropic API key and check credits
+        id: test-api-key
+        continue-on-error: true
+        run: |
+          API_KEY="${{ secrets.ANTHROPIC_API_KEY }}"
+          RESPONSE=$(curl -s -w "\n%{http_code}" \
+            -X POST https://api.anthropic.com/v1/messages \
+            -H "x-api-key: $API_KEY" \
+            -H "anthropic-version: 2023-06-01" \
+            -H "content-type: application/json" \
+            -d '{"model": "claude-3-5-sonnet-20241022", "max_tokens": 10, "messages": [{"role": "user", "content": "Hi"}]}' 2>&1)
+          
+          HTTP_CODE=$(echo "$RESPONSE" | tail -n1)
+          echo "API response: $HTTP_CODE"
+          
+          case "$HTTP_CODE" in
+            200)
+              echo "API key valid"
+              echo "api_status=valid" >> $GITHUB_OUTPUT
+              ;;
+            401)
+              echo "::error::API key authentication failed (401 Unauthorized). Check your API key at https://console.anthropic.com/"
+              echo "api_status=invalid" >> $GITHUB_OUTPUT
+              exit 1
+              ;;
+            402)
+              echo "::error::Insufficient credits/quota (402 Payment Required). Add credits at https://console.anthropic.com/"
+              echo "api_status=no_credits" >> $GITHUB_OUTPUT
+              exit 1
+              ;;
+            429)
+              echo "::warning::Rate limit exceeded (429). Will retry."
+              echo "api_status=rate_limited" >> $GITHUB_OUTPUT
+              ;;
+            *)
+              echo "::warning::Unexpected API response: $HTTP_CODE"
+              echo "api_status=unknown" >> $GITHUB_OUTPUT
+              ;;
+          esac
+
+
       - name: Run Claude Code to update documentation
+        id: claude-code
+        if: steps.test-api-key.outputs.api_status != 'invalid' && steps.test-api-key.outputs.api_status != 'no_credits'
+        continue-on-error: true
+        working-directory: ${{ github.workspace }}
         uses: anthropics/claude-code-action@v1
         with:
           anthropic_api_key: ${{ secrets.ANTHROPIC_API_KEY }}
@@ -111,42 +164,57 @@ jobs:
 
             ## Task
             1. Read CLAUDE.md to understand the documentation policy
-            2. For each repository, examine commits since "${{ env.SINCE }}" using git log
-            3. Apply the Decision Framework from CLAUDE.md strictly to identify user-facing changes
-            4. Update appropriate documentation files if any changes qualify
-            5. If no user-facing changes are found, make no edits
+            2. For each repository, examine commits since "${{ env.SINCE }}" using git log:
+               - Use: `git -C repos/[repo-name] log --since="${{ env.SINCE }}" --no-merges --oneline --name-status`
+            3. For commits that might be user-facing, examine the diff: `git -C repos/[repo-name] show [commit-hash]`
+            4. Apply the Decision Framework from CLAUDE.md strictly to identify user-facing changes
+            5. Update appropriate documentation files if any changes qualify
+            6. If no user-facing changes are found, make no edits
+
+      - name: Handle Claude Code errors
+        if: steps.claude-code.outcome == 'failure'
+        run: |
+          echo "::error::Claude Code action failed!"
+          exit 1
 
       - name: Check for changes
         id: check-changes
+        if: steps.claude-code.outcome == 'success'
+        working-directory: ${{ github.workspace }}
         run: |
           if [[ -n $(git status --porcelain) ]]; then
             echo "changes=true" >> $GITHUB_OUTPUT
-            echo "Changed files:"
             git status --porcelain
           else
             echo "changes=false" >> $GITHUB_OUTPUT
-            echo "No documentation updates needed"
           fi
 
       - name: Create or update PR
         if: steps.check-changes.outputs.changes == 'true'
+        working-directory: ${{ github.workspace }}
+        env:
+          GH_TOKEN: ${{ github.token }}
         run: |
-          # Use a consistent branch name for today
           BRANCH="docs/auto-update-${{ env.TODAY }}"
 
-          # Check if branch exists on remote
+          CURRENT_BRANCH=$(git branch --show-current)
+          if [ -z "$CURRENT_BRANCH" ] || [ "$CURRENT_BRANCH" = "HEAD" ]; then
+            git checkout main 2>/dev/null || git checkout master 2>/dev/null
+          fi
+
           if git ls-remote --heads origin "$BRANCH" | grep -q "$BRANCH"; then
-            # Branch exists, fetch and checkout
             git fetch origin "$BRANCH"
-            git checkout "$BRANCH"
+            git checkout "$BRANCH" || git checkout -b "$BRANCH"
             git pull origin "$BRANCH"
           else
-            # Create new branch
             git checkout -b "$BRANCH"
           fi
 
-          # Add and commit changes
           git add .
+          if git diff --staged --quiet; then
+            exit 0
+          fi
+
           git commit -m "docs: automated documentation update for ${{ env.TODAY }}
 
           This automated update includes user-facing changes from:
@@ -158,14 +226,20 @@ jobs:
           Time window: ${{ env.SINCE }} to now
           Generated by GitHub Actions bot using Claude Code"
 
-          # Push the branch
           git push -u origin "$BRANCH"
 
-          # Check if PR already exists for this branch
-          PR_NUMBER=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' || echo "")
+          DEFAULT_BRANCH=$(git symbolic-ref refs/remotes/origin/HEAD | sed 's@^refs/remotes/origin/@@' 2>/dev/null || echo "master")
+          if ! git show-ref --verify --quiet refs/remotes/origin/"$DEFAULT_BRANCH"; then
+            if git show-ref --verify --quiet refs/remotes/origin/main; then
+              DEFAULT_BRANCH="main"
+            else
+              DEFAULT_BRANCH="master"
+            fi
+          fi
+
+          PR_NUMBER=$(gh pr list --head "$BRANCH" --state open --json number --jq '.[0].number' 2>/dev/null || echo "")
 
           if [ -z "$PR_NUMBER" ]; then
-            # Create new PR
             gh pr create \
               --title "docs: automated update - ${{ env.TODAY }}" \
               --body "## Automated Documentation Update
@@ -200,10 +274,8 @@ jobs:
           - [ ] No unrelated files were modified
 
           Generated by Claude Code Documentation Bot" \
-              --base master \
+              --base "$DEFAULT_BRANCH" \
               --head "$BRANCH"
           else
-            # PR already exists, just add a comment about the update
             gh pr comment "$PR_NUMBER" --body "📝 Documentation updated with latest changes from ${{ env.TODAY }}"
-            echo "Updated existing PR #$PR_NUMBER"
           fi
