@@ -1,6 +1,6 @@
 ---
 title: "Get Snippet Usage"
-openapi: "GET /prompt-templates/{prompt_registry_id}/snippet-usage"
+openapi: "GET /prompt-templates/{identifier}/snippet-usage"
 ---
 
-Get all prompts that use a given snippet (prompt template). Returns a list of prompts and their version numbers that reference this snippet, as well as any release labels that reference it.
+Get all prompts that use a given snippet (prompt template). Returns a list of prompts and their version numbers that reference this snippet, as well as any release labels that reference it. The identifier can be either the prompt name or the prompt id.

@@ -2833,7 +2833,7 @@
         }
       }
     },
-    "/prompt-templates/{prompt_registry_id}/snippet-usage": {
+    "/prompt-templates/{identifier}/snippet-usage": {
       "get": {
         "tags": [
           "prompt-templates",
@@ -2853,13 +2853,13 @@
             }
           },
           {
-            "name": "prompt_registry_id",
+            "name": "identifier",
             "in": "path",
             "required": true,
             "schema": {
-              "type": "integer",
-              "title": "prompt_registry_id",
-              "description": "The prompt registry ID of the snippet"
+              "type": "string",
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id."
             }
           },
           {
