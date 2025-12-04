@@ -134,6 +134,7 @@
         "reference/templates-get",
         "reference/templates-publish",
         "reference/templates-labels-get",
+        "reference/get-snippet-usage",
         "reference/prompt-labels-patch",
         "reference/prompt-labels-delete",
         "reference/prompt-labels-create",
