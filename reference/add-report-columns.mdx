@@ -12,6 +12,14 @@ This endpoint adds evaluation steps (columns) to an existing evaluation pipeline
 - **Unique Names Required**: Each column name must be unique within the pipeline.
 - **Dataset Columns Protected**: You cannot overwrite columns that come from the dataset.
 
+## Scoring
+
+By default, only the last column in a pipeline is used for score calculation. To include multiple columns in the final score:
+
+- Set `is_part_of_score: true` on each column you want to include in the score
+- Columns must produce boolean or numeric values to be scored
+- When multiple columns are marked for scoring, the final score is the average of all included columns
+
 ## Column Types
 
 ### Primary Types
@@ -88,8 +96,9 @@ Transform and manipulate data:
   "name": "Quality Check",
   "configuration": {
     "source": "Generate Response",  // column to evaluate
-    "assertion": "Is this response helpful and accurate?"
-  }
+    "prompt": "Is this response helpful and accurate?"
+  },
+  "is_part_of_score": true  // Optional: include in score calculation
 }
 ```
 

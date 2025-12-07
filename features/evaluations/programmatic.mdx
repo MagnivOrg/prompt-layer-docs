@@ -36,7 +36,127 @@ Trigger evaluations in your CI/CD pipeline (GitHub, GitLab, etc.) whenever relev
 
 ## Complete Example: Building an Evaluation Pipeline
 
-Here's a complete example of building an evaluation pipeline from scratch using the API:
+Here's a complete example of building an evaluation pipeline from scratch using the API.
+
+### Option A: Single Request (Recommended)
+
+Create the entire pipeline with columns and custom scoring in one API call:
+
+```python
+import requests
+import base64
+
+API_KEY = "your_api_key"
+BASE_URL = "https://api.promptlayer.com"
+
+headers = {
+    "X-API-Key": API_KEY,
+    "Content-Type": "application/json"
+}
+
+# Step 1: Create a dataset group
+dataset_group_response = requests.post(
+    f"{BASE_URL}/api/public/v2/dataset-groups",
+    headers=headers,
+    json={"name": "QA Test Dataset Group"}
+)
+dataset_group_id = dataset_group_response.json()["dataset_group"]["id"]
+
+# Step 2: Upload dataset
+csv_content = """question,expected_answer
+What is the capital of France?,Paris
+Who wrote Romeo and Juliet?,William Shakespeare
+What is 2+2?,4"""
+
+encoded_csv = base64.b64encode(csv_content.encode()).decode()
+dataset_response = requests.post(
+    f"{BASE_URL}/api/public/v2/dataset-versions/from-file",
+    headers=headers,
+    json={
+        "dataset_group_id": dataset_group_id,
+        "file_name": "test_qa.csv",
+        "file_content_base64": encoded_csv
+    }
+)
+
+# Wait for async dataset processing
+import time
+time.sleep(3)
+
+# Step 3: Create pipeline with columns and custom scoring in ONE call
+report_response = requests.post(
+    f"{BASE_URL}/reports",
+    headers=headers,
+    json={
+        "dataset_group_id": dataset_group_id,
+        "name": "QA Evaluation Pipeline",
+        "columns": [
+            {
+                "column_type": "LLM_ASSERTION",
+                "name": "Answer Correct",
+                "configuration": {
+                    "source": "expected_answer",
+                    "prompt": "Is this a valid answer to the question?"
+                },
+                "is_part_of_score": True
+            },
+            {
+                "column_type": "LLM_ASSERTION",
+                "name": "Answer Complete",
+                "configuration": {
+                    "source": "expected_answer",
+                    "prompt": "Is this answer complete and not missing key information?"
+                },
+                "is_part_of_score": True
+            }
+        ],
+        "score_configuration": {
+            "code": """
+# Weighted scoring
+weights = {"Answer Correct": 0.7, "Answer Complete": 0.3}
+total_weight = weighted_sum = 0
+
+for row in data:
+    for col, weight in weights.items():
+        if col in row:
+            total_weight += weight
+            val = row[col]
+            if isinstance(val, dict) and 'value' in val:
+                val = val['value']
+            if val == True:
+                weighted_sum += weight
+
+score = (weighted_sum / total_weight * 100) if total_weight > 0 else 0
+return {"score": round(score, 2)}
+""",
+            "code_language": "PYTHON"
+        }
+    }
+)
+report_id = report_response.json()["report_id"]
+
+# Step 4: Run the evaluation
+run_response = requests.post(
+    f"{BASE_URL}/reports/{report_id}/run",
+    headers=headers,
+    json={"name": "QA Eval Run"}
+)
+run_report_id = run_response.json()["report_id"]
+
+# Step 5: Poll for completion and get score
+while True:
+    status_response = requests.get(f"{BASE_URL}/reports/{run_report_id}", headers=headers)
+    if status_response.json()["status"] == "COMPLETED":
+        break
+    time.sleep(5)
+
+score_response = requests.get(f"{BASE_URL}/reports/{run_report_id}/score", headers=headers)
+print(f"Score: {score_response.json()['score']['overall_score']}%")
+```
+
+### Option B: Step-by-Step
+
+For more control, you can create the pipeline and add columns separately:
 
 ```python
 import requests
@@ -141,8 +261,9 @@ requests.post(
         "name": "Semantically Correct",
         "configuration": {
             "source": "AI Answer",
-            "assertion": "Is this answer semantically equivalent to the expected answer?"
-        }
+            "prompt": "Is this answer semantically equivalent to the expected answer?"
+        },
+        "is_part_of_score": True  # Include in final score calculation
     }
 )
 
@@ -287,9 +408,14 @@ The evaluation pipeline consists of steps, each referred to as a "report column"
   "column_type": "COLUMN_TYPE",  // Required: Type of evaluation (see Column Types Reference)
   "name": "Column Name",         // Required: Display name for this step
   "configuration": {},           // Required: Type-specific configuration
-  "position": null               // Optional: Column position (auto-assigned if not provided)
+  "position": null,              // Optional: Column position (auto-assigned if not provided)
+  "is_part_of_score": false      // Optional: Include this column in score calculation
 }
 ```
+
+#### Scoring Columns
+
+By default, only the last column in a pipeline is used for score calculation. To include multiple columns in the final score, set `is_part_of_score: true` on each column you want to include. The final score will be the average of all included columns.
 
 ## Column Types Reference
 
@@ -464,9 +590,10 @@ Uses an LLM to evaluate assertions about the data.
   "name": "Quality Check",
   "configuration": {
     "source": "response_column",      // Required: Column to evaluate
-    "assertion": "Is this response professional and helpful?"  // Required: Question to evaluate
+    "prompt": "Is this response professional and helpful?"  // Required: Question to evaluate
   },
-  "report_id": 456
+  "report_id": 456,
+  "is_part_of_score": true  // Optional: Include in score calculation
 }
 ```
 
@@ -847,4 +974,103 @@ Once the evaluation is complete, retrieve the final score:
     }
   }
 }
+```
+
+### Step 7: Configure Custom Scoring (Optional)
+
+By default, PromptLayer calculates scores by averaging boolean columns. For more control, you can configure custom scoring logic using Python or JavaScript code.
+
+- **Endpoint**: `PATCH /reports/{report_id}/score-card`
+- **Description**: Configure which columns to include and optionally provide custom scoring code
+- **Docs Link**: [Configure Custom Scoring](../../reference/update-report-score-card)
+
+#### Example: Weighted Scoring
+
+```python
+import requests
+
+# Configure custom scoring with weights
+requests.patch(
+    f"{BASE_URL}/reports/{report_id}/score-card",
+    headers=headers,
+    json={
+        "column_names": ["Accuracy Check", "Style Check", "Safety Check"],
+        "code": """
+# Weight accuracy more heavily than other checks
+weights = {
+    "Accuracy Check": 0.5,
+    "Style Check": 0.2,
+    "Safety Check": 0.3
+}
+
+total_weight = 0
+weighted_sum = 0
+
+for row in data:
+    for col_name, weight in weights.items():
+        if col_name in row and isinstance(row[col_name], bool):
+            total_weight += weight
+            if row[col_name]:
+                weighted_sum += weight
+
+score = (weighted_sum / total_weight * 100) if total_weight > 0 else 0
+return {"score": score}
+""",
+        "code_language": "PYTHON"
+    }
+)
+```
+
+#### Example: All Checks Must Pass
+
+```python
+requests.patch(
+    f"{BASE_URL}/reports/{report_id}/score-card",
+    headers=headers,
+    json={
+        "column_names": ["Accuracy Check", "Safety Check", "Format Check"],
+        "code": """
+# A row only counts as passed if ALL checks pass
+check_columns = ["Accuracy Check", "Safety Check", "Format Check"]
+passed_rows = 0
+total_rows = len(data)
+
+for row in data:
+    all_passed = all(
+        row.get(col) == True
+        for col in check_columns
+        if col in row
+    )
+    if all_passed:
+        passed_rows += 1
+
+score = (passed_rows / total_rows * 100) if total_rows > 0 else 0
+return {"score": score}
+""",
+        "code_language": "PYTHON"
+    }
+)
+```
+
+#### Custom Code Interface
+
+Your custom code receives a `data` variable containing all evaluation results:
+
+```python
+data = [
+    {
+        "input": "What is 2+2?",
+        "expected": "4",
+        "AI Response": "The answer is 4",
+        "Accuracy Check": True,
+        "Safety Check": True
+    },
+    # ... more rows
+]
+```
+
+Your code must return a dictionary with at least a `score` key (0-100):
+
+```python
+return {"score": 85.5}
 ```

@@ -153,6 +153,7 @@
         "reference/run-report",
         "reference/get-report",
         "reference/get-report-score",
+        "reference/update-report-score-card",
         "reference/delete-reports-by-name",
         "reference/log-request",
         "reference/workflow-version-execution-results",

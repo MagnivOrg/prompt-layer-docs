@@ -3,4 +3,101 @@ title: "Create Evaluation Pipeline"
 openapi: "POST /reports"
 ---
 
-This endpoint allows for the creation of Evaluation pipelines. These pipelines are given a name and associated with a dataset.
+This endpoint creates an Evaluation Pipeline associated with a dataset.
+
+## Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `dataset_group_id` | `integer` | Yes | ID of the dataset group to use |
+| `name` | `string` | No | Name for the pipeline (auto-generated if not provided) |
+| `folder_id` | `integer` | No | Folder ID for organization |
+| `dataset_version_number` | `integer` | No | Specific dataset version (uses latest if not provided) |
+| `columns` | `array` | No | List of evaluation columns to add |
+| `score_configuration` | `object` | No | Custom scoring logic configuration |
+
+## Column Definition
+
+Each column in the `columns` array accepts:
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `column_type` | `string` | Yes | Type of column (e.g., `LLM_ASSERTION`, `VARIABLE`, `CODE_EXECUTION`) |
+| `name` | `string` | Yes | Display name for the column |
+| `configuration` | `object` | Yes | Column-type-specific configuration |
+| `position` | `integer` | No | Position in the pipeline (auto-assigned if not provided) |
+| `is_part_of_score` | `boolean` | No | Whether this column contributes to the score (defaults to `false`) |
+
+## Scoring
+
+There are two independent ways to calculate scores:
+
+### Built-in Scoring (`is_part_of_score`)
+
+Set `is_part_of_score: true` on columns to have PromptLayer automatically average their values into a score.
+
+### Custom Scoring (`score_configuration`)
+
+Write custom code that receives all report data and calculates the score however you want.
+
+| Field | Type | Required | Description |
+|-------|------|----------|-------------|
+| `code` | `string` | Yes | Python or JavaScript code for score calculation |
+| `code_language` | `string` | No | `"PYTHON"` (default) or `"JAVASCRIPT"` |
+
+Your custom code receives a `data` variable (list of row dictionaries with all column values) and must return a dictionary with at least a `score` key (0-100).
+
+## Example
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.promptlayer.com/reports",
+    headers={"X-API-Key": "your_api_key"},
+    json={
+        "dataset_group_id": 123,
+        "name": "My Evaluation Pipeline",
+        "columns": [
+            {
+                "column_type": "LLM_ASSERTION",
+                "name": "Accuracy Check",
+                "configuration": {
+                    "source": "response",
+                    "prompt": "Is this response accurate?"
+                },
+                "is_part_of_score": True
+            },
+            {
+                "column_type": "LLM_ASSERTION",
+                "name": "Safety Check",
+                "configuration": {
+                    "source": "response",
+                    "prompt": "Is this response safe and appropriate?"
+                },
+                "is_part_of_score": True
+            }
+        ],
+        "score_configuration": {
+            "code": """
+weights = {"Accuracy Check": 0.7, "Safety Check": 0.3}
+total_weight = weighted_sum = 0
+
+for row in data:
+    for col, weight in weights.items():
+        if col in row:
+            total_weight += weight
+            val = row[col]
+            if isinstance(val, dict) and 'value' in val:
+                val = val['value']
+            if val == True:
+                weighted_sum += weight
+
+score = (weighted_sum / total_weight * 100) if total_weight > 0 else 0
+return {"score": round(score, 2)}
+""",
+            "code_language": "PYTHON"
+        }
+    }
+)
+```

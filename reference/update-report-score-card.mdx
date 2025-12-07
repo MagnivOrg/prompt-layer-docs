@@ -1,0 +1,190 @@
+---
+title: "Configure Custom Scoring"
+openapi: "PATCH /reports/{report_id}/score-card"
+description: "Configure custom scoring logic for an evaluation pipeline"
+---
+
+This endpoint allows you to configure custom scoring logic for an evaluation pipeline. You can specify which columns to include in the score calculation and optionally provide custom code to compute the final score.
+
+## Use Cases
+
+- **Weighted Scoring**: Apply different weights to different evaluation columns
+- **Conditional Logic**: Only count certain results based on conditions
+- **Complex Aggregations**: Calculate scores based on multiple factors with custom formulas
+- **Threshold-Based Scoring**: Pass/fail based on meeting certain criteria
+
+## Request Parameters
+
+| Parameter | Type | Required | Description |
+|-----------|------|----------|-------------|
+| `column_names` | `string[]` | Yes | List of column names to include in score calculation |
+| `code` | `string` | No | Custom Python or JavaScript code for score calculation |
+| `code_language` | `string` | No | Language of the code: `"PYTHON"` (default) or `"JAVASCRIPT"` |
+
+## Custom Code Interface
+
+When providing custom code, your code receives a `data` variable containing all evaluation results and must return a dictionary with a `score` key.
+
+### Input: `data`
+
+A list of dictionaries, where each dictionary represents one row from your dataset with all column values:
+
+```python
+data = [
+    {
+        "input_column": "What is 2+2?",
+        "expected_output": "4",
+        "AI Response": "The answer is 4",
+        "Accuracy Check": True,
+        "Relevance Check": True
+    },
+    {
+        "input_column": "What is the capital of France?",
+        "expected_output": "Paris",
+        "AI Response": "The capital of France is Paris",
+        "Accuracy Check": True,
+        "Relevance Check": True
+    },
+    # ... more rows
+]
+```
+
+### Output Requirements
+
+Your code must return a dictionary with at least a `score` key (number between 0-100):
+
+```python
+return {
+    "score": 85.5,  # Required: final score (0-100)
+    "score_matrix": [...]  # Optional: detailed breakdown for UI display
+}
+```
+
+## Examples
+
+### Example 1: Weighted Scoring
+
+Apply different weights to different evaluation columns:
+
+```python
+# Weight accuracy more heavily than style
+weights = {
+    "Accuracy Check": 0.7,
+    "Style Check": 0.3
+}
+
+total_weight = 0
+weighted_sum = 0
+
+for row in data:
+    for col_name, weight in weights.items():
+        if col_name in row and isinstance(row[col_name], bool):
+            total_weight += weight
+            if row[col_name]:
+                weighted_sum += weight
+
+score = (weighted_sum / total_weight * 100) if total_weight > 0 else 0
+return {"score": score}
+```
+
+### Example 2: All Must Pass
+
+Require all checks to pass for a row to count as successful:
+
+```python
+check_columns = ["Accuracy Check", "Safety Check", "Format Check"]
+passed_rows = 0
+total_rows = len(data)
+
+for row in data:
+    all_passed = all(
+        row.get(col) == True
+        for col in check_columns
+        if col in row
+    )
+    if all_passed:
+        passed_rows += 1
+
+score = (passed_rows / total_rows * 100) if total_rows > 0 else 0
+return {"score": score}
+```
+
+### Example 3: Threshold-Based Scoring
+
+Apply different score contributions based on thresholds:
+
+```python
+total_score = 0
+max_score = len(data) * 100
+
+for row in data:
+    similarity = row.get("Similarity Score", 0)
+
+    if similarity >= 0.95:
+        total_score += 100  # Perfect match
+    elif similarity >= 0.8:
+        total_score += 75   # Good match
+    elif similarity >= 0.6:
+        total_score += 50   # Acceptable
+    else:
+        total_score += 0    # Failed
+
+score = (total_score / max_score * 100) if max_score > 0 else 0
+return {"score": score}
+```
+
+### Example 4: Category-Specific Scoring
+
+Different scoring logic for different categories:
+
+```python
+category_scores = {}
+category_counts = {}
+
+for row in data:
+    category = row.get("category", "default")
+    passed = row.get("Quality Check", False)
+
+    if category not in category_scores:
+        category_scores[category] = 0
+        category_counts[category] = 0
+
+    category_counts[category] += 1
+    if passed:
+        category_scores[category] += 1
+
+# Average across categories (equal weight per category)
+category_percentages = [
+    (category_scores[cat] / category_counts[cat] * 100)
+    for cat in category_scores
+    if category_counts[cat] > 0
+]
+
+score = sum(category_percentages) / len(category_percentages) if category_percentages else 0
+return {"score": score}
+```
+
+## Response
+
+```json
+{
+  "success": true,
+  "report": {
+    "id": 456,
+    "name": "My Evaluation Pipeline",
+    "score_configuration": {
+      "code": "...",
+      "code_language": "PYTHON"
+    },
+    // ... other report fields
+  }
+}
+```
+
+## Notes
+
+- Custom code runs in a sandboxed environment with limited execution time
+- The `score` value should be between 0 and 100
+- If no custom code is provided, the default scoring (average of boolean columns) is used
+- Changes to the score card on a blueprint affect all future runs
+- For completed runs, the score is recalculated immediately after updating the score card
