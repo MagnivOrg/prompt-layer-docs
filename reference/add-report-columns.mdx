@@ -22,41 +22,7 @@ By default, only the last column in a pipeline is used for score calculation. To
 
 ## Column Types
 
-### Primary Types
-Execute prompts, call APIs, or gather human input:
-- `PROMPT_TEMPLATE` - Execute a prompt from your registry
-- `ENDPOINT` - Call external API endpoints
-- `MCP` - Execute MCP server functions
-- `HUMAN` - Collect human evaluation input
-- `CODE_EXECUTION` - Run Python or JavaScript code
-- `CODING_AGENT` - Use AI to process data
-- `CONVERSATION_SIMULATOR` - Simulate multi-turn conversations
-- `WORKFLOW` - Execute PromptLayer workflows
-
-### Evaluation Types
-Compare, validate, and score outputs:
-- `LLM_ASSERTION` - Natural language assertions using LLMs
-- `AI_DATA_EXTRACTION` - Extract data using AI
-- `COMPARE` - Compare two columns for equality
-- `CONTAINS` - Check if text contains a value
-- `REGEX` - Match regular expression patterns
-- `REGEX_EXTRACTION` - Extract text using regex
-- `COSINE_SIMILARITY` - Calculate semantic similarity
-- `ABSOLUTE_NUMERIC_DISTANCE` - Calculate numeric difference
-
-### Helper Types
-Transform and manipulate data:
-- `JSON_PATH` - Extract from JSON using JSONPath
-- `XML_PATH` - Extract from XML using XPath
-- `PARSE_VALUE` - Convert between data types
-- `APPLY_DIFF` - Apply diff patches
-- `VARIABLE` - Static values
-- `ASSERT_VALID` - Validate data formats
-- `COALESCE` - First non-null value
-- `COMBINE_COLUMNS` - Combine multiple columns
-- `COUNT` - Count characters/words/paragraphs
-- `MATH_OPERATOR` - Mathematical operations
-- `MIN_MAX` - Find minimum or maximum
+See the [supported column types](/reference/create-reports#supported-column-types) in the Create Evaluation Pipeline documentation.
 
 ## Configuration Examples
 
