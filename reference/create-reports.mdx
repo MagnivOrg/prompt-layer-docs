@@ -22,11 +22,40 @@ Each column in the `columns` array accepts:
 
 | Field | Type | Required | Description |
 |-------|------|----------|-------------|
-| `column_type` | `string` | Yes | Type of column (e.g., `LLM_ASSERTION`, `VARIABLE`, `CODE_EXECUTION`) |
+| `column_type` | `string` | Yes | Type of column (see supported types below) |
 | `name` | `string` | Yes | Display name for the column |
 | `configuration` | `object` | Yes | Column-type-specific configuration |
 | `position` | `integer` | No | Position in the pipeline (auto-assigned if not provided) |
 | `is_part_of_score` | `boolean` | No | Whether this column contributes to the score (defaults to `false`) |
+
+### Supported Column Types
+
+| Type | Description |
+|------|-------------|
+| `LLM_ASSERTION` | AI-powered assertion that evaluates content against a prompt |
+| `PROMPT_TEMPLATE` | Runs a prompt template from the registry |
+| `CODE_EXECUTION` | Executes custom Python or JavaScript code |
+| `VARIABLE` | Static value or reference to another column |
+| `COMPARE` | Compares two values for equality or similarity |
+| `CONTAINS` | Checks if a value contains a substring |
+| `REGEX` | Matches content against a regular expression |
+| `REGEX_EXTRACTION` | Extracts content using a regular expression |
+| `JSON_PATH` | Extracts data using JSONPath expressions |
+| `XML_PATH` | Extracts data using XPath expressions |
+| `COSINE_SIMILARITY` | Calculates semantic similarity between texts |
+| `AI_DATA_EXTRACTION` | AI-powered data extraction from content |
+| `ASSERT_VALID` | Validates data format (JSON, XML, etc.) |
+| `COALESCE` | Returns first non-null value from multiple sources |
+| `COMBINE_COLUMNS` | Combines multiple column values |
+| `COUNT` | Counts occurrences in content |
+| `ENDPOINT` | Calls an external HTTP endpoint |
+| `HUMAN` | Manual human evaluation |
+| `MATH_OPERATOR` | Mathematical operations on numeric values |
+| `MIN_MAX` | Finds minimum or maximum values |
+| `PARSE_VALUE` | Parses and transforms values |
+| `ABSOLUTE_NUMERIC_DISTANCE` | Calculates absolute difference between numbers |
+| `WORKFLOW` | Runs a PromptLayer workflow |
+| `MCP` | Executes an MCP action |
 
 ## Scoring
 
@@ -47,7 +76,11 @@ Write custom code that receives all report data and calculates the score however
 
 Your custom code receives a `data` variable (list of row dictionaries with all column values) and must return a dictionary with at least a `score` key (0-100).
 
-## Example
+## Examples
+
+### Built-in Scoring
+
+Use `is_part_of_score: true` to have PromptLayer automatically average the column values:
 
 ```python
 import requests
@@ -57,7 +90,7 @@ response = requests.post(
     headers={"X-API-Key": "your_api_key"},
     json={
         "dataset_group_id": 123,
-        "name": "My Evaluation Pipeline",
+        "name": "Pipeline with Built-in Scoring",
         "columns": [
             {
                 "column_type": "LLM_ASSERTION",
@@ -73,13 +106,49 @@ response = requests.post(
                 "name": "Safety Check",
                 "configuration": {
                     "source": "response",
-                    "prompt": "Is this response safe and appropriate?"
+                    "prompt": "Is this response safe?"
                 },
                 "is_part_of_score": True
+            }
+        ]
+    }
+)
+```
+
+### Custom Scoring
+
+Use `score_configuration` to write custom scoring logic:
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.promptlayer.com/reports",
+    headers={"X-API-Key": "your_api_key"},
+    json={
+        "dataset_group_id": 123,
+        "name": "Pipeline with Custom Scoring",
+        "columns": [
+            {
+                "column_type": "LLM_ASSERTION",
+                "name": "Accuracy Check",
+                "configuration": {
+                    "source": "response",
+                    "prompt": "Is this response accurate?"
+                }
+            },
+            {
+                "column_type": "LLM_ASSERTION",
+                "name": "Safety Check",
+                "configuration": {
+                    "source": "response",
+                    "prompt": "Is this response safe?"
+                }
             }
         ],
         "score_configuration": {
             "code": """
+# Weighted scoring: accuracy matters more
 weights = {"Accuracy Check": 0.7, "Safety Check": 0.3}
 total_weight = weighted_sum = 0
 
@@ -87,10 +156,7 @@ for row in data:
     for col, weight in weights.items():
         if col in row:
             total_weight += weight
-            val = row[col]
-            if isinstance(val, dict) and 'value' in val:
-                val = val['value']
-            if val == True:
+            if row[col] == True:
                 weighted_sum += weight
 
 score = (weighted_sum / total_weight * 100) if total_weight > 0 else 0

@@ -795,6 +795,52 @@
                     "type": "integer",
                     "description": "Optional specific dataset version number to use. If not specified, the latest non-draft version will be used. Cannot be -1 (draft version).",
                     "nullable": true
+                  },
+                  "columns": {
+                    "type": "array",
+                    "description": "Optional list of evaluation columns to create with the pipeline.",
+                    "items": {
+                      "type": "object",
+                      "properties": {
+                        "column_type": {
+                          "type": "string",
+                          "description": "Type of column (e.g., LLM_ASSERTION, VARIABLE, CODE_EXECUTION, PROMPT_TEMPLATE)"
+                        },
+                        "name": {
+                          "type": "string",
+                          "description": "Display name for the column"
+                        },
+                        "configuration": {
+                          "type": "object",
+                          "description": "Column-type-specific configuration"
+                        },
+                        "position": {
+                          "type": "integer",
+                          "description": "Position in the pipeline (auto-assigned if not provided)"
+                        },
+                        "is_part_of_score": {
+                          "type": "boolean",
+                          "description": "Whether this column contributes to built-in score averaging (defaults to false)"
+                        }
+                      },
+                      "required": ["column_type", "name", "configuration"]
+                    }
+                  },
+                  "score_configuration": {
+                    "type": "object",
+                    "description": "Optional custom scoring logic configuration.",
+                    "properties": {
+                      "code": {
+                        "type": "string",
+                        "description": "Python or JavaScript code for score calculation. Receives 'data' variable (list of row dictionaries) and must return {'score': number}."
+                      },
+                      "code_language": {
+                        "type": "string",
+                        "enum": ["PYTHON", "JAVASCRIPT"],
+                        "description": "Language of the code (defaults to PYTHON)"
+                      }
+                    },
+                    "required": ["code"]
                   }
                 },
                 "required": [
@@ -803,8 +849,17 @@
                 "example": {
                   "dataset_group_id": 123,
                   "name": "QA Evaluation Pipeline",
-                  "folder_id": null,
-                  "dataset_version_number": null
+                  "columns": [
+                    {
+                      "column_type": "LLM_ASSERTION",
+                      "name": "Accuracy Check",
+                      "configuration": {
+                        "source": "response",
+                        "prompt": "Is this response accurate?"
+                      },
+                      "is_part_of_score": true
+                    }
+                  ]
                 }
               }
             }
@@ -825,8 +880,24 @@
                     },
                     "report_id": {
                       "type": "integer",
-                      "description": "The unique ID of the created evaluation pipeline. Use this ID to add columns and run evaluations.",
+                      "description": "The unique ID of the created evaluation pipeline. Use this ID to run evaluations.",
                       "example": 456
+                    },
+                    "report_columns": {
+                      "type": "array",
+                      "description": "List of created columns (only present if columns were provided in the request)",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": { "type": "integer" },
+                          "report_id": { "type": "integer" },
+                          "column_type": { "type": "string" },
+                          "name": { "type": "string" },
+                          "position": { "type": "integer" },
+                          "is_part_of_score": { "type": "boolean" },
+                          "configuration": { "type": "object" }
+                        }
+                      }
                     }
                   },
                   "required": [
@@ -835,7 +906,21 @@
                   ],
                   "example": {
                     "success": true,
-                    "report_id": 456
+                    "report_id": 456,
+                    "report_columns": [
+                      {
+                        "id": 789,
+                        "report_id": 456,
+                        "column_type": "LLM_ASSERTION",
+                        "name": "Accuracy Check",
+                        "position": 2,
+                        "is_part_of_score": true,
+                        "configuration": {
+                          "source": "response",
+                          "prompt": "Is this response accurate?"
+                        }
+                      }
+                    ]
                   }
                 }
               }
