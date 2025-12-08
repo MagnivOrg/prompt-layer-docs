@@ -1,0 +1,589 @@
+---
+title: "Evaluation Column Types"
+description: "Complete reference for all evaluation pipeline column types and their configurations"
+---
+
+This page documents all available column types for evaluation pipelines. Each column type has specific configuration options that determine its behavior.
+
+## Execution Types
+
+These columns execute prompts, code, or external services.
+
+<AccordionGroup>
+  <Accordion title="PROMPT_TEMPLATE">
+    Runs a prompt template from the registry against each row.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `template.name` | string | Yes | Name of the prompt template |
+    | `template.version_number` | integer | No | Specific version number. Uses latest if omitted |
+    | `template.label` | string | No | Release label to use, e.g. "production" |
+    | `prompt_template_variable_mappings` | object | Yes | Maps template input variables to dataset/column names |
+    | `engine` | object | No | Override the template's default model settings |
+    | `engine.provider` | string | No | Provider name, e.g. "openai", "anthropic" |
+    | `engine.model` | string | No | Model name, e.g. "gpt-4", "claude-3-opus" |
+    | `engine.parameters` | object | No | Model parameters like temperature, max_tokens |
+
+    ```json
+    {
+      "column_type": "PROMPT_TEMPLATE",
+      "name": "Generate Response",
+      "configuration": {
+        "template": {
+          "name": "my-prompt",
+          "label": "production"
+        },
+        "prompt_template_variable_mappings": {
+          "question": "user_question",
+          "context": "retrieved_context"
+        }
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="CODE_EXECUTION">
+    Executes custom Python or JavaScript code. The code receives a `data` dictionary containing all column values for the current row.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `code` | string | Yes | The code to execute |
+    | `language` | string | Yes | "PYTHON" or "JAVASCRIPT" |
+
+    ```json
+    {
+      "column_type": "CODE_EXECUTION",
+      "name": "Custom Logic",
+      "configuration": {
+        "code": "result = len(data['response'].split())\nreturn result",
+        "language": "PYTHON"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="ENDPOINT">
+    Calls an external HTTP endpoint. The request body contains all column values for the current row.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `url` | string | Yes | The HTTP endpoint URL |
+    | `headers` | object | No | HTTP headers to include |
+
+    ```json
+    {
+      "column_type": "ENDPOINT",
+      "name": "External Validator",
+      "configuration": {
+        "url": "https://api.example.com/validate",
+        "headers": {
+          "Authorization": "Bearer token123"
+        }
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="WORKFLOW">
+    Runs a PromptLayer workflow.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `workflow_id` | integer | Yes | ID of the workflow to run |
+    | `workflow_version_number` | integer | No | Specific version. Uses latest if omitted |
+    | `workflow_label` | string | No | Release label to use |
+    | `input_mappings` | object | Yes | Maps workflow inputs to column names |
+
+    ```json
+    {
+      "column_type": "WORKFLOW",
+      "name": "Run Analysis Workflow",
+      "configuration": {
+        "workflow_id": 123,
+        "input_mappings": {
+          "input_text": "response"
+        }
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="MCP">
+    Executes an MCP (Model Context Protocol) action.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `mcp_server_id` | integer | Yes | ID of the MCP server |
+    | `tool_name` | string | Yes | Name of the tool to call |
+    | `input_mappings` | object | Yes | Maps tool inputs to column names |
+
+    ```json
+    {
+      "column_type": "MCP",
+      "name": "MCP Tool Call",
+      "configuration": {
+        "mcp_server_id": 456,
+        "tool_name": "search",
+        "input_mappings": {
+          "query": "search_query"
+        }
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="HUMAN">
+    Adds a column for manual human evaluation.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `data_type` | string | Yes | "number" or "string" |
+    | `ui_element` | object | Yes | UI configuration for the input |
+
+    ```json
+    {
+      "column_type": "HUMAN",
+      "name": "Human Rating",
+      "configuration": {
+        "data_type": "number",
+        "ui_element": {
+          "type": "slider",
+          "min": 1,
+          "max": 5
+        }
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Evaluation Types
+
+These columns evaluate or compare data and typically return boolean or numeric scores.
+
+<AccordionGroup>
+  <Accordion title="LLM_ASSERTION">
+    Uses an LLM to evaluate content against a natural language prompt. Returns a boolean indicating pass/fail.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name containing the content to evaluate |
+    | `prompt` | string | Conditional | The assertion prompt. Required if prompt_source not set |
+    | `prompt_source` | string | Conditional | Column name containing the prompt. Required if prompt not set |
+
+    ```json
+    {
+      "column_type": "LLM_ASSERTION",
+      "name": "Quality Check",
+      "configuration": {
+        "source": "response",
+        "prompt": "Is this response helpful, accurate, and free of harmful content?"
+      },
+      "is_part_of_score": true
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="COMPARE">
+    Compares two values for equality. Supports string comparison and JSON comparison with optional JSONPath.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `sources` | array | Yes | Array of exactly 2 column names to compare |
+    | `comparison_type.type` | string | Yes | "STRING" or "JSON" |
+    | `comparison_type.json_path` | string | No | JSONPath to extract before comparing. Only for JSON type |
+
+    ```json
+    {
+      "column_type": "COMPARE",
+      "name": "Accuracy",
+      "configuration": {
+        "sources": ["predicted_value", "ground_truth"],
+        "comparison_type": {"type": "STRING"}
+      },
+      "is_part_of_score": true
+    }
+    ```
+
+    With JSON path:
+    ```json
+    {
+      "column_type": "COMPARE",
+      "name": "JSON Field Match",
+      "configuration": {
+        "sources": ["api_response", "expected_response"],
+        "comparison_type": {
+          "type": "JSON",
+          "json_path": "$.result.status"
+        }
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="CONTAINS">
+    Checks if a value contains a substring (case-insensitive).
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name to search in |
+    | `value` | string | Conditional | Static substring to find. Required if value_source not set |
+    | `value_source` | string | Conditional | Column name containing the substring. Required if value not set |
+
+    ```json
+    {
+      "column_type": "CONTAINS",
+      "name": "Has Keyword",
+      "configuration": {
+        "source": "response",
+        "value": "thank you"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="REGEX">
+    Tests if content matches a regular expression pattern. Returns boolean.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name to test |
+    | `regex_pattern` | string | Yes | Regular expression pattern |
+
+    ```json
+    {
+      "column_type": "REGEX",
+      "name": "Valid Email Format",
+      "configuration": {
+        "source": "email_field",
+        "regex_pattern": "^[\\w.-]+@[\\w.-]+\\.\\w+$"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="COSINE_SIMILARITY">
+    Calculates semantic similarity between two texts using embeddings. Returns a float between 0 and 1.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `sources` | array | Yes | Array of exactly 2 column names to compare |
+
+    ```json
+    {
+      "column_type": "COSINE_SIMILARITY",
+      "name": "Semantic Similarity",
+      "configuration": {
+        "sources": ["generated_response", "reference_response"]
+      },
+      "is_part_of_score": true
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="ABSOLUTE_NUMERIC_DISTANCE">
+    Calculates the absolute difference between two numeric values.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `sources` | array | Yes | Array of exactly 2 column names containing numbers |
+
+    ```json
+    {
+      "column_type": "ABSOLUTE_NUMERIC_DISTANCE",
+      "name": "Score Difference",
+      "configuration": {
+        "sources": ["predicted_score", "actual_score"]
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="AI_DATA_EXTRACTION">
+    Uses an LLM to extract specific information from content based on a natural language query.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name containing the content |
+    | `query` | string | Yes | Natural language description of what to extract |
+
+    ```json
+    {
+      "column_type": "AI_DATA_EXTRACTION",
+      "name": "Extract Sentiment",
+      "configuration": {
+        "source": "response",
+        "query": "What is the overall sentiment? Return only: positive, negative, or neutral"
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Extraction Types
+
+These columns extract or parse data from other columns.
+
+<AccordionGroup>
+  <Accordion title="JSON_PATH">
+    Extracts data from JSON using JSONPath expressions.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name containing JSON data |
+    | `json_path` | string | Yes | JSONPath expression (e.g., "$.field", "$.items[0].name") |
+    | `return_first_match` | boolean | No | Return only first match (default: true) or all matches |
+
+    ```json
+    {
+      "column_type": "JSON_PATH",
+      "name": "Extract Agent",
+      "configuration": {
+        "source": "llm_output",
+        "json_path": "$.selected_agent",
+        "return_first_match": true
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="XML_PATH">
+    Extracts data from XML using XPath expressions.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name containing XML data |
+    | `xml_path` | string | Yes | XPath expression |
+    | `type` | string | No | "find" for first match or "findall" for all matches. Default: "find" |
+    | `return_text` | boolean | No | Return text content only or full XML. Default: true |
+
+    ```json
+    {
+      "column_type": "XML_PATH",
+      "name": "Extract Title",
+      "configuration": {
+        "source": "xml_response",
+        "xml_path": ".//item/title",
+        "type": "find",
+        "return_text": true
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="REGEX_EXTRACTION">
+    Extracts content matching a regular expression pattern. Returns an array of all matches.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name to extract from |
+    | `regex_pattern` | string | Yes | Regular expression pattern |
+
+    ```json
+    {
+      "column_type": "REGEX_EXTRACTION",
+      "name": "Extract Numbers",
+      "configuration": {
+        "source": "text_content",
+        "regex_pattern": "\\d+\\.?\\d*"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="PARSE_VALUE">
+    Parses and converts a value to a specific type.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name to parse |
+    | `type` | string | Yes | Target type: "string", "number", "boolean", or "object" |
+
+    ```json
+    {
+      "column_type": "PARSE_VALUE",
+      "name": "Parse Score",
+      "configuration": {
+        "source": "score_string",
+        "type": "number"
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
+## Transformation Types
+
+These columns transform, combine, or validate data.
+
+<AccordionGroup>
+  <Accordion title="VARIABLE">
+    Creates a static value that can be referenced by other columns.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `value.type` | string | Yes | "string" or "json" |
+    | `value.value` | any | Yes | The static value |
+
+    String variable:
+    ```json
+    {
+      "column_type": "VARIABLE",
+      "name": "Environment",
+      "configuration": {
+        "value": {
+          "type": "string",
+          "value": "production"
+        }
+      }
+    }
+    ```
+
+    JSON variable:
+    ```json
+    {
+      "column_type": "VARIABLE",
+      "name": "Config",
+      "configuration": {
+        "value": {
+          "type": "json",
+          "value": {"threshold": 0.8, "max_retries": 3}
+        }
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="ASSERT_VALID">
+    Validates that data is in a valid format. Returns boolean.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name to validate |
+    | `type` | string | Yes | Expected format: "object" for valid JSON, "number", or "sql" |
+
+    ```json
+    {
+      "column_type": "ASSERT_VALID",
+      "name": "Is Valid JSON",
+      "configuration": {
+        "source": "api_response",
+        "type": "object"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="COALESCE">
+    Returns the first non-null value from multiple sources.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `sources` | array | Yes | Array of column names, minimum 2 |
+
+    ```json
+    {
+      "column_type": "COALESCE",
+      "name": "Best Response",
+      "configuration": {
+        "sources": ["primary_response", "fallback_response", "default_response"]
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="COMBINE_COLUMNS">
+    Combines multiple column values into a single dictionary object.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `sources` | array | Yes | Array of column names to combine |
+
+    ```json
+    {
+      "column_type": "COMBINE_COLUMNS",
+      "name": "Combined Context",
+      "configuration": {
+        "sources": ["question", "context", "metadata"]
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="COUNT">
+    Counts occurrences in text content.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name to count in |
+    | `type` | string | Yes | What to count: "chars", "words", "sentences", or "paragraphs" |
+
+    ```json
+    {
+      "column_type": "COUNT",
+      "name": "Word Count",
+      "configuration": {
+        "source": "response",
+        "type": "words"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="MATH_OPERATOR">
+    Performs numeric comparisons. Returns boolean.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `sources` | array | Yes | Array with first source column, and optionally second source column |
+    | `operator` | string | Yes | Comparison operator: "lt" for less than, "le" for less or equal, "gt" for greater than, "ge" for greater or equal |
+    | `value` | number | Conditional | Static value to compare against. Required if second source not provided |
+
+    Compare to static value:
+    ```json
+    {
+      "column_type": "MATH_OPERATOR",
+      "name": "Above Threshold",
+      "configuration": {
+        "sources": ["score"],
+        "operator": "ge",
+        "value": 0.8
+      }
+    }
+    ```
+
+    Compare two columns:
+    ```json
+    {
+      "column_type": "MATH_OPERATOR",
+      "name": "A Greater Than B",
+      "configuration": {
+        "sources": ["score_a", "score_b"],
+        "operator": "gt"
+      }
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="MIN_MAX">
+    Finds the minimum or maximum value from an array or JSON structure.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `source` | string | Yes | Column name containing the data |
+    | `type` | string | Yes | "min" or "max" |
+    | `json_path` | string | No | JSONPath to extract values from, if source is JSON |
+
+    ```json
+    {
+      "column_type": "MIN_MAX",
+      "name": "Highest Score",
+      "configuration": {
+        "source": "scores_array",
+        "type": "max",
+        "json_path": "$[*].value"
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>

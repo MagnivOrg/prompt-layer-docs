@@ -110,6 +110,7 @@
             "features/evaluations/examples",
             "features/evaluations/building-pipelines",
             "features/evaluations/eval-types",
+            "features/evaluations/column-types",
             "features/evaluations/score-card",
             "features/evaluations/datasets",
             "features/evaluations/programmatic",

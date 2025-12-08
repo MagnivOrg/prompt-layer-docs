@@ -30,32 +30,36 @@ Each column in the `columns` array accepts:
 
 ### Supported Column Types
 
+<Info>
+For detailed configuration options for each column type, see the [Evaluation Column Types](/features/evaluations/column-types) documentation.
+</Info>
+
 | Type | Description |
 |------|-------------|
-| `LLM_ASSERTION` | AI-powered assertion that evaluates content against a prompt |
 | `PROMPT_TEMPLATE` | Runs a prompt template from the registry |
 | `CODE_EXECUTION` | Executes custom Python or JavaScript code |
-| `VARIABLE` | Static value or reference to another column |
-| `COMPARE` | Compares two values for equality or similarity |
-| `CONTAINS` | Checks if a value contains a substring |
-| `REGEX` | Matches content against a regular expression |
-| `REGEX_EXTRACTION` | Extracts content using a regular expression |
-| `JSON_PATH` | Extracts data using JSONPath expressions |
-| `XML_PATH` | Extracts data using XPath expressions |
-| `COSINE_SIMILARITY` | Calculates semantic similarity between texts |
-| `AI_DATA_EXTRACTION` | AI-powered data extraction from content |
-| `ASSERT_VALID` | Validates data format (JSON, XML, etc.) |
-| `COALESCE` | Returns first non-null value from multiple sources |
-| `COMBINE_COLUMNS` | Combines multiple column values |
-| `COUNT` | Counts occurrences in content |
 | `ENDPOINT` | Calls an external HTTP endpoint |
-| `HUMAN` | Manual human evaluation |
-| `MATH_OPERATOR` | Mathematical operations on numeric values |
-| `MIN_MAX` | Finds minimum or maximum values |
-| `PARSE_VALUE` | Parses and transforms values |
-| `ABSOLUTE_NUMERIC_DISTANCE` | Calculates absolute difference between numbers |
 | `WORKFLOW` | Runs a PromptLayer workflow |
 | `MCP` | Executes an MCP action |
+| `HUMAN` | Manual human evaluation |
+| `LLM_ASSERTION` | AI-powered assertion that evaluates content against a prompt |
+| `AI_DATA_EXTRACTION` | AI-powered data extraction from content |
+| `COMPARE` | Compares two values for equality |
+| `CONTAINS` | Checks if a value contains a substring |
+| `REGEX` | Matches content against a regular expression |
+| `COSINE_SIMILARITY` | Calculates semantic similarity between texts |
+| `ABSOLUTE_NUMERIC_DISTANCE` | Calculates absolute difference between numbers |
+| `JSON_PATH` | Extracts data using JSONPath expressions |
+| `XML_PATH` | Extracts data using XPath expressions |
+| `REGEX_EXTRACTION` | Extracts content using a regular expression |
+| `PARSE_VALUE` | Parses and converts values to a specific type |
+| `VARIABLE` | Static value or constant |
+| `ASSERT_VALID` | Validates data format (JSON, number, SQL) |
+| `COALESCE` | Returns first non-null value from multiple sources |
+| `COMBINE_COLUMNS` | Combines multiple column values into a dict |
+| `COUNT` | Counts chars, words, sentences, or paragraphs |
+| `MATH_OPERATOR` | Numeric comparison operations |
+| `MIN_MAX` | Finds minimum or maximum values |
 
 ## Scoring
 

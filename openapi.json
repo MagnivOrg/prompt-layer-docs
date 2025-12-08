@@ -751,7 +751,7 @@
     "/reports": {
       "post": {
         "summary": "Create Evaluation Pipeline",
-        "description": "Creates a new evaluation pipeline (report) with optional evaluation columns and custom scoring. An evaluation pipeline processes datasets through a series of transformations and evaluations to measure prompt performance.\n\n**Workflow:**\n1. Create a dataset group and dataset first\n2. Create an evaluation pipeline using this endpoint (optionally including columns and scoring configuration)\n3. Run the evaluation using `/reports/{report_id}/run`\n4. Monitor progress and retrieve scores",
+        "description": "Creates a new evaluation pipeline (report) with optional evaluation columns and custom scoring.",
         "operationId": "createEvaluationPipeline",
         "tags": [
           "reports"
