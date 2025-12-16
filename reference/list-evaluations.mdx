@@ -1,0 +1,21 @@
+---
+title: "List Evaluations"
+openapi: "GET /api/public/v2/evaluations"
+---
+
+Retrieve a paginated list of evaluations in your workspace.
+
+### Authentication
+
+This endpoint requires JWT or API key authentication.
+
+### Filtering by Name
+
+Use the `name` parameter to search for evaluations by name. The search is case-insensitive and matches partial names. This is useful for discovering existing evaluations programmatically.
+
+### Filtering by Status
+
+Use the `status` parameter to control which evaluations are returned based on their deletion status:
+- `active` (default): Returns only active evaluations
+- `deleted`: Returns only deleted/archived evaluations
+- `all`: Returns both active and deleted evaluations

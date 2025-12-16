@@ -3,4 +3,20 @@ title: "Get All Prompt Templates"
 openapi: "GET /prompt-templates"
 ---
 
-Get a list of all prompt templates.
+Get a paginated list of all prompt templates in your workspace.
+
+### Filtering
+
+- **label**: Filter prompt templates by release label (e.g., 'prod', 'dev', 'staging')
+- **name**: Filter prompt templates by name (case-insensitive partial match)
+
+### Filtering by Status
+
+Use the `status` parameter to control which prompt templates are returned based on their deletion status:
+- `active` (default): Returns only active prompt templates
+- `deleted`: Returns only deleted/archived prompt templates
+- `all`: Returns both active and deleted prompt templates
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header.

@@ -3,8 +3,19 @@ title: "List Datasets"
 openapi: "GET /api/public/v2/datasets"
 ---
 
-Retrieve a paginated list of datasets based on various filtering criteria. This endpoint allows you to retrieve datasets with various filtering options including dataset group, prompt, report, and workspace filters. Supports both JWT and API key authentication.
+Retrieve a paginated list of datasets based on various filtering criteria. This endpoint allows you to retrieve datasets with various filtering options including dataset group, prompt, report, workspace, and name filters. Supports both JWT and API key authentication.
 
 ### Authentication
 
 This endpoint requires JWT or API key authentication.
+
+### Filtering by Name
+
+Use the `name` parameter to search for datasets by their dataset group name. The search is case-insensitive and matches partial names. This is useful for discovering existing datasets programmatically before creating new ones.
+
+### Filtering by Status
+
+Use the `status` parameter to control which datasets are returned based on their deletion status:
+- `active` (default): Returns only active datasets
+- `deleted`: Returns only deleted/archived datasets
+- `all`: Returns both active and deleted datasets
