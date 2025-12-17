@@ -235,6 +235,91 @@ These columns execute prompts, code, or external services.
     }
     ```
   </Accordion>
+
+  <Accordion title="CONVERSATION_SIMULATOR">
+    Simulates multi-turn conversations to test chatbots and conversational agents. An AI-powered user persona engages in realistic dialogue with your prompt template, allowing you to evaluate how well your agent handles extended interactions.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `template.name` | string | Yes | Name of the prompt template to test |
+    | `template.version_number` | integer | No | Specific version number |
+    | `template.label` | string | No | Release label to use |
+    | `prompt_template_variable_mappings` | object | Yes | Maps template input variables to dataset columns |
+    | `user_persona` | string | Conditional | Static persona description. Required if `user_persona_source` not set |
+    | `user_persona_source` | string | Conditional | Column name containing the persona. Required if `user_persona` not set |
+    | `is_user_first` | boolean | No | If true, simulated user sends the first message (default: false) |
+    | `max_turns` | integer | No | Maximum conversation turns (default: system setting, max: 150) |
+    | `conversation_samples` | array | No | Example conversations to guide the simulation style |
+
+    <Info>
+    The `user_persona` defines how the simulated user behaves - their goals, communication style, and what questions they ask. Use `user_persona_source` to pull different personas from your dataset for varied test scenarios.
+    </Info>
+
+    **Basic example with static persona:**
+    ```json
+    {
+      "column_type": "CONVERSATION_SIMULATOR",
+      "name": "Support Chat Test",
+      "configuration": {
+        "template": {
+          "name": "customer-support-bot"
+        },
+        "prompt_template_variable_mappings": {
+          "customer_name": "customer_name",
+          "product": "product_name"
+        },
+        "user_persona": "You are a frustrated customer who purchased a defective product. You want a refund but will accept a replacement if the agent is helpful. Ask follow-up questions and push back on unhelpful responses.",
+        "is_user_first": true,
+        "max_turns": 5
+      }
+    }
+    ```
+
+    **Dynamic personas from dataset:**
+
+    For comprehensive testing, store different user personas in your dataset to test various scenarios:
+
+    ```json
+    {
+      "column_type": "CONVERSATION_SIMULATOR",
+      "name": "Multi-Scenario Test",
+      "configuration": {
+        "template": {
+          "name": "sales-assistant"
+        },
+        "prompt_template_variable_mappings": {
+          "rep_name": "rep_name",
+          "product": "product_name",
+          "customer_context": "customer_context"
+        },
+        "user_persona_source": "test_persona",
+        "is_user_first": true,
+        "max_turns": 6
+      }
+    }
+    ```
+
+    Where your dataset has a `test_persona` column with different personas:
+    - Row 1: "You are a busy executive who needs quick answers. Be impatient if responses are too long."
+    - Row 2: "You are a technical user who asks detailed follow-up questions about implementation."
+    - Row 3: "You are price-sensitive and keep asking about discounts and alternatives."
+
+    **Evaluating conversation quality:**
+
+    Chain with `LLM_ASSERTION` to evaluate the full conversation:
+
+    ```json
+    {
+      "column_type": "LLM_ASSERTION",
+      "name": "Conversation Quality",
+      "configuration": {
+        "source": "Support Chat Test",
+        "prompt": "Did the agent maintain a professional tone throughout and successfully resolve the customer's issue?"
+      },
+      "is_part_of_score": true
+    }
+    ```
+  </Accordion>
 </AccordionGroup>
 
 ## Evaluation Types

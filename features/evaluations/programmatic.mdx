@@ -542,25 +542,30 @@ Uses an AI coding agent to process data.
 ```
 
 #### CONVERSATION_SIMULATOR
-Simulates multi-turn conversations for testing.
+Simulates multi-turn conversations for testing chatbots and conversational agents.
 
 ```json
 {
   "column_type": "CONVERSATION_SIMULATOR",
   "name": "Conversation Test",
   "configuration": {
-    "agent_template": {
+    "template": {
       "name": "support_agent",
       "version_number": null
     },
-    "test_persona": "User is frustrated and needs quick help",
-    "user_goes_first": false,         // Optional: Who starts the conversation
-    "max_turns": 10,                  // Optional: Maximum conversation turns
-    "conversation_samples": []         // Optional: Example conversations
+    "prompt_template_variable_mappings": {
+      "customer_name": "customer_name"
+    },
+    "user_persona": "You are a frustrated customer who needs quick help. Ask follow-up questions if responses are unclear.",
+    "is_user_first": true,            // Optional: If true, simulated user starts (default: false)
+    "max_turns": 10,                  // Optional: Maximum conversation turns (max: 150)
+    "conversation_samples": []         // Optional: Example conversations to guide style
   },
   "report_id": 456
 }
 ```
+
+You can also use `user_persona_source` instead of `user_persona` to pull the persona from a dataset column for varied test scenarios.
 
 #### WORKFLOW
 Executes a PromptLayer workflow.
