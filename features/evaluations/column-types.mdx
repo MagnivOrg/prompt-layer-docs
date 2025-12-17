@@ -247,12 +247,18 @@ These columns execute prompts, code, or external services.
     | `prompt_template_variable_mappings` | object | Yes | Maps template input variables to dataset columns |
     | `user_persona` | string | Conditional | Static persona description. Required if `user_persona_source` not set |
     | `user_persona_source` | string | Conditional | Column name containing the persona. Required if `user_persona` not set |
+    | `conversation_completed_prompt` | string | No | Guidance for when to consider the conversation complete (e.g., "End when the user confirms their order" or "Complete when the assistant calls the submit_order tool") |
+    | `conversation_completed_prompt_source` | string | No | Column name containing the completion guidance. Use instead of `conversation_completed_prompt` for dynamic guidance |
     | `is_user_first` | boolean | No | If true, simulated user sends the first message (default: false) |
     | `max_turns` | integer | No | Maximum conversation turns (default: system setting, max: 150) |
     | `conversation_samples` | array | No | Example conversations to guide the simulation style |
 
     <Info>
     The `user_persona` defines how the simulated user behaves - their goals, communication style, and what questions they ask. Use `user_persona_source` to pull different personas from your dataset for varied test scenarios.
+    </Info>
+
+    <Info>
+    The `conversation_completed_prompt` provides explicit guidance for determining when a conversation should end. This is useful for defining specific end conditions like tool calls, confirmation messages, or goal achievement. The guidance can be holistic (general rules) or specific (look for a certain phrase or tool call).
     </Info>
 
     **Basic example with static persona:**
@@ -303,6 +309,54 @@ These columns execute prompts, code, or external services.
     - Row 1: "You are a busy executive who needs quick answers. Be impatient if responses are too long."
     - Row 2: "You are a technical user who asks detailed follow-up questions about implementation."
     - Row 3: "You are price-sensitive and keep asking about discounts and alternatives."
+
+    **Custom completion conditions:**
+
+    Use `conversation_completed_prompt` to define specific end conditions for your conversations:
+
+    ```json
+    {
+      "column_type": "CONVERSATION_SIMULATOR",
+      "name": "Order Flow Test",
+      "configuration": {
+        "template": {
+          "name": "order-assistant"
+        },
+        "prompt_template_variable_mappings": {
+          "customer_name": "customer_name",
+          "order_items": "items"
+        },
+        "user_persona": "You are a customer placing an order. Provide your shipping address and payment method when asked.",
+        "conversation_completed_prompt": "The conversation is complete when the assistant calls the submit_order tool or confirms that the order has been placed successfully.",
+        "max_turns": 10
+      }
+    }
+    ```
+
+    You can also use `conversation_completed_prompt_source` to pull completion guidance from your dataset:
+
+    ```json
+    {
+      "column_type": "CONVERSATION_SIMULATOR",
+      "name": "Goal-Based Test",
+      "configuration": {
+        "template": {
+          "name": "support-agent"
+        },
+        "prompt_template_variable_mappings": {
+          "context": "support_context"
+        },
+        "user_persona_source": "test_persona",
+        "conversation_completed_prompt_source": "completion_condition",
+        "max_turns": 8
+      }
+    }
+    ```
+
+    Where your dataset has a `completion_condition` column with different end conditions:
+    - Row 1: "End when the user says 'thank you' or indicates satisfaction"
+    - Row 2: "Complete when the assistant provides a ticket number"
+    - Row 3: "End when the refund_process tool is called"
 
     **Evaluating conversation quality:**
 

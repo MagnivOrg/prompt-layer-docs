@@ -151,6 +151,8 @@ won't share phone number until asked three times for it
 
 * **Conversation Samples**: You can provide sample conversations to help guide the simulated user's responses. These samples help maintain consistent voice and interaction patterns, ensuring the simulated user behaves realistically and consistently with your expected user base.
 
+* **Completion Guidance**: Define specific conditions for when the conversation should be considered complete. This is useful for specifying end conditions like tool calls, confirmation messages, or goal achievement (e.g., "End when the assistant calls the submit_order tool" or "Complete when the user confirms their booking"). You can provide this as a static value or pull it from a dataset column for varied test scenarios.
+
 The conversation results are returned as a JSON list of messages that can then be evaluated using other eval types like LLM Assertions to assess success criteria.
 
 ## Simple Evals

@@ -557,6 +557,7 @@ Simulates multi-turn conversations for testing chatbots and conversational agent
       "customer_name": "customer_name"
     },
     "user_persona": "You are a frustrated customer who needs quick help. Ask follow-up questions if responses are unclear.",
+    "conversation_completed_prompt": "The conversation is complete when the assistant resolves the issue or the user indicates they are satisfied.",
     "is_user_first": true,            // Optional: If true, simulated user starts (default: false)
     "max_turns": 10,                  // Optional: Maximum conversation turns (max: 150)
     "conversation_samples": []         // Optional: Example conversations to guide style
@@ -565,7 +566,7 @@ Simulates multi-turn conversations for testing chatbots and conversational agent
 }
 ```
 
-You can also use `user_persona_source` instead of `user_persona` to pull the persona from a dataset column for varied test scenarios.
+You can also use `user_persona_source` instead of `user_persona` to pull the persona from a dataset column for varied test scenarios. Similarly, use `conversation_completed_prompt_source` to pull completion guidance from a dataset column.
 
 #### WORKFLOW
 Executes a PromptLayer workflow.
