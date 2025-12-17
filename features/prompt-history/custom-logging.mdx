@@ -71,22 +71,23 @@ def openai_to_blueprint(messages, completion=None):
         "messages": [
             {
                 "role": msg["role"],
-                "content": [{"type": "text", "text": msg["content"]}] 
+                "content": [{"type": "text", "text": msg["content"]}]
                 if isinstance(msg["content"], str) else msg["content"]
             }
             for msg in messages
         ]
     }
-    
+
     # Convert output if provided
     output_blueprint = None
     if completion:
         if hasattr(completion.choices[0].message, "tool_calls") and completion.choices[0].message.tool_calls:
-            # Handle tool calls
+            # Handle tool calls - IMPORTANT: content must be an empty array, not null/None
             output_blueprint = {
                 "type": "chat",
                 "messages": [{
                     "role": "assistant",
+                    "content": [],  # Required: must be empty array for tool-only responses
                     "tool_calls": [
                         {
                             "id": tool_call.id,
@@ -109,7 +110,7 @@ def openai_to_blueprint(messages, completion=None):
                     "content": [{"type": "text", "text": completion.choices[0].message.content}]
                 }]
             }
-    
+
     return input_blueprint, output_blueprint
 ```
 
@@ -247,8 +248,29 @@ pl_client.log_request(
 
 For OpenAI/Anthropic function calling or tool use:
 
+<Warning>
+**Important**: When logging assistant messages with tool calls but no text content, you must include an empty `content` array (not `null` or omitted). This ensures proper display in the PromptLayer dashboard.
+</Warning>
+
 ```python
-# Tool call response example
+# Assistant message with tool calls (no text response)
+assistant_tool_call_blueprint = {
+    "type": "chat",
+    "messages": [{
+        "role": "assistant",
+        "content": [],  # Required: empty array, not null
+        "tool_calls": [{
+            "id": "call_abc123",
+            "type": "function",
+            "function": {
+                "name": "get_weather",
+                "arguments": "{\"location\": \"San Francisco\"}"
+            }
+        }]
+    }]
+}
+
+# Tool response example
 tool_response_blueprint = {
     "type": "chat",
     "messages": [
