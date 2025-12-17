@@ -5,6 +5,61 @@ description: "Complete reference for all evaluation pipeline column types and th
 
 This page documents all available column types for evaluation pipelines. Each column type has specific configuration options that determine its behavior.
 
+## How Column Sources Work
+
+Columns can reference data from two places:
+
+1. **Dataset columns** - Reference data directly from your dataset by using the dataset column name
+2. **Other evaluation columns** - Reference the output of a previous column by using that column's `name`
+
+When you specify a `source` or include a column name in `sources`, the system first looks for an evaluation column with that name, then falls back to looking for a dataset column.
+
+<Info>
+Columns are executed in order based on their `position`. A column can only reference other columns that come before it in the pipeline.
+</Info>
+
+### Example: Chaining Columns Together
+
+A common pattern is to chain columns: run a prompt, extract a field from the JSON output, then compare it to a ground truth value from the dataset.
+
+```python
+columns = [
+    # Step 1: Run the prompt template (position 1)
+    {
+        "column_type": "PROMPT_TEMPLATE",
+        "name": "LLM Output",  # Other columns reference this name
+        "configuration": {
+            "template": {"name": "my-prompt"},
+            "prompt_template_variable_mappings": {
+                "question": "user_question"  # Maps to dataset column
+            }
+        }
+    },
+    # Step 2: Extract a field from the LLM output (position 2)
+    {
+        "column_type": "JSON_PATH",
+        "name": "Extracted Status",
+        "configuration": {
+            "source": "LLM Output",  # References the column above
+            "json_path": "$.status"
+        }
+    },
+    # Step 3: Compare extracted value to dataset ground truth (position 3)
+    {
+        "column_type": "COMPARE",
+        "name": "Status Match",
+        "configuration": {
+            "sources": [
+                "Extracted Status",   # References the column above
+                "expected_status"     # References a dataset column
+            ],
+            "comparison_type": {"type": "STRING"}
+        },
+        "is_part_of_score": True
+    }
+]
+```
+
 ## Execution Types
 
 These columns execute prompts, code, or external services.
@@ -24,6 +79,10 @@ These columns execute prompts, code, or external services.
     | `engine.model` | string | No | Model name, e.g. "gpt-4", "claude-3-opus" |
     | `engine.parameters` | object | No | Model parameters like temperature, max_tokens |
 
+    <Info>
+    The `prompt_template_variable_mappings` object maps **prompt input variables** (keys) to **dataset or column names** (values). The key is the variable name in your prompt template (e.g., `{{question}}`), and the value is where to get the data from.
+    </Info>
+
     ```json
     {
       "column_type": "PROMPT_TEMPLATE",
@@ -36,6 +95,27 @@ These columns execute prompts, code, or external services.
         "prompt_template_variable_mappings": {
           "question": "user_question",
           "context": "retrieved_context"
+        }
+      }
+    }
+    ```
+
+    **Complete example with all input variables:**
+
+    If your prompt template has variables `{{company}}`, `{{product}}`, and `{{query}}`, map each one:
+
+    ```json
+    {
+      "column_type": "PROMPT_TEMPLATE",
+      "name": "Product Analysis",
+      "configuration": {
+        "template": {
+          "name": "product-analyzer"
+        },
+        "prompt_template_variable_mappings": {
+          "company": "company_name",
+          "product": "product_name",
+          "query": "user_query"
         }
       }
     }
@@ -168,9 +248,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
     | Field | Type | Required | Description |
     |-------|------|----------|-------------|
     | `source` | string | Yes | Column name containing the content to evaluate |
-    | `prompt` | string | Conditional | The assertion prompt. Required if prompt_source not set |
-    | `prompt_source` | string | Conditional | Column name containing the prompt. Required if prompt not set |
+    | `prompt` | string | Conditional | The assertion prompt. Required if `prompt_source` not set |
+    | `prompt_source` | string | Conditional | Column name containing the prompt. Required if `prompt` not set |
 
+    **Basic example with static prompt:**
     ```json
     {
       "column_type": "LLM_ASSERTION",
@@ -182,6 +263,47 @@ These columns evaluate or compare data and typically return boolean or numeric s
       "is_part_of_score": true
     }
     ```
+
+    **Dynamic prompts from dataset:**
+
+    Use `prompt_source` to pull assertion prompts from a dataset column. This lets you define different assertions per row.
+
+    ```json
+    {
+      "column_type": "LLM_ASSERTION",
+      "name": "Custom Assertions",
+      "configuration": {
+        "source": "LLM Output",
+        "prompt_source": "assertions"
+      },
+      "is_part_of_score": true
+    }
+    ```
+
+    Where your dataset has an `assertions` column containing the prompt text for each row.
+
+    **Multiple assertions per row:**
+
+    You can run multiple assertions against the same content by providing a JSON array of prompts. Each assertion is evaluated independently, and the results are returned as a dictionary.
+
+    ```json
+    {
+      "column_type": "LLM_ASSERTION",
+      "name": "Compliance Checks",
+      "configuration": {
+        "source": "LLM Output",
+        "prompt_source": "llm_assertions"
+      },
+      "is_part_of_score": true
+    }
+    ```
+
+    Where your dataset's `llm_assertions` column contains a JSON array:
+    ```json
+    "[\"Does the response avoid making unauthorized claims?\", \"Is patient data properly redacted?\", \"Does it cite approved sources only?\"]"
+    ```
+
+    The output will be a dictionary with each assertion as a key and its boolean result as the value.
   </Accordion>
 
   <Accordion title="COMPARE">
