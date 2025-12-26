@@ -5085,6 +5085,18 @@
             "minimum": 0,
             "title": "Score",
             "type": "integer"
+          },
+          "api_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Api Type"
           }
         },
         "required": [

@@ -36,6 +36,7 @@ When logging a custom request, you can use the following parameters (see [API Re
 - **`output_tokens`**: Number of output tokens generated
 - **`tags`**: Array of strings for categorizing requests
 - **`metadata`**: Custom JSON object for ability to search and filter requests later
+- **`api_type`**: Api type to be used when working with openai/azure-openai (e.g, "chat-completions", "responses")
 
 ## Basic Usage
 
@@ -55,6 +56,8 @@ pl_client.log_request(
     prompt_input_variables={"variable": "value"},
     tags=["tag1", "tag2"],
     metadata={"custom_field": "value"}
+    # Only to be provided in case of openai/azure-openai (chat-completions/responses)
+    api_type=api_type 
 )
 ```
 
@@ -197,7 +200,8 @@ pl_client.log_request(
     request_start_time=request_start_time,
     request_end_time=request_end_time,
     input_tokens=completion.usage.prompt_tokens,
-    output_tokens=completion.usage.completion_tokens
+    output_tokens=completion.usage.completion_tokens,
+    api_type="chat-completions"
 )
 ```
 
@@ -344,7 +348,8 @@ async function main() {
     requestStartTime,
     requestEndTime,
     inputTokens: completion.usage.prompt_tokens,
-    outputTokens: completion.usage.completion_tokens
+    outputTokens: completion.usage.completion_tokens,
+    api_type: "chat-completions"
   });
 }
 
