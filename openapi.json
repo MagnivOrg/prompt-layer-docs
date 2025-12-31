@@ -3729,10 +3729,6 @@
             "type": "boolean",
             "description": "Indicates if the request was successful."
           },
-          "message": {
-            "type": "string",
-            "description": "A message describing the result."
-          },
           "workflow_id": {
             "type": "integer",
             "description": "The ID of the workflow."
@@ -3783,7 +3779,7 @@
             "description": "Required input variables for the workflow."
           }
         },
-        "required": ["success", "message", "workflow_id", "workflow_name", "workflow_version_id", "version_number"],
+        "required": ["success", "workflow_id", "workflow_name", "workflow_version_id", "version_number"],
         "description": "Response after creating or patching a workflow."
       },
       "ErrorResponse": {
@@ -5051,11 +5047,23 @@
         "properties": {
           "id": {
             "type": "integer",
-            "title": "Id"
+            "title": "Id",
+            "description": "The ID of the prompt template."
           },
           "prompt_name": {
             "type": "string",
-            "title": "Prompt Name"
+            "title": "Prompt Name",
+            "description": "The name of the prompt template."
+          },
+          "prompt_version_id": {
+            "type": "integer",
+            "title": "Prompt Version Id",
+            "description": "The ID of the created prompt version."
+          },
+          "version_number": {
+            "type": "integer",
+            "title": "Version Number",
+            "description": "The version number of the prompt template."
           },
           "tags": {
             "items": {
@@ -5118,6 +5126,8 @@
         "required": [
           "id",
           "prompt_name",
+          "prompt_version_id",
+          "version_number",
           "tags",
           "prompt_template"
         ],
