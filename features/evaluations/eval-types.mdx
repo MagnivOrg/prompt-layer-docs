@@ -183,6 +183,27 @@ The _Absolute Numeric Distance_ evaluation type allows you to select two differe
 
 The _LLM Assertion_ evaluation type enables you to run an assertion on a column using natural language prompts. You can create prompts such as "Does this contain an API key?", "Is this sensitive content?", or "Is this in English?". Our system uses a backend prompt template that processes your assertion and returns either true or false. Assertions should be framed as questions.
 
+#### Using Template Variables
+
+You can use template variables in your assertions to reference values from other dataset columns. This allows you to create dynamic assertions that adapt based on your data.
+
+Use f-string style syntax with single curly braces: `{variable_name}`
+
+**Example assertions with variables:**
+- `"Is the response written in {language}?"`
+- `"Does the output discuss {topic}?"`
+- `"Is the tone {expected_tone}?"`
+
+When you include variables in your assertion, a mapping interface will appear allowing you to connect each variable to a dataset column. For example, if your assertion is `"Is the response written in {language}?"` and you have a column called `target_language`, you would map `language` → `target_language`.
+
+<Note>
+All variables used in assertions must be mapped to a column. If a variable is not mapped, the evaluation will fail with an error indicating which variable mapping is missing.
+</Note>
+
+#### Multiple Assertions
+
+You can add multiple assertions to evaluate different criteria on the same data source. Each assertion is evaluated independently and returns its own true/false result.
+
 ### AI Data Extract
 
 The _AI Data Extract_ evaluation type uses AI/LLM to extract specific information from data sources. You can describe what you want to extract using natural language queries, whether the content is JSON, XML, or just unstructured text.

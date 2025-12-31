@@ -852,10 +852,13 @@
                   "columns": [
                     {
                       "column_type": "LLM_ASSERTION",
-                      "name": "Accuracy Check",
+                      "name": "Language Check",
                       "configuration": {
                         "source": "response",
-                        "prompt": "Is this response accurate?"
+                        "prompt": "Is the response written in {language}?",
+                        "variable_mappings": {
+                          "language": "target_language"
+                        }
                       },
                       "is_part_of_score": true
                     }
@@ -912,12 +915,15 @@
                         "id": 789,
                         "report_id": 456,
                         "column_type": "LLM_ASSERTION",
-                        "name": "Accuracy Check",
+                        "name": "Language Check",
                         "position": 2,
                         "is_part_of_score": true,
                         "configuration": {
                           "source": "response",
-                          "prompt": "Is this response accurate?"
+                          "prompt": "Is the response written in {language}?",
+                          "variable_mappings": {
+                            "language": "target_language"
+                          }
                         }
                       }
                     ]

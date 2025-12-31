@@ -596,10 +596,61 @@ Uses an LLM to evaluate assertions about the data.
   "name": "Quality Check",
   "configuration": {
     "source": "response_column",      // Required: Column to evaluate
-    "prompt": "Is this response professional and helpful?"  // Required: Question to evaluate
+    "prompt": "Is this response professional and helpful?"  // Required (unless using prompt_source): Question to evaluate
   },
   "report_id": 456,
   "is_part_of_score": true  // Optional: Include in score calculation
+}
+```
+
+**Using template variables:**
+
+You can use f-string style template variables `{variable_name}` in your assertions and map them to dataset columns using `variable_mappings`:
+
+```json
+{
+  "column_type": "LLM_ASSERTION",
+  "name": "Language Check",
+  "configuration": {
+    "source": "response_column",
+    "prompt": "Is the response written in {language}?",
+    "variable_mappings": {
+      "language": "target_language_column"  // Maps {language} to the target_language_column
+    }
+  },
+  "report_id": 456
+}
+```
+
+**Multiple assertions:**
+
+Pass a JSON array string to evaluate multiple assertions:
+
+```json
+{
+  "column_type": "LLM_ASSERTION",
+  "name": "Multi Check",
+  "configuration": {
+    "source": "response_column",
+    "prompt": "[\"Is this professional?\", \"Is this helpful?\"]"
+  },
+  "report_id": 456
+}
+```
+
+**Importing assertions from a column:**
+
+Use `prompt_source` instead of `prompt` to read assertions from a dataset column:
+
+```json
+{
+  "column_type": "LLM_ASSERTION",
+  "name": "Dynamic Assertion",
+  "configuration": {
+    "source": "response_column",
+    "prompt_source": "assertions_column"  // Column containing assertion(s)
+  },
+  "report_id": 456
 }
 ```
 
