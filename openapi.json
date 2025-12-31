@@ -2663,6 +2663,159 @@
         ]
       }
     },
+    "/rest/workflows": {
+      "post": {
+        "summary": "Create Workflow",
+        "operationId": "createWorkflow",
+        "tags": [
+          "workflow"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateWorkflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Workflow created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkflowResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/workflows/{workflow_id_or_name}": {
+      "patch": {
+        "summary": "Patch Workflow",
+        "operationId": "patchWorkflow",
+        "tags": [
+          "workflow"
+        ],
+        "parameters": [
+          {
+            "name": "workflow_id_or_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The ID or name of the workflow to update."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchWorkflow"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Workflow version created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateWorkflowResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/workflows": {
       "get": {
         "summary": "List Workflows",
@@ -3343,6 +3496,295 @@
           "workflow_version_execution_id"
         ],
         "description": "Response after initiating a workflow execution."
+      },
+      "WorkflowNode": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Unique name for the node within this workflow."
+          },
+          "node_type": {
+            "type": "string",
+            "description": "The type of node. Common types include VARIABLE, CODE_EXECUTION, PROMPT_TEMPLATE, ENDPOINT, COMPARE, CONTAINS, LLM_ASSERTION, AI_DATA_EXTRACTION, CODING_AGENT. See Node & Column Types documentation for the complete list."
+          },
+          "configuration": {
+            "type": "object",
+            "description": "Node-specific configuration."
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Names of nodes or input variables this node depends on."
+          },
+          "is_output_node": {
+            "type": "boolean",
+            "description": "Whether this node is an output node."
+          }
+        },
+        "required": ["name", "node_type", "configuration", "is_output_node"]
+      },
+      "EdgeConditional": {
+        "type": "object",
+        "properties": {
+          "position": {
+            "type": "integer",
+            "minimum": 0,
+            "description": "Order of evaluation."
+          },
+          "operator": {
+            "type": "string",
+            "enum": ["=", "!=", "<", ">", "<=", ">=", "in", "not_in", "is_null", "is_not_null"],
+            "description": "Comparison operator."
+          },
+          "left_config": {
+            "type": "object",
+            "description": "Left side of comparison. Can be static_value or source."
+          },
+          "right_config": {
+            "type": "object",
+            "description": "Right side of comparison. Can be static_value or source."
+          }
+        },
+        "required": ["position", "operator", "left_config", "right_config"]
+      },
+      "Edge": {
+        "type": "object",
+        "properties": {
+          "source_node_name": {
+            "type": "string",
+            "description": "The source node name."
+          },
+          "target_node_name": {
+            "type": "string",
+            "description": "The target node name."
+          },
+          "is_and": {
+            "type": "boolean",
+            "description": "Whether multiple conditionals use AND logic (true) or OR logic (false)."
+          },
+          "conditionals": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EdgeConditional"
+            },
+            "minItems": 1,
+            "description": "At least one conditional."
+          }
+        },
+        "required": ["source_node_name", "target_node_name", "is_and", "conditionals"]
+      },
+      "CreateWorkflow": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "The name for a new workflow. If not provided, a name will be auto-generated."
+          },
+          "workflow_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The ID of an existing workflow to create a new version for."
+          },
+          "workflow_name": {
+            "type": "string",
+            "nullable": true,
+            "description": "The name of an existing workflow to create a new version for."
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The folder ID to place the workflow in."
+          },
+          "commit_message": {
+            "type": "string",
+            "nullable": true,
+            "description": "A message describing the changes in this version."
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/WorkflowNode"
+            },
+            "description": "The nodes in the workflow."
+          },
+          "required_input_variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "A mapping of variable names to their types."
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "nullable": true,
+            "description": "Conditional edges between nodes."
+          },
+          "release_labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Labels to attach to this version."
+          }
+        },
+        "required": ["nodes"],
+        "description": "Request body for creating a new workflow or workflow version."
+      },
+      "NodeUpdate": {
+        "type": "object",
+        "properties": {
+          "node_type": {
+            "type": "string",
+            "nullable": true,
+            "description": "The node type (required for new nodes)."
+          },
+          "configuration": {
+            "type": "object",
+            "nullable": true,
+            "description": "Node configuration to merge."
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Dependencies to replace."
+          },
+          "is_output_node": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "Whether this is an output node."
+          }
+        },
+        "description": "Partial update for a single node."
+      },
+      "PatchWorkflow": {
+        "type": "object",
+        "properties": {
+          "base_version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The version number to base changes on. Defaults to the latest version."
+          },
+          "commit_message": {
+            "type": "string",
+            "nullable": true,
+            "description": "A message describing the changes."
+          },
+          "nodes": {
+            "type": "object",
+            "additionalProperties": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/NodeUpdate" },
+                { "type": "null" }
+              ]
+            },
+            "nullable": true,
+            "description": "Node updates keyed by node name. Use null to remove a node."
+          },
+          "required_input_variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "If provided, replaces the input variables entirely."
+          },
+          "edges": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Edge"
+            },
+            "nullable": true,
+            "description": "If provided, replaces edges entirely."
+          },
+          "release_labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Labels to attach to the new version."
+          }
+        },
+        "description": "Request body for partially updating a workflow."
+      },
+      "CreateWorkflowResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates if the request was successful."
+          },
+          "message": {
+            "type": "string",
+            "description": "A message describing the result."
+          },
+          "workflow_id": {
+            "type": "integer",
+            "description": "The ID of the workflow."
+          },
+          "workflow_name": {
+            "type": "string",
+            "description": "The name of the workflow."
+          },
+          "workflow_version_id": {
+            "type": "integer",
+            "description": "The ID of the created workflow version."
+          },
+          "version_number": {
+            "type": "integer",
+            "description": "The version number."
+          },
+          "base_version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The base version this was created from (PATCH only)."
+          },
+          "release_labels": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Labels attached to this version."
+          },
+          "nodes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": { "type": "string" },
+                "name": { "type": "string" },
+                "node_type": { "type": "string" },
+                "is_output_node": { "type": "boolean" }
+              }
+            },
+            "description": "Summary of nodes in the workflow."
+          },
+          "required_input_variables": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            },
+            "description": "Required input variables for the workflow."
+          }
+        },
+        "required": ["success", "message", "workflow_id", "workflow_name", "workflow_version_id", "version_number"],
+        "description": "Response after creating or patching a workflow."
       },
       "ErrorResponse": {
         "type": "object",

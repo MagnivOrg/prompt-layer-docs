@@ -160,6 +160,8 @@
         "reference/log-request",
         "reference/workflow-version-execution-results",
         "reference/list-workflows",
+        "reference/create-workflow",
+        "reference/patch-workflow",
         "reference/run-workflow",
         "reference/spans-bulk"
       ]
