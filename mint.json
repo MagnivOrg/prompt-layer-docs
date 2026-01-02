@@ -132,38 +132,63 @@
       "group": "Reference",
       "pages": [
         "reference/rest-api-reference",
-        "reference/templates-get",
-        "reference/templates-publish",
-        "reference/templates-labels-get",
-        "reference/get-snippet-usage",
-        "reference/prompt-labels-patch",
-        "reference/prompt-labels-delete",
-        "reference/prompt-labels-create",
-        "reference/track-score",
-        "reference/track-prompt",
-        "reference/track-group",
-        "reference/track-metadata",
-        "reference/list-prompt-templates",
-        "reference/list-datasets",
-        "reference/list-evaluations",
-        "reference/create-dataset-group",
-        "reference/create-folder",
-        "reference/create-dataset-version-from-file",
-        "reference/create-dataset-version-from-filter-params",
-        "reference/create-reports",
-        "reference/add-report-columns",
-        "reference/run-report",
-        "reference/get-report",
-        "reference/get-report-score",
-        "reference/update-report-score-card",
-        "reference/delete-reports-by-name",
-        "reference/log-request",
-        "reference/workflow-version-execution-results",
-        "reference/list-workflows",
-        "reference/create-workflow",
-        "reference/patch-workflow",
-        "reference/run-workflow",
-        "reference/spans-bulk"
+        {
+          "group": "Prompt Templates",
+          "pages": [
+            "reference/templates-get",
+            "reference/list-prompt-templates",
+            "reference/templates-publish",
+            "reference/templates-labels-get",
+            "reference/prompt-labels-create",
+            "reference/prompt-labels-patch",
+            "reference/prompt-labels-delete",
+            "reference/get-snippet-usage"
+          ]
+        },
+        {
+          "group": "Tracking",
+          "pages": [
+            "reference/log-request",
+            "reference/track-prompt",
+            "reference/track-score",
+            "reference/track-metadata",
+            "reference/track-group",
+            "reference/spans-bulk"
+          ]
+        },
+        {
+          "group": "Datasets",
+          "pages": [
+            "reference/list-datasets",
+            "reference/create-dataset-group",
+            "reference/create-dataset-version-from-file",
+            "reference/create-dataset-version-from-filter-params"
+          ]
+        },
+        {
+          "group": "Evaluations",
+          "pages": [
+            "reference/list-evaluations",
+            "reference/create-reports",
+            "reference/run-report",
+            "reference/get-report",
+            "reference/get-report-score",
+            "reference/add-report-columns",
+            "reference/update-report-score-card",
+            "reference/delete-reports-by-name"
+          ]
+        },
+        {
+          "group": "Agents",
+          "pages": [
+            "reference/list-workflows",
+            "reference/create-workflow",
+            "reference/patch-workflow",
+            "reference/run-workflow",
+            "reference/workflow-version-execution-results"
+          ]
+        },
+        "reference/create-folder"
       ]
     }
   ],
