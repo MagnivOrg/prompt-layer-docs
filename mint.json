@@ -125,6 +125,7 @@
         "why-promptlayer/evaluation-and-ranking",
         "why-promptlayer/playground",
         "why-promptlayer/shared-workspaces",
+        "why-promptlayer/rbac",
         "why-promptlayer/how-it-works"
       ]
     },

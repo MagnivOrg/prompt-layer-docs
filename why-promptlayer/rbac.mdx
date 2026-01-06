@@ -1,0 +1,144 @@
+---
+title: "RBAC"
+icon: "shield"
+---
+
+**Role-based Access Control (RBAC)** provides fine-grained permission management for your workspaces. With RBAC enabled, you can define roles at the organization level and apply them to workspace members, giving you precise control over who can do what in each workspace.
+
+## How RBAC Works
+
+RBAC operates on a simple but powerful principle: **roles are defined at the organization level, but applied at the workspace level**. This means you can create a set of roles once for your organization and reuse them across all your workspaces, while still maintaining workspace-specific access control.
+
+### Role Definition (Organization Level)
+
+Roles belong to your organization and can be used across all workspaces. You have two options:
+
+- **Default Roles**: System-provided roles available to all organizations (`Contributor`, `Publisher`, `Developer`, `Admin`)
+- **Custom Roles**: Organization-specific roles you create to match your team's needs
+
+Each role consists of a name and a set of permissions that define what actions that role allows.
+
+### Role Application (Workspace Level)
+
+When you assign roles to workspace members, you're granting them specific permissions within that workspace. A user can have different roles in different workspaces, and can even have multiple roles in the same workspace. When a user has multiple roles, their effective permissions are the combination of all permissions from their assigned roles.
+
+For example, if Alice has both `Contributor` and `Publisher` roles in Workspace A, she can edit prompts and deploy them to production. But if she only has the `Contributor` role in Workspace B, she can edit prompts there but cannot deploy them.
+
+## Default Roles
+
+![RBAC Roles](/images/rbac-roles.png)
+
+PromptLayer provides four default roles that cover most common use cases:
+
+### Contributor
+
+**What they can do**: Create and edit content
+
+- **Prompt templates and versions**: Create, update, rename, delete, move, and duplicate prompt templates and versions
+- **Workflows**: Create, update, rename, delete, move, and duplicate workflows and workflow versions
+- **Datasets**: Create, update, rename, delete, move, and duplicate datasets and dataset groups
+- **Reports**: Create, update, rename, delete, move, and duplicate reports and evaluations
+- **Metadata**: Edit metadata associated with requests and entities
+
+**Best for**: Team members who need to create and iterate on prompts, workflows, and evaluations, but don't need to deploy changes to production.
+
+### Publisher
+
+**What they can do**: Deploy changes to production
+
+- Create and manage prompt labels
+- Deploy prompt changes through changelogs
+- Create and manage workflow labels
+- Move labels between versions
+
+**Best for**: Team members who need to deploy changes to production. Typically combined with `Contributor` for users who need both editing and deployment capabilities.
+
+### Developer
+
+**What they can do**: Manage API access
+
+- Create, view, and delete API keys
+
+**Best for**: Developers who need to manage API keys for programmatic access to your prompts and workflows.
+
+### Admin
+
+**What they can do**: Everything
+
+- All permissions from other roles
+- Manage workspace member roles and permissions
+- Approve protected label changes
+- Full administrative access
+
+**Best for**: Workspace administrators who need complete control over the workspace.
+
+<Warning color="yellow">
+  Users with the `Admin` role can perform destructive workspace-wide actions,
+  including inviting and removing other members from the workspace, even other
+  admins. Grant this role only to trusted team members who need full
+  administrative control.
+</Warning>
+
+## Custom Roles
+
+![Create Custom Role](/images/rbac-create-role.png)
+
+Beyond the default roles, you can create custom roles tailored to your organization's specific needs. Custom roles are defined at the organization level and can be reused across all workspaces.
+
+Only organization owners can create custom roles. When creating a custom role, you select which permissions to include, allowing you to create roles that match your team's workflow exactly. For example, you might create a "QA Tester" role that can only edit reports and datasets, or a "Deployment Manager" role that combines `Publisher` and `Developer` permissions.
+
+## Permissions
+
+RBAC uses fine-grained permissions that control specific actions:
+
+- **`PROMPT_EDIT`**: Edit prompt templates, create versions, modify metadata
+- **`PROMPT_DEPLOY`**: Create labels, deploy changes, move labels between versions
+- **`WORKFLOW_EDIT`**: Edit workflows, create versions, modify structure
+- **`WORKFLOW_DEPLOY`**: Create workflow labels, deploy workflow changes
+- **`DATASET_EDIT`**: Create and manage datasets and dataset groups
+- **`REPORT_EDIT`**: Create, edit, and run reports and evaluations
+- **`METADATA_EDIT`**: Edit metadata associated with requests
+- **`MANAGE_API_KEYS`**: Create and delete API keys
+- **`ADMIN`**: Full administrative access, including managing member roles
+
+<Warning color="yellow">
+  The `ADMIN` permission grants full administrative access and allows users to
+  perform destructive workspace-wide actions, including inviting and removing
+  other members from the workspace, even other admins. Grant this permission
+  only to trusted team members who need full administrative control.
+</Warning>
+
+## Enabling RBAC
+
+RBAC is enabled per organization. When RBAC is disabled, all workspace members receive default permissions (all permissions except `ADMIN`) automatically. When RBAC is enabled, workspace members have no permissions by default and must be explicitly assigned roles to gain access.
+
+This secure-by-default approach ensures that when RBAC is enabled, users only get the permissions they need, following the principle of least privilege.
+
+## Managing Roles
+
+Users with the `ADMIN` permission in a workspace can assign roles to members of that workspace. Organization owners can assign roles to members in any workspace within their organization.
+
+To manage a member's roles:
+
+1. Go to your organization settings
+2. Select your organization
+3. Navigate to Workspaces
+4. Select the workspace
+5. Click the three dots menu next to the member
+6. Choose "Manage roles"
+
+![Manage Roles](/images/rbac-manage-roles.png)
+
+When assigning roles, remember that:
+
+- Roles are assigned to workspace members (not directly to users)
+- Effective permissions are the union of all permissions from assigned roles
+- Role assignments are workspace-specific
+
+## Best Practices
+
+- **Start with default roles**: The default roles cover most common scenarios. Use them before creating custom roles.
+- **Follow least privilege**: Only grant the minimum permissions needed for each team member to do their job.
+- **Combine roles strategically**: Assign multiple roles when users need permissions from different roles (e.g., `Contributor` + `Publisher` for someone who edits and deploys).
+- **Review regularly**: Periodically review role assignments to ensure they still match your team's needs as roles and responsibilities evolve.
+- **Use custom roles thoughtfully**: Create custom roles when you have a recurring pattern that doesn't fit the default roles, not for one-off cases.
