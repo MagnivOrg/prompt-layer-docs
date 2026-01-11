@@ -39,6 +39,20 @@ For complete examples with OpenAI, Anthropic, Google Gemini, and detailed implem
 
 **[Logging Structured Outputs Guide →](/features/prompt-history/structured-output-logging)**
 
+## Using Extended Thinking / Reasoning
+
+When logging requests that use extended thinking (Anthropic), thinking mode (Google), or reasoning (OpenAI), the configuration must be passed inside the `parameters` field using provider-specific formats:
+
+| Provider | Parameter | Example |
+|----------|-----------|---------|
+| Anthropic | `thinking` | `{"thinking": {"type": "enabled", "budget_tokens": 10000}}` |
+| Google | `thinking_config` | `{"thinking_config": {"include_thoughts": true, "thinking_budget": 8000}}` |
+| OpenAI | `reasoning_effort` | `{"reasoning_effort": "high"}` |
+
+For complete examples with thinking content blocks and full code samples, see:
+
+**[Logging Extended Thinking Guide →](/features/prompt-history/custom-logging#logging-extended-thinking-and-reasoning)**
+
 ## Related Documentation
 
 - [Custom Logging Guide](/features/prompt-history/custom-logging) - General guide to logging requests
