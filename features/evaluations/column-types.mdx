@@ -6,7 +6,8 @@ description: "Complete reference for all node types used in Agents and evaluatio
 This page documents all available node types for Agents (workflows) and column types for evaluation pipelines. Agents and evaluations share the same node types—each has specific configuration options that determine its behavior.
 
 <Note>
-In Agents, these are called **nodes**. In evaluation pipelines, they're called **columns**. The configuration is identical.
+  In Agents, these are called **nodes**. In evaluation pipelines, they're called
+  **columns**. The configuration is identical.
 </Note>
 
 ## How Column Sources Work
@@ -19,7 +20,8 @@ Columns can reference data from two places:
 When you specify a `source` or include a column name in `sources`, the system first looks for an evaluation column with that name, then falls back to looking for a dataset column.
 
 <Info>
-Columns are executed in order based on their `position`. A column can only reference other columns that come before it in the pipeline.
+  Columns are executed in order based on their `position`. A column can only
+  reference other columns that come before it in the pipeline.
 </Info>
 
 ### Example: Chaining Columns Together
@@ -69,7 +71,7 @@ columns = [
 These columns execute prompts, code, or external services.
 
 <AccordionGroup>
-  <Accordion title="PROMPT_TEMPLATE">
+  <Accordion title="Prompt Template">
     Runs a prompt template from the registry against each row.
 
     | Field | Type | Required | Description |
@@ -124,9 +126,10 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="CODE_EXECUTION">
+  <Accordion title="Code Execution">
     Executes custom Python or JavaScript code. The code receives a `data` dictionary containing all column values for the current row.
 
     | Field | Type | Required | Description |
@@ -144,9 +147,10 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="ENDPOINT">
+  <Accordion title="Endpoint">
     Calls an external HTTP endpoint. The request body contains all column values for the current row.
 
     | Field | Type | Required | Description |
@@ -166,9 +170,10 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="WORKFLOW">
+  <Accordion title="Workflow">
     Runs a PromptLayer workflow.
 
     | Field | Type | Required | Description |
@@ -190,6 +195,7 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
   </Accordion>
 
   <Accordion title="MCP">
@@ -214,9 +220,10 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="HUMAN">
+  <Accordion title="Human">
     Adds a column for manual human evaluation.
 
     | Field | Type | Required | Description |
@@ -238,9 +245,10 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="CONVERSATION_SIMULATOR">
+  <Accordion title="Conversation Simulator">
     Simulates multi-turn conversations to test chatbots and conversational agents. An AI-powered user persona engages in realistic dialogue with your prompt template, allowing you to evaluate how well your agent handles extended interactions.
 
     | Field | Type | Required | Description |
@@ -377,15 +385,16 @@ These columns execute prompts, code, or external services.
       "is_part_of_score": true
     }
     ```
+
   </Accordion>
 </AccordionGroup>
 
 ## Loop Types
 
-These nodes enable iterating over collections or executing repeated operations within Agents. For comprehensive documentation including API examples, see the [Loop Nodes](/running-requests/workflow-loops) guide.
+These nodes enable iterating over collections or executing repeated operations within Agents.
 
 <AccordionGroup>
-  <Accordion title="FOR_LOOP">
+  <Accordion title="For Loop">
     Iterates over a collection of items or runs a fixed number of times, executing a prompt template or sub-workflow on each iteration.
 
     | Field | Type | Required | Description |
@@ -442,9 +451,10 @@ These nodes enable iterating over collections or executing repeated operations w
       "final_output": "output5"
     }
     ```
+
   </Accordion>
 
-  <Accordion title="WHILE_LOOP">
+  <Accordion title="While Loop">
     Executes repeatedly until an end condition is met or maximum iterations are reached.
 
     | Field | Type | Required | Description |
@@ -491,6 +501,7 @@ These nodes enable iterating over collections or executing repeated operations w
       }
     }
     ```
+
   </Accordion>
 </AccordionGroup>
 
@@ -499,7 +510,7 @@ These nodes enable iterating over collections or executing repeated operations w
 These columns evaluate or compare data and typically return boolean or numeric scores.
 
 <AccordionGroup>
-  <Accordion title="LLM_ASSERTION">
+  <Accordion title="LLM Assertion">
     Uses an LLM to evaluate content against a natural language prompt. Returns a boolean indicating pass/fail.
 
     | Field | Type | Required | Description |
@@ -561,9 +572,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
     ```
 
     The output will be a dictionary with each assertion as a key and its boolean result as the value.
+
   </Accordion>
 
-  <Accordion title="COMPARE">
+  <Accordion title="Compare">
     Compares two values for equality. Supports string comparison and JSON comparison with optional JSONPath.
 
     | Field | Type | Required | Description |
@@ -598,9 +610,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="CONTAINS">
+  <Accordion title="Contains">
     Checks if a value contains a substring (case-insensitive).
 
     | Field | Type | Required | Description |
@@ -619,9 +632,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="REGEX">
+  <Accordion title="Regex">
     Tests if content matches a regular expression pattern. Returns boolean.
 
     | Field | Type | Required | Description |
@@ -639,9 +653,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="COSINE_SIMILARITY">
+  <Accordion title="Cosine Similarity">
     Calculates semantic similarity between two texts using embeddings. Returns a float between 0 and 1.
 
     | Field | Type | Required | Description |
@@ -658,9 +673,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
       "is_part_of_score": true
     }
     ```
+
   </Accordion>
 
-  <Accordion title="ABSOLUTE_NUMERIC_DISTANCE">
+  <Accordion title="Absolute Numeric Distance">
     Calculates the absolute difference between two numeric values.
 
     | Field | Type | Required | Description |
@@ -676,9 +692,10 @@ These columns evaluate or compare data and typically return boolean or numeric s
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="AI_DATA_EXTRACTION">
+  <Accordion title="AI Data Extraction">
     Uses an LLM to extract specific information from content based on a natural language query.
 
     | Field | Type | Required | Description |
@@ -696,6 +713,7 @@ These columns evaluate or compare data and typically return boolean or numeric s
       }
     }
     ```
+
   </Accordion>
 </AccordionGroup>
 
@@ -704,7 +722,7 @@ These columns evaluate or compare data and typically return boolean or numeric s
 These columns extract or parse data from other columns.
 
 <AccordionGroup>
-  <Accordion title="JSON_PATH">
+  <Accordion title="JSON Path">
     Extracts data from JSON using JSONPath expressions.
 
     | Field | Type | Required | Description |
@@ -724,9 +742,10 @@ These columns extract or parse data from other columns.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="XML_PATH">
+  <Accordion title="XML Path">
     Extracts data from XML using XPath expressions.
 
     | Field | Type | Required | Description |
@@ -748,9 +767,10 @@ These columns extract or parse data from other columns.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="REGEX_EXTRACTION">
+  <Accordion title="Regex Extraction">
     Extracts content matching a regular expression pattern. Returns an array of all matches.
 
     | Field | Type | Required | Description |
@@ -768,9 +788,10 @@ These columns extract or parse data from other columns.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="PARSE_VALUE">
+  <Accordion title="Parse Value">
     Parses and converts a value to a specific type.
 
     | Field | Type | Required | Description |
@@ -788,6 +809,7 @@ These columns extract or parse data from other columns.
       }
     }
     ```
+
   </Accordion>
 </AccordionGroup>
 
@@ -796,7 +818,7 @@ These columns extract or parse data from other columns.
 These columns transform, combine, or validate data.
 
 <AccordionGroup>
-  <Accordion title="VARIABLE">
+  <Accordion title="Variable">
     Creates a static value that can be referenced by other columns.
 
     | Field | Type | Required | Description |
@@ -831,9 +853,10 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="ASSERT_VALID">
+  <Accordion title="Assert Valid">
     Validates that data is in a valid format. Returns boolean.
 
     | Field | Type | Required | Description |
@@ -851,9 +874,10 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="COALESCE">
+  <Accordion title="Coalesce">
     Returns the first non-null value from multiple sources.
 
     | Field | Type | Required | Description |
@@ -869,9 +893,10 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="COMBINE_COLUMNS">
+  <Accordion title="Combine Columns">
     Combines multiple column values into a single dictionary object.
 
     | Field | Type | Required | Description |
@@ -887,9 +912,10 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="COUNT">
+  <Accordion title="Count">
     Counts occurrences in text content.
 
     | Field | Type | Required | Description |
@@ -907,9 +933,10 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="MATH_OPERATOR">
+  <Accordion title="Math Operator">
     Performs numeric comparisons. Returns boolean.
 
     | Field | Type | Required | Description |
@@ -942,9 +969,10 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 
-  <Accordion title="MIN_MAX">
+  <Accordion title="Min/Max">
     Finds the minimum or maximum value from an array or JSON structure.
 
     | Field | Type | Required | Description |
@@ -964,5 +992,6 @@ These columns transform, combine, or validate data.
       }
     }
     ```
+
   </Accordion>
 </AccordionGroup>
