@@ -380,6 +380,120 @@ These columns execute prompts, code, or external services.
   </Accordion>
 </AccordionGroup>
 
+## Loop Types
+
+These nodes enable iterating over collections or executing repeated operations within Agents. For comprehensive documentation including API examples, see the [Loop Nodes](/running-requests/workflow-loops) guide.
+
+<AccordionGroup>
+  <Accordion title="FOR_LOOP">
+    Iterates over a collection of items or runs a fixed number of times, executing a prompt template or sub-workflow on each iteration.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `loop_type` | string | Yes | `"prompt"` or `"workflow"` |
+    | `prompt_config` | object | Conditional | Configuration for prompt execution (required if `loop_type` = "prompt") |
+    | `workflow_config` | object | Conditional | Configuration for workflow execution (required if `loop_type` = "workflow") |
+    | `iterator_source` | string | Conditional | Source node providing the collection to iterate over |
+    | `max_iterations` | integer | Conditional | Fixed number of iterations (mutually exclusive with `iterator_source`) |
+    | `return_all_outputs` | boolean | No | Return all outputs from each iteration (default: false) |
+    | `variable_mappings` | object | No | Maps template variables to source nodes or special loop variables |
+
+    **Special loop variables for `variable_mappings`:**
+    - `loop_index` - Current iteration index (0-based)
+    - `previous_outputs` - Array of all outputs from previous iterations
+    - `_iterator_item` - Current item from the iterated collection
+
+    <Warning>
+    Exactly **one** of `iterator_source` or `max_iterations` must be provided.
+    </Warning>
+
+    ```json
+    {
+      "node_type": "FOR_LOOP",
+      "name": "process_items",
+      "is_output_node": true,
+      "dependencies": ["items"],
+      "configuration": {
+        "loop_type": "prompt",
+        "iterator_source": "items",
+        "prompt_config": {
+          "template": {
+            "name": "item-processor",
+            "label": "production"
+          },
+          "prompt_template_variable_mappings": {
+            "item": "_iterator_item",
+            "index": "loop_index"
+          }
+        },
+        "variable_mappings": {
+          "item": "_iterator_item",
+          "index": "loop_index"
+        }
+      }
+    }
+    ```
+
+    **Output structure:**
+    ```json
+    {
+      "iterations": 5,
+      "outputs": ["output1", "output2", "output3", "output4", "output5"],
+      "final_output": "output5"
+    }
+    ```
+  </Accordion>
+
+  <Accordion title="WHILE_LOOP">
+    Executes repeatedly until an end condition is met or maximum iterations are reached.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `loop_type` | string | Yes | `"prompt"` or `"workflow"` |
+    | `prompt_config` | object | Conditional | Configuration for prompt execution (required if `loop_type` = "prompt") |
+    | `workflow_config` | object | Conditional | Configuration for workflow execution (required if `loop_type` = "workflow") |
+    | `end_condition_json_path` | string | No | JSONPath expression to evaluate termination (loop stops when truthy) |
+    | `max_iterations` | integer | No | Maximum iterations (defaults to system limit) |
+    | `return_all_outputs` | boolean | No | Return all outputs (default: false) |
+    | `variable_mappings` | object | No | Maps template variables to source nodes or special variables |
+
+    <Info>
+    **Termination behavior:**
+    - If `end_condition_json_path` is set: Loop ends when JSONPath extracts a truthy value
+    - If not set: Loop ends when output is falsy (empty, null, false)
+    </Info>
+
+    ```json
+    {
+      "node_type": "WHILE_LOOP",
+      "name": "refine_loop",
+      "is_output_node": true,
+      "dependencies": ["initial_draft"],
+      "configuration": {
+        "loop_type": "prompt",
+        "max_iterations": 5,
+        "end_condition_json_path": "$.is_complete",
+        "prompt_config": {
+          "template": {
+            "name": "text-refiner",
+            "label": "production"
+          },
+          "prompt_template_variable_mappings": {
+            "text": "initial_draft",
+            "previous_results": "previous_outputs"
+          }
+        },
+        "variable_mappings": {
+          "text": "initial_draft",
+          "previous_results": "previous_outputs",
+          "iteration": "loop_index"
+        }
+      }
+    }
+    ```
+  </Accordion>
+</AccordionGroup>
+
 ## Evaluation Types
 
 These columns evaluate or compare data and typically return boolean or numeric scores.

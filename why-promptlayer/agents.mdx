@@ -20,13 +20,17 @@ PromptLayer Agents let you quickly build, launch, and manage AI workflows that u
 ## Use Cases
 
 ### 1. **Combining Multiple LLM Calls into a Single Output**
+
 Improve AI-generated responses by using results from multiple LLM calls, either by merging outputs or choosing the best one. This can lead to:
+
 - More thorough and precise outputs
 - Enhanced decision-making by considering multiple perspectives
 - Higher reliability through comparing multiple AI answers
 
 ### 2. **Building Complex Agents**
+
 Create advanced AI systems that can handle multi-step tasks and solve complex problems. These systems can:
+
 - Integrate multiple LLM calls
 - Incorporate external data sources
 - Automate complex decision-making processes
@@ -34,21 +38,29 @@ Create advanced AI systems that can handle multi-step tasks and solve complex pr
 ## Key Concepts
 
 ### 1. Input Variables
+
 Input Variables are the data you feed into an Agent. They can be text, numbers, or other information the Agent uses in its various steps to produce the final result.
 
 ![Input Variables](/images/agents/input-variables.png)
 
 ### 2. Nodes
+
 Nodes are the building blocks of the Agent. Each node represents a specific action or decision. Types include:
 
 - **Prompt Template**: Make an LLM call using a specified prompt template and input variables.
 - **Callback Endpoint**: Make external API calls (ex: RAG steps) or trigger callback requests after workflow processes finish.
 - **Coding Agent**: Execute AI coding agents (such as Claude Code) in a sandboxed environment for data transformations, file processing, and complex analysis. [Learn more about Coding Agent](/features/evaluations/eval-types#coding-agent)
+- **For Loop**: Iterate over collections, running a prompt or sub-workflow on each item. [Learn more about For Loop](/running-requests/workflow-loops#for-loop-for_loop)
+- **While Loop**: Execute repeatedly until a condition is met. [Learn more about While Loop](/running-requests/workflow-loops#while-loop-while_loop)
 - **Math Operator**: Perform numerical comparisons or calculations between different data sources.
 - **Parse Value**: Extract and process specific data types like strings, numbers, or JSON from inputs.
 
 <Info>
-**Want to learn about all available node types?** Agent nodes use the same building blocks as evaluation types. [View all eval types](/features/evaluations/eval-types) to see the full catalog of nodes you can use in your agents, including LLM assertions, data extraction, conversation simulators, and more.
+  **Want to learn about all available node types?** Agent nodes use the same
+  building blocks as evaluation types. [View all eval
+  types](/features/evaluations/eval-types) to see the full catalog of nodes you
+  can use in your agents, including LLM assertions, data extraction,
+  conversation simulators, and more.
 </Info>
 
 ![Nodes](/images/agents/nodes.png)

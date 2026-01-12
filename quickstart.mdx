@@ -14,7 +14,8 @@ This tutorial walks you through building an AI application that generates cake r
 - View logs and debug issues
 
 <Info>
-  [Create an account](https://dashboard.promptlayer.com/create-account) to follow along.
+  [Create an account](https://dashboard.promptlayer.com/create-account) to
+  follow along.
 </Info>
 
 ## Creating Your First Prompt
@@ -24,7 +25,10 @@ Prompts are the core IP of any AI application. By managing them in PromptLayer i
 From the PromptLayer dashboard, click **New** → **Prompt**.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-creation-access.png" alt="Creating a new prompt" />
+  <img
+    src="/new-quickstart-images/prompt-creation-access.png"
+    alt="Creating a new prompt"
+  />
 </Frame>
 
 A prompt starts with two messages. The **System** message sets the AI's behavior. The **User** message is what gets sent each time you run it.
@@ -35,11 +39,12 @@ A prompt starts with two messages. The **System** message sets the AI's behavior
   - Defining output format ("Always respond in JSON...")
   - Establishing guardrails ("Never discuss competitors...")
 
-  **User message**: The input that changes each time the prompt runs. This is where you put the actual request and any input variables. In production, your code will dynamically fill in this message.
+**User message**: The input that changes each time the prompt runs. This is where you put the actual request and any input variables. In production, your code will dynamically fill in this message.
 
-  Some prompts also use **Assistant** messages to show example responses, which helps the AI understand the expected format.
+Some prompts also use **Assistant** messages to show example responses, which helps the AI understand the expected format.
 
-  Learn more about [LLM idioms](https://blog.promptlayer.com/llm-idioms/) and why chat formats matter.
+Learn more about [LLM idioms](https://blog.promptlayer.com/llm-idioms/) and why chat formats matter.
+
 </Accordion>
 
 Replace the default content with:
@@ -60,18 +65,25 @@ Create a recipe for {{cake_type}} that serves {{serving_size}} people.
 Notice `{{cake_type}}` and `{{serving_size}}`. These are [input variables](/features/prompt-registry/template-variables)—think of them like mad-libs. When you run the prompt, you'll fill these in with real values.
 
 <Frame>
-  <img src="/new-quickstart-images/variables-explained.png" alt="Input variables in prompt" />
+  <img
+    src="/new-quickstart-images/variables-explained.png"
+    alt="Input variables in prompt"
+  />
 </Frame>
 
 ### Running Your Prompt
 
 To test your prompt:
+
 1. Click **Define input variables** in the right panel
 2. Set `cake_type` to "Chocolate Cake" and `serving_size` to "8"
 3. Click **Run**
 
 <Frame>
-  <img src="/new-quickstart-images/running-in-playground.gif" alt="Running a prompt in the playground" />
+  <img
+    src="/new-quickstart-images/running-in-playground.gif"
+    alt="Running a prompt in the playground"
+  />
 </Frame>
 
 Save your prompt by clicking **Save Template**.
@@ -79,18 +91,19 @@ Save your prompt by clicking **Save Template**.
 <Accordion title="Retrieving Prompts in Your Code">
   Your application fetches prompts from PromptLayer at runtime using the SDK or REST API. This keeps prompts out of your codebase and lets you update them without redeploying. It also means PMs and domain experts can edit prompts directly in the dashboard without waiting for engineering.
 
-  ```python
-  from promptlayer import PromptLayer
-  client = PromptLayer()
+```python
+from promptlayer import PromptLayer
+client = PromptLayer()
 
-  # Fetch and run a prompt by name
-  response = client.run(
-      prompt_name="cake-recipe",
-      input_variables={"cake_type": "Chocolate", "serving_size": "8"}
-  )
-  ```
+# Fetch and run a prompt by name
+response = client.run(
+    prompt_name="cake-recipe",
+    input_variables={"cake_type": "Chocolate", "serving_size": "8"}
+)
+```
 
-  See [Deployment Strategies](/onboarding-guides/deployment-strategies) for caching strategies.
+See [Deployment Strategies](/onboarding-guides/deployment-strategies) for caching strategies.
+
 </Accordion>
 
 ## Versioning Your Prompt
@@ -98,11 +111,12 @@ Save your prompt by clicking **Save Template**.
 PromptLayer tracks every change you make to a prompt. Each save creates a new version with a record of what changed, when, and by whom.
 
 <Accordion title="Prompt Writing Tips">
-  - Use headers to structure your prompt (`**Section**:`)
-  - Be specific about output format
-  - Include examples when possible
-  
-  PromptLayer supports [Jinja2 templates](/features/prompt-registry/template-variables#jinja2-templates) for more advanced variable logic. For structured outputs, see our guide on [tool calling with LLMs](https://blog.promptlayer.com/tool-calling-with-llms-how-and-when-to-use-it/).
+  - Use headers to structure your prompt (`**Section**:`) - Be specific about
+  output format - Include examples when possible PromptLayer supports [Jinja2
+  templates](/features/prompt-registry/template-variables#jinja2-templates) for
+  more advanced variable logic. For structured outputs, see our guide on [tool
+  calling with
+  LLMs](https://blog.promptlayer.com/tool-calling-with-llms-how-and-when-to-use-it/).
 </Accordion>
 
 ### Editing Prompts
@@ -118,19 +132,28 @@ Always include a "Baker's Tip" at the end with advice for beginners.
 Click **Save Template**. Before saving, PromptLayer shows you a diff of exactly what changed: deletions in red, additions in green. Add a commit message like "Added baker's tip requirement" and save.
 
 <Frame>
-  <img src="/new-quickstart-images/bakers-tip.png" alt="Saving with diff view" />
+  <img
+    src="/new-quickstart-images/bakers-tip.png"
+    alt="Saving with diff view"
+  />
 </Frame>
 
 Your version history appears in the left panel. You can click any previous version to view it.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-versioning-display.png" alt="Version history" />
+  <img
+    src="/new-quickstart-images/prompt-versioning-display.png"
+    alt="Version history"
+  />
 </Frame>
 
 Hover over a version and click **View Diff** to compare any two versions side by side.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-diffing-display.png" alt="Comparing versions with diff" />
+  <img
+    src="/new-quickstart-images/prompt-diffing-display.png"
+    alt="Comparing versions with diff"
+  />
 </Frame>
 
 ### Writing Prompts with AI
@@ -138,7 +161,10 @@ Hover over a version and click **View Diff** to compare any two versions side by
 Click the magic wand icon to open the AI prompt writer. It can help rewrite or improve your prompts based on your instructions. Try asking it to "add allergy warnings" to the recipe generator.
 
 <Frame>
-  <img src="/new-quickstart-images/ai-prompt-writer-zoomed.png" alt="AI prompt writer" />
+  <img
+    src="/new-quickstart-images/ai-prompt-writer-zoomed.png"
+    alt="AI prompt writer"
+  />
 </Frame>
 
 ### Switching LLMs
@@ -152,7 +178,9 @@ PromptLayer is model-agnostic. You can switch between OpenAI, Anthropic, Google,
 All prompts work across models, including [function calling and tool use](/features/prompt-registry/tool-calling). You can also connect [private models or custom hosts](/features/custom-providers), and build [fine-tuned models](/why-promptlayer/fine-tuning).
 
 <Note>
-  Any model with a `base_url` can be added as a [custom provider](/features/custom-providers) - including self-hosted models, Azure OpenAI, or any OpenAI-compatible API.
+  Any model with a `base_url` can be added as a [custom
+  provider](/features/custom-providers) - including self-hosted models, Azure
+  OpenAI, or any OpenAI-compatible API.
 </Note>
 
 ## Deploying to Prod
@@ -166,7 +194,10 @@ For engineers: PromptLayer offers several [deployment strategies](/onboarding-gu
 Release labels control which prompt version is live. You can mark versions as "production", "staging", or "testing". Your code fetches the prompt by label, so you can update the live version without changing any code.
 
 <Frame>
-  <img src="/new-quickstart-images/release-labels-close.png" alt="Release labels" />
+  <img
+    src="/new-quickstart-images/release-labels-close.png"
+    alt="Release labels"
+  />
 </Frame>
 
 Learn more about [release labels](/features/prompt-registry/release-labels).
@@ -181,7 +212,10 @@ PromptLayer supports A/B testing prompts in production. Common use cases include
 To start an A/B test, assign release labels to different prompt versions and configure traffic splits in the dashboard.
 
 <Frame>
-  <img src="/new-quickstart-images/prompt-ab-test-display.png" alt="A/B testing prompts" />
+  <img
+    src="/new-quickstart-images/prompt-ab-test-display.png"
+    alt="A/B testing prompts"
+  />
 </Frame>
 
 Learn more about [A/B testing](/why-promptlayer/ab-releases).
@@ -191,6 +225,7 @@ Learn more about [A/B testing](/why-promptlayer/ab-releases).
 Agents are multi-step AI workflows. Unlike a single prompt, an agent can chain multiple prompts together, use tools, and make decisions based on intermediate results.
 
 For example, you could extend the cake recipe generator into an agent that:
+
 1. Generates the recipe (using our prompt from earlier)
 2. Scales the ingredients for 100 people
 3. Calculates the total cost based on current grocery prices
@@ -204,7 +239,10 @@ Create an agent by clicking **New** → **Agent**. You can build workflows visua
 Like prompts, agents are versioned with commit messages and can be retrieved via the SDK.
 
 <Frame>
-  <img src="/new-quickstart-images/agent-version-list.png" alt="Agent version history" />
+  <img
+    src="/new-quickstart-images/agent-version-list.png"
+    alt="Agent version history"
+  />
 </Frame>
 
 Learn more about [Agents](/why-promptlayer/agents).
@@ -220,7 +258,10 @@ Evals test how well your prompts perform. Common use cases include:
 - **Human grading**: Collect feedback from domain experts on prompt quality
 
 <Frame>
-  <img src="/new-quickstart-images/eval-example.png" alt="Evaluation pipeline" />
+  <img
+    src="/new-quickstart-images/eval-example.png"
+    alt="Evaluation pipeline"
+  />
 </Frame>
 
 You can build evaluation pipelines visually and connect them to prompts for continuous testing. Learn more about [Evaluations](/features/evaluations/overview).
@@ -230,7 +271,10 @@ You can build evaluation pipelines visually and connect them to prompts for cont
 Every prompt run is logged with full request and response details. You can attach [metadata](/features/prompt-history/metadata) like user IDs, session IDs, or feature flags to each request, making it easy to debug issues for specific users. [Analytics](/why-promptlayer/analytics) show cost, latency, and usage patterns across your prompts.
 
 <Frame>
-  <img src="/new-quickstart-images/analytics-display.png" alt="Analytics dashboard" />
+  <img
+    src="/new-quickstart-images/analytics-display.png"
+    alt="Analytics dashboard"
+  />
 </Frame>
 
 ### Viewing Logs
@@ -244,7 +288,10 @@ Click **Logs** in the sidebar to see all requests. You can filter by prompt, [se
 You can also view logs for a specific prompt by clicking **Analytics & Logs** in the prompt editor.
 
 <Frame>
-  <img src="/new-quickstart-images/logs-by-prompt-display.png" alt="Logs filtered by prompt" />
+  <img
+    src="/new-quickstart-images/logs-by-prompt-display.png"
+    alt="Logs filtered by prompt"
+  />
 </Frame>
 
 From the logs table, you can select historical requests and click **Backtest** to run a new prompt version against those inputs and compare results.
@@ -254,11 +301,12 @@ From the logs table, you can select historical requests and click **Backtest** t
 For agents, [traces](/running-requests/traces) show each step of the workflow as spans. You can see timing, inputs, and outputs for every step. Traces are OpenTelemetry (OTEL) compatible, so you can integrate with your existing observability stack.
 
 <Frame>
-  <img src="/new-quickstart-images/trace-span.png" alt="Trace visualization" />
+  <img src="/images/new_traces.gif" alt="Trace visualization" />
 </Frame>
 
 <Tip>
-  Continue to [Quickstart Part 2](/quickstart-part-two) to learn about evaluations, backtests, and connecting PromptLayer to your code.
+  Continue to [Quickstart Part 2](/quickstart-part-two) to learn about
+  evaluations, backtests, and connecting PromptLayer to your code.
 </Tip>
 
 You can also watch our [Tutorial Videos](/tutorial-videos) for guided walkthroughs.

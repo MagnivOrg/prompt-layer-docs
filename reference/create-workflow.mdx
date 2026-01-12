@@ -105,17 +105,19 @@ Agents use the same node types as evaluation pipelines. For the complete list of
 
 Common node types include:
 
-| Node Type | Description |
-|-----------|-------------|
-| `VARIABLE` | Static value |
-| `CODE_EXECUTION` | Run Python or JavaScript code |
-| `PROMPT_TEMPLATE` | Call an LLM with a prompt template |
-| `ENDPOINT` | Make an HTTP request |
-| `COMPARE` | Compare two values |
-| `CONTAINS` | Check if string contains value |
-| `LLM_ASSERTION` | LLM-based evaluation |
-| `AI_DATA_EXTRACTION` | Extract structured data |
-| `CODING_AGENT` | Claude Code sandbox |
+| Node Type            | Description                                                                                          |
+| -------------------- | ---------------------------------------------------------------------------------------------------- |
+| `VARIABLE`           | Static value                                                                                         |
+| `CODE_EXECUTION`     | Run Python or JavaScript code                                                                        |
+| `PROMPT_TEMPLATE`    | Call an LLM with a prompt template                                                                   |
+| `ENDPOINT`           | Make an HTTP request                                                                                 |
+| `FOR_LOOP`           | Iterate over a collection ([details](/features/evaluations/column-types#for-loop-for_loop))          |
+| `WHILE_LOOP`         | Execute until condition is met ([details](/features/evaluations/column-types#while-loop-while_loop)) |
+| `COMPARE`            | Compare two values                                                                                   |
+| `CONTAINS`           | Check if string contains value                                                                       |
+| `LLM_ASSERTION`      | LLM-based evaluation                                                                                 |
+| `AI_DATA_EXTRACTION` | Extract structured data                                                                              |
+| `CODING_AGENT`       | Claude Code sandbox                                                                                  |
 
 ## Response
 
@@ -314,8 +316,8 @@ response = requests.post(
 
 ## Error Responses
 
-| Status Code | Error |
-|-------------|-------|
-| 400 | Invalid request body, duplicate name, validation errors |
-| 401 | Missing or invalid API key |
-| 404 | Workflow not found (when using workflow_id or workflow_name) |
+| Status Code | Error                                                        |
+| ----------- | ------------------------------------------------------------ |
+| 400         | Invalid request body, duplicate name, validation errors      |
+| 401         | Missing or invalid API key                                   |
+| 404         | Workflow not found (when using workflow_id or workflow_name) |
