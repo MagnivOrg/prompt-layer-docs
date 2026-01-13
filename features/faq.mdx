@@ -36,6 +36,10 @@ When streaming is enabled, each chunk includes:
 - `prompt_blueprint`: The progressively built prompt blueprint showing the current state of the response
 - `request_id`: Only included in the final chunk to indicate completion
 
+<Note>
+The `raw_response` structure is provider-specific and may change as LLM providers update their APIs. For stable, provider-agnostic access, use `prompt_blueprint` instead.
+</Note>
+
 Example usage for OpenAI:
 ```python
 for chunk in pl.run(prompt_name="your-prompt", stream=True):

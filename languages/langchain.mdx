@@ -208,6 +208,8 @@ llm = ChatOpenAI(
 PROMPT_NAME = "ai-poet-test"
 INPUT_VARIABLES = {"topic": "PromptLayer the Premier Prompt Engineering Platform"}
 template = pl_client.templates.get(PROMPT_NAME, {"input_variables": INPUT_VARIABLES})
+# Note: llm_kwargs structure is provider-specific and may change.
+# See https://docs.promptlayer.com/features/prompt-registry/overview#setting-execution-parameters
 pl_messages = template["llm_kwargs"]["messages"]
 
 messages = [
@@ -218,6 +220,7 @@ ai_msg = llm.invoke(messages)
 PROMPT_NAME = "check-the-weather"
 INPUT_VARIABLES = {'location': 'New York'}
 template = pl_client.templates.get(PROMPT_NAME, {"input_variables": INPUT_VARIABLES})
+# Note: llm_kwargs structure is provider-specific and may change.
 pl_messages = template["llm_kwargs"]["messages"]
 messages = [
     (convert_role(pl_message["role"]), convert_content(pl_message["content"])) for pl_message in pl_messages

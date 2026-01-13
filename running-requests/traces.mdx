@@ -182,6 +182,8 @@ def main():
 
 @pl_client.traceable()
 def openai_call():
+    # Note: llm_kwargs structure is provider-specific and may change.
+    # See https://docs.promptlayer.com/features/prompt-registry/overview#setting-execution-parameters
     OpenAI = pl_client.openai.OpenAI
     openai = OpenAI()
     template = pl_client.templates.get("simple-greeting")

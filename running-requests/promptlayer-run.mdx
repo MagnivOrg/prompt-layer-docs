@@ -182,7 +182,15 @@ const response = await pl.run({
 
 ### Overriding Model Parameters
 
-You can also override `provider` and `model` at runtime to choose a different LLM provider or model. This is useful if you want to use a different provider than the one specified in the prompt template. PromptLayer will automatically return the corrent `llm_kwargs` for the specified provider and model with default values for the parameters corresponding to the `provider` and `model`.
+You can also override `provider` and `model` at runtime to choose a different LLM provider or model. This is useful if you want to use a different provider than the one specified in the prompt template. PromptLayer will automatically return the correct `llm_kwargs` for the specified provider and model with default values for the parameters corresponding to the `provider` and `model`.
+
+<Warning>
+**Provider-Specific Schema Notice**
+
+The `llm_kwargs` and `raw_response` objects have provider-specific structures that may change as LLM providers update their APIs. PromptLayer passes through the native format required by each provider.
+
+For stable, provider-agnostic prompt data, use `prompt_blueprint.prompt_template` instead of relying on the structure of provider-specific objects.
+</Warning>
 
 <CodeGroup>
 

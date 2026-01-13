@@ -18,6 +18,12 @@ Think of Prompt Blueprints as a universal language for LLM interactions that shi
 
 Instead of accessing the raw LLM response via `response["raw_response"]`, it's recommended to use the standardized `response["prompt_blueprint"]`. This ensures consistency across different providers.
 
+<Warning>
+**Provider-Specific Schema Notice**
+
+The `raw_response` object structure is provider-specific and may change without notice as LLM providers update their APIs. PromptLayer passes through the native format from each provider. For stable, provider-agnostic prompt data, always use `prompt_blueprint` instead.
+</Warning>
+
 ```python
 response = promptlayer_client.run(
     prompt_name="ai-poet",

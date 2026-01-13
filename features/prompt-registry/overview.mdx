@@ -112,6 +112,19 @@ Currently we support `provider` type of either `openai` or `anthropic`.
 
 When using PromptLayer, ensure you set any necessary parameters for execution, such as `provider`, `input_variables`, and other specific parameters required by the LLM provider (e.g., `temperature`, `max_tokens` for OpenAI). Use the `llm_kwargs` as provided. If you need to override certain arguments, it is recommended to create a new version on PromptLayer. Alternatively, you can override them on your end if necessary.
 
+<Warning>
+**Provider-Specific Schema Notice**
+
+The `llm_kwargs` object structure is provider-specific and may change without notice as LLM providers update their APIs. For example, Provider's system message format may change from a string to an array of objects.
+
+PromptLayer passes through the native format required by each provider. If you need stable, provider-agnostic access to prompt data, use `prompt_template` instead, which provides a consistent structure regardless of the target provider.
+
+We recommend:
+- Do not hard-code assumptions about `llm_kwargs` structure in your application
+- Use `prompt_template` for storing or caching prompt data
+- Test your integration when switching providers or after provider API updates
+</Warning>
+
 <CodeGroup>
 
 ```python Python SDK
