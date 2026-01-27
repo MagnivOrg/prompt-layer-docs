@@ -32,8 +32,8 @@ When included, the `log_request` field creates a request log associated with the
 - **model** (string, required): The model name
 - **input** (object, required): The input template (chat or completion format)
 - **output** (object, required): The output template (chat or completion format)
-- **request_start_time** (datetime, required): ISO format datetime
-- **request_end_time** (datetime, required): ISO format datetime
+- **request_start_time** (datetime, optional): ISO format datetime. If omitted, defaults to the parent span's `start_time`.
+- **request_end_time** (datetime, optional): ISO format datetime. If omitted, defaults to the parent span's `end_time`.
 - **parameters** (object, optional): Model parameters used
 - **tags** (array[string], optional): Tags to associate with the request
 - **metadata** (object, optional): Metadata key-value pairs
@@ -54,6 +54,8 @@ Returns a JSON object with:
 - **request_logs** (array, optional): Array of created request log objects (only present if log_request was provided)
 
 ## Example Request
+
+### With explicit request times
 
 ```json
 {
@@ -121,9 +123,70 @@ Returns a JSON object with:
 }
 ```
 
+### With inherited span times
+
+When `request_start_time` and `request_end_time` are omitted, they are automatically inherited from the span's `start_time` and `end_time`:
+
+```json
+{
+  "spans": [
+    {
+      "name": "llm_call",
+      "context": {
+        "trace_id": "d4b5e2a1-3c8f-4e9a-b7d6-1a2b3c4d5e6f",
+        "span_id": "b2c3d4e5-6f7a-8b9c-0d1e-2f3a4b5c6d7e",
+        "trace_state": ""
+      },
+      "kind": "SpanKind.INTERNAL",
+      "parent_id": null,
+      "start_time": 1630000000000000000,
+      "end_time": 1630000001000000000,
+      "status": {
+        "status_code": "StatusCode.OK",
+        "description": "OK"
+      },
+      "attributes": {},
+      "resource": {
+        "attributes": {
+          "service.name": "my-app"
+        },
+        "schema_url": ""
+      },
+      "log_request": {
+        "provider": "openai",
+        "model": "gpt-3.5-turbo",
+        "input": {
+          "type": "chat",
+          "messages": [
+            {
+              "role": "user",
+              "content": [{"type": "text", "text": "Hello!"}]
+            }
+          ]
+        },
+        "output": {
+          "type": "chat",
+          "messages": [
+            {
+              "role": "assistant",
+              "content": [{"type": "text", "text": "Hi there!"}]
+            }
+          ]
+        },
+        "prompt_name": "greeting_prompt",
+        "prompt_version_number": 1,
+        "input_tokens": 5,
+        "output_tokens": 3
+      }
+    }
+  ]
+}
+```
+
 ## Notes
 
 - Spans with names "openai.OpenAI" or "anthropic.Anthropic" are excluded from processing
 - When `log_request` is provided, the created request log will be associated with the span via the span_id
+- If `request_start_time` or `request_end_time` is omitted from `log_request`, the value is inherited from the parent span's `start_time` or `end_time` (converted from nanoseconds). This avoids requiring you to redundantly set both span and request log times.
 - If a prompt_name is specified but not found, the span will still be created but the log_request creation will be skipped for that span
 - All operations are atomic - if any span creation fails, the entire batch is rolled back
