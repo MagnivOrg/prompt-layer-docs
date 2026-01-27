@@ -1,0 +1,61 @@
+---
+title: "Get Prompt Template (Raw)"
+openapi: "GET /prompt-templates/{identifier}"
+---
+
+Retrieve raw prompt template data without applying input variables. This endpoint is designed for:
+
+- **GitHub sync**: Use `resolve_snippets=false` to get the raw template with `@@@snippet@@@` references intact
+- **Local caching**: Fetch resolved templates with optional `llm_kwargs` for offline use
+- **Template inspection**: View template structure and metadata without executing
+
+Unlike the [POST endpoint](/reference/templates-get), this GET endpoint does not accept `input_variables` or `provider` in a request body. Instead, it returns the raw template data with placeholders preserved.
+
+### Query Parameters
+
+| Parameter | Type | Default | Description |
+|-----------|------|---------|-------------|
+| `version` | integer | - | Specific version number. Mutually exclusive with `label`. |
+| `label` | string | - | Release label name (e.g. `prod`). Mutually exclusive with `version`. |
+| `resolve_snippets` | boolean | `true` | When `true`, snippets are expanded. When `false`, raw `@@@snippet@@@` references are preserved. |
+| `include_llm_kwargs` | boolean | `false` | When `true`, includes provider-specific LLM API format in the response. |
+
+### Caching
+
+Responses are cached by default. To bypass the cache, send the `Cache-Control: no-cache` header.
+
+<Warning>
+**Provider-Specific Schema Notice**
+
+The `llm_kwargs` field (when requested via `include_llm_kwargs=true`) is provider-specific and its structure may change without notice as LLM providers update their APIs.
+
+For stable, provider-agnostic prompt data, use `prompt_template` instead of `llm_kwargs`.
+</Warning>
+
+### Examples
+
+```bash
+# Default: resolved snippets, latest version
+curl -H "X-API-KEY: your_api_key" \
+  https://api.promptlayer.com/prompt-templates/my-prompt
+
+# Raw template with snippet references (for GitHub sync)
+curl -H "X-API-KEY: your_api_key" \
+  "https://api.promptlayer.com/prompt-templates/my-prompt?resolve_snippets=false"
+
+# With llm_kwargs (for local caching)
+curl -H "X-API-KEY: your_api_key" \
+  "https://api.promptlayer.com/prompt-templates/my-prompt?include_llm_kwargs=true"
+
+# Specific version
+curl -H "X-API-KEY: your_api_key" \
+  "https://api.promptlayer.com/prompt-templates/my-prompt?version=2"
+
+# By release label
+curl -H "X-API-KEY: your_api_key" \
+  "https://api.promptlayer.com/prompt-templates/my-prompt?label=prod"
+```
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header.

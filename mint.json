@@ -137,6 +137,7 @@
           "group": "Prompt Templates",
           "pages": [
             "reference/templates-get",
+            "reference/templates-get-raw",
             "reference/list-prompt-templates",
             "reference/templates-publish",
             "reference/templates-labels-get",

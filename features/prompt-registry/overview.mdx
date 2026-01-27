@@ -49,7 +49,9 @@ const template_dict = await promptLayerClient.templates.get("my_template");
 
 </CodeGroup>
 
-Alternatively, use the REST API endpoint `/prompte-templates/{prompt_name}` ([read more](/reference/templates-get)).
+Alternatively, use the REST API:
+- `POST /prompt-templates/{prompt_name}` to get a template with input variables and provider-formatted output ([read more](/reference/templates-get))
+- `GET /prompt-templates/{prompt_name}` to get raw template data without applying input variables, useful for syncing, caching, or inspection ([read more](/reference/templates-get-raw))
 
 ### By Release Label
 

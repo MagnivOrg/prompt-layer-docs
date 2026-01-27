@@ -47,7 +47,7 @@ Input Variables are the data you feed into an Agent. They can be text, numbers, 
 
 Nodes are the building blocks of the Agent. Each node represents a specific action or decision. Types include:
 
-- **Prompt Template**: Make an LLM call using a specified prompt template and input variables.
+- **Prompt Template**: Make an LLM call using a prompt template from the registry or an [inline template](#inline-templates) defined directly in the node configuration.
 - **Callback Endpoint**: Make external API calls (ex: RAG steps) or trigger callback requests after workflow processes finish.
 - **Coding Agent**: Execute AI coding agents (such as Claude Code) in a sandboxed environment for data transformations, file processing, and complex analysis. [Learn more about Coding Agent](/features/evaluations/eval-types#coding-agent)
 - **For Loop**: Iterate over collections, running a prompt or sub-workflow on each item. [Learn more about For Loop](/running-requests/workflow-loops#for-loop-for_loop)
@@ -85,6 +85,53 @@ You can compare values against numbers or booleans, and multiple conditions can 
 Output Nodes determine what your Agent returns as its final result. When using Conditional Edges to create different paths in your workflow, you can place multiple Output Nodes at the end of different branches. Similar to a "return statement" in programming, whichever Output Node executes successfully first will provide the final output. This allows your Agent to deliver different results based on the specific conditions that were met during the workflow.
 
 ![Output Nodes](/images/agents/output-node.png)
+
+### 5. Inline Templates
+
+Prompt Template nodes can reference a template from the Prompt Registry or define a template inline. Inline templates are useful for quick iteration and experimentation without committing a prompt to the registry.
+
+When creating or updating an agent programmatically, use `inline_template` instead of `template` in a Prompt Template node's configuration:
+
+```json
+{
+  "name": "Generate Summary",
+  "node_type": "PROMPT_TEMPLATE",
+  "configuration": {
+    "inline_template": {
+      "inline": true,
+      "prompt_template": {
+        "type": "chat",
+        "messages": [
+          {
+            "role": "system",
+            "content": [{"type": "text", "text": "Summarize the following text concisely."}]
+          },
+          {
+            "role": "user",
+            "content": [{"type": "text", "text": "{input_text}"}]
+          }
+        ]
+      },
+      "metadata": {
+        "model": {
+          "provider": "openai",
+          "name": "gpt-4",
+          "parameters": {"temperature": 0.3}
+        }
+      }
+    },
+    "prompt_template_variable_mappings": {
+      "input_text": "document"
+    }
+  },
+  "dependencies": ["document"],
+  "is_output_node": false
+}
+```
+
+<Info>
+You must provide exactly one of `template` (registry reference) or `inline_template` (inline content) in a Prompt Template node's configuration. They are mutually exclusive. You can convert an inline template to a registry template at any time from the UI using "Save to Registry".
+</Info>
 
 ## Versioning
 
