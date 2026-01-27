@@ -33,8 +33,8 @@ promptLayerClient.track.prompt({
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-prompt \
   --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: pl_<YOUR API KEY>' \
   --data '{
-    "api_key": "pl_<YOUR API KEY>",
     "request_id": "<REQUEST ID>",
     "prompt_name": "<PROMPT TEMPLATE NAME>",
     "prompt_input_variables": <PROMPT TEMPLATE INPUT VARIABLES>,
@@ -76,8 +76,8 @@ promptLayerClient.track.prompt({
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-prompt \
   --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: pl_<YOUR API KEY>' \
   --data '{
-    "api_key": "pl_<YOUR API KEY>",
     "request_id": "<REQUEST ID>",
     "prompt_name": "<PROMPT TEMPLATE NAME>",
     "prompt_input_variables": <PROMPT TEMPLATE INPUT VARIABLES>,

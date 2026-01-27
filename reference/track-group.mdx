@@ -12,8 +12,8 @@ pl_group_id = promptlayer_client.group.create()
 import requests
 response = requests.post(
   "https://api.promptlayer.com/rest/track-group",
+  headers={"X-API-KEY": "<YOUR_API_KEY>"},
   json={
-      "api_key": "<YOUR_API_KEY>",
       "request_id": "<REQUEST_ID>",
       "group_id": pl_group_id,
   },

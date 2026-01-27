@@ -10,8 +10,8 @@ Associate a metadata dictionary with a request. This can be used for things like
 import requests
 response = requests.post(
   "https://api.promptlayer.com/rest/track-metadata",
+  headers={"X-API-KEY": "<YOUR_API_KEY>"},
   json={
-      "api_key": "<YOUR_API_KEY>",
       "request_id": "<REQUEST_ID>",
       "metadata": {"session_id": "abc123", "user_id": "user123"}
   },

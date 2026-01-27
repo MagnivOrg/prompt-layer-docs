@@ -10,8 +10,8 @@ Associate a prompt template with a request.
 import requests
 response = requests.post(
   "https://api.promptlayer.com/rest/track-prompt",
+  headers={"X-API-KEY": "<YOUR_API_KEY>"},
   json={
-      "api_key": "<YOUR_API_KEY>",
       "prompt_name": "<PROMPT_NAME>",
       "prompt_input_variables": {"variable1": "value1", "variable2": "value2"},
       "request_id": "<REQUEST_ID>",
