@@ -6,6 +6,110 @@
   },
   "paths": {
     "/prompt-templates/{identifier}": {
+      "get": {
+        "tags": [
+          "prompt-templates"
+        ],
+        "summary": "Get Prompt Template Raw Data",
+        "description": "Retrieve raw prompt template data without applying input variables. Designed for GitHub sync, local caching, and template inspection. By default, snippets are resolved (expanded). Use resolve_snippets=false to get the raw template with snippet references intact.",
+        "operationId": "get_prompt_template_raw",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id."
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "title": "Version",
+              "description": "Specific version number to retrieve. Mutually exclusive with `label`."
+            }
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Label",
+              "description": "Release label name to retrieve (e.g. 'prod', 'staging'). Mutually exclusive with `version`."
+            }
+          },
+          {
+            "name": "resolve_snippets",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Resolve Snippets",
+              "description": "When true (default), snippets are expanded in the returned prompt_template. When false, raw @@@snippet@@@ references are preserved."
+            }
+          },
+          {
+            "name": "include_llm_kwargs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Include LLM Kwargs",
+              "description": "When true, includes provider-specific llm_kwargs in the response. Requires model metadata to be set on the template."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptTemplateRawResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prompt template not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      },
       "post": {
         "tags": [
           "prompt-templates"
@@ -4895,6 +4999,160 @@
           "prompt_template"
         ],
         "title": "GetPromptTemplateResponse"
+      },
+      "SnippetReference": {
+        "properties": {
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "The name of the snippet prompt template."
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "description": "The version number of the snippet used."
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label",
+            "description": "The release label of the snippet, if applicable."
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_name",
+          "version"
+        ],
+        "title": "SnippetReference"
+      },
+      "GetPromptTemplateRawResponse": {
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "title": "Success"
+          },
+          "id": {
+            "type": "integer",
+            "title": "Id",
+            "description": "The prompt template ID."
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "The name of the prompt template."
+          },
+          "version": {
+            "type": "integer",
+            "title": "Version",
+            "description": "The version number of the prompt template."
+          },
+          "workspace_id": {
+            "type": "integer",
+            "title": "Workspace Id",
+            "description": "The workspace this prompt template belongs to."
+          },
+          "prompt_template": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/CompletionPrompt"
+              },
+              {
+                "$ref": "#/components/schemas/ChatPrompt"
+              }
+            ],
+            "title": "Prompt Template",
+            "description": "The prompt template content. When resolve_snippets is true (default), snippets are expanded. When false, raw @@@snippet@@@ references are preserved.",
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "chat": "#/components/schemas/ChatPrompt",
+                "completion": "#/components/schemas/CompletionPrompt"
+              }
+            }
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Metadata"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "description": "Model configuration including provider, model name, and parameters."
+          },
+          "commit_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Message",
+            "description": "The commit message for this version."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "Tags",
+            "description": "Tags associated with the prompt template."
+          },
+          "created_at": {
+            "anyOf": [
+              {
+                "type": "string",
+                "format": "date-time"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Created At",
+            "description": "Timestamp when this version was created."
+          },
+          "snippets": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SnippetReference"
+            },
+            "title": "Snippets",
+            "description": "List of snippet references used in this template."
+          },
+          "llm_kwargs": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "LLM Kwargs",
+            "description": "Provider-specific LLM arguments. Only present when include_llm_kwargs=true. Structure is provider-specific and may change without notice."
+          }
+        },
+        "type": "object",
+        "required": [
+          "success",
+          "id",
+          "prompt_name",
+          "version",
+          "workspace_id",
+          "prompt_template",
+          "snippets"
+        ],
+        "title": "GetPromptTemplateRawResponse"
       },
       "GetPromptTemplateLabelResponse": {
         "properties": {
