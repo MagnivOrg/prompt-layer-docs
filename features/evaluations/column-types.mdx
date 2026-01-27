@@ -72,7 +72,9 @@ These columns execute prompts, code, or external services.
 
 <AccordionGroup>
   <Accordion title="Prompt Template">
-    Runs a prompt template from the registry against each row.
+    Runs a prompt template against each row. You can reference a template from the Prompt Registry or define one inline.
+
+    **Registry Reference (using `template`)**
 
     | Field | Type | Required | Description |
     |-------|------|----------|-------------|
@@ -126,6 +128,58 @@ These columns execute prompts, code, or external services.
       }
     }
     ```
+
+    **Inline Template (using `inline_template`)**
+
+    Define a prompt template directly in the configuration without saving it to the registry. This is useful for quick experimentation or one-off evaluations.
+
+    | Field | Type | Required | Description |
+    |-------|------|----------|-------------|
+    | `inline_template.inline` | boolean | Yes | Must be `true` |
+    | `inline_template.prompt_template` | object | Yes | The template content (chat or completion format) |
+    | `inline_template.metadata` | object | No | Model configuration (provider, name, parameters) |
+    | `inline_template.source_prompt_name` | string | No | Name of the registry prompt this was derived from |
+    | `inline_template.source_prompt_version` | integer | No | Version number of the source prompt |
+    | `prompt_template_variable_mappings` | object | Yes | Maps template input variables to dataset/column names |
+
+    ```json
+    {
+      "column_type": "PROMPT_TEMPLATE",
+      "name": "Generate Response",
+      "configuration": {
+        "inline_template": {
+          "inline": true,
+          "prompt_template": {
+            "type": "chat",
+            "messages": [
+              {
+                "role": "system",
+                "content": [{"type": "text", "text": "You are a helpful assistant."}]
+              },
+              {
+                "role": "user",
+                "content": [{"type": "text", "text": "Answer: {question}"}]
+              }
+            ]
+          },
+          "metadata": {
+            "model": {
+              "provider": "openai",
+              "name": "gpt-4",
+              "parameters": {"temperature": 0.7}
+            }
+          }
+        },
+        "prompt_template_variable_mappings": {
+          "question": "user_question"
+        }
+      }
+    }
+    ```
+
+    <Warning>
+    You must provide exactly one of `template` or `inline_template`. They are mutually exclusive.
+    </Warning>
 
   </Accordion>
 
