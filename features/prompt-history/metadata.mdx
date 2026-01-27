@@ -38,8 +38,8 @@ promptLayerClient.track.metadata({
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-metadata \
   --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: pl_<YOUR API KEY>' \
   --data '{
-    "api_key": "pl_<YOUR API KEY>",
     "request_id": "<REQUEST ID>",
     "metadata": {
       "user_id":"1abf2345f",

@@ -31,11 +31,11 @@ await promptLayerClient.track.group({
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-group \
   --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: pl_<YOUR API KEY>' \
   --data '{
-    "api_key": "pl_<YOUR API KEY>",
     "request_id": "<REQUEST ID>",
-    "group_id": "<GROUP ID>",
-}'
+    "group_id": "<GROUP ID>"
+  }'
 ```
 
 </CodeGroup>

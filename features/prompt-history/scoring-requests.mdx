@@ -40,11 +40,11 @@ promptLayerClient.track.score({
 curl --request POST \
   --url https://api.promptlayer.com/rest/track-score \
   --header 'Content-Type: application/json' \
+  --header 'X-API-KEY: pl_<YOUR API KEY>' \
   --data '{
-    "api_key": "pl_<YOUR API KEY>",
     "request_id": "<REQUEST ID>",
     "score": <YOUR SCORE>,
-    "name": <YOUR SCORE NAME>,
+    "name": <YOUR SCORE NAME>
   }'
 ```
 

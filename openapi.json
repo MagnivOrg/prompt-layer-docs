@@ -498,6 +498,17 @@
         "tags": [
           "metadata"
         ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API Key."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -505,10 +516,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "api_key": {
-                    "type": "string",
-                    "description": "Your PromptLayer API Key."
-                  },
                   "request_id": {
                     "type": "integer",
                     "description": "The unique identifier for the request to which the metadata is associated."
@@ -520,7 +527,6 @@
                   }
                 },
                 "required": [
-                  "api_key",
                   "request_id",
                   "metadata"
                 ]
@@ -567,6 +573,17 @@
         "tags": [
           "group"
         ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API Key."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -574,10 +591,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "api_key": {
-                    "type": "string",
-                    "description": "Your PromptLayer API Key."
-                  },
                   "request_id": {
                     "type": "integer",
                     "description": "The unique identifier for the request."
@@ -588,7 +601,6 @@
                   }
                 },
                 "required": [
-                  "api_key",
                   "request_id",
                   "group_id"
                 ]
@@ -635,6 +647,17 @@
         "tags": [
           "prompt"
         ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API Key."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -642,11 +665,6 @@
               "schema": {
                 "type": "object",
                 "properties": {
-                  "api_key": {
-                    "type": "string",
-                    "description": "Your PromptLayer API Key.",
-                    "minLength": 1
-                  },
                   "prompt_name": {
                     "type": "string",
                     "description": "The name of the prompt template.",
@@ -678,7 +696,6 @@
                   }
                 },
                 "required": [
-                  "api_key",
                   "prompt_name",
                   "request_id"
                 ]
@@ -725,6 +742,17 @@
         "tags": [
           "score"
         ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API Key."
+          }
+        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -746,16 +774,11 @@
                     "type": "string",
                     "description": "A name for this request score. If not provided, the score will be tracked as `default`.",
                     "optional": true
-                  },
-                  "api_key": {
-                    "type": "string",
-                    "description": "Your PromptLayer API Key."
                   }
                 },
                 "required": [
                   "request_id",
-                  "score",
-                  "api_key"
+                  "score"
                 ]
               }
             }
