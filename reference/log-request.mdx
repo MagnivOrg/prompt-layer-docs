@@ -53,6 +53,58 @@ For complete examples with thinking content blocks and full code samples, see:
 
 **[Logging Extended Thinking Guide →](/features/prompt-history/custom-logging#logging-extended-thinking-and-reasoning)**
 
+## Error Tracking
+
+You can log failed or problematic requests using the `status`, `error_type`, and `error_message` fields. This is useful for monitoring error rates, debugging issues, and tracking provider reliability.
+
+### Example: Logging a Failed Request
+
+```json
+{
+  "provider": "openai",
+  "model": "gpt-4",
+  "api_type": "chat-completions",
+  "input": {
+    "type": "chat",
+    "messages": [{"role": "user", "content": "Hello"}]
+  },
+  "output": {
+    "type": "chat",
+    "messages": []
+  },
+  "request_start_time": "2024-01-15T10:30:00Z",
+  "request_end_time": "2024-01-15T10:30:30Z",
+  "status": "ERROR",
+  "error_type": "PROVIDER_TIMEOUT",
+  "error_message": "Request timed out after 30 seconds"
+}
+```
+
+### Example: Logging a Warning
+
+Use `WARNING` status for requests that succeeded but had issues (e.g., retries, degraded responses):
+
+```json
+{
+  "provider": "anthropic",
+  "model": "claude-3-sonnet",
+  "api_type": "chat-completions",
+  "input": {
+    "type": "chat",
+    "messages": [{"role": "user", "content": "Summarize this"}]
+  },
+  "output": {
+    "type": "chat",
+    "messages": [{"role": "assistant", "content": "Summary..."}]
+  },
+  "request_start_time": "2024-01-15T10:30:00Z",
+  "request_end_time": "2024-01-15T10:30:05Z",
+  "status": "WARNING",
+  "error_type": "PROVIDER_RATE_LIMIT",
+  "error_message": "Succeeded after 2 retries due to rate limiting"
+}
+```
+
 ## Related Documentation
 
 - [Custom Logging Guide](/features/prompt-history/custom-logging) - General guide to logging requests

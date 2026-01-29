@@ -5836,6 +5836,50 @@
             ],
             "default": null,
             "title": "Api Type"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SUCCESS", "WARNING", "ERROR"],
+            "default": "SUCCESS",
+            "title": "Status",
+            "description": "Request status.\n\n| Value | Description |\n|-------|-------------|\n| `SUCCESS` | Request completed successfully (default) |\n| `WARNING` | Request succeeded but had issues (e.g., retries, degraded response) |\n| `ERROR` | Request failed |"
+          },
+          "error_type": {
+            "anyOf": [
+              {
+                "type": "string",
+                "enum": [
+                  "PROVIDER_TIMEOUT",
+                  "PROVIDER_QUOTA_LIMIT",
+                  "PROVIDER_RATE_LIMIT",
+                  "PROVIDER_AUTH_ERROR",
+                  "PROVIDER_ERROR",
+                  "TEMPLATE_RENDER_ERROR",
+                  "VARIABLE_MISSING_OR_EMPTY",
+                  "UNKNOWN_ERROR"
+                ]
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Type",
+            "description": "Categorized error type.\n\n| Value | Description | Allowed Statuses |\n|-------|-------------|------------------|\n| `PROVIDER_RATE_LIMIT` | Rate limit hit on provider API | WARNING, ERROR |\n| `PROVIDER_QUOTA_LIMIT` | Account quota or spending limit exceeded | WARNING, ERROR |\n| `VARIABLE_MISSING_OR_EMPTY` | Required template variable was missing or empty | WARNING |\n| `PROVIDER_TIMEOUT` | Request timed out | ERROR |\n| `PROVIDER_AUTH_ERROR` | Authentication failed with provider | ERROR |\n| `PROVIDER_ERROR` | General provider-side error | ERROR |\n| `TEMPLATE_RENDER_ERROR` | Failed to render prompt template | ERROR |\n| `UNKNOWN_ERROR` | Uncategorized error | WARNING, ERROR |"
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 1024
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Error Message",
+            "description": "Detailed error message describing what went wrong. Maximum 1024 characters."
           }
         },
         "required": [
@@ -5857,6 +5901,36 @@
           },
           "prompt_version": {
             "$ref": "#/components/schemas/PromptVersion"
+          },
+          "status": {
+            "type": "string",
+            "enum": ["SUCCESS", "WARNING", "ERROR"],
+            "title": "Status",
+            "description": "Request status indicating success, warning, or error."
+          },
+          "error_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Type",
+            "description": "Categorized error type if status is WARNING or ERROR."
+          },
+          "error_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Error Message",
+            "description": "Detailed error message if status is WARNING or ERROR."
           }
         },
         "required": [
