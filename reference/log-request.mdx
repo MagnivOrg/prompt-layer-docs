@@ -39,6 +39,80 @@ For complete examples with OpenAI, Anthropic, Google Gemini, and detailed implem
 
 **[Logging Structured Outputs Guide →](/features/prompt-history/structured-output-logging)**
 
+## Logging Tools (Function Definitions)
+
+When logging requests that include tool/function definitions, include the tools array directly in the `input` field. This allows request replay to use the exact tools from the original request.
+
+**Example:**
+
+```json
+{
+  "provider": "openai",
+  "model": "gpt-4o",
+  "input": {
+    "type": "chat",
+    "messages": [
+      {
+        "role": "user",
+        "content": [{"type": "text", "text": "What's the weather in NYC?"}]
+      }
+    ],
+    "tools": [
+      {
+        "type": "function",
+        "function": {
+          "name": "get_weather",
+          "description": "Get the current weather for a location",
+          "parameters": {
+            "type": "object",
+            "properties": {
+              "location": {
+                "type": "string",
+                "description": "City name"
+              }
+            },
+            "required": ["location"]
+          }
+        }
+      }
+    ],
+    "tool_choice": "auto"
+  },
+  "output": {
+    "type": "chat",
+    "messages": [
+      {
+        "role": "assistant",
+        "content": [],
+        "tool_calls": [
+          {
+            "id": "call_abc123",
+            "type": "function",
+            "function": {
+              "name": "get_weather",
+              "arguments": "{\"location\": \"NYC\"}"
+            }
+          }
+        ]
+      }
+    ]
+  },
+  "request_start_time": "2024-04-03T20:57:25+00:00",
+  "request_end_time": "2024-04-03T20:57:26+00:00"
+}
+```
+
+### Tool Choice Options
+
+You can control which tool the model should use with `tool_choice`:
+
+- `"auto"` - Model decides whether to use a tool
+- `"none"` - Model will not call any tools
+- `"required"` - Model must call at least one tool
+- `{"type": "function", "function": {"name": "get_weather"}}` - Force a specific tool
+
+For logging tool call responses, see the [Custom Logging Guide](/features/prompt-history/custom-logging#working-with-tools-and-function-calls).
+
 ## Using Extended Thinking / Reasoning
 
 When logging requests that use extended thinking (Anthropic), thinking mode (Google), or reasoning (OpenAI), the configuration must be passed inside the `parameters` field using provider-specific formats:
