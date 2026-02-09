@@ -41,8 +41,23 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 
 ### Amazon Bedrock
 
-- Access Anthropic Claude and Meta Llama (and other families) via AWS Bedrock.
-- Capabilities vary per model—some models may not support tools or certain parameters.
+- Access Anthropic Claude, Meta Llama, Mistral, Cohere, AI21 Jamba, Nova, DeepSeek, Gemma, and GPT-OSS models via AWS Bedrock Converse API.
+- Capabilities vary per model family—see tool calling support below.
+- Streaming via SDK (Python/JS).
+
+Tool Calling Support:
+- Full support (auto, any, specific tool): Claude, Mistral, GPT-OSS, Nova.
+- Partial support (auto, any only): AI21 Jamba, Cohere, Llama — use "any" when you want the model to pick from your tools.
+- No tool calling: DeepSeek, Gemma.
+
+Tool Choice Options:
+- `auto` — Model decides whether to use a tool or respond directly.
+- `any` — Model must use one of the provided tools.
+- Specific tool — Force a particular tool (not supported by AI21 Jamba, Cohere, Llama).
+
+Limitations:
+- AI21 Jamba and Llama do not support streaming when tools are configured; use non-streaming requests.
+- Cohere and Nova require underscores in tool names — PromptLayer automatically converts hyphens to underscores.
 
 ### Mistral
 
