@@ -33,6 +33,7 @@
         "languages/javascript",
         "languages/langchain",
         "languages/rest-api",
+        "languages/mcp",
         "languages/integrations"
       ]
     },
