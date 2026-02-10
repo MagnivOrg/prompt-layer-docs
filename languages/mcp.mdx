@@ -3,146 +3,38 @@ title: "MCP Server"
 icon: "server"
 ---
 
-The [PromptLayer MCP server](https://github.com/MagnivOrg/promptlayer-mcp) lets any [MCP](https://modelcontextprotocol.io/)-compatible AI client (Claude Desktop, Claude Code, Cursor, etc.) interact with your PromptLayer workspace using natural language. It wraps the [PromptLayer REST API](/reference/rest-api-reference) and exposes all 33 endpoints as MCP tools.
+[Model Context Protocol (MCP)](https://modelcontextprotocol.io/) is an open standard that lets AI assistants connect to external tools and data sources. The PromptLayer MCP server gives any MCP-compatible client — like Claude Desktop, Claude Code, or Cursor — direct access to your PromptLayer workspace.
 
-## Setup
+This means you can manage prompt templates, run evaluations, log requests, and more, all through natural language in your AI coding assistant.
 
-You'll need a PromptLayer API key. Create one from your [PromptLayer dashboard](https://www.promptlayer.com/).
+<Card title="GitHub Repository" icon="github" href="https://github.com/MagnivOrg/promptlayer-mcp">
+  Setup instructions, full tool reference, and source code.
+</Card>
 
-### Claude Desktop
+## Why Use It?
 
-Add to your `claude_desktop_config.json`:
+- **Manage prompts from your editor** — publish new template versions, move release labels, and search templates without leaving your coding environment.
+- **Run evaluations conversationally** — create reports, run pipelines, and check scores by asking your AI assistant.
+- **Log and inspect requests** — track LLM calls, attach metadata and scores, all through natural language.
+- **Works with any MCP client** — Claude Desktop, Claude Code, Cursor, or anything that supports the MCP standard.
 
-```json
-{
-  "mcpServers": {
-    "promptlayer": {
-      "command": "npx",
-      "args": ["-y", "@promptlayer/mcp-server"],
-      "env": {
-        "PROMPTLAYER_API_KEY": "pl_your_key_here"
-      }
-    }
-  }
-}
-```
+## Quick Setup
 
-### Claude Code
+You'll need a PromptLayer API key from your [dashboard](https://www.promptlayer.com/). Then add the server to your MCP client:
 
 ```bash
-claude mcp add promptlayer -- npx -y @promptlayer/mcp-server
+npx -y @promptlayer/mcp-server
 ```
 
-Then set your API key in the environment or pass it inline.
+For client-specific configuration (Claude Desktop, Cursor, etc.), see the [GitHub README](https://github.com/MagnivOrg/promptlayer-mcp#usage).
 
-### Cursor
+## Example
 
-Add to `.cursor/mcp.json`:
-
-```json
-{
-  "mcpServers": {
-    "promptlayer": {
-      "command": "npx",
-      "args": ["-y", "@promptlayer/mcp-server"],
-      "env": {
-        "PROMPTLAYER_API_KEY": "pl_your_key_here"
-      }
-    }
-  }
-}
-```
-
-### Any MCP Client
-
-Run the server directly:
-
-```bash
-PROMPTLAYER_API_KEY=pl_your_key_here npx -y @promptlayer/mcp-server
-```
-
-## Available Tools
-
-The server exposes 33 tools organized into five categories:
-
-### Prompt Templates
-
-| Tool | Description |
-|---|---|
-| `get-prompt-template` | Get a template by name/ID with optional version or release label |
-| `get-prompt-template-raw` | Get raw template data without filling variables |
-| `list-prompt-templates` | List templates with pagination and filtering |
-| `publish-prompt-template` | Create a new version of a template |
-| `list-prompt-template-labels` | List release labels on a template |
-| `create-prompt-label` | Attach a release label to a template version |
-| `move-prompt-label` | Move a label to a different version |
-| `delete-prompt-label` | Delete a label |
-| `get-snippet-usage` | Find all templates referencing a snippet |
-
-### Tracking
-
-| Tool | Description |
-|---|---|
-| `log-request` | Log an LLM request/response pair |
-| `track-prompt` | Link a logged request to a prompt template |
-| `track-score` | Score a logged request (0-100) |
-| `track-metadata` | Attach metadata to a logged request |
-| `track-group` | Associate a request with a group |
-| `create-spans-bulk` | Create OpenTelemetry spans in bulk for tracing |
-
-### Datasets
-
-| Tool | Description |
-|---|---|
-| `list-datasets` | List datasets with filtering |
-| `create-dataset-group` | Create a dataset group |
-| `create-dataset-version-from-file` | Create a version from CSV/JSON |
-| `create-dataset-version-from-filter-params` | Create a version from request log history |
-
-### Evaluations
-
-| Tool | Description |
-|---|---|
-| `list-evaluations` | List evaluation pipelines |
-| `create-report` | Create an evaluation pipeline on a dataset |
-| `run-report` | Execute a pipeline |
-| `get-report` | Get pipeline details |
-| `get-report-score` | Get the computed score |
-| `add-report-column` | Add an evaluation step |
-| `update-report-score-card` | Configure custom scoring logic |
-| `delete-reports-by-name` | Archive pipelines by name |
-
-### Agents
-
-| Tool | Description |
-|---|---|
-| `list-workflows` | List all agents |
-| `create-workflow` | Create an agent or new version |
-| `patch-workflow` | Partially update an agent |
-| `run-workflow` | Execute an agent by name |
-| `get-workflow-version-execution-results` | Poll for execution results |
-
-### Other
-
-| Tool | Description |
-|---|---|
-| `create-folder` | Create a folder for organizing resources |
-
-## Example Usage
-
-Once connected, you can ask your AI client things like:
+Once connected, you can ask your AI assistant things like:
 
 - *"List all my prompt templates"*
-- *"Publish a new version of my `welcome-email` template with this updated system prompt..."*
-- *"Move the `production` label to version 3 of `welcome-email`"*
-- *"Create an evaluation report on my `qa-dataset` dataset"*
-- *"Run my `summarizer` agent with this input..."*
+- *"Publish a new version of my welcome-email template with this updated system prompt..."*
+- *"Move the production label to version 3 of welcome-email"*
+- *"Run an evaluation on my QA dataset"*
 
-The AI client will automatically call the appropriate PromptLayer tools to fulfill your request.
-
-## Related Documentation
-
-- [REST API Reference](/reference/rest-api-reference) — the underlying API
-- [Prompt Registry](/features/prompt-registry/overview) — managing prompt templates
-- [Evaluations](/features/evaluations/overview) — building evaluation pipelines
-- [Agents](/why-promptlayer/agents) — creating and running agents
+The assistant will call the appropriate PromptLayer tools automatically.
