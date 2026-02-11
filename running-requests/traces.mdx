@@ -182,22 +182,21 @@ def main():
 
 @pl_client.traceable()
 def openai_call():
-    # Note: llm_kwargs structure is provider-specific and may change.
-    # See https://docs.promptlayer.com/features/prompt-registry/overview#setting-execution-parameters
-    OpenAI = pl_client.openai.OpenAI
-    openai = OpenAI()
-    template = pl_client.templates.get("simple-greeting")
-    response, pl_request_id = openai.chat.completions.create(
-        **template["llm_kwargs"],
-        return_pl_id=True
+    response = pl_client.run(
+        prompt_name="simple-greeting",
+        input_variables={}
     )
-    print("OpenAI response:", response.choices[0].message.content)
+    print("OpenAI response:", response["prompt_blueprint"]["prompt_template"]["messages"][-1])
 
 @pl_client.traceable()
 def anthropic_call():
-    anthropic = pl_client.anthropic.Anthropic()
-    # Add your Anthropic API call here
-    print("Anthropic call executed")
+    response = pl_client.run(
+        prompt_name="simple-greeting",
+        input_variables={},
+        provider="anthropic",
+        model="claude-sonnet-4-20250514"
+    )
+    print("Anthropic response:", response["prompt_blueprint"]["prompt_template"]["messages"][-1])
 
 @pl_client.traceable()
 def custom_function():

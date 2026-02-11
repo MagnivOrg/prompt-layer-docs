@@ -5,46 +5,92 @@ icon: "person-running"
 
 PromptLayer takes less than 5 minutes to setup.
 - Sign up for an account at www.promptlayer.com
-- Grab an API key from PromptLayer. Find it in settings (_click the cog on the top right_). 
+- Grab an API key from PromptLayer. Find it in settings (_click the cog on the top right_).
 
-It's super easy to add PromptLayer to an existing project. Usually only takes one line.
+It's super easy to add PromptLayer to an existing project.
+
+### Option 1: Use the `run` Method (Recommended)
+
+The `run()` method fetches a prompt template from the [Prompt Registry](/features/prompt-registry/overview), executes it, and logs the result automatically.
 
 <CodeGroup>
 
-```python Python openai >= 1.0.0
-# Make sure to `pip install promptlayer`
+```python Python
+# pip install promptlayer
 from promptlayer import PromptLayer
 promptlayer_client = PromptLayer()
 
-# Swap out your 'from openai import OpenAI'
-OpenAI = promptlayer_client.openai.OpenAI
-
-# Leave this
-client = OpenAI()
-```
-
-```python Python openai < 1.0.0
-# Make sure to `pip install promptlayer`
-from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
-
-# Swap out your 'import openai'
-openai = promptlayer_client.openai
+response = promptlayer_client.run(
+    prompt_name="my-prompt",
+    input_variables={"variable": "value"}
+)
 ```
 
 ```js JavaScript
-// Make sure to `npm install promptlayer`
+// npm install promptlayer
 import { PromptLayer } from "promptlayer";
 const promptLayerClient = new PromptLayer();
 
-// Swap out `import OpenAI from "openai"`
-const OpenAI = promptLayerClient.OpenAI;
-
-// Leave this
-const openai = new OpenAI();
+const response = await promptLayerClient.run({
+  promptName: "my-prompt",
+  inputVariables: { variable: "value" }
+});
 ```
 
+</CodeGroup>
+
+### Option 2: Use `log_request` for Custom Logging
+
+If you want to keep using your existing LLM client code, use `log_request` to manually log requests to PromptLayer.
+
+<CodeGroup>
+
+```python Python
+# pip install promptlayer
+from openai import OpenAI
+from promptlayer import PromptLayer
+import time
+
+pl_client = PromptLayer()
+client = OpenAI()
+
+messages = [{"role": "user", "content": "Hello!"}]
+
+start = time.time()
+completion = client.chat.completions.create(model="gpt-4o", messages=messages)
+end = time.time()
+
+pl_client.log_request(
+    provider="openai", model="gpt-4o",
+    input={"type": "chat", "messages": [{"role": m["role"], "content": [{"type": "text", "text": m["content"]}]} for m in messages]},
+    output={"type": "chat", "messages": [{"role": "assistant", "content": [{"type": "text", "text": completion.choices[0].message.content}]}]},
+    request_start_time=start, request_end_time=end
+)
+```
+
+```js JavaScript
+// npm install promptlayer openai
+import { PromptLayer } from "promptlayer";
+import OpenAI from "openai";
+
+const plClient = new PromptLayer();
+const openai = new OpenAI();
+
+const messages = [{ role: "user", content: "Hello!" }];
+
+const start = Date.now();
+const completion = await openai.chat.completions.create({ model: "gpt-4o", messages });
+const end = Date.now();
+
+await plClient.logRequest({
+  provider: "openai", model: "gpt-4o",
+  input: { type: "chat", messages: messages.map(m => ({ role: m.role, content: [{ type: "text", text: m.content }] })) },
+  output: { type: "chat", messages: [{ role: "assistant", content: [{ type: "text", text: completion.choices[0].message.content }] }] },
+  requestStartTime: start, requestEndTime: end
+});
+```
 
 </CodeGroup>
-    
+
+See the [Custom Logging documentation](/features/prompt-history/custom-logging) for more details including format converters for OpenAI and Anthropic. 
    

@@ -18,43 +18,77 @@ The `pl_request_id` is returned as `request_id` in the case of a successful requ
 
 [Learn more](/reference/log-request)
 
-## Python
+## Using the `run` Method
 
-To retrieve the `pl_request_id` using OpenAI in Python (through `promptlayer_client.openai.OpenAI`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream=true`, then only the last `pl_request_id` will be the id; otherwise, it will be `None`.
+The `run()` method returns the `request_id` directly in the response object. This is the recommended way to retrieve the `pl_request_id`.
 
-The same is true for Anthropic.
-        
-```python
+<CodeGroup>
+
+```python Python
 from promptlayer import PromptLayer
 promptlayer_client = PromptLayer()
 
-OpenAI = promptlayer_client.openai.OpenAI
-client = OpenAI()
-
-response, pl_request_id = client.Completion.create(
-    engine="gpt-3.5-turbo-instruct", 
-    prompt="hi my name is ", 
-    return_pl_id=True
+response = promptlayer_client.run(
+    prompt_name="my-prompt",
+    input_variables={"name": "Alice"}
 )
+
+pl_request_id = response["request_id"]
+print(pl_request_id)
 ```
 
-## Javascript
-
-To retrieve the `pl_request_id` using OpenAI in JavaScript (through `promptLayerClient.OpenAI`), set the argument `return_pl_id` to `true` in your function call. This will change the call to now return the OpenAI response and the `pl_request_id`. If you are using `stream: true`, then only the last `pl_request_id` will be the id; otherwise, it will be `undefined`.
-
-The same is true for Anthropic.
-        
-```js
+```js JavaScript
 import { PromptLayer } from "promptlayer";
 const promptLayerClient = new PromptLayer();
 
-const OpenAI = promptLayerClient.OpenAI;
-const client = new OpenAI();
-
-const [response, pl_request_id] = await client.completions.create({
-    model: "gpt-3.5-turbo-instruct",
-    prompt: "hi my name is ",
-    return_pl_id: true
+const response = await promptLayerClient.run({
+    promptName: "my-prompt",
+    inputVariables: { name: "Alice" }
 });
+
+const plRequestId = response.request_id;
+console.log(plRequestId);
 ```
+
+</CodeGroup>
+
+## Using the `log_request` Method
+
+When using `log_request` for custom logging, the method returns the `request_id` in its response.
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+pl_client = PromptLayer()
+
+result = pl_client.log_request(
+    provider="openai",
+    model="gpt-4o",
+    input=input_blueprint,
+    output=output_blueprint,
+    request_start_time=start_time,
+    request_end_time=end_time
+)
+
+pl_request_id = result["request_id"]
+```
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+const plClient = new PromptLayer();
+
+const result = await plClient.logRequest({
+    provider: "openai",
+    model: "gpt-4o",
+    input: inputBlueprint,
+    output: outputBlueprint,
+    requestStartTime: startTime,
+    requestEndTime: endTime
+});
+
+const plRequestId = result.request_id;
+```
+
+</CodeGroup>
 

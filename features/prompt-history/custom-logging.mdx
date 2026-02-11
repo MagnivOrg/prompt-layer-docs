@@ -7,12 +7,12 @@ icon: "brackets-curly"
 ## When to Use Custom Logging
 
 Use the `log_request` method when:
-- You're **not** using PromptLayer's proxied versions of OpenAI or Anthropic clients
 - You're **not** using `pl_client.run()` for executing prompts
 - You need more flexibility (e.g., background processing, custom models)
-- You want to track requests made outside the PromptLayer SDK
+- You want to track requests made with your own LLM client code (OpenAI, Anthropic, etc.)
+- You want to log requests from any LLM provider
 
-While custom logging requires more manual work, it offers greater control over the logging process and supports any LLM provider.
+While custom logging requires more manual work than the `run()` method, it offers greater control over the logging process and supports any LLM provider.
 
 ## API Reference
 

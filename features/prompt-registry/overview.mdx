@@ -130,39 +130,35 @@ We recommend:
 <CodeGroup>
 
 ```python Python SDK
-input_variables = {
-    "city": "Washington, D.C.", 
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
+
+response = promptlayer_client.run(
+  prompt_name="city_choice",
+  input_variables={
+    "city": "Washington, D.C.",
     "interests": "resorts, museums, beaches"
-}
-
-city_choice_prompt = promptlayer_client.templates.get("city_choice",
-{
-  "provider": "openai",
-  "input_variables": input_variables
-})
-
-response, pl_request_id = client.completions.create(
-  **city_choice_prompt['llm_kwargs'],
-  pl_tags=["getting_started_example"],
-  return_pl_id=True
+  },
+  tags=["getting_started_example"]
 )
+
+pl_request_id = response["request_id"]
 ```
 
 ```js JavaScript
-const input_variables = {
-  city: "Washington, D.C.",
-  interests: "resorts, museums, beaches",
-};
-const city_choice_prompt = await promptLayerClient.templates.get("city_choice", {
-  provider: "openai",
-  input_variables,
+import { PromptLayer } from "promptlayer";
+const promptLayerClient = new PromptLayer();
+
+const response = await promptLayerClient.run({
+  promptName: "city_choice",
+  inputVariables: {
+    city: "Washington, D.C.",
+    interests: "resorts, museums, beaches",
+  },
+  tags: ["getting_started_example"],
 });
 
-const [response, pl_request_id] = await openai.completions.create({
-  ...city_choice_prompt.llm_kwargs,
-  pl_tags: ["getting_started_example"],
-  return_pl_id: true,
-});
+const plRequestId = response.request_id;
 ```
 
 </CodeGroup>

@@ -91,20 +91,26 @@ Tagging a request is easy. Read more about it [here](/features/prompt-history/or
 
 <CodeGroup>
 
-```python Python Native
-openai.Completion.create(
-  engine="text-ada-001", 
-  prompt="My name is", 
-  pl_tags=["mytag1", "mytag2"]
+```python Python
+from promptlayer import PromptLayer
+pl_client = PromptLayer()
+
+response = pl_client.run(
+  prompt_name="my-prompt",
+  input_variables={"name": "world"},
+  tags=["mytag1", "mytag2"]
 )
 ```
 
 ```js JavaScript
-openai.completions.create({
-  model:"text-ada-001", 
-  prompt:"My name is", 
-  pl_tags:["mytag1", "mytag2"]
-})
+import { PromptLayer } from "promptlayer";
+const plClient = new PromptLayer();
+
+const response = await plClient.run({
+  promptName: "my-prompt",
+  inputVariables: { name: "world" },
+  tags: ["mytag1", "mytag2"]
+});
 ```
 
 
