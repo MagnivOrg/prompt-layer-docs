@@ -14,7 +14,7 @@ Yes, PromptLayer supports multi-modal image models, including `gpt-4-vision-prev
 To use `gpt-4-vision-preview` with PromptLayer, follow these steps:
 
 1. Ensure you have the PromptLayer and OpenAI Python libraries installed.
-2. Replace the standard OpenAI import with the [PromptLayer SDK client](/languages/python) (or use the REST API).
+2. Use the [`run()` method](/running-requests/promptlayer-run) to execute prompts, or use [`log_request`](/features/prompt-history/custom-logging) to log requests made with your own client.
 3. Make your request to `gpt-4-vision-preview` with the necessary image inputs, either through image URLs or base64 encoded images.
 4. Check the PromptLayer dashboard to see your request logged!
 
@@ -24,7 +24,7 @@ Multi-modal models are also supported in the Prompt Registry, Playground, and Ev
  
 ## Do you support OpenAI function calling?
 
-Yes, we take great pride in staying up to date. PromptLayer is 1-to-1 with OpenAI's library. That means, if you are using PromptLayer+OpenAI through the Python libraries, [function calling](https://platform.openai.com/docs/guides/function-calling) will be implicitly supported.
+Yes, we take great pride in staying up to date. PromptLayer supports [function calling](https://platform.openai.com/docs/guides/function-calling) through the `run()` method and via [custom logging](/features/prompt-history/custom-logging). You can also configure tool calling directly in the [Prompt Registry](/features/prompt-registry/tool-calling).
 
 
 ## Does PromptLayer support streaming?
@@ -91,37 +91,28 @@ Yes, we do support on-premises deployment for a select few of our enterprise cus
 
 If you are interested in onprem, please [contact us](mailto:hello@promptlayer.com) for more information.
 
-## Does AsyncOpenAI work with PromptLayer?
+## Does async work with PromptLayer?
 
-Yes, AsyncOpenAI is compatible with PromptLayer. Use them together as demonstrated in example below.
+Yes, PromptLayer supports asynchronous operations through `AsyncPromptLayer`. You can use the async `run()` method or `log_request` to log requests made with async LLM clients.
 
 ```python
-from promptlayer import PromptLayer 
-promptlayer_client = PromptLayer(api_key="pl_*****")
-
 import asyncio
-# from openai import AsyncOpenAI
-AsyncOpenAI = promptlayer_client.openai.AsyncOpenAI
+from promptlayer import AsyncPromptLayer
 
-client = AsyncOpenAI(
-    api_key="sk-***",
-)
+async def main():
+    async_client = AsyncPromptLayer(api_key="pl_*****")
 
-
-async def main() -> None:
-    chat_completion = await client.chat.completions.create(
-        messages=[
-            {
-                "role": "user",
-                "content": "Say this is a test",
-            }
-        ],
-        model="gpt-3.5-turbo",
+    # Use the async run method
+    response = await async_client.run(
+        prompt_name="my-prompt",
+        input_variables={"topic": "testing"}
     )
-    print(chat_completion)
+    print(response)
 
 asyncio.run(main())
 ```
+
+See the [Async Support section](/languages/python#async-support) for more details.
 
 ## Is PromptLayer SOC 2 certified?
 

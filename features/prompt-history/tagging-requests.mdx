@@ -12,29 +12,35 @@ Tags can be used for whatever you want, but the top 2 ways are to:
 
 For example, if you are working on an email application that has three chained stages, it would be a good idea to tag all the requests in this application with `email` and the corresponding stage `stage-x`
 
-To add a tag, add the keyword argument `pl_tags` into your OpenAI request like so:
+To add tags using the `run()` method:
 
 <CodeGroup>
 
 ```python Python SDK
-openai.Completion.create(
-  engine="gpt-3.5-turbo-instruct",
-  prompt="My name is",
-  pl_tags=["pipeline3", "world"] # 🍰 PromptLayer tags
+from promptlayer import PromptLayer
+pl_client = PromptLayer()
+
+response = pl_client.run(
+  prompt_name="my-prompt",
+  input_variables={"name": "world"},
+  tags=["pipeline3", "world"]  # 🍰 PromptLayer tags
 )
 ```
 
 ```js JavaScript
-openai.completions.create({
-  model: "gpt-3.5-turbo-instruct",
-  prompt: "My name is",
-  pl_tags: ["pipeline3", "world"], // 🍰 PromptLayer tags
+import { PromptLayer } from "promptlayer";
+const plClient = new PromptLayer();
+
+const response = await plClient.run({
+  promptName: "my-prompt",
+  inputVariables: { name: "world" },
+  tags: ["pipeline3", "world"],  // 🍰 PromptLayer tags
 });
 ```
 
 </CodeGroup>
 
-Alternatively, use the REST API endpoint `/log-request` ([read more](/reference/log-request)).
+You can also pass tags when using `log_request` or the REST API endpoint `/log-request` ([read more](/reference/log-request)).
 
 This will then show up on your PromptLayer dashboard:
 

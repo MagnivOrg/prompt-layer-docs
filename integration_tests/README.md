@@ -15,13 +15,7 @@ When testing custom provider integrations (Exa, xAI, etc.), **always use `prompt
 
 ### Don't Use Direct SDK Calls
 
-Avoid testing with direct OpenAI client wrappers like:
-```python
-client = promptlayer.openai.OpenAI(base_url="...", api_key="...")
-response = client.chat.completions.create(...)
-```
-
-This bypasses the prompt template system and doesn't validate the full integration flow.
+Avoid testing with direct LLM client calls that bypass PromptLayer. Instead, always use `promptlayer.run()` which tests the full integration flow through the prompt template system.
 
 ## Setup Requirements
 

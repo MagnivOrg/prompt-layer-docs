@@ -26,107 +26,119 @@ const promptLayerClient = new PromptLayer({ apiKey: "pl_****", baseURL: "https:/
 
 <Warning>PromptLayer's JavaScript library is not compatible with client-side (browser) environments. It is designed for use exclusively in server-side runtimes such as Node.js, Bun, or Deno.</Warning>
 
-## OpenAI
+## Using the `run` Method (Recommended)
 
-In the JavaScript file where the OpenAI APIs are integrated, include the following lines. They enable PromptLayer to track your requests without additional code modifications.
+The easiest way to use PromptLayer is with the `run()` method. It fetches a prompt template from the [Prompt Registry](/features/prompt-registry/overview), executes it against your configured LLM provider, and logs the result — all in one call.
 
 ```js
 import { PromptLayer } from "promptlayer";
 const promptLayerClient = new PromptLayer();
 
-const OpenAI = promptLayerClient.OpenAI;
-const openai = new OpenAI();
+const response = await promptLayerClient.run({
+  promptName: "my-prompt",
+  inputVariables: { topic: "poetry" },
+  tags: ["getting-started"],
+  metadata: { user_id: "123" }
+});
+
+console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].content);
 ```
 
-**You can then use `openai` as you would if you had imported it directly.**
-
 <Info>
-  Your OpenAI API Key is **never** sent to our servers. All OpenAI requests are
+  Your LLM API keys (OpenAI, Anthropic, etc.) are **never** sent to our servers. All LLM requests are
   made locally from your machine, PromptLayer just logs the request.
 </Info>
 
-### Adding PromptLayer tags: `pl_tags`
+The `run()` method works with any provider configured in your prompt template — OpenAI, Anthropic, Google, and more. See the [Run documentation](/running-requests/promptlayer-run) for full details.
 
-PromptLayer allows you to add tags through the `pl_tags` argument. This allows you to track and group requests in the dashboard.
+## Custom Logging with `logRequest`
 
-**Tags are not required but we recommend them!**
+If you need more control — for example, using your own LLM client, a custom provider, or background processing — you can use `logRequest` to manually log requests to PromptLayer.
 
-```js
-openai.chat.completions.create({
-  messages: [{ role: "user", content: "Say this is a test" }],
-  model: "gpt-3.5-turbo",
-  pl_tags: ["test"],
-});
-```
-
-### Returning request id: `return_pl_id`
-
-PromptLayer provides an option to retrieve the request id using the `return_pl_id` argument. When set to true, it returns a tuple where the second element is the request id.
+### OpenAI Example
 
 ```js
-openai.chat.completions.create({
-  messages: [{ role: "user", content: "Say this is a test" }],
-  model: "gpt-3.5-turbo",
-  return_pl_id: true,
-});
-```
-
-### TypeScript
-
-The PromptLayer JavaScript library also supports TypeScript. You can type cast the `OpenAI` class to `typeof BaseOpenAI` to get the correct typings.
-
-```ts
-import BaseOpenAI from "openai";
-
 import { PromptLayer } from "promptlayer";
-const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+import OpenAI from "openai";
 
-const OpenAI: typeof BaseOpenAI = promptLayerClient.OpenAI;
-
+const plClient = new PromptLayer();
 const openai = new OpenAI();
-```
 
-You can also use our custom attributes `pl_tags` and `return_pl_id` with TypeScript. You will need to add the `@ts-ignore` comment to ignore the TypeScript error.
+const messages = [{ role: "user", content: "Say this is a test" }];
 
-```ts
-openai.chat.completions.create({
-  messages: [{ role: "user", content: "Say this is a test" }],
-  model: "gpt-3.5-turbo",
-  // @ts-ignore
-  return_pl_id: true,
+const requestStartTime = Date.now();
+const completion = await openai.chat.completions.create({
+  messages,
+  model: "gpt-4o",
+});
+const requestEndTime = Date.now();
+
+await plClient.logRequest({
+  provider: "openai",
+  model: "gpt-4o",
+  input: {
+    type: "chat",
+    messages: messages.map(m => ({
+      role: m.role,
+      content: [{ type: "text", text: m.content }]
+    }))
+  },
+  output: {
+    type: "chat",
+    messages: [{
+      role: "assistant",
+      content: [{ type: "text", text: completion.choices[0].message.content }]
+    }]
+  },
+  requestStartTime,
+  requestEndTime,
+  tags: ["test"]
 });
 ```
 
-This is because the `pl_tags` and `return_pl_id` arguments are not part of the OpenAI API.
-
-## Anthropic
-
-Using Anthropic with PromptLayer is very similar to how to one would use OpenAI. 
-
-Below is an example code snippet of the one line replacement:
+### Anthropic Example
 
 ```js
 import { PromptLayer } from "promptlayer";
-const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+import Anthropic from "@anthropic-ai/sdk";
 
-// Instead of `import Anthropic from "@anthropic-ai/sdk";` ->
-const Anthropic = promptLayerClient.Anthropic;
+const plClient = new PromptLayer();
 const anthropic = new Anthropic();
 
-const response = anthropic.completions.create({
-  prompt: `${Anthropic.HUMAN_PROMPT} How many toes do dogs have? more information more information more${Anthropic.AI_PROMPT}`,
-  stop_sequences: [Anthropic.HUMAN_PROMPT],
-  model: "claude-v1-100k",
-  max_tokens_to_sample: 100,
-  pl_tags: ["test-anthropic-1"],
-  return_pl_id: true,
+const messages = [{ role: "user", content: "How many toes do dogs have?" }];
+
+const requestStartTime = Date.now();
+const response = await anthropic.messages.create({
+  messages,
+  model: "claude-sonnet-4-20250514",
+  max_tokens: 100,
 });
-console.log(response);
+const requestEndTime = Date.now();
+
+await plClient.logRequest({
+  provider: "anthropic",
+  model: "claude-sonnet-4-20250514",
+  input: {
+    type: "chat",
+    messages: messages.map(m => ({
+      role: m.role,
+      content: [{ type: "text", text: m.content }]
+    }))
+  },
+  output: {
+    type: "chat",
+    messages: [{
+      role: "assistant",
+      content: [{ type: "text", text: response.content[0].text }]
+    }]
+  },
+  requestStartTime,
+  requestEndTime,
+  tags: ["test-anthropic-1"]
+});
 ```
 
-Here is how it would look like on the dashbaord:
-
-<img src="/images/anthropic-test.png" />
+See the [Custom Logging documentation](/features/prompt-history/custom-logging) and [Log Request API Reference](/reference/log-request) for full details.
 
 ## Error Handling
 
@@ -220,60 +232,21 @@ To capture these logs in your application, you can monitor `console.info` output
 
 ## Edge
 
-PromptLayer can be used with Edge functions. Please use either our Javascript library or REST library directly.
+PromptLayer can be used with Edge functions. Use either the `run()` method, `logRequest`, or our [REST API](/languages/rest-api) directly.
 
 ```js
-import BaseAnthropic from "@anthropic-ai/sdk";
-
 import { PromptLayer } from "promptlayer";
 const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
-
-const Anthropic: typeof BaseAnthropic = promptLayerClient.Anthropic;
-
-const anthropic = new Anthropic();
 
 // Add this line
 export const runtime = "edge";
 
 export const POST = async () => {
-  const response = await anthropic.messages.create({
-    messages: [
-      {
-        role: "user",
-        content: "What is the capital of France?",
-      },
-    ],
-    max_tokens: 100,
-    model: "claude-3-sonnet-20240229",
+  const response = await promptLayerClient.run({
+    promptName: "my-prompt",
+    inputVariables: { question: "What is the capital of France?" },
   });
-  return Response.json(response.content[0].text);
-};
-```
-
-Or use streaming. Here's another example that can be run in NextJS on edge.
-
-```js
-import BaseAnthropic from "@anthropic-ai/sdk";
-import { AnthropicStream, StreamingTextResponse } from "ai";
-
-import { PromptLayer } from "promptlayer";
-const promptLayerClient = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
-
-// Add this line
-export const runtime = "edge";
-
-const Anthropic: typeof BaseAnthropic = promptLayerClient.Anthropic;
-const anthropic = new Anthropic();
-
-export const POST = async (request: Request) => {
-  const { messages } = await request.json();
-  const response = await anthropic.messages.create({
-    messages,
-    max_tokens: 100,
-    model: "claude-3-sonnet-20240229",
-    stream: true,
-  });
-  const stream = AnthropicStream(response);
-  return new StreamingTextResponse(stream);
+  const content = response.prompt_blueprint.prompt_template.messages.slice(-1)[0].content;
+  return Response.json(content);
 };
 ```

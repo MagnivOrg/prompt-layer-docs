@@ -11,7 +11,7 @@ Once you have that all set up, [install PromptLayer using](https://pypi.org/proj
 pip install promptlayer
 ```
 
-PromptLayer python library has support for both OpenAI and Anthropic LLMs!
+PromptLayer python library has support for OpenAI, Anthropic, and other LLM providers!
 
 Set up a PromptLayer client in your python file.
 
@@ -26,102 +26,111 @@ Optionally, you can specify the API key and base URL in the client.
 promptlayer_client = PromptLayer(api_key="pl_****", base_url="https://api.promptlayer.com")
 ```
 
-## OpenAI
+## Using the `run` Method (Recommended)
 
-In the Python file where you use OpenAI APIs, add the following. This allows us to keep track of your requests without needing any other code changes.
-
-<CodeGroup>
-
-```python openai >= 1.0.0
-from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
-
-OpenAI = promptlayer_client.openai.OpenAI
-client = OpenAI()
-```
-
-```python openai < 1.0.0
-from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
-
-openai = promptlayer_client.openai
-```
-
-</CodeGroup>
-
-**You can then use `openai` as you would if you had imported it directly.**
-
-<Info>Your OpenAI API Key is **never** sent to our servers. All OpenAI requests are made locally from your machine, PromptLayer just logs the request.</Info>
-
-There is only one difference… PromptLayer allows you to add tags through the `pl_tags` argument. This allows you to track and group requests in the dashboard. 
-
-************Tags are not required but we recommend them!************
+The easiest way to use PromptLayer is with the `run()` method. It fetches a prompt template from the [Prompt Registry](/features/prompt-registry/overview), executes it against your configured LLM provider, and logs the result — all in one call.
 
 ```python
-completion = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
-    {"role": "system", "content": "You are an AI."},
-    {"role": "user", "content": "Compose a poem please."}
-  ],
-  pl_tags=["getting-started"]
+from promptlayer import PromptLayer
+promptlayer_client = PromptLayer()
+
+response = promptlayer_client.run(
+    prompt_name="my-prompt",
+    input_variables={"topic": "poetry"},
+    tags=["getting-started"],
+    metadata={"user_id": "123"}
 )
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
 ```
+
+<Info>Your LLM API keys (OpenAI, Anthropic, etc.) are **never** sent to our servers. All LLM requests are made locally from your machine, PromptLayer just logs the request.</Info>
+
+The `run()` method works with any provider configured in your prompt template — OpenAI, Anthropic, Google, and more. See the [Run documentation](/running-requests/promptlayer-run) for full details.
 
 After making your first few requests, you should be able to see them in the PromptLayer dashboard!
 
 <img src="/images/prompt-in-dashboard.png" />
 
-Here is a complete code snippet:
+## Custom Logging with `log_request`
+
+If you need more control — for example, using your own LLM client, a custom provider, or background processing — you can use `log_request` to manually log requests to PromptLayer.
 
 ```python
+from openai import OpenAI
 from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
+import time
 
-# Swap out 'from openai import OpenAI'
-OpenAI = promptlayer_client.openai.OpenAI
-
+pl_client = PromptLayer()
 client = OpenAI()
-completion = client.chat.completions.create(
-  model="gpt-3.5-turbo",
-  messages=[
+
+messages = [
     {"role": "system", "content": "You are an AI."},
     {"role": "user", "content": "Compose a poem please."}
-  ],
-  pl_tags=["getting-started"]
+]
+
+request_start_time = time.time()
+completion = client.chat.completions.create(
+    model="gpt-4o",
+    messages=messages
 )
-print(completion.choices[0].message)
+request_end_time = time.time()
+
+# Log to PromptLayer
+pl_client.log_request(
+    provider="openai",
+    model="gpt-4o",
+    input={"type": "chat", "messages": [
+        {"role": m["role"], "content": [{"type": "text", "text": m["content"]}]}
+        for m in messages
+    ]},
+    output={"type": "chat", "messages": [
+        {"role": "assistant", "content": [{"type": "text", "text": completion.choices[0].message.content}]}
+    ]},
+    request_start_time=request_start_time,
+    request_end_time=request_end_time,
+    tags=["getting-started"]
+)
 ```
 
-## Anthropic
-
-Using Anthropic with PromptLayer is very similar to how to one would use OpenAI. 
-
-Below is an example code snippet of the one line replacement:
+This works with any LLM provider, including Anthropic:
 
 ```python
+import anthropic
 from promptlayer import PromptLayer
-promptlayer_client = PromptLayer()
+import time
 
-# Swap out 'from anthropic import Anthropic'
-anthropic = promptlayer_client.anthropic
-
+pl_client = PromptLayer()
 client = anthropic.Anthropic()
 
-completion = client.completions.create(
-    prompt=f'{anthropic.HUMAN_PROMPT} How many toes do dogs have? {anthropic.AI_PROMPT}',
-    stop_sequences=[anthropic.HUMAN_PROMPT],
-    model='claude-v1-100k',
-    max_tokens_to_sample=100,
-    pl_tags=['animal-toes']
-)
+messages = [{"role": "user", "content": "How many toes do dogs have?"}]
 
-print(completion)
+request_start_time = time.time()
+response = client.messages.create(
+    model="claude-sonnet-4-20250514",
+    max_tokens=100,
+    messages=messages
+)
+request_end_time = time.time()
+
+# Log to PromptLayer
+pl_client.log_request(
+    provider="anthropic",
+    model="claude-sonnet-4-20250514",
+    input={"type": "chat", "messages": [
+        {"role": m["role"], "content": [{"type": "text", "text": m["content"]}]}
+        for m in messages
+    ]},
+    output={"type": "chat", "messages": [
+        {"role": "assistant", "content": [{"type": "text", "text": response.content[0].text}]}
+    ]},
+    request_start_time=request_start_time,
+    request_end_time=request_end_time,
+    tags=["animal-toes"]
+)
 ```
 
-Here is how it would look like on the dashbaord:
-
-<img src="/images/anthropic-test1.png" />
+See the [Custom Logging documentation](/features/prompt-history/custom-logging) and [Log Request API Reference](/reference/log-request) for full details.
 
 ## Error Handling
 
