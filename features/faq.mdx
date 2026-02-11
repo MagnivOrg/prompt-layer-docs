@@ -73,13 +73,7 @@ for chunk in pl.run(prompt_name="your-prompt", stream=True):
                 print(f"Current response: {text_content}")
 ```
 
-If you are using [LangChain](/languages/langchain), streaming is only supported when you use the `PromptLayerCallbackHandler`. Streaming is not supported through the PromptLayer-specific LLMs (the old way to use LangChain).
-
 Finally, if you are interacting with PromptLayer through our [REST API](/languages/rest-api) you will need to store the whole output and log it to PromptLayer (`log-request`) only after it is finished.
-
-## I'm having trouble with the LangChain integration.
-
-Try updating both LangChain and PromptLayer to their most recent versions.
 
 ## Can I export my data from PromptLayer?
 

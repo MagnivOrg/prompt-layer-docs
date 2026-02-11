@@ -32,28 +32,6 @@ openai.completions.create({
 });
 ```
 
-```python Python (LangChain)
-llm = OpenAI(
-    model_name="gpt-3.5-turbo-instruct",
-    callbacks=[
-        PromptLayerCallbackHandler(
-            pl_tags=["pipeline3", "world"] # 🍰 PromptLayer tags
-        ),
-    ],
-)
-response = llm("My name is")
-```
-
-```js Javascript (LangChain)
-const llm = new PromptLayerOpenAI({
-  temperature: 0.9,
-  openAIApiKey: process.env.OPENAI_API_KEY,
-  promptLayerApiKey: process.env.PROMPTLAYER_API_KEY,
-  plTags: ["pipeline3", "world"], // 🍰 PromptLayer tags
-});
-llm.call("My name is");
-```
-
 </CodeGroup>
 
 Alternatively, use the REST API endpoint `/log-request` ([read more](/reference/log-request)).

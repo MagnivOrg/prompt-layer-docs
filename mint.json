@@ -31,7 +31,6 @@
       "pages": [
         "languages/python",
         "languages/javascript",
-        "languages/langchain",
         "languages/rest-api",
         "languages/integrations"
       ]

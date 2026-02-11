@@ -58,38 +58,3 @@ const [response, pl_request_id] = await client.completions.create({
 });
 ```
 
-## LangChain
-
-### With Callback (newer)
-
-For LangChain PromptLayer integration, define a `pl_id_callback` callback inside the `PromptLayerCallbackHandler`. This takes in the `pl_request_id` and can be used accordingly. Here's an example:
-
-```python 
-def pl_id_callback(pl_request_id):
-    print(pl_request_id)
-
-llm = OpenAI(
-    model_name="gpt-3.5-turbo-instruct",
-    callbacks=[
-        PromptLayerCallbackHandler(
-            pl_id_callback=pl_id_callback, 
-            pl_tags=["langchain"]
-        )
-    ],
-)
-
-llm("How tall are you?")
-```   
-
-### With Specific Models (older)
-
-For LangChain PromptLayer integration, set the argument `return_pl_id` to true when instantiating your model. This will add the PromptLayer request ID in the `generation_info` field of the Generation returned when using `.generate` or `.agenerate`. Here's an example:
-        
-```python
-from langchain.llms import PromptLayerOpenAI
-llm = PromptLayerOpenAI(return_pl_id=True)
-
-llm_results = llm.generate(["hello world"])
-for res in llm_results.generations:
-    print("pl request id: ", res[0].generation_info["pl_request_id"])
-```
