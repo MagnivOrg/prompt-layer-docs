@@ -32,6 +32,7 @@
         "languages/python",
         "languages/javascript",
         "languages/rest-api",
+        "languages/mcp",
         "languages/integrations"
       ]
     },

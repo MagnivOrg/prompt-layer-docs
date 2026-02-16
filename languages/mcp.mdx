@@ -1,0 +1,87 @@
+---
+title: 'MCP'
+icon: 'plug'
+---
+
+The PromptLayer MCP server lets any [Model Context Protocol](https://modelcontextprotocol.io/) compatible client interact with PromptLayer — managing prompts, tracking requests, running evaluations, and more.
+
+## Remote Server (Streamable HTTP)
+
+The hosted MCP server is available at:
+
+```
+https://mcp.promptlayer.com/mcp
+```
+
+Pass your PromptLayer API key via the `Authorization` header. No installation required.
+
+### Claude Desktop / Cursor / Windsurf
+
+Add to your MCP config:
+
+```json
+{
+  "mcpServers": {
+    "promptlayer": {
+      "type": "streamable-http",
+      "url": "https://mcp.promptlayer.com/mcp",
+      "headers": {
+        "Authorization": "Bearer pl_your_key_here"
+      }
+    }
+  }
+}
+```
+
+### OpenAI Responses API
+
+The remote server works with [OpenAI's MCP tool support](https://platform.openai.com/docs/guides/tools-mcp):
+
+```json
+{
+  "tools": [{
+    "type": "mcp",
+    "server_label": "promptlayer",
+    "server_url": "https://mcp.promptlayer.com/mcp",
+    "require_approval": "never",
+    "headers": {
+      "Authorization": "Bearer pl_your_key_here"
+    }
+  }]
+}
+```
+
+## Local Server (stdio)
+
+For clients that support stdio transport (e.g. Claude Desktop, Cursor), you can run the server locally via npx:
+
+```json
+{
+  "mcpServers": {
+    "promptlayer": {
+      "command": "npx",
+      "args": ["-y", "@promptlayer/mcp-server"],
+      "env": {
+        "PROMPTLAYER_API_KEY": "pl_your_key_here"
+      }
+    }
+  }
+}
+```
+
+## Available Tools
+
+The MCP server exposes 34 tools covering all major PromptLayer features:
+
+| Category | Tools |
+|---|---|
+| **Prompt Templates** | `get-prompt-template`, `get-prompt-template-raw`, `list-prompt-templates`, `publish-prompt-template`, `list-prompt-template-labels`, `create-prompt-label`, `move-prompt-label`, `delete-prompt-label`, `get-snippet-usage` |
+| **Tracking** | `log-request`, `create-spans-bulk` |
+| **Datasets** | `list-datasets`, `create-dataset-group`, `create-dataset-version-from-file`, `create-dataset-version-from-filter-params` |
+| **Evaluations** | `list-evaluations`, `create-report`, `run-report`, `get-report`, `get-report-score`, `update-report-score-card`, `delete-reports-by-name` |
+| **Agents** | `list-workflows`, `create-workflow`, `patch-workflow`, `run-workflow`, `get-workflow-version-execution-results`, `get-workflow` |
+| **Folders** | `create-folder`, `edit-folder`, `get-folder-entities`, `move-folder-entities`, `delete-folder-entities`, `resolve-folder-id` |
+
+## Source Code
+
+The MCP server is open source: [github.com/MagnivOrg/promptlayer-mcp](https://github.com/MagnivOrg/promptlayer-mcp)
