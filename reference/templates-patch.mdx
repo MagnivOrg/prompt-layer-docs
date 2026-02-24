@@ -1,0 +1,259 @@
+---
+title: "Patch Prompt Template Version"
+openapi: "PATCH /rest/prompt-templates/{identifier}"
+---
+
+Partially update a prompt template by creating a new version with merged changes. This endpoint allows you to modify specific fields of a prompt template without resending the entire configuration.
+
+The PATCH operation:
+1. Fetches the specified base version (latest by default, or a specific version/label)
+2. Applies your field-level patches to the base template
+3. Validates the merged result
+4. Creates a new version with the merged configuration
+
+## HTTP Request
+
+`PATCH /rest/prompt-templates/{identifier}`
+
+## Path Parameters
+
+- **identifier** (string, required): The prompt template name or numeric ID.
+
+## Request Body
+
+The request body expects a JSON object with the following structure:
+
+### Schema
+
+```json
+{
+  "version": "integer (optional)",
+  "label": "string (optional)",
+  "messages": "object | array (optional)",
+  "tools": "object | array | null (optional)",
+  "functions": "object | array | null (optional)",
+  "function_call": "string | object | null (optional)",
+  "tool_choice": "string | object | null (optional)",
+  "content": "object | array (optional)",
+  "model_parameters": "object (optional)",
+  "response_format": "object | null (optional)",
+  "commit_message": "string (optional)",
+  "release_labels": ["string"]
+}
+```
+
+### Parameters
+
+#### Base Version Targeting
+
+These are mutually exclusive. If neither is provided, the latest version is used.
+
+- **version** (integer, optional): The version number to base changes on.
+- **label** (string, optional): A release label identifying the base version (e.g. `"prod"`, `"staging"`).
+
+#### Chat Template Fields
+
+These fields only apply to chat-type templates. Sending them for a completion template returns a 400 error.
+
+- **messages** (object or array, optional):
+  - **Object**: Index-based patch. Keys are string indices (e.g. `{"0": {...}}`), values are replacement message objects. Only the specified indices are updated; others are preserved.
+  - **Array**: Full replacement. Replaces all messages entirely.
+- **tools** (object, array, or null, optional): Same patching behavior as messages. Set to `null` to remove all tools.
+- **functions** (object, array, or null, optional): Same patching behavior as messages. Set to `null` to remove all functions.
+- **function_call** (string, object, or null, optional): Replaces the function_call setting. Set to `null` to remove.
+- **tool_choice** (string, object, or null, optional): Replaces the tool_choice setting. Set to `null` to remove.
+
+#### Completion Template Fields
+
+- **content** (object or array, optional): Patch for completion template content. Same index-based or full-replacement behavior as messages. Completion templates only — sending this for a chat template returns a 400 error.
+
+#### Model & Metadata
+
+- **model_parameters** (object, optional): Parameters to shallow-merge into existing model parameters (e.g. `temperature`, `max_tokens`). Existing keys not mentioned here are preserved.
+- **response_format** (object or null, optional): Convenience field to set `response_format` in model parameters. Cannot be used simultaneously with `response_format` inside `model_parameters`. Set to `null` to remove.
+
+#### Version Metadata
+
+- **commit_message** (string, optional): A message describing the changes in this version.
+- **release_labels** (array of strings, optional): Release labels to create or move to the newly created version.
+
+## Response
+
+**Status Code**: 201 (Created)
+
+```json
+{
+  "id": 17,
+  "prompt_name": "web-search-prompt",
+  "prompt_version_id": 109,
+  "version_number": 5,
+  "tags": [],
+  "prompt_template": { "..." },
+  "commit_message": "Updated system message",
+  "metadata": { "..." },
+  "release_labels": ["staging"]
+}
+```
+
+## Examples
+
+### Patch a Single Message by Index
+
+Update just one message in a chat template while preserving all others:
+
+```python
+import requests
+
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "messages": {
+            "0": {
+                "role": "system",
+                "content": [{"type": "text", "text": "You are a helpful assistant."}]
+            }
+        },
+        "commit_message": "Updated system message"
+    }
+)
+```
+
+### Replace All Messages
+
+Pass an array to fully replace the messages list:
+
+```python
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "messages": [
+            {"role": "system", "content": [{"type": "text", "text": "New system prompt."}]},
+            {"role": "user", "content": [{"type": "text", "text": "{user_input}"}]}
+        ]
+    }
+)
+```
+
+### Update Model Parameters
+
+Shallow-merge new parameters while preserving existing ones:
+
+```python
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "model_parameters": {"temperature": 0.7, "max_tokens": 500},
+        "commit_message": "Tuned generation parameters"
+    }
+)
+```
+
+### Patch from a Specific Version
+
+Base the patch on a specific version instead of the latest:
+
+```python
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "version": 3,
+        "messages": {
+            "0": {
+                "role": "system",
+                "content": [{"type": "text", "text": "Hotfix based on v3"}]
+            }
+        },
+        "commit_message": "Hotfix from version 3"
+    }
+)
+```
+
+### Patch from a Release Label
+
+Use the version currently tagged with a label as the base:
+
+```python
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "label": "production",
+        "messages": {
+            "0": {
+                "role": "system",
+                "content": [{"type": "text", "text": "Patched production prompt"}]
+            }
+        },
+        "commit_message": "Quick fix on production version"
+    }
+)
+```
+
+### Update and Deploy
+
+Combine changes with release label assignment:
+
+```python
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "model_parameters": {"temperature": 0.5},
+        "response_format": {"type": "json_object"},
+        "commit_message": "Deploy with JSON mode",
+        "release_labels": ["staging", "production"]
+    }
+)
+```
+
+### Add Tools to a Prompt
+
+```python
+response = requests.patch(
+    "https://api.promptlayer.com/rest/prompt-templates/my-prompt",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "tools": [
+            {
+                "type": "function",
+                "function": {
+                    "name": "search",
+                    "description": "Search the web",
+                    "parameters": {
+                        "type": "object",
+                        "properties": {"query": {"type": "string"}}
+                    }
+                }
+            }
+        ],
+        "tool_choice": "auto",
+        "commit_message": "Added search tool"
+    }
+)
+```
+
+## Merge Behavior
+
+| Field | Merge Behavior |
+|-------|----------------|
+| `messages` | **Object**: index-based patch (update specific indices, preserve others). **Array**: full replacement. |
+| `tools` | Same as messages. `null` removes all tools. |
+| `functions` | Same as messages. `null` removes all functions. |
+| `function_call` | Full replacement. `null` removes. |
+| `tool_choice` | Full replacement. `null` removes. |
+| `content` | Same as messages (completion templates only). |
+| `model_parameters` | Shallow merge with existing parameters. |
+| `response_format` | Full replacement. `null` removes. |
+| `release_labels` | Creates or moves labels to the new version. |
+
+## Error Responses
+
+| Status Code | Error |
+|-------------|-------|
+| 400 | Validation error, conflicting response_format, out-of-bounds index, wrong template type, version and label both specified |
+| 401 | Missing or invalid API key |
+| 404 | Prompt template not found, version not found, label not found |

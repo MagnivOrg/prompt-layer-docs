@@ -140,6 +140,7 @@
             "reference/templates-get-raw",
             "reference/list-prompt-templates",
             "reference/templates-publish",
+            "reference/templates-patch",
             "reference/templates-labels-get",
             "reference/prompt-labels-create",
             "reference/prompt-labels-patch",
