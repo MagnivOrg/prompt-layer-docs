@@ -439,10 +439,8 @@ The following table provides an overview of the methods currently available in b
 | `run()`            | Executes a prompt template.   | `promptlayer_client.run()`            | `async_promptlayer_client.run()`            |
 | `run_workflow()`   | Executes an Agent.            | `promptlayer_client.run_workflow()`   | `async_promptlayer_client.run_workflow()`   |
 | `track.metadata()` | Tracks metadata.              | `promptlayer_client.track.metadata()` | `async_promptlayer_client.track.metadata()` |
-| `track.group()`    | Tracks a group.               | `promptlayer_client.track.group()`    | `async_promptlayer_client.track.group()`    |
 | `track.prompt()`   | Tracks a prompt.              | `promptlayer_client.track.prompt()`   | `async_promptlayer_client.track.prompt()`   |
 | `track.score()`    | Tracks a score.               | `promptlayer_client.track.score()`    | `async_promptlayer_client.track.score()`    |
-| `group.create()`   | Creates a new group.          | `promptlayer_client.group.create()`   | `async_promptlayer_client.group.create()`   |
 | `log_request()`    | Logs a request.               | `promptlayer_client.log_request()`    | `async_promptlayer_client.log_request()`    |
 
 > **Note:** All asynchronous methods require an active event loop. Use them within an `async` function and run the function using `asyncio.run()` or another method suitable for managing event loops (e.g., `await` in Jupyter notebooks).
