@@ -150,6 +150,7 @@
         {
           "group": "Tracking",
           "pages": [
+            "reference/get-request",
             "reference/log-request",
             "reference/track-prompt",
             "reference/track-score",
