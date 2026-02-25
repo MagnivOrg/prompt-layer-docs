@@ -491,6 +491,90 @@
         }
       }
     },
+    "/rest/prompt-templates/{identifier}": {
+      "patch": {
+        "tags": [
+          "rest",
+          "prompt-templates"
+        ],
+        "summary": "Patch Prompt Template Version",
+        "description": "Partially update a prompt template by creating a new version with merged changes. This endpoint fetches a base version (latest by default), applies your patches, validates the result, and creates a new version.",
+        "operationId": "patch_prompt_template_version",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier",
+              "description": "The prompt template name or ID."
+            }
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchPromptTemplateVersion"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New version created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error (e.g. conflicting fields, out-of-bounds index, wrong template type)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Prompt template, version, or label not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/rest/track-metadata": {
       "post": {
         "summary": "Track Metadata",
@@ -5297,6 +5381,192 @@
           "prompt_template"
         ],
         "title": "PromptVersion"
+      },
+      "PatchPromptTemplateVersion": {
+        "properties": {
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "The base version number to patch from. Mutually exclusive with `label`. If neither is provided, the latest version is used."
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label",
+            "description": "The release label identifying the base version to patch from (e.g. 'prod', 'staging'). Mutually exclusive with `version`."
+          },
+          "messages": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true,
+                "description": "Index-based patch. Keys are string indices (e.g. \"0\", \"1\"), values are the replacement message objects."
+              },
+              {
+                "type": "array",
+                "items": {},
+                "description": "Full replacement. Replaces all messages."
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Messages",
+            "description": "Patch for chat template messages. Pass an object with index keys for index-based patching, or an array for full replacement. Chat templates only."
+          },
+          "tools": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tools",
+            "description": "Patch for tools. Object for index-based patching, array for full replacement, null to remove. Chat templates only."
+          },
+          "functions": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Functions",
+            "description": "Patch for functions. Object for index-based patching, array for full replacement, null to remove. Chat templates only."
+          },
+          "function_call": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Function Call",
+            "description": "Replace the function_call setting. Set to null to remove. Chat templates only."
+          },
+          "tool_choice": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tool Choice",
+            "description": "Replace the tool_choice setting. Set to null to remove. Chat templates only."
+          },
+          "content": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "array",
+                "items": {}
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Content",
+            "description": "Patch for completion template content. Object for index-based patching, array for full replacement. Completion templates only."
+          },
+          "model_parameters": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Parameters",
+            "description": "Parameters to shallow-merge into the existing model parameters (e.g. temperature, max_tokens). Existing keys not specified here are preserved."
+          },
+          "response_format": {
+            "anyOf": [
+              {
+                "type": "object",
+                "additionalProperties": true
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Response Format",
+            "description": "Convenience field to set response_format in model parameters. Cannot be used simultaneously with response_format inside model_parameters. Set to null to remove."
+          },
+          "commit_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Message",
+            "description": "A message describing the changes in this version."
+          },
+          "release_labels": {
+            "anyOf": [
+              {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                }
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Labels",
+            "description": "Release labels to create or move to the newly created version (e.g. ['staging', 'production'])."
+          }
+        },
+        "type": "object",
+        "title": "PatchPromptTemplateVersion"
       },
       "CreatePromptTemplate": {
         "properties": {
