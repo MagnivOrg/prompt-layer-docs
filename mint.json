@@ -75,7 +75,6 @@
             "features/prompt-history/metadata",
             "features/prompt-history/scoring-requests",
             "features/prompt-history/tracking-templates",
-            "features/prompt-history/groups",
             "features/prompt-history/custom-logging",
             "features/prompt-history/structured-output-logging"
           ],
@@ -155,7 +154,6 @@
             "reference/track-prompt",
             "reference/track-score",
             "reference/track-metadata",
-            "reference/track-group",
             "reference/spans-bulk"
           ]
         },

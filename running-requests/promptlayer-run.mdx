@@ -77,7 +77,6 @@ console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].cont
 - `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be inserted into the prompt template.
 - `tags` (List[str], optional): Tags to associate with this run.
 - `metadata` (Dict[str, str], optional): Additional metadata for the run.
-- `group_id` / `groupId` (int, optional): Group ID to associate with this run.
 - `model_parameter_overrides` / `modelParameterOverrides` (Union[Dict[str, Any], None], optional): Model-specific parameter overrides.
 - `stream` (bool, default=False): Whether to stream the response.
 - `provider` (str, optional): The LLM provider to use (e.g., "openai", "anthropic", "google"). This is useful if you want to override the provider specified in the prompt template.
