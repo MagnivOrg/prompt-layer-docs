@@ -189,7 +189,17 @@
             "reference/workflow-version-execution-results"
           ]
         },
-        "reference/create-folder"
+        {
+          "group": "Folders",
+          "pages": [
+            "reference/create-folder",
+            "reference/update-folder",
+            "reference/list-folder-entities",
+            "reference/move-folder-entities",
+            "reference/delete-folder-entities",
+            "reference/resolve-folder-id"
+          ]
+        }
       ]
     }
   ],
