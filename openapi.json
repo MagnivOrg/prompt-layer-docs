@@ -3458,6 +3458,441 @@
         }
       }
     },
+    "/api/public/v2/folders/{folder_id}": {
+      "patch": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "Update Folder",
+        "description": "Renames an existing folder. The new name must be unique within the folder's parent (or at root level). The folder must belong to a workspace accessible by the authenticated user.",
+        "operationId": "update_folder_api_public_v2_folders_patch",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "folder_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Folder ID",
+              "description": "The ID of the folder to update."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateFolderRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Folder updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateFolderSuccessResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Folder with the same name already exists at this level",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderExistsError"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderNotFoundError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/folders/entities": {
+      "get": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "List Folder Entities",
+        "description": "Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Supports filtering by entity type, searching by name, flattening the folder hierarchy, and optionally including entity metadata.",
+        "operationId": "list_folder_entities_api_public_v2_folders_entities_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Workspace ID",
+              "description": "The ID of the workspace to list entities from."
+            }
+          },
+          {
+            "name": "folder_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "title": "Folder ID",
+              "description": "The ID of the folder to list entities from. If not provided, lists entities at the workspace root level."
+            }
+          },
+          {
+            "name": "filter_type",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string",
+                  "enum": ["FOLDER", "PROMPT", "SNIPPET", "WORKFLOW", "DATASET", "REPORT", "AB_TEST", "INPUT_VARIABLE_SET"]
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string",
+                    "enum": ["FOLDER", "PROMPT", "SNIPPET", "WORKFLOW", "DATASET", "REPORT", "AB_TEST", "INPUT_VARIABLE_SET"]
+                  }
+                }
+              ],
+              "title": "Filter Type",
+              "description": "Filter entities by type. Can be a single type or a list of types. If not provided, all entity types are returned."
+            }
+          },
+          {
+            "name": "search_query",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Search Query",
+              "description": "Search entities by name (case-insensitive partial match)."
+            }
+          },
+          {
+            "name": "flatten",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Flatten",
+              "description": "When true, returns all entities recursively within the folder hierarchy instead of only direct children."
+            }
+          },
+          {
+            "name": "include_metadata",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Include Metadata",
+              "description": "When true, includes type-specific metadata for each entity (e.g., prompt type, latest version number)."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListFolderEntitiesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Missing or invalid workspace_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderNotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "Move Folder Entities",
+        "description": "Moves one or more entities into a target folder, or to the workspace root if no folder_id is provided. Supports moving folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Requires appropriate edit permissions for each entity type.",
+        "operationId": "move_folder_entities_api_public_v2_folders_entities_post",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MoveFolderEntitiesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entities moved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderEntitiesCountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Missing workspace_id or invalid entity type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder or entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderNotFoundError"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "Delete Folder Entities",
+        "description": "Deletes one or more entities from the workspace. Supports deleting folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Use cascade=true to recursively delete all contents of a folder. Without cascade, deleting a non-empty folder returns an error. Entities are soft-deleted where applicable.",
+        "operationId": "delete_folder_entities_api_public_v2_folders_entities_delete",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/DeleteFolderEntitiesRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Entities deleted successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/FolderEntitiesCountResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Folder is not empty (use cascade=true) or invalid entity type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Missing or invalid API key",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UnauthorizedError"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during deletion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/folders/resolve-id": {
+      "get": {
+        "tags": [
+          "folders"
+        ],
+        "summary": "Resolve Folder ID by Path",
+        "description": "Resolves a folder's ID from its path. The path uses dot-separated folder names representing the hierarchy (e.g., \"My Folder.Subfolder\").",
+        "operationId": "resolve_folder_id_api_public_v2_folders_resolve_id_get",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "Workspace ID",
+              "description": "The ID of the workspace containing the folder."
+            }
+          },
+          {
+            "name": "path",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Path",
+              "description": "Dot-separated folder path to resolve (e.g., \"My Folder.Subfolder\")."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Folder ID resolved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ResolveFolderIdResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad request - Missing or invalid workspace_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder path not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/prompt-templates/{identifier}/snippet-usage": {
       "get": {
         "tags": [
@@ -6658,6 +7093,256 @@
           }
         },
         "title": "UnauthorizedError"
+      },
+      "FolderNotFoundError": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "title": "FolderNotFoundError"
+      },
+      "UpdateFolderRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "The new name for the folder. Must be unique within its parent folder."
+          }
+        },
+        "title": "UpdateFolderRequest"
+      },
+      "EntityType": {
+        "type": "string",
+        "enum": [
+          "FOLDER",
+          "PROMPT",
+          "SNIPPET",
+          "WORKFLOW",
+          "DATASET",
+          "REPORT",
+          "AB_TEST",
+          "INPUT_VARIABLE_SET"
+        ],
+        "description": "The type of entity. SNIPPET is a pseudo-entity type representing completion-type prompts."
+      },
+      "FolderEntity": {
+        "type": "object",
+        "required": [
+          "id",
+          "name",
+          "type",
+          "path"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "Unique identifier for the entity"
+          },
+          "name": {
+            "type": "string",
+            "description": "Name of the entity"
+          },
+          "type": {
+            "$ref": "#/components/schemas/EntityType"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the entity was created"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true,
+            "description": "Timestamp when the entity was last updated"
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "ID of the folder containing this entity. Null for root-level entities."
+          },
+          "path": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Array of folder names representing the entity's location in the folder hierarchy."
+          },
+          "metadata": {
+            "nullable": true,
+            "description": "Type-specific metadata. Included only when include_metadata=true.",
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/PromptEntityMetadata"
+              },
+              {
+                "$ref": "#/components/schemas/WorkflowEntityMetadata"
+              },
+              {
+                "$ref": "#/components/schemas/DatasetEntityMetadata"
+              },
+              {
+                "type": "object"
+              }
+            ]
+          }
+        },
+        "title": "FolderEntity"
+      },
+      "PromptEntityMetadata": {
+        "type": "object",
+        "properties": {
+          "type": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["chat", "completion"],
+            "description": "The prompt template type."
+          },
+          "latest_version_number": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The latest version number of the prompt."
+          }
+        },
+        "title": "PromptEntityMetadata"
+      },
+      "WorkflowEntityMetadata": {
+        "type": "object",
+        "properties": {
+          "latest_version_number": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The latest version number of the workflow."
+          }
+        },
+        "title": "WorkflowEntityMetadata"
+      },
+      "DatasetEntityMetadata": {
+        "type": "object",
+        "properties": {
+          "isDraft": {
+            "type": "boolean",
+            "description": "Whether the dataset group only has draft versions (no published versions)."
+          },
+          "latest_version_number": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The latest published version number of the dataset."
+          }
+        },
+        "title": "DatasetEntityMetadata"
+      },
+      "ListFolderEntitiesResponse": {
+        "type": "object",
+        "properties": {
+          "entities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FolderEntity"
+            },
+            "description": "List of entities matching the query."
+          }
+        },
+        "title": "ListFolderEntitiesResponse"
+      },
+      "EntityReference": {
+        "type": "object",
+        "required": [
+          "id",
+          "type"
+        ],
+        "properties": {
+          "id": {
+            "type": "integer",
+            "exclusiveMinimum": 0,
+            "description": "The ID of the entity."
+          },
+          "type": {
+            "$ref": "#/components/schemas/EntityType"
+          }
+        },
+        "title": "EntityReference"
+      },
+      "MoveFolderEntitiesRequest": {
+        "type": "object",
+        "required": [
+          "entities"
+        ],
+        "properties": {
+          "entities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityReference"
+            },
+            "description": "List of entities to move."
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "The ID of the destination folder. If null or not provided, entities are moved to the workspace root."
+          },
+          "workspace_id": {
+            "type": "integer",
+            "description": "The ID of the workspace."
+          }
+        },
+        "title": "MoveFolderEntitiesRequest"
+      },
+      "DeleteFolderEntitiesRequest": {
+        "type": "object",
+        "required": [
+          "entities"
+        ],
+        "properties": {
+          "entities": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/EntityReference"
+            },
+            "description": "List of entities to delete."
+          },
+          "cascade": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, recursively deletes all contents of any folders in the entities list. When false, attempting to delete a non-empty folder returns an error."
+          },
+          "workspace_id": {
+            "type": "integer",
+            "description": "The ID of the workspace."
+          }
+        },
+        "title": "DeleteFolderEntitiesRequest"
+      },
+      "FolderEntitiesCountResponse": {
+        "type": "object",
+        "properties": {
+          "moved_count": {
+            "type": "integer",
+            "description": "The number of entities affected by the operation."
+          }
+        },
+        "title": "FolderEntitiesCountResponse"
+      },
+      "ResolveFolderIdResponse": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "integer",
+            "description": "The ID of the resolved folder."
+          }
+        },
+        "title": "ResolveFolderIdResponse"
       }
     }
   }
