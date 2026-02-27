@@ -1,0 +1,60 @@
+---
+title: "Get Request"
+openapi: "GET /api/public/v2/request/{request_id}"
+description: "Retrieve a request's payload as a prompt blueprint."
+---
+
+Retrieve the full payload of a logged request by its ID, returned as a [prompt blueprint](/running-requests/prompt-blueprints). This is useful for:
+
+- **Request replay**: Re-run a request with the same input and parameters
+- **Debugging**: Inspect the exact prompt and model configuration used
+- **Dataset creation**: Extract request data for use in evaluations
+
+The response includes the prompt blueprint (input messages, model configuration, and parameters) along with the provider and model used.
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header, or JWT authentication via the `Authorization: Bearer` header.
+
+### Example
+
+```bash
+curl -H "X-API-KEY: your_api_key" \
+  https://api.promptlayer.com/api/public/v2/request/12345
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "prompt_blueprint": {
+    "prompt_template": {
+      "type": "chat",
+      "messages": [
+        {
+          "role": "user",
+          "content": [{ "type": "text", "text": "Hello, world!" }]
+        }
+      ]
+    },
+    "metadata": {
+      "model": {
+        "provider": "openai",
+        "name": "gpt-4",
+        "parameters": {}
+      }
+    },
+    "inference_client_name": null
+  },
+  "request_id": 12345,
+  "provider": "openai",
+  "model": "gpt-4"
+}
+```
+
+### Related
+
+- [Request IDs](/features/prompt-history/request-id) - How to obtain request IDs
+- [Prompt Blueprints](/running-requests/prompt-blueprints) - Understanding the blueprint format
+- [Log Request](/reference/log-request) - Log new requests

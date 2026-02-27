@@ -2125,6 +2125,125 @@
         }
       }
     },
+    "/api/public/v2/request/{request_id}": {
+      "get": {
+        "summary": "Get Request",
+        "operationId": "getRequest",
+        "tags": [
+          "tracking"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication."
+          },
+          {
+            "name": "request_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "The ID of the request to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successfully retrieved request as a prompt blueprint.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "description": "Indicates the request was successful."
+                    },
+                    "prompt_blueprint": {
+                      "type": "object",
+                      "description": "The request converted to a prompt blueprint format.",
+                      "properties": {
+                        "prompt_template": {
+                          "type": "object",
+                          "description": "The prompt template with type and messages."
+                        },
+                        "metadata": {
+                          "type": "object",
+                          "description": "Metadata including model provider, name, and parameters."
+                        },
+                        "inference_client_name": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "The inference client name if one was used."
+                        }
+                      }
+                    },
+                    "request_id": {
+                      "type": "integer",
+                      "description": "The ID of the request."
+                    },
+                    "provider": {
+                      "type": "string",
+                      "description": "The LLM provider (e.g. openai, anthropic)."
+                    },
+                    "model": {
+                      "type": "string",
+                      "description": "The model name (e.g. gpt-4, claude-3-sonnet)."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Request not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/public/v2/evaluations": {
       "get": {
         "summary": "List Evaluations",
