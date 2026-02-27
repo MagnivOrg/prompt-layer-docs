@@ -4,6 +4,44 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## February 27, 2026
+
+## New Features
+
+**OpenAI Images API Support**
+Full support for OpenAI's image generation models including `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `dall-e-3`, and `dall-e-2`.
+- Configure quality, size, background, output format, and moderation settings directly in the Playground
+- Generate multiple images in a single request with `n` parameter control
+- View generated images with revised prompts in dedicated accordion sections
+
+**Google Gemini Image Generation**
+Added `gemini-3.1-flash-image-preview` model for AI-generated images via Google/Vertex AI.
+- Customize image size (0.5K to 4K) and aspect ratio (1:1, 16:9, 21:9, and more)
+- Includes standard Gemini safety settings and generation parameters
+
+**URL Context Tool for Google/VertexAI**
+Web search and URL content retrieval now available for Google and Vertex AI models in the Playground.
+- Extract and analyze content from web pages during conversations
+- Matches existing functionality available for OpenAI models
+
+**Enhanced Custom Scoring System**
+Refactored evaluation scoring with improved reliability and performance.
+- Automatically recalculates report scores when evaluation criteria are updated
+- Prevents score updates on incomplete evaluations
+
+## Improvements
+
+- Fixed WebSocket connection timing to establish only after authentication token is available
+- Increased message history buffer to 400 messages for improved chat continuity
+- Resolved dynamic resolution stack errors in evaluation workflows
+- Enhanced Playground sidebar layout with better widget spacing and control bar positioning
+- Improved clipboard handling for content copy operations in the editor
+- Fixed cost calculations for `nano-banana-2` model
+- Streamlined prompt template retrieval logic for better reliability
+
+---
+
+
 ## February 26, 2026
 
 ## New Features
