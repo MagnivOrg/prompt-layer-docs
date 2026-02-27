@@ -1034,7 +1034,11 @@
                           "description": "Whether this column contributes to built-in score averaging (defaults to false)"
                         }
                       },
-                      "required": ["column_type", "name", "configuration"]
+                      "required": [
+                        "column_type",
+                        "name",
+                        "configuration"
+                      ]
                     }
                   },
                   "score_configuration": {
@@ -1047,11 +1051,16 @@
                       },
                       "code_language": {
                         "type": "string",
-                        "enum": ["PYTHON", "JAVASCRIPT"],
+                        "enum": [
+                          "PYTHON",
+                          "JAVASCRIPT"
+                        ],
                         "description": "Language of the code (defaults to PYTHON)"
                       }
                     },
-                    "required": ["code"]
+                    "required": [
+                      "code"
+                    ]
                   }
                 },
                 "required": [
@@ -1103,13 +1112,27 @@
                       "items": {
                         "type": "object",
                         "properties": {
-                          "id": { "type": "integer" },
-                          "report_id": { "type": "integer" },
-                          "column_type": { "type": "string" },
-                          "name": { "type": "string" },
-                          "position": { "type": "integer" },
-                          "is_part_of_score": { "type": "boolean" },
-                          "configuration": { "type": "object" }
+                          "id": {
+                            "type": "integer"
+                          },
+                          "report_id": {
+                            "type": "integer"
+                          },
+                          "column_type": {
+                            "type": "string"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "integer"
+                          },
+                          "is_part_of_score": {
+                            "type": "boolean"
+                          },
+                          "configuration": {
+                            "type": "object"
+                          }
                         }
                       }
                     }
@@ -1232,11 +1255,33 @@
                     "type": "string",
                     "description": "The type of evaluation or transformation this column performs. Must be one of the supported column types.",
                     "enum": [
-                      "ABSOLUTE_NUMERIC_DISTANCE", "AI_DATA_EXTRACTION", "ASSERT_VALID", "CONVERSATION_SIMULATOR",
-                      "COALESCE", "CODE_EXECUTION", "COMBINE_COLUMNS", "COMPARE", "CONTAINS", "COSINE_SIMILARITY",
-                      "COUNT", "ENDPOINT", "MCP", "HUMAN", "JSON_PATH", "LLM_ASSERTION", "MATH_OPERATOR",
-                      "MIN_MAX", "PARSE_VALUE", "APPLY_DIFF", "PROMPT_TEMPLATE", "REGEX", "REGEX_EXTRACTION",
-                      "VARIABLE", "XML_PATH", "WORKFLOW", "CODING_AGENT"
+                      "ABSOLUTE_NUMERIC_DISTANCE",
+                      "AI_DATA_EXTRACTION",
+                      "ASSERT_VALID",
+                      "CONVERSATION_SIMULATOR",
+                      "COALESCE",
+                      "CODE_EXECUTION",
+                      "COMBINE_COLUMNS",
+                      "COMPARE",
+                      "CONTAINS",
+                      "COSINE_SIMILARITY",
+                      "COUNT",
+                      "ENDPOINT",
+                      "MCP",
+                      "HUMAN",
+                      "JSON_PATH",
+                      "LLM_ASSERTION",
+                      "MATH_OPERATOR",
+                      "MIN_MAX",
+                      "PARSE_VALUE",
+                      "APPLY_DIFF",
+                      "PROMPT_TEMPLATE",
+                      "REGEX",
+                      "REGEX_EXTRACTION",
+                      "VARIABLE",
+                      "XML_PATH",
+                      "WORKFLOW",
+                      "CODING_AGENT"
                     ]
                   },
                   "name": {
@@ -2037,7 +2082,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["active", "deleted", "all"],
+              "enum": [
+                "active",
+                "deleted",
+                "all"
+              ],
               "default": "active"
             },
             "description": "Filter datasets by status: 'active' (default) returns only active datasets, 'deleted' returns only deleted/archived datasets, 'all' returns both"
@@ -2195,6 +2244,41 @@
                     "model": {
                       "type": "string",
                       "description": "The model name (e.g. gpt-4, claude-3-sonnet)."
+                    },
+                    "input_tokens": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Number of input tokens used."
+                    },
+                    "output_tokens": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Number of output tokens generated."
+                    },
+                    "tokens": {
+                      "type": "integer",
+                      "nullable": true,
+                      "description": "Total token count (input + output)."
+                    },
+                    "price": {
+                      "type": "number",
+                      "nullable": true,
+                      "description": "Cost of the request in USD."
+                    },
+                    "request_start_time": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "ISO 8601 timestamp of when the request started."
+                    },
+                    "request_end_time": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "ISO 8601 timestamp of when the request ended."
+                    },
+                    "latency_ms": {
+                      "type": "number",
+                      "nullable": true,
+                      "description": "Request latency in milliseconds, derived from start and end times."
                     }
                   }
                 }
@@ -2286,7 +2370,11 @@
             "required": false,
             "schema": {
               "type": "string",
-              "enum": ["active", "deleted", "all"],
+              "enum": [
+                "active",
+                "deleted",
+                "all"
+              ],
               "default": "active"
             },
             "description": "Filter evaluations by status: 'active' (default) returns only active evaluations, 'deleted' returns only deleted/archived evaluations, 'all' returns both"
@@ -2800,7 +2888,11 @@
             "name": "status",
             "schema": {
               "type": "string",
-              "enum": ["active", "deleted", "all"],
+              "enum": [
+                "active",
+                "deleted",
+                "all"
+              ],
               "default": "active",
               "title": "Status"
             },
@@ -4291,7 +4383,12 @@
             "description": "Whether this node is an output node."
           }
         },
-        "required": ["name", "node_type", "configuration", "is_output_node"]
+        "required": [
+          "name",
+          "node_type",
+          "configuration",
+          "is_output_node"
+        ]
       },
       "EdgeConditional": {
         "type": "object",
@@ -4303,7 +4400,18 @@
           },
           "operator": {
             "type": "string",
-            "enum": ["=", "!=", "<", ">", "<=", ">=", "in", "not_in", "is_null", "is_not_null"],
+            "enum": [
+              "=",
+              "!=",
+              "<",
+              ">",
+              "<=",
+              ">=",
+              "in",
+              "not_in",
+              "is_null",
+              "is_not_null"
+            ],
             "description": "Comparison operator."
           },
           "left_config": {
@@ -4315,7 +4423,12 @@
             "description": "Right side of comparison. Can be static_value or source."
           }
         },
-        "required": ["position", "operator", "left_config", "right_config"]
+        "required": [
+          "position",
+          "operator",
+          "left_config",
+          "right_config"
+        ]
       },
       "Edge": {
         "type": "object",
@@ -4341,7 +4454,12 @@
             "description": "At least one conditional."
           }
         },
-        "required": ["source_node_name", "target_node_name", "is_and", "conditionals"]
+        "required": [
+          "source_node_name",
+          "target_node_name",
+          "is_and",
+          "conditionals"
+        ]
       },
       "CreateWorkflow": {
         "type": "object",
@@ -4404,7 +4522,9 @@
             "description": "Labels to attach to this version."
           }
         },
-        "required": ["nodes"],
+        "required": [
+          "nodes"
+        ],
         "description": "Request body for creating a new workflow or workflow version."
       },
       "NodeUpdate": {
@@ -4453,8 +4573,12 @@
             "type": "object",
             "additionalProperties": {
               "oneOf": [
-                { "$ref": "#/components/schemas/NodeUpdate" },
-                { "type": "null" }
+                {
+                  "$ref": "#/components/schemas/NodeUpdate"
+                },
+                {
+                  "type": "null"
+                }
               ]
             },
             "nullable": true,
@@ -4528,10 +4652,18 @@
             "items": {
               "type": "object",
               "properties": {
-                "id": { "type": "string" },
-                "name": { "type": "string" },
-                "node_type": { "type": "string" },
-                "is_output_node": { "type": "boolean" }
+                "id": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "node_type": {
+                  "type": "string"
+                },
+                "is_output_node": {
+                  "type": "boolean"
+                }
               }
             },
             "description": "Summary of nodes in the workflow."
@@ -4544,7 +4676,13 @@
             "description": "Required input variables for the workflow."
           }
         },
-        "required": ["success", "workflow_id", "workflow_name", "workflow_version_id", "version_number"],
+        "required": [
+          "success",
+          "workflow_id",
+          "workflow_name",
+          "workflow_version_id",
+          "version_number"
+        ],
         "description": "Response after creating or patching a workflow."
       },
       "ErrorResponse": {
@@ -6663,7 +6801,11 @@
           },
           "status": {
             "type": "string",
-            "enum": ["SUCCESS", "WARNING", "ERROR"],
+            "enum": [
+              "SUCCESS",
+              "WARNING",
+              "ERROR"
+            ],
             "default": "SUCCESS",
             "title": "Status",
             "description": "Request status.\n\n| Value | Description |\n|-------|-------------|\n| `SUCCESS` | Request completed successfully (default) |\n| `WARNING` | Request succeeded but had issues (e.g., retries, degraded response) |\n| `ERROR` | Request failed |"
@@ -6728,7 +6870,11 @@
           },
           "status": {
             "type": "string",
-            "enum": ["SUCCESS", "WARNING", "ERROR"],
+            "enum": [
+              "SUCCESS",
+              "WARNING",
+              "ERROR"
+            ],
             "title": "Status",
             "description": "Request status indicating success, warning, or error."
           },

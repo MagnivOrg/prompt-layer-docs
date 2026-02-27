@@ -1,7 +1,7 @@
 ---
 title: "Get Request"
 openapi: "GET /api/public/v2/request/{request_id}"
-description: "Retrieve a request's payload as a prompt blueprint."
+description: "Retrieve a request's payload as a prompt blueprint, along with token usage and timing data."
 ---
 
 Retrieve the full payload of a logged request by its ID, returned as a [prompt blueprint](/running-requests/prompt-blueprints). This is useful for:
@@ -9,8 +9,9 @@ Retrieve the full payload of a logged request by its ID, returned as a [prompt b
 - **Request replay**: Re-run a request with the same input and parameters
 - **Debugging**: Inspect the exact prompt and model configuration used
 - **Dataset creation**: Extract request data for use in evaluations
+- **Cost analysis**: Review token usage and pricing for individual requests
 
-The response includes the prompt blueprint (input messages, model configuration, and parameters) along with the provider and model used.
+The response includes the prompt blueprint (input messages, model configuration, and parameters) along with token counts and timing data.
 
 ### Authentication
 
@@ -49,7 +50,14 @@ curl -H "X-API-KEY: your_api_key" \
   },
   "request_id": 12345,
   "provider": "openai",
-  "model": "gpt-4"
+  "model": "gpt-4",
+  "input_tokens": 12,
+  "output_tokens": 25,
+  "tokens": 37,
+  "price": 0.00123,
+  "request_start_time": "2024-04-03T20:57:25",
+  "request_end_time": "2024-04-03T20:57:26",
+  "latency_ms": 1000.0
 }
 ```
 
