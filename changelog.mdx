@@ -4,6 +4,27 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## February 28, 2026
+
+### New Features
+
+**Public API Request Payload Endpoint**
+New `/api/public/v2/request-payload` endpoint allows you to retrieve complete request details including prompt blueprints, token usage, and latency metrics.
+- Returns full prompt blueprint structure for easy reproduction
+- Includes comprehensive metadata: provider, model, tokens, pricing, and timing
+- Supports both JWT and API key authentication
+
+### Improvements
+
+- Improved Playground reliability on slow network connections by buffering early messages to prevent UI stalls
+- Enhanced error handling for WebSocket token refresh failures with better logging for troubleshooting
+- Fixed race condition in report cell generation that could cause false failures under high concurrency
+- Improved WebSocket connection stability by returning cached tokens when refresh attempts fail
+- Enhanced error reporting for messaging service failures with clearer error messages and categorization
+
+---
+
+
 ## February 27, 2026
 
 ## New Features
