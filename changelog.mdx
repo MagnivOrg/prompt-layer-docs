@@ -4,6 +4,34 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 03, 2026
+
+### New Features
+
+**Anthropic Structured Output Support**
+Added JSON Schema support for Anthropic models to enforce structured responses.
+- Configure `response_format` with JSON Schema in prompt templates for Claude models
+- Automatically converts to Anthropic's `output_config` format
+- Also supported for Claude models running on AWS Bedrock
+
+**Organization Members Management**
+Enhanced organization members page with improved filtering and detailed member views.
+- View all workspaces and roles for each organization member in a detailed side panel
+- Filter members by workspace, role, or search by name/email
+- Members can now remove themselves from organizations without owner permissions
+
+### Improvements
+
+- Fixed score slider to properly handle integer-only scores
+- Added workspace search by name in workspace listing
+- Improved autocomplete components with better keyboard navigation and multi-select support
+- Enhanced request display to show `error_type` and `error_message` fields when present
+- Added validation for `error_type` field in `/track-request` endpoint to match `/log-request` behavior
+- Fixed memory leak in scheduled job processing
+
+---
+
+
 ## March 01, 2026
 
 ### Improvements
