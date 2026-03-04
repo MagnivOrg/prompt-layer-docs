@@ -4,6 +4,43 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 04, 2026
+
+### New Features
+
+**Google File Search Tool Support**
+Native integration with Google's File Search tool for Gemini models, enabling document-based context retrieval.
+- Create and manage file search stores directly in the PromptLayer UI
+- Upload documents to stores and associate them with prompts in the playground
+- Documents are automatically indexed for semantic search during conversations
+- Grounding metadata shows which documents were referenced in responses
+
+**OpenAI MCP (Model Context Protocol) Tool**
+Support for OpenAI's Model Context Protocol tools in prompt templates and playground.
+- Configure MCP servers and tools through the built-in tools dialog
+- Available for OpenAI models that support function calling
+- Tool responses appear inline in conversation history
+
+**User Attribution Tracking**
+Track which team member created or modified resources across the platform.
+- Author information displayed for prompts, datasets, evaluations, and notifications
+- Filter resources by creator in the unified registry
+- "Open Original Session" button on run requests links back to the source playground session
+
+### Improvements
+
+- Added support for Claude Sonnet 4.5 on Amazon Bedrock
+- Added support for Gemini 3.1 Flash Lite model
+- Debounced playground input variable parsing to reduce API calls during typing
+- Fixed issue where deleted file stores could still be selected in the UI
+- Improved search indexing with deduplication to prevent duplicate results
+- Redesigned settings navigation with clearer organization and visual hierarchy
+- Enhanced vector store management with delete store capability
+- Improved file preview URLs for local storage backends with HMAC-signed streaming
+
+---
+
+
 ## March 03, 2026
 
 ### New Features
