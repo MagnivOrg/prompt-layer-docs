@@ -4,6 +4,40 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 05, 2026
+
+### New Features
+
+**OpenTelemetry Trace Ingestion**
+Native support for industry-standard OpenTelemetry Protocol (OTLP) trace ingestion, enabling seamless integration with existing observability tooling.
+- Ingest traces via standard OTLP/HTTP endpoint at `/v1/traces`
+- Automatic extraction of GenAI semantic conventions for OpenAI and Anthropic providers
+- Convert OTLP spans into PromptLayer request logs with proper error mapping and metadata preservation
+
+**Multi-Message Tool Response Handling**
+Enhanced playground chat interface now supports submitting multiple tool response messages simultaneously.
+- Import and replay conversations with parallel tool calls from request logs
+- Maintain correct message ordering when tools are invoked across conversation turns
+- Proper hydration of chat history with multiple tool responses per assistant turn
+
+**Chat History Import from Request Logs**
+Import conversation history directly from request logs into playground chat sessions.
+- Reset and re-seed chat from any logged request with one click
+- Automatically diff request messages against current template to extract conversation context
+- Per-variable-set chat history support for testing multiple scenarios simultaneously
+
+### Improvements
+
+- Fixed playground chat crashes when trace metadata contains non-string values during URL sharing
+- Resolved 500 errors when reading prompts that use legacy LangChain message format
+- Fixed "No response" display issue for template render errors in request logs
+- Improved image evaluation algorithm accuracy for visual content comparison
+- Enhanced workspace member invitation dialog with better field validation
+- Fixed chat message ordering when importing request logs with tool calls
+
+---
+
+
 ## March 04, 2026
 
 ### New Features
