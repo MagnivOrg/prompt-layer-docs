@@ -4,6 +4,39 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 07, 2026
+
+### New Features
+
+**Anthropic Code Execution Tool Support**
+Added support for Anthropic's native code execution tool capability, enabling AI models to write and execute Python code during conversations.
+- Models can now generate and run code snippets directly within chat sessions
+- Code execution results are displayed inline with conversation history
+- Supports dynamic data analysis and computation workflows
+
+**Enhanced Trace Filtering with Metadata Search**
+Introduced advanced filtering for traces using custom metadata keys, making it easier to find specific traces in production systems.
+- Search and filter traces by any custom metadata key stored in span attributes
+- Autocomplete suggestions help discover available metadata keys across your workspace
+- Filter results update in real-time as you type
+
+**OpenAI Shell Tool Integration**
+Added built-in shell tool support for OpenAI models, allowing AI assistants to execute shell commands when explicitly enabled.
+- Enables automation workflows where models can interact with system commands
+- Integrates with OpenAI's native tool calling infrastructure
+
+### Improvements
+
+- Improved playground session initialization to correctly handle tool and function definitions when opening from request logs
+- Enhanced request log input variable extraction to include tool/function data for better context when replaying requests
+- Streamlined "Open in Playground" workflow to preserve all tool configurations from original requests
+- Fixed trace metadata button display issues in the span details view
+- Normalized message content format to consistently use content blocks across chat interfaces
+- Improved Vite build configuration for better development server performance
+
+---
+
+
 ## March 05, 2026
 
 ### New Features
