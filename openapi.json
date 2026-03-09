@@ -3085,19 +3085,7 @@
             }
           },
           "400": {
-            "description": "Bad Request"
-          },
-          "401": {
-            "description": "Unauthorized"
-          },
-          "403": {
-            "description": "Forbidden"
-          },
-          "404": {
-            "description": "Not Found"
-          },
-          "500": {
-            "description": "No output node found for this workflow.",
+            "description": "Bad Request. Also returned when no output node is found for the workflow.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3141,6 +3129,15 @@
                 }
               }
             }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden"
+          },
+          "404": {
+            "description": "Not Found"
           }
         },
         "security": [

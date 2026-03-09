@@ -5,7 +5,7 @@ openapi: "GET /workflow-version-execution-results"
 
 Retrieve the execution results of a specific Agent version. You can include all output nodes by setting the `return_all_outputs` query parameter to `true`.
 
-This endpoint returns a status code of `200` when the agent has finished execution. If the agent is still in the process of running, it will return a status code of `202`. If the agent completed but no output node was found for the workflow, the endpoint returns a `500` with `{"success": false, "message": "No output node found for this workflow", "output": ...}`, where `output` contains all node results for debugging.
+This endpoint returns a status code of `200` when the agent has finished execution. If the agent is still in the process of running, it will return a status code of `202`. If the agent completed but no output node was found for the workflow, the endpoint returns a `400` with `{"success": false, "message": "No output node found for this workflow", "output": ...}`, where `output` contains all node results for debugging.
 
 If a node in the agent errors but the output node still exists, the endpoint will still return `200`. In this case, when `return_all_outputs` is `false`, the response will contain all node outputs (instead of just the output node's value) since no output node succeeded. You can check each node's `status` field (`"SUCCESS"`, `"FAILED"`, `"SKIPPED"`) and `error_message` field to identify which node failed and why.
 
