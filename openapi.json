@@ -2885,6 +2885,25 @@
           },
           {
             "in": "query",
+            "name": "tags",
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ],
+              "title": "Tags"
+            },
+            "description": "Filter prompt templates by tags. Can be a single tag or a list of tags. Only templates whose tags contain all specified values are returned."
+          },
+          {
+            "in": "query",
             "name": "status",
             "schema": {
               "type": "string",
