@@ -177,7 +177,7 @@ When polling (suggestion):
 - Check every **5000 ms**
 - A **200** status code means the run completed successfully
 - A **202** status code indicates the agent is still running
-- A **500** status code means the agent completed but the output node failed — the response will include `{"success": false, "message": "Workflow completed but no output node succeeded", "output": ...}` with all node results for debugging
+- A **500** status code means the agent completed but no output node was found — the response will include `{"success": false, "message": "No output node found for this workflow", "output": ...}` with all node results for debugging
 - Consider timing out after about 10 minutes
 
 Depending on if you set `return_all_outputs` or not, you will either return the output value or all node values on completion.

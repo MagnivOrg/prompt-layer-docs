@@ -3097,7 +3097,7 @@
             "description": "Not Found"
           },
           "500": {
-            "description": "Workflow completed but no output node succeeded.",
+            "description": "No output node found for this workflow.",
             "content": {
               "application/json": {
                 "schema": {
@@ -3109,7 +3109,7 @@
                     },
                     "message": {
                       "type": "string",
-                      "example": "Workflow completed but no output node succeeded"
+                      "example": "No output node found for this workflow"
                     },
                     "output": {
                       "type": "object",
