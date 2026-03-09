@@ -3095,6 +3095,52 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "500": {
+            "description": "Workflow completed but no output node succeeded.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Workflow completed but no output node succeeded"
+                    },
+                    "output": {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string"
+                          },
+                          "value": {
+                            "description": "The output value of the node."
+                          },
+                          "error_message": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "raw_error_message": {
+                            "type": "string",
+                            "nullable": true
+                          },
+                          "is_output_node": {
+                            "type": "boolean"
+                          }
+                        }
+                      },
+                      "description": "All node outputs for debugging purposes."
+                    }
+                  }
+                }
+              }
+            }
           }
         },
         "security": [
