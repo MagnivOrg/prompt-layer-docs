@@ -4,6 +4,34 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 09, 2026
+
+### New Features
+
+**OpenTelemetry Trace Ingestion Enhancements**
+Support for modern OpenTelemetry semantic conventions and improved compatibility with observability libraries.
+- Added support for gzip-compressed OTLP trace payloads to reduce network overhead
+- Added support for newer `gen_ai.input.messages` and `gen_ai.output.messages` JSON format used by Ruby and other emerging instrumentations
+- Improved parsing of `gen_ai.system_instructions` to properly handle system prompts from different providers
+- Added automatic upsert logic for duplicate span IDs to ensure trace completeness when spans are sent multiple times
+
+**Template Rendering for Tool/Function Messages**
+Improved handling of LLM-generated tool and function call messages in prompt templates.
+- Template validation now gracefully skips tool/function messages that contain JSON responses rather than user-authored templates
+- Prevents false template rendering errors when JSON braces in tool responses are mistaken for template syntax
+- Preserves support for legitimate template variables in few-shot tool examples
+
+### Improvements
+
+- Added `playground_session_id` to request log bulk endpoint responses for better session tracking
+- Improved JSON variable parsing to optimistically parse all string values, matching frontend batch-mode behavior
+- Enhanced OTLP function name inference to support more provider-specific operation types (embeddings, text completion, content generation)
+- Fixed provider family detection for Anthropic and Google AI models in OpenTelemetry traces
+- Improved error handling for malformed Content-Type headers in trace ingestion
+
+---
+
+
 ## March 07, 2026
 
 ### New Features
