@@ -37,6 +37,24 @@ Native display support for Anthropic code execution and shell command tools.
 ---
 
 
+
+### Deployment 1
+
+#### New Features
+
+**Model Override Support in Evaluations**
+Enhanced evaluation workflows now preserve model configuration when routing between prompt templates and agents.
+- Model override settings are now correctly passed through evaluation interfaces
+- API type and model configuration IDs are properly maintained across workflow executions
+
+#### Improvements
+
+- Fixed tool call detection in search indexing to correctly identify assistant messages with tool calls
+- Improved "Open Prompt" button functionality in image API evaluations to use correct routing
+- Enhanced build efficiency by adding path guards to skip unnecessary backend image builds when only documentation or configuration files change
+
+---
+
 ## March 09, 2026
 
 ### New Features
