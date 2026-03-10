@@ -41,7 +41,7 @@ To publish a prompt template with tools programmatically, you can add the argume
 PromptLayer supports provider-native built-in tools across multiple LLM providers. These pre-built tools enable your prompts to access real-time information, execute code, search through files, and more—all without writing custom function definitions.
 
 Built-in tools are available for the following providers:
-- [OpenAI (Responses API)](#openai-responses-api)
+- [OpenAI / Azure OpenAI (Responses API)](#openai-and-azure-openai-responses-api)
 - [Anthropic](#anthropic)
 - [Google (Gemini)](#google-gemini)
 - [Vertex AI](#vertex-ai)
@@ -57,14 +57,15 @@ Built-in tools are available for the following providers:
 7. **Save and run your prompt** — the model will use the built-in tools when appropriate
 
 <Note>
-For OpenAI, built-in tools require the **Responses API**. Switch from **Chat Completions API** to **Responses API** in the API dropdown before adding built-in tools.
+For OpenAI and Azure OpenAI, built-in tools require the **Responses API**. Switch from **Chat Completions API** to **Responses API** in the API dropdown before adding built-in tools.
 </Note>
+
 
 ---
 
-### OpenAI (Responses API)
+### OpenAI and Azure OpenAI (Responses API)
 
-OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer.
+OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer. These tools are available for both the **OpenAI** and **Azure OpenAI** providers.
 
 #### Available Tools
 
