@@ -192,12 +192,33 @@ response = promptlayer_client.run(
 
 Each message in a Prompt Blueprint should be a dictionary with the following structure:
 
-- **`role`**: The role of the message sender (`user`, `assistant`, etc.).
-- **`content`**: A list of content items, where each item has:
-  - **`type`**: The type of content (`text`, `thinking`, `media`, etc.).
-  - **`text`**: The text content (if `type` is `text`).
-  - **`thinking`**: The thinking content (if `type` is `thinking`).
-  - **`signature`**: The signature content (if `type` is `thinking`).
+- **`role`**: The role of the message sender (`user`, `assistant`, `system`, `tool`, `function`, `placeholder`, `developer`).
+- **`content`**: A list of content items, where each item has a **`type`** field that determines the content structure.
+
+### Supported Content Types
+
+| Type | Description |
+|------|-------------|
+| `text` | Text content with a `text` field |
+| `thinking` | Model reasoning with `thinking` and optional `signature` fields |
+| `code` | Code block with a `code` field (from code execution tools) |
+| `image_url` | Image content with an `image_url` object containing a `url` |
+| `media` | Media content (images, PDFs) with a `media` object |
+| `media_variable` | Dynamic media variable with a `name` field |
+| `output_media` | LLM-generated media (e.g. images) with a `url` and `mime_type` |
+| `server_tool_use` | Server-side tool invocation with `id`, `name`, and `input` |
+| `web_search_tool_result` | Web search results with citations |
+| `code_execution_result` | Code execution output with `output` and `outcome` fields |
+| `mcp_list_tools` | MCP server tool listing with `server_label` and `tools` |
+| `mcp_call` | MCP tool call with `name`, `server_label`, and `arguments` |
+| `mcp_approval_request` | MCP tool approval request |
+| `mcp_approval_response` | MCP tool approval response |
+| `bash_code_execution_tool_result` | Bash tool execution result with `tool_use_id` and `content` |
+| `text_editor_code_execution_tool_result` | Text editor tool result with `tool_use_id` and `content` |
+| `shell_call` | Shell tool call with `action` containing commands |
+| `shell_call_output` | Shell tool output with execution results |
+| `apply_patch_call` | Apply patch tool call with `operation` (create, update, delete files) |
+| `apply_patch_call_output` | Apply patch tool output |
 
 ### Example Message
 

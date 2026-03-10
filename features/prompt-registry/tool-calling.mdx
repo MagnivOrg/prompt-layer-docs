@@ -36,53 +36,54 @@ Tools can be defined, called, and set up visually through the Prompt Registry.
 
 To publish a prompt template with tools programmatically, you can add the arguments `tools` and `tool_choice` to your prompt_template object. This is similar to how you would publish a regular prompt template.
 
-## Built-in Tools (OpenAI Responses API)
+## Built-in Tools
 
-OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer. These tools enable your prompts to access real-time information and search through files—all without writing custom function definitions.
+PromptLayer supports provider-native built-in tools across multiple LLM providers. These pre-built tools enable your prompts to access real-time information, execute code, search through files, and more—all without writing custom function definitions.
 
-### Available Pre-Built Tools
+Built-in tools are available for the following providers:
+- [OpenAI / Azure OpenAI (Responses API)](#openai-and-azure-openai-responses-api)
+- [Anthropic](#anthropic)
+- [Google (Gemini)](#google-gemini)
+- [Vertex AI](#vertex-ai)
 
-PromptLayer currently supports the following OpenAI built-in tools:
-
-- **Web Search** — Get fast, up-to-date answers with citations from the web
-- **File Search** — Search through uploaded files and documents using Vector Stores
-- **Code Interpreter** — Write and execute Python code in a secure, sandboxed environment
-
-Additional tools like Image Generation may be available depending on your OpenAI API access.
-
-### How to Add Built-in Tools in PromptLayer
-
-Follow these steps to enable OpenAI's pre-built tools in your PromptLayer prompts:
+### How to Add Built-in Tools
 
 1. **Open your prompt in the Prompt Registry** and navigate to the prompt editor
+2. **Select your LLM provider** in the provider settings at the bottom of the editor
+3. **Open the Function & Output Schema Editor** by clicking the **Functions & Output** button
+4. **Click the Built-in tools button** (on the right side) to browse available tools for your selected provider
+5. **Click Add Tool** for the tool you want to use — it will appear in your function definitions list
+6. **Configure tool_choice** (optional) — set to **auto** to let the model decide when to use the tool
+7. **Save and run your prompt** — the model will use the built-in tools when appropriate
 
-2. **Switch to the Responses API**:
-   - Click the **LLM Provider** settings at the bottom of the editor
-   - Change the **API** dropdown from **Chat Completions API** to **Responses API**
+<Note>
+For OpenAI and Azure OpenAI, built-in tools require the **Responses API**. Switch from **Chat Completions API** to **Responses API** in the API dropdown before adding built-in tools.
+</Note>
 
-3. **Open the Function & Output Schema Editor**:
-   - Click the **Functions & Output** button at the bottom of the editor
 
-4. **Add a pre-built tool**:
-   - Click the **Built-in tools** button (on the right side)
-   - Browse available tools like **Web Search**, **File Search**, **Code Interpreter**, or **Image Generation**
-   - Click **Add Tool** for the tool you want to use
-   - The tool will appear in your **Function definitions** list with a checkmark
+---
 
-5. **Configure tool_choice** (optional):
-   - Set **tool_choice** to **auto** to let the model decide when to use the tool
-   - Or select a specific tool to force its use
+### OpenAI and Azure OpenAI (Responses API)
 
-6. **Save and run your prompt**:
-   - Close the modal and click **Run** to test your prompt
-   - The model will automatically use the pre-built tool when appropriate
-   - You'll see tool usage indicators like **"Preparing search parameters..."** or **"Found web results for: [query]"** in the response
+OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer. These tools are available for both the **OpenAI** and **Azure OpenAI** providers.
 
-### Using File Search with Vector Stores
+#### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| **Web Search** | Get fast, up-to-date answers with citations from the web |
+| **File Search** | Search through uploaded files and documents using Vector Stores |
+| **Code Interpreter** | Write and execute Python code in a secure, sandboxed environment |
+| **Image Generation** | Generate or edit images using a text prompt |
+| **MCP** | Connect to remote MCP servers or OpenAI-maintained connectors for external tools |
+| **Shell** | Execute shell commands in a managed environment |
+| **Apply Patch** | Propose structured diffs to create, update, or delete files |
+
+#### Using File Search with Vector Stores
 
 OpenAI's File Search tool enables semantic search over your documents using Vector Stores. This powerful feature allows your prompts to automatically retrieve relevant information from uploaded files during inference, making it perfect for building RAG (Retrieval-Augmented Generation) systems, knowledge bases, and documentation assistants.
 
-#### Setting Up File Search
+##### Setting Up File Search
 
 For the **File Search** tool, you'll need to create and attach Vector Stores containing your documents:
 
@@ -104,7 +105,7 @@ For the **File Search** tool, you'll need to create and attach Vector Stores con
    - Retrieved context is used to generate informed responses
    - Sources can be traced back to specific documents
 
-### Using Code Interpreter
+#### Using Code Interpreter
 
 OpenAI's Code Interpreter tool enables your prompts to write and execute Python code within a secure, sandboxed environment. This powerful feature allows for dynamic problem-solving, data analysis, visualization generation, and file processing—all without writing custom function definitions.
 
@@ -112,10 +113,99 @@ To enable Code Interpreter, follow the steps above to add it as a built-in tool.
 
 For detailed information about Code Interpreter's capabilities, file handling, and configuration options, see the [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter).
 
-### Learn More
+#### Learn More
 
 - [OpenAI Web Search Guide](https://platform.openai.com/docs/guides/tools-web-search)
 - [OpenAI File Search Guide](https://platform.openai.com/docs/guides/tools-file-search)
 - [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter)
 - [OpenAI Responses API Announcement](https://openai.com/index/new-tools-for-building-agents/)
 - [Deep Research API Cookbook](https://cookbook.openai.com/examples/deep_research_api/introduction_to_deep_research_api)
+
+---
+
+### Anthropic
+
+Anthropic provides native built-in tools for Claude models that enable code execution, web search, and system-level interactions directly within conversations.
+
+#### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| **Web Search** | Search the web for real-time information. Claude uses this automatically when current information would help answer a question. Results include citations. |
+| **Bash** | Execute bash commands within a sandboxed environment. Useful for automation workflows and system interactions. |
+| **Code Execution** | Execute code in a sandboxed environment with access to bash and a text editor. Ideal for data analysis, computation, and dynamic problem-solving. |
+| **Text Editor** | View, create, and edit text files with commands like `view`, `str_replace`, `create`, and `insert`. Enables Claude to work with files during conversations. |
+
+<Tip>
+Anthropic built-in tools are available for all Claude models that support tool use. They work with both the direct Anthropic provider and Claude models on Vertex AI.
+</Tip>
+
+#### Learn More
+
+- [Anthropic Tool Use Documentation](https://docs.anthropic.com/en/docs/build-with-claude/tool-use)
+- [Anthropic Computer Use](https://docs.anthropic.com/en/docs/agents-and-tools/computer-use)
+
+---
+
+### Google (Gemini)
+
+Google provides native built-in tools for Gemini models that enable web grounding, location data, code execution, URL analysis, and file search capabilities.
+
+#### Available Tools
+
+| Tool | Description |
+|------|-------------|
+| **Google Search** | Ground model responses with real-time web search results using Google Search. Provides up-to-date information with source citations. |
+| **Google Maps** | Ground responses with Google Maps place data including reviews, addresses, and business hours. |
+| **Code Execution** | Execute Python code in a sandboxed environment for data analysis, calculations, and dynamic computations. |
+| **URL Context** | Retrieve and analyze content from URLs provided in the prompt. Allows the model to process web page content during conversations. |
+| **File Search** | Search through uploaded files using semantic retrieval. Configure file search stores to index documents for automatic retrieval during conversations. |
+
+#### Using File Search with Google
+
+Google's File Search tool uses file search stores for document indexing and retrieval:
+
+1. **Add the File Search tool** from the built-in tools menu
+2. **Configure a file search store** — specify the store name(s) that contain your indexed documents
+3. **Run your prompt** — Gemini will automatically search through indexed documents when relevant context is needed
+
+#### Learn More
+
+- [Google Gemini API Tools Documentation](https://ai.google.dev/gemini-api/docs/function-calling)
+- [Grounding with Google Search](https://ai.google.dev/gemini-api/docs/grounding)
+
+---
+
+### Vertex AI
+
+Vertex AI supports built-in tools from both Google and Anthropic, depending on the model family you are using. PromptLayer automatically shows the correct set of tools based on your selected model.
+
+#### For Gemini Models on Vertex AI
+
+When using Gemini models (e.g., `gemini-2.0-flash`), the following Google-native tools are available:
+
+| Tool | Description |
+|------|-------------|
+| **Web Search** | Ground responses with real-time Google Search results |
+| **Google Maps** | Access Google Maps place data for location-based grounding |
+| **Code Execution** | Execute Python code in a sandboxed environment |
+| **URL Context** | Retrieve and analyze content from URLs in the prompt |
+
+#### For Claude Models on Vertex AI
+
+When using Claude models (e.g., `claude-sonnet-4-20250514`) through Vertex AI, the following Anthropic-native tools are available:
+
+| Tool | Description |
+|------|-------------|
+| **Web Search** | Search the web for real-time information with citations |
+| **Bash** | Execute bash commands in a sandboxed environment |
+| **Text Editor** | View, create, and edit text files with structured commands |
+
+<Tip>
+PromptLayer automatically detects the model family (Gemini vs Claude) and displays the appropriate set of built-in tools in the editor. You don't need to manually configure which tool set to use.
+</Tip>
+
+#### Learn More
+
+- [Vertex AI Gemini Documentation](https://cloud.google.com/vertex-ai/generative-ai/docs/learn/overview)
+- [Claude on Vertex AI](https://docs.anthropic.com/en/api/claude-on-vertex-ai)

@@ -5008,28 +5008,50 @@
             "items": {
               "discriminator": {
                 "mapping": {
-                  "image_url": "#/components/schemas/ImageContent",
                   "text": "#/components/schemas/TextContent",
-                  "thinking": "#/components/schemas/ThinkingContent"
+                  "thinking": "#/components/schemas/ThinkingContent",
+                  "code": "#/components/schemas/CodeContent",
+                  "image_url": "#/components/schemas/ImageContent",
+                  "media": "#/components/schemas/MediaContent",
+                  "media_variable": "#/components/schemas/MediaVariable",
+                  "output_media": "#/components/schemas/OutputMediaContent",
+                  "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                  "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                  "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                  "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                  "mcp_call": "#/components/schemas/McpCallContent",
+                  "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                  "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                  "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                  "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                  "shell_call": "#/components/schemas/ShellCallContent",
+                  "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                  "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                  "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                 },
                 "propertyName": "type"
               },
               "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TextContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ThinkingContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaVariable"
-                }
+                {"$ref": "#/components/schemas/TextContent"},
+                {"$ref": "#/components/schemas/ThinkingContent"},
+                {"$ref": "#/components/schemas/CodeContent"},
+                {"$ref": "#/components/schemas/ImageContent"},
+                {"$ref": "#/components/schemas/MediaContent"},
+                {"$ref": "#/components/schemas/MediaVariable"},
+                {"$ref": "#/components/schemas/OutputMediaContent"},
+                {"$ref": "#/components/schemas/ServerToolUseContent"},
+                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                {"$ref": "#/components/schemas/McpListToolsContent"},
+                {"$ref": "#/components/schemas/McpCallContent"},
+                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/ShellCallContent"},
+                {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
               ]
             },
             "title": "Content",
@@ -5236,6 +5258,559 @@
         "title": "MediaVariable",
         "type": "object"
       },
+      "OutputMediaContent": {
+        "description": "LLM-generated media output (e.g. from image generation tools).",
+        "properties": {
+          "type": {
+            "const": "output_media",
+            "default": "output_media",
+            "enum": ["output_media"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "mime_type": {
+            "type": "string",
+            "default": "image/png",
+            "title": "Mime Type"
+          },
+          "media_type": {
+            "enum": ["image", "video", "audio"],
+            "default": "image",
+            "title": "Media Type",
+            "type": "string"
+          },
+          "provider_metadata": {
+            "anyOf": [{"type": "object"}, {"type": "null"}],
+            "default": null,
+            "title": "Provider Metadata"
+          }
+        },
+        "required": ["url"],
+        "title": "OutputMediaContent",
+        "type": "object"
+      },
+      "CodeContent": {
+        "description": "Code content block (e.g. from code execution tools).",
+        "properties": {
+          "type": {
+            "const": "code",
+            "default": "code",
+            "enum": ["code"],
+            "title": "Type",
+            "type": "string"
+          },
+          "code": {
+            "type": "string",
+            "title": "Code"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "container_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Container Id"
+          }
+        },
+        "required": ["code"],
+        "title": "CodeContent",
+        "type": "object"
+      },
+      "ServerToolUseContent": {
+        "description": "Server-side tool use block (e.g. web search, code execution).",
+        "properties": {
+          "type": {
+            "const": "server_tool_use",
+            "default": "server_tool_use",
+            "enum": ["server_tool_use"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "input": {
+            "type": "object",
+            "default": {},
+            "title": "Input"
+          }
+        },
+        "required": ["id", "name"],
+        "title": "ServerToolUseContent",
+        "type": "object"
+      },
+      "WebSearchResult": {
+        "properties": {
+          "type": {
+            "const": "web_search_result",
+            "default": "web_search_result",
+            "enum": ["web_search_result"],
+            "title": "Type",
+            "type": "string"
+          },
+          "url": {
+            "type": "string",
+            "default": "",
+            "title": "Url"
+          },
+          "title": {
+            "type": "string",
+            "default": "",
+            "title": "Title"
+          },
+          "encrypted_content": {
+            "type": "string",
+            "default": "",
+            "title": "Encrypted Content"
+          },
+          "page_age": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Page Age"
+          }
+        },
+        "title": "WebSearchResult",
+        "type": "object"
+      },
+      "WebSearchToolResultContent": {
+        "description": "Results from a web search tool invocation.",
+        "properties": {
+          "type": {
+            "const": "web_search_tool_result",
+            "default": "web_search_tool_result",
+            "enum": ["web_search_tool_result"],
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_use_id": {
+            "type": "string",
+            "title": "Tool Use Id"
+          },
+          "content": {
+            "items": {
+              "$ref": "#/components/schemas/WebSearchResult"
+            },
+            "type": "array",
+            "default": [],
+            "title": "Content"
+          }
+        },
+        "required": ["tool_use_id"],
+        "title": "WebSearchToolResultContent",
+        "type": "object"
+      },
+      "CodeExecutionResultContent": {
+        "description": "Result from a code execution tool.",
+        "properties": {
+          "type": {
+            "const": "code_execution_result",
+            "default": "code_execution_result",
+            "enum": ["code_execution_result"],
+            "title": "Type",
+            "type": "string"
+          },
+          "output": {
+            "type": "string",
+            "title": "Output"
+          },
+          "outcome": {
+            "type": "string",
+            "default": "OUTCOME_OK",
+            "title": "Outcome"
+          }
+        },
+        "required": ["output"],
+        "title": "CodeExecutionResultContent",
+        "type": "object"
+      },
+      "McpListToolsContent": {
+        "description": "MCP list tools response block.",
+        "properties": {
+          "type": {
+            "const": "mcp_list_tools",
+            "default": "mcp_list_tools",
+            "enum": ["mcp_list_tools"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "server_label": {
+            "type": "string",
+            "default": "",
+            "title": "Server Label"
+          },
+          "tools": {
+            "items": {"type": "object"},
+            "type": "array",
+            "default": [],
+            "title": "Tools"
+          },
+          "error": {
+            "anyOf": [{"type": "string"}, {"type": "object"}, {"type": "null"}],
+            "default": null,
+            "title": "Error"
+          }
+        },
+        "title": "McpListToolsContent",
+        "type": "object"
+      },
+      "McpCallContent": {
+        "description": "MCP tool call block.",
+        "properties": {
+          "type": {
+            "const": "mcp_call",
+            "default": "mcp_call",
+            "enum": ["mcp_call"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "default": "",
+            "title": "Name"
+          },
+          "server_label": {
+            "type": "string",
+            "default": "",
+            "title": "Server Label"
+          },
+          "arguments": {
+            "type": "string",
+            "default": "",
+            "title": "Arguments"
+          },
+          "output": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Output"
+          },
+          "error": {
+            "anyOf": [{"type": "string"}, {"type": "object"}, {"type": "null"}],
+            "default": null,
+            "title": "Error"
+          },
+          "approval_request_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Approval Request Id"
+          }
+        },
+        "title": "McpCallContent",
+        "type": "object"
+      },
+      "McpApprovalRequestContent": {
+        "description": "MCP tool approval request block.",
+        "properties": {
+          "type": {
+            "const": "mcp_approval_request",
+            "default": "mcp_approval_request",
+            "enum": ["mcp_approval_request"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "default": "",
+            "title": "Name"
+          },
+          "arguments": {
+            "type": "string",
+            "default": "",
+            "title": "Arguments"
+          },
+          "server_label": {
+            "type": "string",
+            "default": "",
+            "title": "Server Label"
+          }
+        },
+        "title": "McpApprovalRequestContent",
+        "type": "object"
+      },
+      "McpApprovalResponseContent": {
+        "description": "MCP tool approval response block.",
+        "properties": {
+          "type": {
+            "const": "mcp_approval_response",
+            "default": "mcp_approval_response",
+            "enum": ["mcp_approval_response"],
+            "title": "Type",
+            "type": "string"
+          },
+          "approval_request_id": {
+            "type": "string",
+            "title": "Approval Request Id"
+          },
+          "approve": {
+            "type": "boolean",
+            "title": "Approve"
+          }
+        },
+        "required": ["approval_request_id", "approve"],
+        "title": "McpApprovalResponseContent",
+        "type": "object"
+      },
+      "BashCodeExecutionToolResultContent": {
+        "description": "Result from bash code execution tool.",
+        "properties": {
+          "type": {
+            "const": "bash_code_execution_tool_result",
+            "default": "bash_code_execution_tool_result",
+            "enum": ["bash_code_execution_tool_result"],
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_use_id": {
+            "type": "string",
+            "title": "Tool Use Id"
+          },
+          "content": {
+            "type": "object",
+            "default": {},
+            "title": "Content"
+          }
+        },
+        "required": ["tool_use_id"],
+        "title": "BashCodeExecutionToolResultContent",
+        "type": "object"
+      },
+      "TextEditorCodeExecutionToolResultContent": {
+        "description": "Result from text editor code execution tool.",
+        "properties": {
+          "type": {
+            "const": "text_editor_code_execution_tool_result",
+            "default": "text_editor_code_execution_tool_result",
+            "enum": ["text_editor_code_execution_tool_result"],
+            "title": "Type",
+            "type": "string"
+          },
+          "tool_use_id": {
+            "type": "string",
+            "title": "Tool Use Id"
+          },
+          "content": {
+            "type": "object",
+            "default": {},
+            "title": "Content"
+          }
+        },
+        "required": ["tool_use_id"],
+        "title": "TextEditorCodeExecutionToolResultContent",
+        "type": "object"
+      },
+      "ShellCallContent": {
+        "description": "Shell tool call block.",
+        "properties": {
+          "type": {
+            "const": "shell_call",
+            "default": "shell_call",
+            "enum": ["shell_call"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "call_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Call Id"
+          },
+          "action": {
+            "type": "object",
+            "default": {},
+            "title": "Action"
+          },
+          "status": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Status"
+          }
+        },
+        "title": "ShellCallContent",
+        "type": "object"
+      },
+      "ShellCallOutputContent": {
+        "description": "Shell tool output block.",
+        "properties": {
+          "type": {
+            "const": "shell_call_output",
+            "default": "shell_call_output",
+            "enum": ["shell_call_output"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "call_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Call Id"
+          },
+          "output": {
+            "items": {"type": "object"},
+            "type": "array",
+            "default": [],
+            "title": "Output"
+          },
+          "status": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Status"
+          }
+        },
+        "title": "ShellCallOutputContent",
+        "type": "object"
+      },
+      "ApplyPatchCallContent": {
+        "description": "Apply patch tool call block.",
+        "properties": {
+          "type": {
+            "const": "apply_patch_call",
+            "default": "apply_patch_call",
+            "enum": ["apply_patch_call"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "call_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Call Id"
+          },
+          "operation": {
+            "type": "object",
+            "default": {},
+            "title": "Operation"
+          },
+          "status": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Status"
+          }
+        },
+        "title": "ApplyPatchCallContent",
+        "type": "object"
+      },
+      "ApplyPatchCallOutputContent": {
+        "description": "Apply patch tool output block.",
+        "properties": {
+          "type": {
+            "const": "apply_patch_call_output",
+            "default": "apply_patch_call_output",
+            "enum": ["apply_patch_call_output"],
+            "title": "Type",
+            "type": "string"
+          },
+          "id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Id"
+          },
+          "call_id": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Call Id"
+          },
+          "output": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Output"
+          },
+          "status": {
+            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "default": null,
+            "title": "Status"
+          }
+        },
+        "title": "ApplyPatchCallOutputContent",
+        "type": "object"
+      },
+      "BuiltInTool": {
+        "description": "A provider-native built-in tool (e.g. web search, code interpreter, bash).",
+        "properties": {
+          "id": {
+            "type": "string",
+            "title": "Id"
+          },
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "provider": {
+            "type": "string",
+            "title": "Provider"
+          },
+          "type": {
+            "enum": [
+              "web_search",
+              "file_search",
+              "code_interpreter",
+              "image_generation",
+              "google_maps",
+              "url_context",
+              "mcp",
+              "bash",
+              "shell",
+              "apply_patch",
+              "text_editor"
+            ],
+            "title": "Type",
+            "type": "string"
+          },
+          "config": {
+            "type": "object",
+            "title": "Config",
+            "description": "Provider-specific tool configuration. Structure varies by provider and tool type."
+          }
+        },
+        "required": ["id", "name", "description", "provider", "type", "config"],
+        "title": "BuiltInTool",
+        "type": "object"
+      },
       "SystemMessage": {
         "properties": {
           "input_variables": {
@@ -5257,27 +5832,53 @@
           },
           "content": {
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TextContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaVariable"
-                }
-              ],
               "discriminator": {
                 "propertyName": "type",
                 "mapping": {
+                  "text": "#/components/schemas/TextContent",
+                  "thinking": "#/components/schemas/ThinkingContent",
+                  "code": "#/components/schemas/CodeContent",
                   "image_url": "#/components/schemas/ImageContent",
-                  "text": "#/components/schemas/TextContent"
+                  "media": "#/components/schemas/MediaContent",
+                  "media_variable": "#/components/schemas/MediaVariable",
+                  "output_media": "#/components/schemas/OutputMediaContent",
+                  "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                  "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                  "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                  "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                  "mcp_call": "#/components/schemas/McpCallContent",
+                  "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                  "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                  "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                  "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                  "shell_call": "#/components/schemas/ShellCallContent",
+                  "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                  "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                  "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                 }
-              }
+              },
+              "oneOf": [
+                {"$ref": "#/components/schemas/TextContent"},
+                {"$ref": "#/components/schemas/ThinkingContent"},
+                {"$ref": "#/components/schemas/CodeContent"},
+                {"$ref": "#/components/schemas/ImageContent"},
+                {"$ref": "#/components/schemas/MediaContent"},
+                {"$ref": "#/components/schemas/MediaVariable"},
+                {"$ref": "#/components/schemas/OutputMediaContent"},
+                {"$ref": "#/components/schemas/ServerToolUseContent"},
+                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                {"$ref": "#/components/schemas/McpListToolsContent"},
+                {"$ref": "#/components/schemas/McpCallContent"},
+                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/ShellCallContent"},
+                {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+              ]
             },
             "type": "array",
             "title": "Content"
@@ -5326,27 +5927,53 @@
           },
           "content": {
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TextContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaVariable"
-                }
-              ],
               "discriminator": {
                 "propertyName": "type",
                 "mapping": {
+                  "text": "#/components/schemas/TextContent",
+                  "thinking": "#/components/schemas/ThinkingContent",
+                  "code": "#/components/schemas/CodeContent",
                   "image_url": "#/components/schemas/ImageContent",
-                  "text": "#/components/schemas/TextContent"
+                  "media": "#/components/schemas/MediaContent",
+                  "media_variable": "#/components/schemas/MediaVariable",
+                  "output_media": "#/components/schemas/OutputMediaContent",
+                  "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                  "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                  "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                  "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                  "mcp_call": "#/components/schemas/McpCallContent",
+                  "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                  "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                  "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                  "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                  "shell_call": "#/components/schemas/ShellCallContent",
+                  "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                  "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                  "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                 }
-              }
+              },
+              "oneOf": [
+                {"$ref": "#/components/schemas/TextContent"},
+                {"$ref": "#/components/schemas/ThinkingContent"},
+                {"$ref": "#/components/schemas/CodeContent"},
+                {"$ref": "#/components/schemas/ImageContent"},
+                {"$ref": "#/components/schemas/MediaContent"},
+                {"$ref": "#/components/schemas/MediaVariable"},
+                {"$ref": "#/components/schemas/OutputMediaContent"},
+                {"$ref": "#/components/schemas/ServerToolUseContent"},
+                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                {"$ref": "#/components/schemas/McpListToolsContent"},
+                {"$ref": "#/components/schemas/McpCallContent"},
+                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/ShellCallContent"},
+                {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+              ]
             },
             "type": "array",
             "title": "Content"
@@ -5397,25 +6024,53 @@
             "anyOf": [
               {
                 "items": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextContent"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ThinkingContent"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ImageContent"
-                    }
-                  ],
                   "discriminator": {
                     "propertyName": "type",
                     "mapping": {
-                      "image_url": "#/components/schemas/ImageContent",
                       "text": "#/components/schemas/TextContent",
-                      "thinking": "#/components/schemas/ThinkingContent"
+                      "thinking": "#/components/schemas/ThinkingContent",
+                      "code": "#/components/schemas/CodeContent",
+                      "image_url": "#/components/schemas/ImageContent",
+                      "media": "#/components/schemas/MediaContent",
+                      "media_variable": "#/components/schemas/MediaVariable",
+                      "output_media": "#/components/schemas/OutputMediaContent",
+                      "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                      "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                      "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                      "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                      "mcp_call": "#/components/schemas/McpCallContent",
+                      "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                      "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                      "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                      "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                      "shell_call": "#/components/schemas/ShellCallContent",
+                      "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                      "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                      "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                     }
-                  }
+                  },
+                  "oneOf": [
+                    {"$ref": "#/components/schemas/TextContent"},
+                    {"$ref": "#/components/schemas/ThinkingContent"},
+                    {"$ref": "#/components/schemas/CodeContent"},
+                    {"$ref": "#/components/schemas/ImageContent"},
+                    {"$ref": "#/components/schemas/MediaContent"},
+                    {"$ref": "#/components/schemas/MediaVariable"},
+                    {"$ref": "#/components/schemas/OutputMediaContent"},
+                    {"$ref": "#/components/schemas/ServerToolUseContent"},
+                    {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                    {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                    {"$ref": "#/components/schemas/McpListToolsContent"},
+                    {"$ref": "#/components/schemas/McpCallContent"},
+                    {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                    {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                    {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                    {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                    {"$ref": "#/components/schemas/ShellCallContent"},
+                    {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                    {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                    {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                  ]
                 },
                 "type": "array"
               },
@@ -5495,21 +6150,53 @@
             "anyOf": [
               {
                 "items": {
-                  "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextContent"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ImageContent"
-                    }
-                  ],
                   "discriminator": {
                     "propertyName": "type",
                     "mapping": {
+                      "text": "#/components/schemas/TextContent",
+                      "thinking": "#/components/schemas/ThinkingContent",
+                      "code": "#/components/schemas/CodeContent",
                       "image_url": "#/components/schemas/ImageContent",
-                      "text": "#/components/schemas/TextContent"
+                      "media": "#/components/schemas/MediaContent",
+                      "media_variable": "#/components/schemas/MediaVariable",
+                      "output_media": "#/components/schemas/OutputMediaContent",
+                      "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                      "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                      "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                      "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                      "mcp_call": "#/components/schemas/McpCallContent",
+                      "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                      "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                      "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                      "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                      "shell_call": "#/components/schemas/ShellCallContent",
+                      "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                      "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                      "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                     }
-                  }
+                  },
+                  "oneOf": [
+                    {"$ref": "#/components/schemas/TextContent"},
+                    {"$ref": "#/components/schemas/ThinkingContent"},
+                    {"$ref": "#/components/schemas/CodeContent"},
+                    {"$ref": "#/components/schemas/ImageContent"},
+                    {"$ref": "#/components/schemas/MediaContent"},
+                    {"$ref": "#/components/schemas/MediaVariable"},
+                    {"$ref": "#/components/schemas/OutputMediaContent"},
+                    {"$ref": "#/components/schemas/ServerToolUseContent"},
+                    {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                    {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                    {"$ref": "#/components/schemas/McpListToolsContent"},
+                    {"$ref": "#/components/schemas/McpCallContent"},
+                    {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                    {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                    {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                    {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                    {"$ref": "#/components/schemas/ShellCallContent"},
+                    {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                    {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                    {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                  ]
                 },
                 "type": "array"
               },
@@ -5556,27 +6243,53 @@
           },
           "content": {
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TextContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaVariable"
-                }
-              ],
               "discriminator": {
                 "propertyName": "type",
                 "mapping": {
+                  "text": "#/components/schemas/TextContent",
+                  "thinking": "#/components/schemas/ThinkingContent",
+                  "code": "#/components/schemas/CodeContent",
                   "image_url": "#/components/schemas/ImageContent",
-                  "text": "#/components/schemas/TextContent"
+                  "media": "#/components/schemas/MediaContent",
+                  "media_variable": "#/components/schemas/MediaVariable",
+                  "output_media": "#/components/schemas/OutputMediaContent",
+                  "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                  "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                  "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                  "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                  "mcp_call": "#/components/schemas/McpCallContent",
+                  "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                  "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                  "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                  "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                  "shell_call": "#/components/schemas/ShellCallContent",
+                  "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                  "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                  "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                 }
-              }
+              },
+              "oneOf": [
+                {"$ref": "#/components/schemas/TextContent"},
+                {"$ref": "#/components/schemas/ThinkingContent"},
+                {"$ref": "#/components/schemas/CodeContent"},
+                {"$ref": "#/components/schemas/ImageContent"},
+                {"$ref": "#/components/schemas/MediaContent"},
+                {"$ref": "#/components/schemas/MediaVariable"},
+                {"$ref": "#/components/schemas/OutputMediaContent"},
+                {"$ref": "#/components/schemas/ServerToolUseContent"},
+                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                {"$ref": "#/components/schemas/McpListToolsContent"},
+                {"$ref": "#/components/schemas/McpCallContent"},
+                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/ShellCallContent"},
+                {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+              ]
             },
             "type": "array",
             "title": "Content"
@@ -6438,31 +7151,53 @@
           },
           "content": {
             "items": {
-              "oneOf": [
-                {
-                  "$ref": "#/components/schemas/TextContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ThinkingContent"
-                },
-                {
-                  "$ref": "#/components/schemas/ImageContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaContent"
-                },
-                {
-                  "$ref": "#/components/schemas/MediaVariable"
-                }
-              ],
               "discriminator": {
                 "propertyName": "type",
                 "mapping": {
-                  "image_url": "#/components/schemas/ImageContent",
                   "text": "#/components/schemas/TextContent",
-                  "thinking": "#/components/schemas/ThinkingContent"
+                  "thinking": "#/components/schemas/ThinkingContent",
+                  "code": "#/components/schemas/CodeContent",
+                  "image_url": "#/components/schemas/ImageContent",
+                  "media": "#/components/schemas/MediaContent",
+                  "media_variable": "#/components/schemas/MediaVariable",
+                  "output_media": "#/components/schemas/OutputMediaContent",
+                  "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                  "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                  "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                  "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                  "mcp_call": "#/components/schemas/McpCallContent",
+                  "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                  "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                  "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                  "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                  "shell_call": "#/components/schemas/ShellCallContent",
+                  "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                  "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                  "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
                 }
-              }
+              },
+              "oneOf": [
+                {"$ref": "#/components/schemas/TextContent"},
+                {"$ref": "#/components/schemas/ThinkingContent"},
+                {"$ref": "#/components/schemas/CodeContent"},
+                {"$ref": "#/components/schemas/ImageContent"},
+                {"$ref": "#/components/schemas/MediaContent"},
+                {"$ref": "#/components/schemas/MediaVariable"},
+                {"$ref": "#/components/schemas/OutputMediaContent"},
+                {"$ref": "#/components/schemas/ServerToolUseContent"},
+                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                {"$ref": "#/components/schemas/McpListToolsContent"},
+                {"$ref": "#/components/schemas/McpCallContent"},
+                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                {"$ref": "#/components/schemas/ShellCallContent"},
+                {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+              ]
             },
             "type": "array",
             "title": "Content"
@@ -6495,7 +7230,8 @@
         ],
         "title": "ToolMessage"
       },
-      "Tool": {
+      "FunctionTool": {
+        "description": "A custom function tool definition.",
         "properties": {
           "type": {
             "const": "function",
@@ -6509,6 +7245,30 @@
         "type": "object",
         "required": [
           "function"
+        ],
+        "title": "FunctionTool"
+      },
+      "Tool": {
+        "discriminator": {
+          "propertyName": "type",
+          "mapping": {
+            "function": "#/components/schemas/FunctionTool",
+            "web_search": "#/components/schemas/BuiltInTool",
+            "file_search": "#/components/schemas/BuiltInTool",
+            "code_interpreter": "#/components/schemas/BuiltInTool",
+            "image_generation": "#/components/schemas/BuiltInTool",
+            "google_maps": "#/components/schemas/BuiltInTool",
+            "url_context": "#/components/schemas/BuiltInTool",
+            "mcp": "#/components/schemas/BuiltInTool",
+            "bash": "#/components/schemas/BuiltInTool",
+            "shell": "#/components/schemas/BuiltInTool",
+            "apply_patch": "#/components/schemas/BuiltInTool",
+            "text_editor": "#/components/schemas/BuiltInTool"
+          }
+        },
+        "oneOf": [
+          {"$ref": "#/components/schemas/FunctionTool"},
+          {"$ref": "#/components/schemas/BuiltInTool"}
         ],
         "title": "Tool"
       },
@@ -6604,19 +7364,51 @@
               {
                 "items": {
                   "discriminator": {
+                    "propertyName": "type",
                     "mapping": {
+                      "text": "#/components/schemas/TextContent",
+                      "thinking": "#/components/schemas/ThinkingContent",
+                      "code": "#/components/schemas/CodeContent",
                       "image_url": "#/components/schemas/ImageContent",
-                      "text": "#/components/schemas/TextContent"
-                    },
-                    "propertyName": "type"
+                      "media": "#/components/schemas/MediaContent",
+                      "media_variable": "#/components/schemas/MediaVariable",
+                      "output_media": "#/components/schemas/OutputMediaContent",
+                      "server_tool_use": "#/components/schemas/ServerToolUseContent",
+                      "web_search_tool_result": "#/components/schemas/WebSearchToolResultContent",
+                      "code_execution_result": "#/components/schemas/CodeExecutionResultContent",
+                      "mcp_list_tools": "#/components/schemas/McpListToolsContent",
+                      "mcp_call": "#/components/schemas/McpCallContent",
+                      "mcp_approval_request": "#/components/schemas/McpApprovalRequestContent",
+                      "mcp_approval_response": "#/components/schemas/McpApprovalResponseContent",
+                      "bash_code_execution_tool_result": "#/components/schemas/BashCodeExecutionToolResultContent",
+                      "text_editor_code_execution_tool_result": "#/components/schemas/TextEditorCodeExecutionToolResultContent",
+                      "shell_call": "#/components/schemas/ShellCallContent",
+                      "shell_call_output": "#/components/schemas/ShellCallOutputContent",
+                      "apply_patch_call": "#/components/schemas/ApplyPatchCallContent",
+                      "apply_patch_call_output": "#/components/schemas/ApplyPatchCallOutputContent"
+                    }
                   },
                   "oneOf": [
-                    {
-                      "$ref": "#/components/schemas/TextContent"
-                    },
-                    {
-                      "$ref": "#/components/schemas/ImageContent"
-                    }
+                    {"$ref": "#/components/schemas/TextContent"},
+                    {"$ref": "#/components/schemas/ThinkingContent"},
+                    {"$ref": "#/components/schemas/CodeContent"},
+                    {"$ref": "#/components/schemas/ImageContent"},
+                    {"$ref": "#/components/schemas/MediaContent"},
+                    {"$ref": "#/components/schemas/MediaVariable"},
+                    {"$ref": "#/components/schemas/OutputMediaContent"},
+                    {"$ref": "#/components/schemas/ServerToolUseContent"},
+                    {"$ref": "#/components/schemas/WebSearchToolResultContent"},
+                    {"$ref": "#/components/schemas/CodeExecutionResultContent"},
+                    {"$ref": "#/components/schemas/McpListToolsContent"},
+                    {"$ref": "#/components/schemas/McpCallContent"},
+                    {"$ref": "#/components/schemas/McpApprovalRequestContent"},
+                    {"$ref": "#/components/schemas/McpApprovalResponseContent"},
+                    {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
+                    {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
+                    {"$ref": "#/components/schemas/ShellCallContent"},
+                    {"$ref": "#/components/schemas/ShellCallOutputContent"},
+                    {"$ref": "#/components/schemas/ApplyPatchCallContent"},
+                    {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
                   ]
                 },
                 "type": "array"
