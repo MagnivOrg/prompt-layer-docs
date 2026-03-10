@@ -6,7 +6,24 @@ icon: "clock-rotate-left"
 
 ## March 10, 2026
 
-### New Features
+### Deployment 1
+
+#### New Features
+
+**Model Override Support in Evaluations**
+Enhanced evaluation workflows now preserve model configuration when routing between prompt templates and agents.
+- Model override settings are now correctly passed through evaluation interfaces
+- API type and model configuration IDs are properly maintained across workflow executions
+
+#### Improvements
+
+- Fixed tool call detection in search indexing to correctly identify assistant messages with tool calls
+- Improved "Open Prompt" button functionality in image API evaluations to use correct routing
+- Enhanced build efficiency by adding path guards to skip unnecessary backend image builds when only documentation or configuration files change
+
+### Deployment 2
+
+#### New Features
 
 **Prompt Starring**
 Users can now star important prompts for quick access and organization.
@@ -26,7 +43,7 @@ Native display support for Anthropic code execution and shell command tools.
 - See code patches applied by AI agents in a readable format
 - Improved visualization of tool use blocks in chat interfaces
 
-### Improvements
+#### Improvements
 
 - Filter prompt templates by tags via the API using the `tags` parameter
 - Fixed "Open Prompt" button behavior in image-based evaluations to correctly navigate to prompt templates
@@ -36,28 +53,11 @@ Native display support for Anthropic code execution and shell command tools.
 
 ---
 
-
+## March 09, 2026
 
 ### Deployment 1
 
 #### New Features
-
-**Model Override Support in Evaluations**
-Enhanced evaluation workflows now preserve model configuration when routing between prompt templates and agents.
-- Model override settings are now correctly passed through evaluation interfaces
-- API type and model configuration IDs are properly maintained across workflow executions
-
-#### Improvements
-
-- Fixed tool call detection in search indexing to correctly identify assistant messages with tool calls
-- Improved "Open Prompt" button functionality in image API evaluations to use correct routing
-- Enhanced build efficiency by adding path guards to skip unnecessary backend image builds when only documentation or configuration files change
-
----
-
-## March 09, 2026
-
-### New Features
 
 **OpenTelemetry Trace Ingestion Enhancements**
 Support for modern OpenTelemetry semantic conventions and improved compatibility with observability libraries.
@@ -72,7 +72,7 @@ Improved handling of LLM-generated tool and function call messages in prompt tem
 - Prevents false template rendering errors when JSON braces in tool responses are mistaken for template syntax
 - Preserves support for legitimate template variables in few-shot tool examples
 
-### Improvements
+#### Improvements
 
 - Added `playground_session_id` to request log bulk endpoint responses for better session tracking
 - Improved JSON variable parsing to optimistically parse all string values, matching frontend batch-mode behavior
@@ -85,7 +85,9 @@ Improved handling of LLM-generated tool and function call messages in prompt tem
 
 ## March 07, 2026
 
-### New Features
+### Deployment 1
+
+#### New Features
 
 **Anthropic Code Execution Tool Support**
 Added support for Anthropic's native code execution tool capability, enabling AI models to write and execute Python code during conversations.
@@ -104,7 +106,7 @@ Added built-in shell tool support for OpenAI models, allowing AI assistants to e
 - Enables automation workflows where models can interact with system commands
 - Integrates with OpenAI's native tool calling infrastructure
 
-### Improvements
+#### Improvements
 
 - Improved playground session initialization to correctly handle tool and function definitions when opening from request logs
 - Enhanced request log input variable extraction to include tool/function data for better context when replaying requests
@@ -118,7 +120,9 @@ Added built-in shell tool support for OpenAI models, allowing AI assistants to e
 
 ## March 05, 2026
 
-### New Features
+### Deployment 1
+
+#### New Features
 
 **OpenTelemetry Trace Ingestion**
 Native support for industry-standard OpenTelemetry Protocol (OTLP) trace ingestion, enabling seamless integration with existing observability tooling.
@@ -138,7 +142,7 @@ Import conversation history directly from request logs into playground chat sess
 - Automatically diff request messages against current template to extract conversation context
 - Per-variable-set chat history support for testing multiple scenarios simultaneously
 
-### Improvements
+#### Improvements
 
 - Fixed playground chat crashes when trace metadata contains non-string values during URL sharing
 - Resolved 500 errors when reading prompts that use legacy LangChain message format
@@ -152,7 +156,9 @@ Import conversation history directly from request logs into playground chat sess
 
 ## March 04, 2026
 
-### New Features
+### Deployment 1
+
+#### New Features
 
 **Google File Search Tool Support**
 Native integration with Google's File Search tool for Gemini models, enabling document-based context retrieval.
@@ -173,7 +179,7 @@ Track which team member created or modified resources across the platform.
 - Filter resources by creator in the unified registry
 - "Open Original Session" button on run requests links back to the source playground session
 
-### Improvements
+#### Improvements
 
 - Added support for Claude Sonnet 4.5 on Amazon Bedrock
 - Added support for Gemini 3.1 Flash Lite model
@@ -189,7 +195,9 @@ Track which team member created or modified resources across the platform.
 
 ## March 03, 2026
 
-### New Features
+### Deployment 1
+
+#### New Features
 
 **Anthropic Structured Output Support**
 Added JSON Schema support for Anthropic models to enforce structured responses.
@@ -203,7 +211,7 @@ Enhanced organization members page with improved filtering and detailed member v
 - Filter members by workspace, role, or search by name/email
 - Members can now remove themselves from organizations without owner permissions
 
-### Improvements
+#### Improvements
 
 - Fixed score slider to properly handle integer-only scores
 - Added workspace search by name in workspace listing
@@ -217,7 +225,9 @@ Enhanced organization members page with improved filtering and detailed member v
 
 ## March 01, 2026
 
-### Improvements
+### Deployment 1
+
+#### Improvements
 
 - Conversation simulator now surfaces errors from follow-up turns instead of silently ending conversations, making it easier to diagnose multi-turn evaluation failures
 - Request logs with warning status now display partial responses when available, providing visibility into requests that partially succeeded
@@ -229,7 +239,9 @@ Enhanced organization members page with improved filtering and detailed member v
 
 ## February 28, 2026
 
-### New Features
+### Deployment 1
+
+#### New Features
 
 **Public API Request Payload Endpoint**
 New `/api/public/v2/request-payload` endpoint allows you to retrieve complete request details including prompt blueprints, token usage, and latency metrics.
@@ -237,7 +249,7 @@ New `/api/public/v2/request-payload` endpoint allows you to retrieve complete re
 - Includes comprehensive metadata: provider, model, tokens, pricing, and timing
 - Supports both JWT and API key authentication
 
-### Improvements
+#### Improvements
 
 - Improved Playground reliability on slow network connections by buffering early messages to prevent UI stalls
 - Enhanced error handling for WebSocket token refresh failures with better logging for troubleshooting
@@ -250,7 +262,9 @@ New `/api/public/v2/request-payload` endpoint allows you to retrieve complete re
 
 ## February 27, 2026
 
-## New Features
+### Deployment 1
+
+#### New Features
 
 **OpenAI Images API Support**
 Full support for OpenAI's image generation models including `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `dall-e-3`, and `dall-e-2`.
@@ -273,7 +287,7 @@ Refactored evaluation scoring with improved reliability and performance.
 - Automatically recalculates report scores when evaluation criteria are updated
 - Prevents score updates on incomplete evaluations
 
-## Improvements
+#### Improvements
 
 - Fixed WebSocket connection timing to establish only after authentication token is available
 - Increased message history buffer to 400 messages for improved chat continuity
@@ -288,7 +302,9 @@ Refactored evaluation scoring with improved reliability and performance.
 
 ## February 26, 2026
 
-## New Features
+### Deployment 1
+
+#### New Features
 
 **OpenAI Images API Support**
 PromptLayer now supports OpenAI's image generation models including `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `dall-e-3`, and `dall-e-2`.
@@ -308,7 +324,7 @@ Enhanced markdown display across the platform for better content readability.
 - Improved code block rendering with syntax highlighting
 - Better handling of complex markdown structures in evaluations and logs
 
-## Improvements
+#### Improvements
 
 - Added human-readable status descriptions in the UI for better request monitoring
 - Fixed refresh button behavior in sidebar navigation for consistent state management
@@ -319,4 +335,3 @@ Enhanced markdown display across the platform for better content readability.
 - Enhanced streaming performance for playground outputs with better state management
 
 ---
-
