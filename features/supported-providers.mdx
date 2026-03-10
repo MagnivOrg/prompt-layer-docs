@@ -10,7 +10,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 ### OpenAI
 
 - Chat Completions and Responses API are both supported.
-- Function/Tool Calling (including built-in Responses API tools: Web Search, File Search) — see [Tool Calling](/features/prompt-registry/tool-calling#built-in-tools-openai-responses-api).
+- Function/Tool Calling (including built-in Responses API tools: Web Search, File Search, Code Interpreter, Image Generation, MCP, Shell, Apply Patch) — see [Tool Calling](/features/prompt-registry/tool-calling#openai-responses-api).
 - JSON mode / structured outputs.
 - Vision models (e.g., `gpt-4-vision`) — see [FAQ: multimodal](/features/faq#does-promptlayer-support-multi-modal-image-models-like-gpt-4-vision).
 - Streaming via SDK (Python/JS).
@@ -25,6 +25,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 ### Anthropic
 
 - Tool Use (Anthropic Messages API).
+- Built-in tools: Web Search, Bash, Code Execution, Text Editor — see [Tool Calling](/features/prompt-registry/tool-calling#anthropic).
 - Claude 3 family supports image inputs.
 - Streaming via SDK.
 - If you previously used "Anthropic Bedrock", migrate to the native Anthropic provider or to Claude via Amazon Bedrock.
@@ -32,11 +33,15 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 ### Google (Gemini)
 
 - Multimodal support for images.
+- Built-in tools: Google Search, Google Maps, Code Execution, URL Context, File Search — see [Tool Calling](/features/prompt-registry/tool-calling#google-gemini).
 - Use either the direct Google provider or Vertex AI based on your infrastructure preference.
 
 ### Vertex AI
 
 - Gemini and Anthropic Claude served through Google Cloud's Vertex AI.
+- Built-in tools vary by model family — see [Tool Calling](/features/prompt-registry/tool-calling#vertex-ai):
+  - Gemini models: Web Search, Google Maps, Code Execution, URL Context.
+  - Claude models: Web Search, Bash, Text Editor.
 - Configure project, region, and credentials as required by Vertex AI.
 
 ### Amazon Bedrock
