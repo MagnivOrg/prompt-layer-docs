@@ -156,7 +156,8 @@
             "reference/track-prompt",
             "reference/track-score",
             "reference/track-metadata",
-            "reference/spans-bulk"
+            "reference/spans-bulk",
+            "reference/otlp-ingest-traces"
           ]
         },
         {
