@@ -4752,6 +4752,12 @@
             "title": "Description",
             "default": ""
           },
+          "strict": {
+            "type": "boolean",
+            "title": "Strict",
+            "default": false,
+            "description": "Whether to enable strict schema validation for the function parameters."
+          },
           "parameters": {
             "type": "object",
             "title": "Parameters",
@@ -4837,16 +4843,66 @@
         "properties": {
           "provider": {
             "title": "Provider",
-            "type": "string"
+            "type": "string",
+            "description": "The LLM provider (e.g. openai, anthropic, google, openai.azure, vertexai, mistral, cohere, amazon.bedrock, huggingface)."
+          },
+          "model_config_display_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model Config Display Name",
+            "description": "Optional display name for the model configuration."
+          },
+          "base_model": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 100
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Base Model",
+            "description": "The base model name (e.g. for fine-tuned models)."
           },
           "name": {
             "title": "Name",
-            "type": "string"
+            "type": "string",
+            "description": "The model name (e.g. gpt-4o, claude-sonnet-4-20250514)."
           },
           "parameters": {
             "title": "Parameters",
             "default": {},
-            "type": "object"
+            "type": "object",
+            "description": "Model parameters (e.g. temperature, max_tokens, top_p)."
+          },
+          "display_params": {
+            "title": "Display Params",
+            "default": {},
+            "type": "object",
+            "description": "Display-friendly parameter values shown in the UI."
+          },
+          "api_type": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Api Type",
+            "description": "The API type (e.g. chat.completions, responses, images). Used to select the correct API endpoint for the provider."
           }
         },
         "required": [
@@ -4857,39 +4913,22 @@
       "Metadata": {
         "title": "Metadata",
         "type": "object",
+        "additionalProperties": true,
         "properties": {
           "model": {
-            "$ref": "#/components/schemas/Model"
-          },
-          "customField": {
-            "type": "string"
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/Model"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Model"
           }
         },
-        "definitions": {
-          "Model": {
-            "title": "Model",
-            "type": "object",
-            "properties": {
-              "provider": {
-                "title": "Provider",
-                "type": "string"
-              },
-              "name": {
-                "title": "Name",
-                "type": "string"
-              },
-              "parameters": {
-                "title": "Parameters",
-                "default": {},
-                "type": "object"
-              }
-            },
-            "required": [
-              "provider",
-              "name"
-            ]
-          }
-        }
+        "description": "Metadata associated with the prompt blueprint. Supports additional custom fields beyond the model field."
       },
       "GetPromptTemplate": {
         "properties": {
@@ -5090,6 +5129,218 @@
         "title": "Completion Template",
         "type": "object"
       },
+      "FileAnnotation": {
+        "properties": {
+          "type": {
+            "const": "file_citation",
+            "title": "Type",
+            "type": "string"
+          },
+          "index": {
+            "type": "integer",
+            "title": "Index"
+          },
+          "file_id": {
+            "type": "string",
+            "title": "File Id"
+          },
+          "filename": {
+            "type": "string",
+            "title": "Filename"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "index",
+          "file_id",
+          "filename"
+        ],
+        "title": "FileAnnotation"
+      },
+      "WebAnnotation": {
+        "properties": {
+          "type": {
+            "const": "url_citation",
+            "title": "Type",
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "start_index": {
+            "type": "integer",
+            "title": "Start Index"
+          },
+          "end_index": {
+            "type": "integer",
+            "title": "End Index"
+          },
+          "cited_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cited Text"
+          },
+          "encrypted_index": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Encrypted Index"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "url",
+          "start_index",
+          "end_index"
+        ],
+        "title": "WebAnnotation"
+      },
+      "MapAnnotation": {
+        "properties": {
+          "type": {
+            "const": "map_citation",
+            "title": "Type",
+            "type": "string"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "url": {
+            "type": "string",
+            "title": "Url"
+          },
+          "place_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Place Id"
+          },
+          "start_index": {
+            "type": "integer",
+            "title": "Start Index"
+          },
+          "end_index": {
+            "type": "integer",
+            "title": "End Index"
+          },
+          "cited_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Cited Text"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "title",
+          "url",
+          "start_index",
+          "end_index"
+        ],
+        "title": "MapAnnotation"
+      },
+      "ContainerFileAnnotation": {
+        "properties": {
+          "type": {
+            "const": "container_file_citation",
+            "title": "Type",
+            "type": "string"
+          },
+          "container_id": {
+            "type": "string",
+            "title": "Container Id"
+          },
+          "start_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Start Index"
+          },
+          "end_index": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "End Index"
+          },
+          "filename": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Filename"
+          },
+          "file_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "File Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "type",
+          "container_id"
+        ],
+        "title": "ContainerFileAnnotation"
+      },
       "TextContent": {
         "properties": {
           "type": {
@@ -5104,6 +5355,59 @@
           "text": {
             "title": "Text",
             "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Id"
+          },
+          "annotations": {
+            "anyOf": [
+              {
+                "items": {
+                  "oneOf": [
+                    {
+                      "$ref": "#/components/schemas/WebAnnotation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/FileAnnotation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MapAnnotation"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ContainerFileAnnotation"
+                    }
+                  ]
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Annotations",
+            "description": "Citations and references within the text (web citations, file citations, map citations, container file citations)."
+          },
+          "thought_signature": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Thought Signature"
           }
         },
         "required": [
@@ -5114,6 +5418,18 @@
       },
       "ThinkingContent": {
         "properties": {
+          "signature": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Signature"
+          },
           "type": {
             "const": "thinking",
             "default": "thinking",
@@ -5124,8 +5440,20 @@
             "type": "string"
           },
           "thinking": {
-            "title": "Text",
+            "title": "Thinking",
             "type": "string"
+          },
+          "id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Id"
           }
         },
         "required": [
@@ -5163,23 +5491,48 @@
           "title": {
             "type": "string",
             "title": "Title",
+            "default": "media",
             "description": "Title of the media"
           },
           "type": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "title": "Type",
-            "description": "Type of the media. For example, image/png"
+            "default": "image/jpeg",
+            "description": "MIME type of the media. For example, image/png, image/jpeg"
           },
           "url": {
-            "type": "string",
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
             "title": "Url"
+          },
+          "format": {
+            "type": "string",
+            "enum": [
+              "base64",
+              "url",
+              "neither"
+            ],
+            "title": "Format",
+            "default": "neither",
+            "description": "Format of the media data."
           }
         },
         "type": "object",
-        "required": [
-          "url"
-        ],
-        "title": "ImageURL"
+        "title": "Media"
       },
       "ImageContent": {
         "properties": {
@@ -7110,6 +7463,18 @@
       },
       "ToolCall": {
         "properties": {
+          "tool_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Tool Id"
+          },
           "id": {
             "type": "string",
             "title": "Id"
@@ -7746,7 +8111,7 @@
       "PromptBlueprint": {
         "properties": {
           "prompt_template": {
-            "oneOf": [
+            "anyOf": [
               {
                 "$ref": "#/components/schemas/CompletionPrompt"
               },
@@ -7754,6 +8119,8 @@
                 "$ref": "#/components/schemas/ChatPrompt"
               }
             ],
+            "title": "Prompt Template",
+            "description": "The prompt template. Either a CompletionPrompt (type: 'completion') or ChatPrompt (type: 'chat').",
             "discriminator": {
               "propertyName": "type",
               "mapping": {
@@ -7761,6 +8128,18 @@
                 "completion": "#/components/schemas/CompletionPrompt"
               }
             }
+          },
+          "commit_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Commit Message"
           },
           "metadata": {
             "anyOf": [
@@ -7770,7 +8149,63 @@
               {
                 "type": "null"
               }
-            ]
+            ],
+            "default": null,
+            "title": "Metadata"
+          },
+          "provider_base_url_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Base Url Name",
+            "description": "Name of the custom provider base URL configuration."
+          },
+          "report_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Report Id"
+          },
+          "inference_client_name": {
+            "anyOf": [
+              {
+                "type": "string",
+                "maxLength": 255
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Inference Client Name",
+            "description": "Name of the inference client to use."
+          },
+          "provider_id": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Id",
+            "description": "ID of the provider configuration to use."
           }
         },
         "type": "object",
