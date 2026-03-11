@@ -4,6 +4,28 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 11, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Nested Search Support for Outputs and Input Variables**
+Advanced search now supports filtering by output fields and input variables, matching the existing metadata search capabilities.
+- Search for specific output values using `output:key=value` syntax
+- Filter requests by input variable content with `input_variables:key=value`
+- Use autocomplete suggestions for both output keys and input variable keys in the search bar
+
+#### Improvements
+
+- Improved snippet handling when creating prompt versions with overrides to ensure base references are used consistently
+- Enhanced search suggestion performance for nested field queries (metadata, outputs, input variables)
+- Input variables now preserve insertion order when rendering prompt templates
+- Added structured logging context showing workspace and user IDs for better debugging and support
+
+---
+
+
 ## March 10, 2026
 
 ### Deployment 1
