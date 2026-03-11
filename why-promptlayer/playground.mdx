@@ -21,6 +21,18 @@ The Playground fully supports [OpenAI function calling](https://platform.openai.
 ![Tools dialogue](/images/playground/tools.png)
 </div>
 
+## Image Generation
+
+The Playground supports image generation across multiple providers:
+
+- **OpenAI Images API** — Select "Images API" in the API dropdown to use models like `gpt-image-1`, `dall-e-3`, and `dall-e-2`. Write a text prompt and receive generated images directly in the output.
+- **OpenAI Responses API** — Add the `image_generation` built-in tool to let the model generate images during a conversation.
+- **Google Gemini** — Select a Gemini image model (e.g., `gemini-2.5-flash-image`) to generate images natively within chat responses.
+
+Generated images are displayed with a rich card showing generation parameters, the revised prompt (when available), and the image itself. See the full [Image Generation guide](/features/image-generation) for details.
+
+<img src="/images/image-generation-playground.png" alt="Playground with generated image output" />
+
 ## Custom models
 
 The Playground also supports the use of custom models for LLM requests. This means you can use a fine-tuned model or a dedicated OpenAI instance.

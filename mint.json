@@ -86,6 +86,7 @@
           "group": "Models & Integrations",
           "pages": [
             "features/supported-providers",
+            "features/image-generation",
             "features/custom-providers",
             "features/exa-integration",
             "features/xai-integration",
