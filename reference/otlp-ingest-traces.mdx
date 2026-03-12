@@ -41,9 +41,11 @@ You can link ingested spans to existing prompt templates in your workspace by ad
 | Attribute | Type | Description |
 |---|---|---|
 | `promptlayer.prompt.name` | string | Name of the prompt template to link |
+| `promptlayer.prompt.id` | integer | ID of the prompt template to link (alternative to `name`) |
 | `promptlayer.prompt.version` | integer | Specific version number (optional) |
+| `promptlayer.prompt.label` | string | Label to resolve to a version number (e.g. `production`). Used when `version` is not set. |
 
-If the prompt name is not found in the workspace, the span is still ingested but no request log link is created.
+Either `name` or `id` must be provided to identify the prompt template. If the prompt is not found in the workspace, the span is still ingested but no request log link is created.
 
 ## Validation
 
