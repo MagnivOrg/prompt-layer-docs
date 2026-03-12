@@ -33,6 +33,32 @@ Chat panel now maintains your scroll position when new messages arrive, preventi
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**OTLP Prompt Resolution by ID and Label**
+Enhanced OpenTelemetry trace ingestion now supports flexible prompt identification and version resolution.
+- Spans can reference prompts by `promptlayer.prompt.id` in addition to `promptlayer.prompt.name`
+- Version resolution via `promptlayer.prompt.label` automatically links traces to labeled prompt versions
+- Improved error handling when prompt identifiers are incomplete or not found in the workspace
+
+**Duplicate Span Handling**
+The `/spans-bulk` endpoint now intelligently handles duplicate span IDs to prevent data conflicts.
+- Duplicate spans within the same batch are deduplicated before insertion (first occurrence wins)
+- Duplicate spans across separate batches use upsert logic (last write wins)
+- Ensures trace data remains consistent when the same span is reported multiple times
+
+#### Improvements
+
+- Added `flask embed_recently_used_prompts` command to backfill embeddings for prompts with recent traffic
+- Added `flask normalize_recently_used_prompts` command to backfill normalized content for recently-used prompt versions
+- Both commands support configurable look-back windows (default 365 days) and batch sizes for gradual processing
+- Enhanced test coverage for duplicate span handling scenarios in bulk span creation
+
+---
+
 ## March 11, 2026
 
 ### Deployment 1
