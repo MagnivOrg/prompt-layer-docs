@@ -81,6 +81,17 @@ Advanced filtering interface for request logs with improved query building and a
 
 ---
 
+
+### Deployment 4
+
+#### Improvements
+
+- Fixed search filters not correctly matching boolean and numeric metadata values (e.g., `false`, `true`, `42`)
+- Resolved issue where changing search filters could trigger duplicate requests and cause stale results to display
+- Improved nested field filtering to properly match metadata values regardless of type (string, boolean, or number)
+
+---
+
 ## March 11, 2026
 
 ### Deployment 1
