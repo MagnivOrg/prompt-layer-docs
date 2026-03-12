@@ -4182,6 +4182,109 @@
           }
         }
       }
+    },
+    "/v1/traces": {
+      "post": {
+        "tags": [
+          "otlp"
+        ],
+        "summary": "Ingest Traces (OTLP)",
+        "description": "Ingest OpenTelemetry traces using the standard OTLP/HTTP protocol.\n\nThis endpoint accepts an `ExportTraceServiceRequest` as defined by the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/otel/protocol/otlp/#otlphttp). Spans carrying [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.\n\nSupported content types:\n- `application/x-protobuf` — binary protobuf encoding (recommended)\n- `application/json` — JSON encoding\n\nGzip `Content-Encoding` is supported for both formats.\n\nSpans can include `promptlayer.prompt.name` (or `promptlayer.prompt.id`) and `promptlayer.prompt.version` (or `promptlayer.prompt.label`) attributes to link the generated request log to an existing prompt template in your workspace.",
+        "operationId": "ingestOtlpTraces",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "description": "API key to authorize the operation."
+          },
+          {
+            "name": "Content-Type",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "application/x-protobuf",
+                "application/json"
+              ]
+            },
+            "description": "The encoding of the request body. Use `application/x-protobuf` for binary protobuf or `application/json` for JSON."
+          },
+          {
+            "name": "Content-Encoding",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "gzip"
+              ]
+            },
+            "description": "Set to `gzip` if the request body is gzip-compressed."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/OtlpExportTraceServiceRequest"
+              }
+            },
+            "application/x-protobuf": {
+              "schema": {
+                "type": "string",
+                "format": "binary",
+                "description": "Binary-encoded ExportTraceServiceRequest protobuf message."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response. When using protobuf, the response is a binary `ExportTraceServiceResponse`. When using JSON, the response is a JSON object.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/OtlpExportTraceServiceResponse"
+                }
+              },
+              "application/x-protobuf": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary",
+                  "description": "Binary-encoded ExportTraceServiceResponse protobuf message."
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported Content-Type",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Internal server error during ingestion",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -8419,6 +8522,229 @@
           }
         },
         "title": "ResolveFolderIdResponse"
+      },
+      "OtlpExportTraceServiceRequest": {
+        "type": "object",
+        "title": "ExportTraceServiceRequest",
+        "description": "An OTLP ExportTraceServiceRequest in JSON encoding. See the [OTLP specification](https://opentelemetry.io/docs/specs/otlp/#otlphttp-request) for the full schema.",
+        "properties": {
+          "resourceSpans": {
+            "type": "array",
+            "description": "An array of ResourceSpans. Each element describes spans from a single instrumented resource.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "resource": {
+                  "type": "object",
+                  "description": "The resource that produced the spans.",
+                  "properties": {
+                    "attributes": {
+                      "type": "array",
+                      "description": "Resource attributes as key-value pairs.",
+                      "items": {
+                        "$ref": "#/components/schemas/OtlpKeyValue"
+                      }
+                    }
+                  }
+                },
+                "scopeSpans": {
+                  "type": "array",
+                  "description": "An array of ScopeSpans, grouping spans by instrumentation scope.",
+                  "items": {
+                    "type": "object",
+                    "properties": {
+                      "scope": {
+                        "type": "object",
+                        "description": "The instrumentation scope that produced the spans.",
+                        "properties": {
+                          "name": {
+                            "type": "string"
+                          },
+                          "version": {
+                            "type": "string"
+                          }
+                        }
+                      },
+                      "spans": {
+                        "type": "array",
+                        "description": "Array of Span objects.",
+                        "items": {
+                          "$ref": "#/components/schemas/OtlpSpan"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "OtlpSpan": {
+        "type": "object",
+        "title": "Span",
+        "description": "A single OTLP span. See the [OTLP Span spec](https://opentelemetry.io/docs/specs/otel/trace/api/#span) for full details.",
+        "required": ["traceId", "spanId", "name", "startTimeUnixNano"],
+        "properties": {
+          "traceId": {
+            "type": "string",
+            "description": "Hex-encoded trace ID (32 hex characters / 16 bytes).",
+            "minLength": 32,
+            "maxLength": 32
+          },
+          "spanId": {
+            "type": "string",
+            "description": "Hex-encoded span ID (16 hex characters / 8 bytes).",
+            "minLength": 16,
+            "maxLength": 16
+          },
+          "parentSpanId": {
+            "type": "string",
+            "description": "Hex-encoded parent span ID. Empty or omitted for root spans."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the span."
+          },
+          "kind": {
+            "type": "integer",
+            "description": "Span kind: 0=UNSPECIFIED, 1=INTERNAL, 2=SERVER, 3=CLIENT, 4=PRODUCER, 5=CONSUMER.",
+            "enum": [0, 1, 2, 3, 4, 5]
+          },
+          "startTimeUnixNano": {
+            "type": "string",
+            "description": "Start time in nanoseconds since Unix epoch, encoded as a string."
+          },
+          "endTimeUnixNano": {
+            "type": "string",
+            "description": "End time in nanoseconds since Unix epoch, encoded as a string."
+          },
+          "attributes": {
+            "type": "array",
+            "description": "Span attributes as key-value pairs. GenAI semantic convention attributes (e.g. `gen_ai.request.model`, `gen_ai.usage.input_tokens`) are automatically extracted.",
+            "items": {
+              "$ref": "#/components/schemas/OtlpKeyValue"
+            }
+          },
+          "status": {
+            "type": "object",
+            "description": "Span status.",
+            "properties": {
+              "code": {
+                "type": "integer",
+                "description": "Status code: 0=UNSET, 1=OK, 2=ERROR.",
+                "enum": [0, 1, 2]
+              },
+              "message": {
+                "type": "string",
+                "description": "Status message (typically set for ERROR status)."
+              }
+            }
+          },
+          "events": {
+            "type": "array",
+            "description": "Span events (e.g. exceptions).",
+            "items": {
+              "type": "object",
+              "properties": {
+                "timeUnixNano": {
+                  "type": "string"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OtlpKeyValue"
+                  }
+                }
+              }
+            }
+          },
+          "links": {
+            "type": "array",
+            "description": "Links to other spans.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "traceId": {
+                  "type": "string"
+                },
+                "spanId": {
+                  "type": "string"
+                },
+                "attributes": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/OtlpKeyValue"
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "OtlpKeyValue": {
+        "type": "object",
+        "title": "KeyValue",
+        "description": "An OTLP attribute key-value pair.",
+        "required": ["key", "value"],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "value": {
+            "type": "object",
+            "description": "The attribute value. Exactly one of the value fields must be set.",
+            "properties": {
+              "stringValue": {
+                "type": "string"
+              },
+              "intValue": {
+                "type": "string"
+              },
+              "doubleValue": {
+                "type": "number"
+              },
+              "boolValue": {
+                "type": "boolean"
+              },
+              "arrayValue": {
+                "type": "object",
+                "properties": {
+                  "values": {
+                    "type": "array",
+                    "items": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "OtlpExportTraceServiceResponse": {
+        "type": "object",
+        "title": "ExportTraceServiceResponse",
+        "description": "Response to an OTLP trace export request.",
+        "properties": {
+          "partialSuccess": {
+            "type": ["object", "null"],
+            "description": "Present only when some spans were rejected. Null when all spans were accepted.",
+            "properties": {
+              "rejectedSpans": {
+                "type": "integer",
+                "description": "The number of spans that were rejected."
+              },
+              "errorMessage": {
+                "type": "string",
+                "description": "A human-readable error message describing why spans were rejected."
+              }
+            }
+          }
+        }
       }
     }
   }
