@@ -59,6 +59,28 @@ The `/spans-bulk` endpoint now intelligently handles duplicate span IDs to preve
 
 ---
 
+
+### Deployment 3
+
+#### New Features
+
+**Structured Search**
+Advanced filtering interface for request logs with improved query building and autocomplete suggestions.
+- Build complex filters using fields, operators, and values with keyboard-driven autocomplete
+- Support for nested metadata filtering with `key_equals`, `key_not_equals`, and `key_contains` operators
+- Multi-value selection for tags, labels, and metadata fields with `in` and `not_in` operators
+- Apply date range presets like "Last 5 minutes" or shorthand like "30d" for quick filtering
+
+#### Improvements
+
+- Enhanced date picker with single date selection mode and custom preset support
+- Added `NOT_IN` operator support for identifier, string, array, and nested key-value fields
+- Improved table components with better row click handling and empty state messages
+- Added `IS_EMPTY` and `IS_NOT_EMPTY` operators for nested metadata filtering
+- Expanded operator support for input/output text fields to include `STARTS_WITH` and `ENDS_WITH`
+
+---
+
 ## March 11, 2026
 
 ### Deployment 1
