@@ -5,6 +5,12 @@ openapi: "POST /log-request"
 
 Log a request to the system. This is useful for logging requests from custom LLM providers.
 
+<Warning>
+**Message `content` must be an array of content blocks, not a plain string.**
+
+Use `"content": [{"type": "text", "text": "your message"}]` instead of `"content": "your message"`. Using a plain string will result in a "Malformed Request" error. See the [Prompt Blueprints](/running-requests/prompt-blueprints) docs for the full format.
+</Warning>
+
 ## Using Structured Outputs
 
 When logging requests that use structured outputs (JSON schemas), include the schema configuration in the `parameters` field using the `response_format.json_schema` structure.
@@ -15,7 +21,7 @@ When logging requests that use structured outputs (JSON schemas), include the sc
 {
   "provider": "openai",
   "model": "gpt-4",
-  "api_type": "chat-completions"
+  "api_type": "chat-completions",
   "parameters": {
     "temperature": 0.7,
     "response_format": {
@@ -140,7 +146,7 @@ You can log failed or problematic requests using the `status`, `error_type`, and
   "api_type": "chat-completions",
   "input": {
     "type": "chat",
-    "messages": [{"role": "user", "content": "Hello"}]
+    "messages": [{"role": "user", "content": [{"type": "text", "text": "Hello"}]}]
   },
   "output": {
     "type": "chat",
@@ -165,11 +171,11 @@ Use `WARNING` status for requests that succeeded but had issues (e.g., retries, 
   "api_type": "chat-completions",
   "input": {
     "type": "chat",
-    "messages": [{"role": "user", "content": "Summarize this"}]
+    "messages": [{"role": "user", "content": [{"type": "text", "text": "Summarize this"}]}]
   },
   "output": {
     "type": "chat",
-    "messages": [{"role": "assistant", "content": "Summary..."}]
+    "messages": [{"role": "assistant", "content": [{"type": "text", "text": "Summary..."}]}]
   },
   "request_start_time": "2024-01-15T10:30:00Z",
   "request_end_time": "2024-01-15T10:30:05Z",

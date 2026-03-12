@@ -42,6 +42,12 @@ When logging a custom request, you can use the following parameters (see [API Re
 
 The `input` and `output` must be in [prompt blueprint format](/running-requests/prompt-blueprints):
 
+<Warning>
+**Message `content` must be an array of content blocks, not a plain string.**
+
+Use `"content": [{"type": "text", "text": "your message"}]` instead of `"content": "your message"`. Using a plain string will result in a "Malformed Request" error in the dashboard.
+</Warning>
+
 ```python
 pl_client.log_request(
     provider="provider_name",

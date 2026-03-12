@@ -100,11 +100,11 @@ promptlayer.log_request(
     model="gpt-4",
     input={
         "type": "chat",
-        "messages": [{"role": "user", "content": "Generate a recipe for chocolate cake"}]
+        "messages": [{"role": "user", "content": [{"type": "text", "text": "Generate a recipe for chocolate cake"}]}]
     },
     output={
         "type": "chat",
-        "messages": [{"role": "assistant", "content": response.choices[0].message.content}]
+        "messages": [{"role": "assistant", "content": [{"type": "text", "text": response.choices[0].message.content}]}]
     },
     request_start_time=datetime.now(),
     request_end_time=datetime.now(),
@@ -160,11 +160,11 @@ promptlayer.log_request(
     model="gemini-2.0-flash-lite-preview-02-05",
     input={
         "type": "chat",
-        "messages": [{"role": "user", "content": "Create a product listing"}]
+        "messages": [{"role": "user", "content": [{"type": "text", "text": "Create a product listing"}]}]
     },
     output={
         "type": "chat",
-        "messages": [{"role": "assistant", "content": "..."}]
+        "messages": [{"role": "assistant", "content": [{"type": "text", "text": "..."}]}]
     },
     request_start_time=datetime.now(),
     request_end_time=datetime.now(),
@@ -235,11 +235,11 @@ await promptlayer.logRequest({
   model: 'gpt-4',
   input: {
     type: 'chat',
-    messages: [{ role: 'user', content: 'Extract contact information' }]
+    messages: [{ role: 'user', content: [{ type: 'text', text: 'Extract contact information' }] }]
   },
   output: {
     type: 'chat',
-    messages: [{ role: 'assistant', content: response.choices[0].message.content }]
+    messages: [{ role: 'assistant', content: [{ type: 'text', text: response.choices[0].message.content }] }]
   },
   request_start_time: new Date().toISOString(),
   request_end_time: new Date().toISOString(),
@@ -280,11 +280,11 @@ curl -X POST https://api.promptlayer.com/log-request \
     "model": "gpt-4",
     "input": {
       "type": "chat",
-      "messages": [{"role": "user", "content": "Generate a user profile"}]
+      "messages": [{"role": "user", "content": [{"type": "text", "text": "Generate a user profile"}]}]
     },
     "output": {
       "type": "chat",
-      "messages": [{"role": "assistant", "content": "{\"name\":\"John\",\"age\":30}"}]
+      "messages": [{"role": "assistant", "content": [{"type": "text", "text": "{\"name\":\"John\",\"age\":30}"}]}]
     },
     "request_start_time": "2024-01-15T10:00:00Z",
     "request_end_time": "2024-01-15T10:00:02Z",
