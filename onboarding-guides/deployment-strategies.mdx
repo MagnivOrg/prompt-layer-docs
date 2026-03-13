@@ -20,9 +20,6 @@ PromptLayer fits into your stack at three levels of sophistication:
 # Use `promptlayer_client.run` (quickest path)
 
 When every millisecond of developer time counts, call `promptlayer_client.run()` directly from your application code.
-1. Fetch latest prompt – We pull the template (by version or release label) from PromptLayer.
-2. Execute – The SDK sends the populated prompt to OpenAI, Anthropic, Gemini, etc.
-3. Log – The raw request/response pair is saved back to PromptLayer.
 
 <CodeGroup>
 
@@ -52,12 +49,9 @@ const response = await plClient.run({
 
 **Under the hood**
 
-1. SDK pulls the latest prompt (or the version/label you specify).
-2. Your client calls the model provider (OpenAI, Anthropic, Gemini, …).
-3. SDK writes the log back to PromptLayer.
-
-> 💡 **Tip** – If latency is critical, enqueue the log to a background worker and let your request return immediately.
---- 
+1. Fetch latest prompt – We pull the template (by version or release label) from PromptLayer.
+2. Execute – The SDK sends the populated prompt to OpenAI, Anthropic, Gemini, etc.
+3. Log – The raw request/response pair is saved back to PromptLayer.--- 
 
 # Cache prompts with Webhooks 
 
@@ -105,7 +99,7 @@ llm_response = openai.chat.completions.create(...)
 queue.enqueue(track_to_promptlayer, llm_response)
 ```
 
-> **Tip:** Most teams push the track_to_promptlayer onto a Redis or SQS queue so as to not block on the logging of a request.
+> 💡 **Tip:** Most teams push the track_to_promptlayer onto a Redis or SQS queue so as to not block on the logging of a request.
 
 Read the full guide: **[PromptLayer Webhooks ↗](/features/prompt-registry/webhooks)**
 
