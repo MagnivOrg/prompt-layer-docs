@@ -56,14 +56,36 @@ When the model returns valid JSON, PromptLayer flattens the entire object into s
 
 ### Tool Call Output
 
-When the model makes tool calls, the tool call structure is flattened with a `tool_calls.` prefix. Tool names are also extracted into the `tool_names` array for easy filtering.
+When the model makes tool calls, the entire tool call structure is wrapped in a `{"tool_calls": [...]}` object and then flattened using dot-notation. Array indices are stripped, so if the model calls multiple tools, their fields are grouped together under the same keys.
+
+For example, a tool call like:
+
+```json
+{
+  "id": "call_123",
+  "type": "function",
+  "function": {
+    "name": "search_database",
+    "arguments": { "query": "active users", "limit": 10 }
+  }
+}
+```
+
+Gets flattened into these searchable keys:
+- `tool_calls.id`
+- `tool_calls.type`
+- `tool_calls.function.name`
+- `tool_calls.function.arguments.query`
+- `tool_calls.function.arguments.limit`
+
+Tool names are also extracted into the `tool_names` array for easy filtering.
 
 ```json
 // Filter requests that called a specific tool:
 {"field": "tool_names", "operator": "contains", "value": "search_database"}
 
 // Filter by tool call arguments:
-{"field": "output", "operator": "key_equals", "value": "users", "nested_key": "tool_calls.function.arguments.table"}
+{"field": "output", "operator": "key_contains", "value": "active users", "nested_key": "tool_calls.function.arguments.query"}
 
 // Find any request that used tool calling:
 {"field": "is_tool_call", "operator": "is_true"}
