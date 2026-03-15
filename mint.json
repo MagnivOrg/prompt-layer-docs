@@ -152,6 +152,7 @@
           "group": "Tracking",
           "pages": [
             "reference/get-request",
+            "reference/search-request-logs",
             "reference/log-request",
             "reference/track-prompt",
             "reference/track-score",
