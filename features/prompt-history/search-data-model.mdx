@@ -55,7 +55,9 @@ How the LLM output is indexed depends on the output type:
 
 ### JSON Output
 
-When the model returns valid JSON, PromptLayer flattens the entire object into searchable key-value pairs. All keys become available in `output_keys`, and all values become filterable through the `output` field.
+When the model returns a valid JSON **object** (e.g. `{"key": "value"}`), PromptLayer flattens it into searchable key-value pairs. All keys become available in `output_keys`, and all values become filterable through the `output` field.
+
+JSON arrays (e.g. `[1, 2, 3]`) and other JSON primitives are treated as plain text — only JSON objects are flattened.
 
 ```json
 // Model returns:
@@ -147,6 +149,8 @@ Nested metadata is also supported. If you attach `{"user": {"id": "abc", "role":
 
 <Warning>
 **Input variables are only indexed if they are referenced in the prompt template.** If you pass input variables that are not used in your template (e.g. as `{variable_name}` or `{{ variable_name }}`), they will **not** appear in search results.
+
+Requests logged without an associated prompt template (no `prompt_id`) will have **no** input variables indexed at all.
 
 If you need to filter by values that aren't part of the prompt template, attach them as [metadata](/features/prompt-history/metadata) instead — metadata is always fully indexed.
 </Warning>
