@@ -8853,9 +8853,9 @@
           "per_page": {
             "type": "integer",
             "minimum": 1,
-            "maximum": 50,
+            "maximum": 25,
             "nullable": true,
-            "description": "Number of results per page. Defaults to 10, maximum 50."
+            "description": "Number of results per page. Defaults to 10, maximum 25."
           },
           "sort_by": {
             "type": "string",
