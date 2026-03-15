@@ -2174,7 +2174,7 @@
         }
       }
     },
-    "/api/public/v2/request/{request_id}": {
+    "/api/public/v2/requests/{request_id}": {
       "get": {
         "summary": "Get Request",
         "operationId": "getRequest",
@@ -4282,6 +4282,81 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/public/v2/requests/search": {
+      "post": {
+        "summary": "Search Request Logs",
+        "operationId": "searchRequestLogs",
+        "tags": [
+          "tracking"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SearchRequestLogsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Paginated list of matching request logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SearchRequestLogsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filter or search parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (10 requests per minute)."
           }
         }
       }
@@ -8743,6 +8818,187 @@
                 "description": "A human-readable error message describing why spans were rejected."
               }
             }
+          }
+        }
+      },
+      "SearchRequestLogsRequest": {
+        "type": "object",
+        "title": "SearchRequestLogsRequest",
+        "description": "Search and filter request logs with structured filters, free-text search, sorting, and pagination.",
+        "properties": {
+          "filters": {
+            "type": "array",
+            "nullable": true,
+            "description": "List of structured filters. Multiple filters are combined with AND logic.",
+            "items": {
+              "$ref": "#/components/schemas/StructuredFilter"
+            }
+          },
+          "filter_group": {
+            "nullable": true,
+            "description": "Nested filter group with AND/OR logic. Use this for complex queries.",
+            "$ref": "#/components/schemas/StructuredFilterGroup"
+          },
+          "q": {
+            "type": "string",
+            "nullable": true,
+            "description": "Free-text search query. Searches across the prompt input and LLM output text using fuzzy prefix matching."
+          },
+          "page": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Page number for pagination. Defaults to 1."
+          },
+          "per_page": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 25,
+            "nullable": true,
+            "description": "Number of results per page. Defaults to 10, maximum 25."
+          },
+          "sort_by": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["request_start_time", "input_tokens", "output_tokens", "cost", "latency_ms", "status"],
+            "description": "Field to sort results by."
+          },
+          "sort_order": {
+            "type": "string",
+            "nullable": true,
+            "enum": ["asc", "desc"],
+            "description": "Sort direction. Must be provided together with sort_by."
+          },
+          "include_prompt_name": {
+            "type": "boolean",
+            "nullable": true,
+            "description": "When true, includes the prompt template name in each result item. Defaults to false."
+          }
+        }
+      },
+      "StructuredFilter": {
+        "type": "object",
+        "title": "StructuredFilter",
+        "description": "A single filter condition on a request log field.",
+        "required": ["field", "operator"],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "The request log field to filter on.",
+            "enum": [
+              "pl_id", "prompt_id", "engine", "provider_type",
+              "input_text", "output_text", "prompt_version_number",
+              "input_tokens", "output_tokens", "cost", "latency_ms",
+              "request_start_time", "request_end_time", "status",
+              "is_json", "is_tool_call", "is_plain_text",
+              "tags", "metadata_keys", "metadata", "tool_names",
+              "output", "output_keys", "input_variables", "input_variable_keys"
+            ]
+          },
+          "operator": {
+            "type": "string",
+            "description": "The comparison operator.",
+            "enum": [
+              "is", "is_not", "in", "not_in",
+              "contains", "not_contains", "starts_with", "ends_with",
+              "eq", "neq", "gt", "gte", "lt", "lte", "between",
+              "before", "after",
+              "is_true", "is_false",
+              "is_empty", "is_not_empty", "is_null", "is_not_null",
+              "key_equals", "key_not_equals", "key_contains"
+            ]
+          },
+          "value": {
+            "description": "The value to compare against. Type depends on the field and operator.",
+            "oneOf": [
+              { "type": "string" },
+              { "type": "number" },
+              { "type": "boolean" },
+              { "type": "array" },
+              { "type": "null" }
+            ]
+          },
+          "nested_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "Required for nested fields (metadata, output, input_variables). Specifies which key within the nested object to filter on."
+          }
+        }
+      },
+      "StructuredFilterGroup": {
+        "type": "object",
+        "title": "StructuredFilterGroup",
+        "description": "A group of filters combined with AND or OR logic. Can be nested recursively.",
+        "required": ["filters"],
+        "properties": {
+          "logic": {
+            "type": "string",
+            "enum": ["AND", "OR"],
+            "default": "AND",
+            "description": "How to combine the filters in this group."
+          },
+          "filters": {
+            "type": "array",
+            "description": "List of filters or nested filter groups.",
+            "items": {
+              "oneOf": [
+                { "$ref": "#/components/schemas/StructuredFilter" },
+                { "$ref": "#/components/schemas/StructuredFilterGroup" }
+              ]
+            }
+          }
+        }
+      },
+      "SearchRequestLogsResponse": {
+        "type": "object",
+        "title": "SearchRequestLogsResponse",
+        "description": "Paginated search results.",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "description": "Indicates the request was successful."
+          },
+          "items": {
+            "type": "array",
+            "description": "List of matching request log summaries.",
+            "items": {
+              "type": "object",
+              "description": "A request log summary including metadata, token counts, cost, and tags."
+            }
+          },
+          "page": {
+            "type": "integer",
+            "description": "Current page number."
+          },
+          "pages": {
+            "type": "integer",
+            "description": "Total number of pages."
+          },
+          "per_page": {
+            "type": "integer",
+            "description": "Number of results per page."
+          },
+          "total": {
+            "type": "integer",
+            "description": "Total number of matching results."
+          },
+          "has_next": {
+            "type": "boolean",
+            "description": "Whether there are more pages after the current one."
+          },
+          "has_prev": {
+            "type": "boolean",
+            "description": "Whether there are pages before the current one."
+          },
+          "next_num": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Next page number, or null if on the last page."
+          },
+          "prev_num": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Previous page number, or null if on the first page."
           }
         }
       }

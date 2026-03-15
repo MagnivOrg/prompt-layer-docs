@@ -1,6 +1,6 @@
 ---
 title: "Get Request"
-openapi: "GET /api/public/v2/request/{request_id}"
+openapi: "GET /api/public/v2/requests/{request_id}"
 description: "Retrieve a request's payload as a prompt blueprint, along with token usage and timing data."
 ---
 
@@ -21,7 +21,7 @@ This endpoint requires API key authentication via the `X-API-KEY` header, or JWT
 
 ```bash
 curl -H "X-API-KEY: your_api_key" \
-  https://api.promptlayer.com/api/public/v2/request/12345
+  https://api.promptlayer.com/api/public/v2/requests/12345
 ```
 
 ### Response

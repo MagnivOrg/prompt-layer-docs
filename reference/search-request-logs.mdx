@@ -1,0 +1,324 @@
+---
+title: "Search Request Logs"
+openapi: "POST /api/public/v2/requests/search"
+description: "Search and filter your request logs using structured filters, free-text search, and sorting."
+---
+
+Search through your logged requests programmatically using the same powerful filtering available in the PromptLayer dashboard. This is useful for:
+
+- **Analytics & monitoring**: Query requests by cost, latency, model, or status
+- **Debugging**: Find requests matching specific metadata, tags, or error states
+- **Data export**: Paginate through filtered results for downstream processing
+- **Custom dashboards**: Build your own views on top of PromptLayer data
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header, or JWT authentication via the `Authorization: Bearer` header.
+
+<Warning>
+This endpoint is rate limited to **10 requests per minute**. Results are capped at **25 per page**.
+</Warning>
+
+## Filters
+
+Filters let you narrow results by any request log field. Pass them in the `filters` array — multiple filters are combined with AND logic.
+
+```json
+{
+  "filters": [
+    { "field": "engine", "operator": "is", "value": "gpt-4o" },
+    { "field": "cost", "operator": "gte", "value": 0.01 }
+  ]
+}
+```
+
+### Available Fields
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `pl_id` | identifier | PromptLayer request ID |
+| `prompt_id` | identifier | Associated prompt template ID |
+| `engine` | string | Model name (e.g. `gpt-4o`, `claude-sonnet-4-20250514`) |
+| `provider_type` | string | Provider (e.g. `openai`, `anthropic`) |
+| `input_text` | string | Prompt input content |
+| `output_text` | string | LLM output content |
+| `prompt_version_number` | numeric | Prompt template version |
+| `input_tokens` | numeric | Input token count |
+| `output_tokens` | numeric | Output token count |
+| `cost` | numeric | Request cost in USD |
+| `latency_ms` | numeric | Latency in milliseconds |
+| `request_start_time` | datetime | When the request started (ISO 8601) |
+| `request_end_time` | datetime | When the request ended (ISO 8601) |
+| `status` | status | Request status (`success`, `error`, etc.) |
+| `is_json` | boolean | Whether output is JSON |
+| `is_tool_call` | boolean | Whether the request used tool calling |
+| `is_plain_text` | boolean | Whether output is plain text |
+| `tags` | array | Tags attached to the request |
+| `metadata` | nested | Metadata key-value pairs |
+| `metadata_keys` | array | List of metadata keys present |
+| `tool_names` | array | Names of tools used |
+| `output` | nested | Flattened output key-value pairs (JSON and tool call output only) |
+| `output_keys` | array | List of keys present in the flattened output |
+| `input_variables` | nested | Flattened input variable key-value pairs |
+| `input_variable_keys` | array | List of input variable keys |
+
+<Info>
+**Understanding nested fields:** The `output`, `metadata`, and `input_variables` fields are flattened from nested objects into searchable key-value pairs using dot-notation (e.g. `result.status`). See the [Search Data Model](/features/prompt-history/search-data-model) guide for details on how different output types are indexed and when to use `key_equals` vs `key_contains`.
+</Info>
+
+<Warning>
+**Input variables are only indexed if they are referenced in your prompt template.** Unused input variables will not appear in search results. If you need to filter by values not in the template, attach them as [metadata](/features/prompt-history/metadata) instead.
+</Warning>
+
+### Operators by Field Type
+
+<AccordionGroup>
+
+<Accordion title="String fields (engine, provider_type)">
+| Operator | Description |
+|----------|-------------|
+| `is` | Exact match |
+| `is_not` | Not equal |
+| `in` | Matches any value in a list |
+| `not_in` | Does not match any value in a list |
+</Accordion>
+
+<Accordion title="Text fields (input_text, output_text)">
+| Operator | Description |
+|----------|-------------|
+| `contains` | Text contains the value (partial match) |
+| `not_contains` | Text does not contain the value |
+| `starts_with` | Text starts with the value |
+| `ends_with` | Text ends with the value |
+</Accordion>
+
+<Accordion title="Numeric fields (cost, latency_ms, input_tokens, output_tokens)">
+| Operator | Description | Example value |
+|----------|-------------|---------------|
+| `eq` | Equal | `100` |
+| `neq` | Not equal | `100` |
+| `gt` | Greater than | `0.01` |
+| `gte` | Greater than or equal | `0.01` |
+| `lt` | Less than | `1000` |
+| `lte` | Less than or equal | `1000` |
+| `between` | Within a range (inclusive) | `[100, 500]` |
+| `is_null` | Value is null | — |
+| `is_not_null` | Value is not null | — |
+</Accordion>
+
+<Accordion title="Datetime fields (request_start_time, request_end_time)">
+| Operator | Description | Example value |
+|----------|-------------|---------------|
+| `is` | Exact match | `"2025-03-15T00:00:00Z"` |
+| `before` | Before this time | `"2025-03-15T00:00:00Z"` |
+| `after` | After this time | `"2025-03-14T00:00:00Z"` |
+| `between` | Within a time range | `["2025-03-14T00:00:00Z", "2025-03-15T00:00:00Z"]` |
+</Accordion>
+
+<Accordion title="Boolean fields (is_json, is_tool_call, is_plain_text)">
+| Operator | Description |
+|----------|-------------|
+| `is_true` | Field is true |
+| `is_false` | Field is false |
+</Accordion>
+
+<Accordion title="Array fields (tags, metadata_keys, tool_names, etc.)">
+| Operator | Description | Example value |
+|----------|-------------|---------------|
+| `contains` | Array contains this value | `"production"` |
+| `not_contains` | Array does not contain this value | `"test"` |
+| `in` | Array contains any of these values | `["prod", "staging"]` |
+| `not_in` | Array contains none of these values | `["test", "debug"]` |
+| `is_empty` | Array is empty | — |
+| `is_not_empty` | Array is not empty | — |
+</Accordion>
+
+<Accordion title="Nested fields (metadata, output, input_variables)">
+
+Nested fields store key-value pairs. Use the `nested_key` parameter to specify which key to filter on.
+
+| Operator | Description |
+|----------|-------------|
+| `key_equals` | The value for the given key exactly matches |
+| `key_not_equals` | The value for the given key does not match |
+| `key_contains` | The value for the given key contains the search term |
+| `in` | The value for the given key matches any in a list |
+| `not_in` | The value for the given key matches none in a list |
+| `is_empty` | The key does not exist |
+| `is_not_empty` | The key exists |
+
+<Note>
+**Matching behavior for nested fields:**
+- `key_equals` and `key_not_equals` perform exact matching, which works best with short, discrete values like IDs, status codes, and enum-like strings.
+- `key_contains` performs partial text matching, which is better suited for longer text values or when you only know part of the value.
+
+If an exact match filter isn't returning expected results, the value may be stored as a longer string internally — try `key_contains` instead.
+</Note>
+
+```json
+{
+  "filters": [
+    {
+      "field": "metadata",
+      "operator": "key_equals",
+      "value": "customer_123",
+      "nested_key": "user_id"
+    }
+  ]
+}
+```
+
+</Accordion>
+
+</AccordionGroup>
+
+## Complex Filters with AND/OR Logic
+
+For more sophisticated queries, use `filter_group` to combine filters with AND/OR logic. Groups can be nested recursively.
+
+```json
+{
+  "filter_group": {
+    "logic": "OR",
+    "filters": [
+      { "field": "tags", "operator": "contains", "value": "production" },
+      {
+        "logic": "AND",
+        "filters": [
+          { "field": "engine", "operator": "in", "value": ["gpt-4o", "claude-sonnet-4-20250514"] },
+          { "field": "latency_ms", "operator": "gt", "value": 5000 }
+        ]
+      }
+    ]
+  }
+}
+```
+
+<Tip>
+You can use `filters` and `filter_group` together — they are combined with AND logic.
+</Tip>
+
+## Free-Text Search
+
+The `q` parameter performs a fuzzy prefix search across the prompt input and LLM output text. Combine it with filters to narrow results.
+
+```json
+{
+  "q": "refund policy",
+  "filters": [
+    { "field": "tags", "operator": "contains", "value": "customer-support" }
+  ]
+}
+```
+
+## Sorting
+
+Sort results by any of these fields:
+
+- `request_start_time` (default, descending)
+- `input_tokens`
+- `output_tokens`
+- `cost`
+- `latency_ms`
+- `status`
+
+Both `sort_by` and `sort_order` must be provided together.
+
+## Examples
+
+### Find expensive requests from the last 24 hours
+
+```bash
+curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
+  -H "X-API-KEY: your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filters": [
+      { "field": "cost", "operator": "gte", "value": 0.10 },
+      { "field": "request_start_time", "operator": "after", "value": "2025-03-14T00:00:00Z" }
+    ],
+    "sort_by": "cost",
+    "sort_order": "desc"
+  }'
+```
+
+### Find errors on a specific prompt template
+
+```json
+{
+  "filters": [
+    { "field": "prompt_id", "operator": "is", "value": 1234 },
+    { "field": "status", "operator": "is", "value": "error" }
+  ]
+}
+```
+
+### Search by metadata
+
+```json
+{
+  "filters": [
+    {
+      "field": "metadata",
+      "operator": "key_equals",
+      "value": "customer_123",
+      "nested_key": "user_id"
+    }
+  ]
+}
+```
+
+### Paginate through results
+
+```json
+{
+  "filters": [
+    { "field": "engine", "operator": "is", "value": "gpt-4o" }
+  ],
+  "page": 3,
+  "per_page": 25,
+  "sort_by": "request_start_time",
+  "sort_order": "desc"
+}
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "items": [
+    {
+      "id": 12345,
+      "engine": "gpt-4o",
+      "provider_type": "openai",
+      "input_tokens": 150,
+      "output_tokens": 300,
+      "price": 0.005,
+      "request_start_time": "2025-03-15T10:30:00",
+      "request_end_time": "2025-03-15T10:30:01",
+      "latency": 1.234,
+      "tags_array": ["production"],
+      "metadata": [{ "user_id": "customer_123" }],
+      "scores": [],
+      "prompt_name": "my-prompt"
+    }
+  ],
+  "page": 1,
+  "pages": 5,
+  "per_page": 25,
+  "total": 112,
+  "has_next": true,
+  "has_prev": false,
+  "next_num": 2,
+  "prev_num": null
+}
+```
+
+### Related
+
+- [Search Data Model](/features/prompt-history/search-data-model) - How your data is indexed and what's searchable
+- [Get Request](/reference/get-request) - Retrieve the full payload of a single request
+- [Advanced Search](/why-promptlayer/advanced-search) - Using search in the dashboard
+- [Metadata](/features/prompt-history/metadata) - Attaching metadata to requests
+- [Tagging Requests](/features/prompt-history/tagging-requests) - Using tags
