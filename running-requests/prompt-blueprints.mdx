@@ -276,6 +276,50 @@ prompt_template = {
 
 The `parameters` field is of interest because it specifies the expected input parameters for the function. The LLM provider will use this information to generate the appropriate tool call. You can define the `parameters` using [JSON Schema](https://json-schema.org) format. You can read moe about how OpenAI uses JSON Schema for defining parameters [here](https://platform.openai.com/docs/guides/function-calling). And you can read more about how Anthropic uses JSON Schema for defining parameters [here](https://docs.anthropic.com/en/docs/build-with-claude/tool-use).
 
+### Tool Variables
+
+In addition to static tool definitions, you can use **tool variables** to inject tools dynamically at runtime. A tool variable acts as a placeholder in the `tools` array that gets replaced with actual tool definitions from `input_variables`.
+
+```python
+tools = [
+    {
+        "type": "variable",
+        "name": "dynamic_tools"
+    },
+    {
+        "type": "function",
+        "function": {
+            "name": "static_tool",
+            "parameters": {"type": "object", "properties": {}}
+        }
+    }
+]
+```
+
+At runtime, pass the tool definitions through `input_variables`:
+
+```python
+response = promptlayer_client.run(
+    prompt_name="my-prompt",
+    input_variables={
+        "dynamic_tools": [
+            {
+                "name": "search",
+                "description": "Search the database",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string"}
+                    }
+                }
+            }
+        ]
+    }
+)
+```
+
+The tool variable placeholders are expanded before the prompt is sent to the LLM, so the model sees a flat list of regular tool definitions. For more details, see [Tool Variables](/features/prompt-registry/tool-calling#tool-variables).
+
 ### Assistant Tool Calls
 
 When the assistant decides to use a tool, the response will include a `tool_calls` field in the message. The format is:

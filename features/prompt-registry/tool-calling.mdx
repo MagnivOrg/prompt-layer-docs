@@ -36,6 +36,103 @@ Tools can be defined, called, and set up visually through the Prompt Registry.
 
 To publish a prompt template with tools programmatically, you can add the arguments `tools` and `tool_choice` to your prompt_template object. This is similar to how you would publish a regular prompt template.
 
+## Tool Variables
+
+Tool variables allow you to dynamically inject tools at runtime through input variables, rather than defining them statically in your prompt template. This is useful when:
+
+- Different customers or tenants need different sets of tools
+- Your available tools change based on runtime context (e.g., user permissions, feature flags)
+- You want to manage tool definitions outside of your prompt template
+
+### Adding a Tool Variable
+
+1. Open the **Tool & Output Editor** in the Prompt Registry
+2. Click **Add Tool Variable**
+3. Enter a variable name (e.g., `dynamic_tools`)
+4. The variable will appear in your Input Variable Sets alongside other template variables
+
+Tool variables can coexist with static tool definitions. For example, you might have a fixed `get_weather` tool alongside a `customer_tools` variable that injects customer-specific tools at runtime.
+
+### Passing Tools at Runtime
+
+When running a prompt with tool variables, pass the tool definitions as an array in your `input_variables`:
+
+<CodeGroup>
+
+```python Python
+response = pl.run(
+    prompt_name="my-agent",
+    input_variables={
+        "dynamic_tools": [
+            {
+                "name": "get_knowledge",
+                "description": "Search the knowledge base",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "query": {"type": "string", "description": "Search query"}
+                    },
+                    "required": ["query"]
+                }
+            },
+            {
+                "name": "create_ticket",
+                "description": "Create a support ticket",
+                "parameters": {
+                    "type": "object",
+                    "properties": {
+                        "title": {"type": "string"},
+                        "priority": {"type": "string", "enum": ["low", "medium", "high"]}
+                    },
+                    "required": ["title"]
+                }
+            }
+        ]
+    }
+)
+```
+
+```js JavaScript
+const response = await pl.run({
+    promptName: "my-agent",
+    inputVariables: {
+        dynamic_tools: [
+            {
+                name: "get_knowledge",
+                description: "Search the knowledge base",
+                parameters: {
+                    type: "object",
+                    properties: {
+                        query: { type: "string", description: "Search query" }
+                    },
+                    required: ["query"]
+                }
+            },
+            {
+                name: "create_ticket",
+                description: "Create a support ticket",
+                parameters: {
+                    type: "object",
+                    properties: {
+                        title: { type: "string" },
+                        priority: { type: "string", enum: ["low", "medium", "high"] }
+                    },
+                    required: ["title"]
+                }
+            }
+        ]
+    }
+});
+```
+
+</CodeGroup>
+
+Each tool definition should include `name`, `description`, and `parameters` (using JSON Schema format). Anthropic-style `input_schema` is also accepted as an alternative to `parameters`.
+
+<Note>
+Tool variables are expanded before the prompt is sent to the LLM provider. The model sees them as regular tool definitions, so they work with any provider that supports tool calling.
+</Note>
+
 ## Built-in Tools
 
 PromptLayer supports provider-native built-in tools across multiple LLM providers. These pre-built tools enable your prompts to access real-time information, execute code, search through files, and more—all without writing custom function definitions.
