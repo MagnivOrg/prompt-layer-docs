@@ -4,6 +4,34 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 15, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Public API Request Search Endpoint**
+A new `/api/public/v2/requests/search` endpoint enables programmatic searching of request logs with structured filters.
+- Search logs using the same filtering capabilities available in the dashboard
+- Support for complex filter groups and structured queries
+- Rate-limited to 10 requests per minute with up to 25 results per page
+
+**BYOK Playground Limit Exemption**
+Users who configure their own API keys (Bring Your Own Key) are now exempt from daily playground run limits.
+- Unlimited playground testing when using your own API credentials
+- Cost control stays with your organization while removing artificial usage caps
+
+#### Improvements
+
+- Improved dataset column JSON parsing with better error handling for sparse or malformed data
+- Enhanced workspace member management interface with clearer permission displays
+- Fixed API key modal display to better communicate rate limits and usage policies
+- Standardized public API endpoint structure (moved `GET /api/public/v2/request/<id>` to `/requests/<id>`)
+- Added permission checks to dataset creation and editing endpoints to enforce role-based access control
+
+---
+
+
 ## March 12, 2026
 
 ### Deployment 1
