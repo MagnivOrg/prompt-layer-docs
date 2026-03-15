@@ -278,47 +278,9 @@ The `parameters` field is of interest because it specifies the expected input pa
 
 ### Tool Variables
 
-In addition to static tool definitions, you can use **tool variables** to inject tools dynamically at runtime. A tool variable acts as a placeholder in the `tools` array that gets replaced with actual tool definitions from `input_variables`.
+You can also use **tool variables** to inject tools dynamically at runtime, rather than defining them statically. Tool variables act as placeholders in the `tools` array that get replaced with actual tool definitions from `input_variables`.
 
-```python
-tools = [
-    {
-        "type": "variable",
-        "name": "dynamic_tools"
-    },
-    {
-        "type": "function",
-        "function": {
-            "name": "static_tool",
-            "parameters": {"type": "object", "properties": {}}
-        }
-    }
-]
-```
-
-At runtime, pass the tool definitions through `input_variables`:
-
-```python
-response = promptlayer_client.run(
-    prompt_name="my-prompt",
-    input_variables={
-        "dynamic_tools": [
-            {
-                "name": "search",
-                "description": "Search the database",
-                "parameters": {
-                    "type": "object",
-                    "properties": {
-                        "query": {"type": "string"}
-                    }
-                }
-            }
-        ]
-    }
-)
-```
-
-The tool variable placeholders are expanded before the prompt is sent to the LLM, so the model sees a flat list of regular tool definitions. For more details, see [Tool Variables](/features/prompt-registry/tool-calling#tool-variables).
+For details and examples, see [Tool Calling - Tool Variables](/features/prompt-registry/tool-calling#tool-variables).
 
 ### Assistant Tool Calls
 
