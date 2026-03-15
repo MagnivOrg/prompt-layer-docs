@@ -4286,7 +4286,7 @@
         }
       }
     },
-    "/api/public/v2/request-logs/search": {
+    "/api/public/v2/requests/search": {
       "post": {
         "summary": "Search Request Logs",
         "operationId": "searchRequestLogs",

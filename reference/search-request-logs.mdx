@@ -1,6 +1,6 @@
 ---
 title: "Search Request Logs"
-openapi: "POST /api/public/v2/request-logs/search"
+openapi: "POST /api/public/v2/requests/search"
 description: "Search and filter your request logs using structured filters, free-text search, and sorting."
 ---
 
@@ -225,7 +225,7 @@ Both `sort_by` and `sort_order` must be provided together.
 ### Find expensive requests from the last 24 hours
 
 ```bash
-curl -X POST https://api.promptlayer.com/api/public/v2/request-logs/search \
+curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
   -H "X-API-KEY: your_api_key" \
   -H "Content-Type: application/json" \
   -d '{
