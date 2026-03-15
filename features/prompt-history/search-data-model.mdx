@@ -78,7 +78,9 @@ Gets flattened into these searchable keys:
 - `tool_calls.function.arguments.query`
 - `tool_calls.function.arguments.limit`
 
-Tool names are also extracted into the `tool_names` array for easy filtering.
+**Multiple tool calls:** When the model calls multiple tools, values from all calls are grouped together under the same key. For example, if the model calls both `search_database` and `send_email`, the key `tool_calls.function.name` will contain `["search_database", "send_email"]`. Filtering on that key will match if *any* of the values match — so `key_equals` with `"search_database"` will find requests that called `search_database`, even if other tools were also called.
+
+Tool names are also extracted into the `tool_names` array for easy filtering — this is typically the simplest way to filter by tool.
 
 ```json
 // Filter requests that called a specific tool:
