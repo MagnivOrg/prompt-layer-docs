@@ -77,7 +77,8 @@
             "features/prompt-history/scoring-requests",
             "features/prompt-history/tracking-templates",
             "features/prompt-history/custom-logging",
-            "features/prompt-history/structured-output-logging"
+            "features/prompt-history/structured-output-logging",
+            "features/prompt-history/search-data-model"
           ],
           "icon": "cassette-tape"
         },

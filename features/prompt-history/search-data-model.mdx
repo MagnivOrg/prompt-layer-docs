@@ -1,0 +1,149 @@
+---
+title: "Search Data Model"
+icon: "diagram-project"
+---
+
+When you log requests through PromptLayer, we process and index the data to make it searchable. Understanding how your data is indexed will help you write more effective filters when using the [Search Request Logs](/reference/search-request-logs) API or the dashboard's advanced search.
+
+## How Data Gets Indexed
+
+PromptLayer takes your request data — the prompt input, model output, metadata, and input variables — and flattens nested structures into searchable key-value pairs. This allows you to filter on deeply nested fields using dot-notation paths.
+
+For example, if your output is:
+
+```json
+{
+  "result": {
+    "status": "approved",
+    "score": 0.95
+  }
+}
+```
+
+This becomes two searchable entries:
+- `result.status` → `"approved"`
+- `result.score` → `0.95`
+
+You can then filter with:
+
+```json
+{
+  "field": "output",
+  "operator": "key_equals",
+  "value": "approved",
+  "nested_key": "result.status"
+}
+```
+
+## Output
+
+How the LLM output is indexed depends on the output type:
+
+### JSON Output
+
+When the model returns valid JSON, PromptLayer flattens the entire object into searchable key-value pairs. All keys become available in `output_keys`, and all values become filterable through the `output` field.
+
+```json
+// Model returns:
+{"action": "send_email", "recipient": "user@example.com", "priority": "high"}
+
+// You can filter by:
+{"field": "output", "operator": "key_equals", "value": "send_email", "nested_key": "action"}
+
+// Or check which keys exist:
+{"field": "output_keys", "operator": "contains", "value": "priority"}
+```
+
+### Tool Call Output
+
+When the model makes tool calls, the tool call structure is flattened with a `tool_calls.` prefix. Tool names are also extracted into the `tool_names` array for easy filtering.
+
+```json
+// Filter requests that called a specific tool:
+{"field": "tool_names", "operator": "contains", "value": "search_database"}
+
+// Filter by tool call arguments:
+{"field": "output", "operator": "key_equals", "value": "users", "nested_key": "tool_calls.function.arguments.table"}
+
+// Find any request that used tool calling:
+{"field": "is_tool_call", "operator": "is_true"}
+```
+
+### Plain Text Output
+
+When the model returns plain text (not JSON, no tool calls), the text is stored in `output_text` and searchable via the `q` free-text search parameter. The `output` and `output_keys` fields will be empty.
+
+```json
+// Use free-text search for plain text output:
+{"q": "refund policy"}
+
+// Or check output type:
+{"field": "is_plain_text", "operator": "is_true"}
+```
+
+## Metadata
+
+Metadata key-value pairs that you attach to requests via `track.metadata()` are **always fully indexed**. Every key and value you provide becomes searchable.
+
+```json
+// All metadata is searchable:
+{"field": "metadata", "operator": "key_equals", "value": "customer_123", "nested_key": "user_id"}
+
+// Check if a metadata key exists:
+{"field": "metadata_keys", "operator": "contains", "value": "session_id"}
+```
+
+Nested metadata is also supported. If you attach `{"user": {"id": "abc", "role": "admin"}}`, you can filter on `user.id` and `user.role`.
+
+## Input Variables
+
+<Warning>
+**Input variables are only indexed if they are referenced in the prompt template.** If you pass input variables that are not used in your template (e.g. as `{variable_name}` or `{{ variable_name }}`), they will **not** appear in search results.
+
+If you need to filter by values that aren't part of the prompt template, attach them as [metadata](/features/prompt-history/metadata) instead — metadata is always fully indexed.
+</Warning>
+
+For example, if your prompt template uses `{question}` and `{context}`, but you also pass `user_id` as an input variable:
+
+```python
+response = pl_client.run(
+    prompt_name="qa-bot",
+    input_variables={
+        "question": "What is PromptLayer?",   # ✓ Referenced in template — indexed
+        "context": "PromptLayer is a...",      # ✓ Referenced in template — indexed
+        "user_id": "customer_123"              # ✗ NOT in template — not indexed
+    },
+    metadata={"user_id": "customer_123"}       # ✓ Always indexed
+)
+```
+
+In this case, only `question` and `context` are searchable as input variables. To make `user_id` searchable, pass it as metadata.
+
+## Exact Match vs. Text Search
+
+When filtering nested fields (metadata, output, input_variables), the matching behavior depends on the operator and the nature of the stored value:
+
+- **`key_equals`** and **`key_not_equals`** perform exact matching. These work best with short, discrete values like IDs, status codes, numbers, and enum-like strings.
+
+- **`key_contains`** performs partial text matching. This is better suited for longer text values, sentences, or when you only know part of the value.
+
+<Tip>
+As a rule of thumb: use `key_equals` for structured data (IDs, numbers, short strings) and `key_contains` for natural language text. If `key_equals` isn't returning expected results for a longer text value, try `key_contains`.
+</Tip>
+
+## Quick Reference
+
+| Field | What's Indexed | When |
+|-------|---------------|------|
+| `output` / `output_keys` | Flattened JSON keys and values | JSON or tool call output only |
+| `output_text` | Raw output text | Always (searchable via `q`) |
+| `metadata` / `metadata_keys` | All key-value pairs | Always |
+| `input_variables` / `input_variable_keys` | Flattened key-value pairs | Only for variables referenced in the prompt template |
+| `tags` | Tag names | Always |
+| `tool_names` | Tool/function names | Tool call output only |
+
+## Related
+
+- [Search Request Logs API](/reference/search-request-logs) - API reference for filtering
+- [Metadata](/features/prompt-history/metadata) - Attaching metadata to requests
+- [Advanced Search](/why-promptlayer/advanced-search) - Using search in the dashboard

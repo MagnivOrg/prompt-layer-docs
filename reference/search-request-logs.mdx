@@ -57,10 +57,18 @@ Filters let you narrow results by any request log field. Pass them in the `filte
 | `metadata` | nested | Metadata key-value pairs |
 | `metadata_keys` | array | List of metadata keys present |
 | `tool_names` | array | Names of tools used |
-| `output` | nested | Output key-value pairs |
-| `output_keys` | array | List of output keys present |
-| `input_variables` | nested | Input variable key-value pairs |
+| `output` | nested | Flattened output key-value pairs (JSON and tool call output only) |
+| `output_keys` | array | List of keys present in the flattened output |
+| `input_variables` | nested | Flattened input variable key-value pairs |
 | `input_variable_keys` | array | List of input variable keys |
+
+<Info>
+**Understanding nested fields:** The `output`, `metadata`, and `input_variables` fields are flattened from nested objects into searchable key-value pairs using dot-notation (e.g. `result.status`). See the [Search Data Model](/features/prompt-history/search-data-model) guide for details on how different output types are indexed and when to use `key_equals` vs `key_contains`.
+</Info>
+
+<Warning>
+**Input variables are only indexed if they are referenced in your prompt template.** Unused input variables will not appear in search results. If you need to filter by values not in the template, attach them as [metadata](/features/prompt-history/metadata) instead.
+</Warning>
 
 ### Operators by Field Type
 
@@ -313,6 +321,7 @@ curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
 
 ### Related
 
+- [Search Data Model](/features/prompt-history/search-data-model) - How your data is indexed and what's searchable
 - [Get Request](/reference/get-request) - Retrieve the full payload of a single request
 - [Advanced Search](/why-promptlayer/advanced-search) - Using search in the dashboard
 - [Metadata](/features/prompt-history/metadata) - Attaching metadata to requests
