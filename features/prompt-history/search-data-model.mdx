@@ -35,6 +35,18 @@ You can then filter with:
 }
 ```
 
+## Input Text
+
+For chat requests, `input_text` is built by combining all non-assistant messages. Each message is prefixed with its role in brackets and joined with double newlines:
+
+```
+[system]: You are a helpful assistant that answers questions about our product.
+
+[user]: What is the refund policy?
+```
+
+This means when you search `input_text` using `contains` or the `q` free-text parameter, you're searching across the system prompt, user messages, and any other non-assistant roles (e.g. `tool` results) in a single string. The role prefixes are included, so a search for `"[system]"` would match requests that have a system prompt.
+
 ## Output
 
 How the LLM output is indexed depends on the output type:
