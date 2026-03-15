@@ -95,7 +95,7 @@ Tool names are also extracted into the `tool_names` array for easy filtering —
 
 ### Plain Text Output
 
-When the model returns plain text (not JSON, no tool calls), the text is stored in `output_text` and searchable via the `q` free-text search parameter. The `output` and `output_keys` fields will be empty.
+When the model returns plain text (not JSON, no tool calls), the `output` and `output_keys` fields will be empty — there are no structured keys to flatten. The raw text is still stored in `output_text` and searchable via `q`.
 
 ```json
 // Use free-text search for plain text output:
@@ -104,6 +104,16 @@ When the model returns plain text (not JSON, no tool calls), the text is stored 
 // Or check output type:
 {"field": "is_plain_text", "operator": "is_true"}
 ```
+
+### Free-Text Search Across All Output Types
+
+The `output_text` field is always populated regardless of output type, so the `q` parameter works across all requests:
+
+- **Plain text**: `output_text` contains the raw output
+- **JSON**: `output_text` contains a text representation of each flattened key-value pair (e.g. `"status: approved\nscore: 0.95"`)
+- **Tool calls**: `output_text` contains any assistant text content combined with the flattened tool call values
+
+This means `q` searches across all output types — you don't need to know the output format to find requests by content.
 
 ## Metadata
 
