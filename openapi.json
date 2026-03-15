@@ -2174,7 +2174,7 @@
         }
       }
     },
-    "/api/public/v2/request/{request_id}": {
+    "/api/public/v2/requests/{request_id}": {
       "get": {
         "summary": "Get Request",
         "operationId": "getRequest",
