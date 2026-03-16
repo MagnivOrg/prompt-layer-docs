@@ -276,6 +276,12 @@ prompt_template = {
 
 The `parameters` field is of interest because it specifies the expected input parameters for the function. The LLM provider will use this information to generate the appropriate tool call. You can define the `parameters` using [JSON Schema](https://json-schema.org) format. You can read moe about how OpenAI uses JSON Schema for defining parameters [here](https://platform.openai.com/docs/guides/function-calling). And you can read more about how Anthropic uses JSON Schema for defining parameters [here](https://docs.anthropic.com/en/docs/build-with-claude/tool-use).
 
+### Tool Variables
+
+You can also use **tool variables** to inject tools dynamically at runtime, rather than defining them statically. Tool variables act as placeholders in the `tools` array that get replaced with actual tool definitions from `input_variables`.
+
+For details and examples, see [Tool Calling - Tool Variables](/features/prompt-registry/tool-calling#tool-variables).
+
 ### Assistant Tool Calls
 
 When the assistant decides to use a tool, the response will include a `tool_calls` field in the message. The format is:
