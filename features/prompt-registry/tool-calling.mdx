@@ -160,7 +160,7 @@ For OpenAI and Azure OpenAI, built-in tools require the **Responses API**. Switc
 
 ---
 
-<h3 id="openai-and-azure-openai-responses-api">OpenAI and Azure OpenAI (Responses API)</h3>
+### OpenAI and Azure OpenAI (Responses API)
 
 OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer. These tools are available for both the **OpenAI** and **Azure OpenAI** providers.
 
@@ -206,7 +206,7 @@ For the **File Search** tool, you'll need to create and attach Vector Stores con
 
 OpenAI's Code Interpreter tool enables your prompts to write and execute Python code within a secure, sandboxed environment. This powerful feature allows for dynamic problem-solving, data analysis, visualization generation, and file processing—all without writing custom function definitions.
 
-To enable Code Interpreter, follow the steps above to add it as a built-in tool. The tool is configured with `container: { type: "auto" }` by default, which automatically manages the execution environment. The LLM will automatically use Code Interpreter when it needs to perform calculations, analyze data, create visualizations, or process files.
+To enable Code Interpreter, follow the steps above to add it as a built-in tool. The tool uses container type `"auto"` by default, which automatically manages the execution environment. The LLM will automatically use Code Interpreter when it needs to perform calculations, analyze data, create visualizations, or process files.
 
 For detailed information about Code Interpreter's capabilities, file handling, and configuration options, see the [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter).
 
