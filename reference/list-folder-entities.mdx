@@ -3,4 +3,182 @@ title: "List Folder Entities"
 openapi: "GET /api/public/v2/folders/entities"
 ---
 
-Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Supports filtering by entity type, searching by name, flattening the folder hierarchy, and optionally including entity metadata.
+Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets.
+
+This endpoint is the primary way to browse the unified registry programmatically — equivalent to viewing the registry page in the PromptLayer dashboard.
+
+## Query Parameters
+
+### Browsing
+
+<ParamField query="folder_id" type="integer">
+  The folder to list entities from. If omitted, returns entities at the workspace root.
+</ParamField>
+
+<ParamField query="flatten" type="boolean" default="false">
+  When `true`, returns all entities recursively from the target folder and all of its subfolders. When `false` (default), only returns direct children of the folder (or root).
+</ParamField>
+
+<ParamField query="filter_type" type="string | string[]">
+  Restrict results to one or more entity types. Accepts a single value or a list. Valid values:
+
+  `FOLDER`, `PROMPT`, `SNIPPET`, `WORKFLOW`, `DATASET`, `REPORT`, `AB_TEST`, `INPUT_VARIABLE_SET`
+
+  If omitted, all entity types are returned.
+</ParamField>
+
+<ParamField query="include_metadata" type="boolean" default="false">
+  When `true`, each entity includes a `metadata` object with type-specific information. See [Entity Metadata](#entity-metadata) below.
+</ParamField>
+
+<ParamField query="tags" type="string[]">
+  Filter entities by tags. Only entities that contain all specified tags are returned. Applies to prompts, workflows, datasets, and evaluations. Folders, AB tests, and input variable sets are excluded when this filter is active.
+</ParamField>
+
+### Search
+
+<ParamField query="search_query" type="string">
+  Filter entities by name using case-insensitive partial matching. For prompts, this also searches across prompt version content.
+</ParamField>
+
+<ParamField query="semantic_search" type="boolean" default="false">
+  Enable semantic (vector) search instead of text matching. Requires `search_query` to be set. Currently supports prompts and folders.
+</ParamField>
+
+<ParamField query="semantic_search_top_k" type="integer" default="100">
+  Maximum number of results to return from semantic search. Range: `1` – `500`.
+</ParamField>
+
+<ParamField query="semantic_search_threshold" type="number">
+  Maximum distance threshold for semantic search results. Only results within this distance are returned. Range: `(0, 2]`. If omitted, no threshold is applied.
+</ParamField>
+
+## Response
+
+Returns an object with a single `entities` array. Each entity has the following shape:
+
+<ResponseField name="entities" type="Entity[]">
+  <Expandable title="Entity object">
+    <ResponseField name="id" type="integer">Unique entity identifier.</ResponseField>
+    <ResponseField name="name" type="string">Display name of the entity.</ResponseField>
+    <ResponseField name="type" type="string">One of: `FOLDER`, `PROMPT`, `SNIPPET`, `WORKFLOW`, `DATASET`, `REPORT`, `AB_TEST`, `INPUT_VARIABLE_SET`.</ResponseField>
+    <ResponseField name="created_at" type="string | null">ISO 8601 creation timestamp.</ResponseField>
+    <ResponseField name="updated_at" type="string | null">ISO 8601 last-updated timestamp.</ResponseField>
+    <ResponseField name="folder_id" type="integer | null">ID of the parent folder, or `null` if at the workspace root.</ResponseField>
+    <ResponseField name="path" type="string[]">Full folder path as an ordered list of folder names from root to the entity's parent.</ResponseField>
+    <ResponseField name="metadata" type="object | null">Type-specific metadata (only present when `include_metadata=true`).</ResponseField>
+    <ResponseField name="distance" type="number | null">Semantic search distance score (only present when using semantic search).</ResponseField>
+    <ResponseField name="created_by_email" type="string | null">Email of the user who created the entity, if available.</ResponseField>
+  </Expandable>
+</ResponseField>
+
+## Entity Metadata
+
+When `include_metadata=true`, the `metadata` field contains type-specific information:
+
+| Entity Type | Metadata Fields |
+|-------------|----------------|
+| **PROMPT** / **SNIPPET** | `type` (`"chat"` or `"completion"` or `null`), `latest_version_number` |
+| **WORKFLOW** | `latest_version_number` |
+| **DATASET** | `isDraft` (boolean — `true` if only draft versions exist), `latest_version_number` |
+| **FOLDER**, **REPORT**, **AB_TEST**, **INPUT_VARIABLE_SET** | Empty object `{}` |
+
+## Sorting Behavior
+
+- **Semantic search**: Results are sorted by relevance (distance ascending).
+- **Text search**: Prompts and snippets with a name match are prioritized above content-only matches.
+- **No search**: Results are returned in default database order.
+
+## Examples
+
+### List all entities at the workspace root
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### Browse inside a folder
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?folder_id=42" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### List only prompts and workflows, with metadata
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?filter_type=PROMPT&filter_type=WORKFLOW&include_metadata=true" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### Search across all folders (flattened)
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?search_query=summarize&flatten=true" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### Semantic search with threshold
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?search_query=customer+onboarding&semantic_search=true&semantic_search_threshold=1.0" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### Filter by tags
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?tags=production&tags=v2&flatten=true" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### Example Response
+
+```json
+{
+  "entities": [
+    {
+      "id": 10,
+      "name": "Prompts",
+      "type": "FOLDER",
+      "created_at": "2025-01-10T08:00:00",
+      "updated_at": "2025-02-15T12:30:00",
+      "folder_id": null,
+      "path": ["Prompts"],
+      "metadata": null,
+      "distance": null,
+      "created_by_email": null
+    },
+    {
+      "id": 205,
+      "name": "summarize-article",
+      "type": "PROMPT",
+      "created_at": "2025-02-01T14:20:00",
+      "updated_at": "2025-03-10T09:15:00",
+      "folder_id": null,
+      "path": [],
+      "metadata": {
+        "type": "chat",
+        "latest_version_number": 5
+      },
+      "distance": null,
+      "created_by_email": "alice@example.com"
+    },
+    {
+      "id": 88,
+      "name": "onboarding-flow",
+      "type": "WORKFLOW",
+      "created_at": "2025-01-20T11:00:00",
+      "updated_at": "2025-03-01T16:45:00",
+      "folder_id": null,
+      "path": [],
+      "metadata": {
+        "latest_version_number": 3
+      },
+      "distance": null,
+      "created_by_email": "bob@example.com"
+    }
+  ]
+}
+```
