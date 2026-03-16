@@ -160,7 +160,7 @@ For OpenAI and Azure OpenAI, built-in tools require the **Responses API**. Switc
 
 ---
 
-### OpenAI and Azure OpenAI (Responses API)
+<h3 id="openai-and-azure-openai-responses-api">OpenAI and Azure OpenAI (Responses API)</h3>
 
 OpenAI's [Responses API](https://openai.com/index/new-tools-for-building-agents/) includes powerful pre-built tools that work seamlessly with PromptLayer. These tools are available for both the **OpenAI** and **Azure OpenAI** providers.
 
@@ -210,11 +210,28 @@ To enable Code Interpreter, follow the steps above to add it as a built-in tool.
 
 For detailed information about Code Interpreter's capabilities, file handling, and configuration options, see the [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter).
 
-#### Learn More
+### Using Image Generation
 
+OpenAI's Image Generation tool enables the model to generate or edit images using a text prompt directly within a conversation. When the model determines that an image should be created, it invokes the `image_generation` tool with an optimized prompt and returns the generated image in the response.
+
+To enable Image Generation, follow the steps above to add it as a built-in tool. Once enabled, the model will automatically generate images when the conversation calls for it.
+
+Generated images appear inline in the response with:
+- A collapsible **revised prompt** showing the optimized text the model used for generation
+- **Generation parameters** such as size, quality, background, and output format
+- The **generated image** displayed in a rich card format
+
+The model can generate multiple images in a single response — consecutive image generation calls are grouped together for clean display. The model may also include descriptive text alongside the generated images.
+
+For a comprehensive guide to image generation across all providers (including the dedicated Images API and Gemini native image generation), see the [Image Generation](/features/image-generation) documentation.
+
+### Learn More
+
+- [Image Generation Guide](/features/image-generation)
 - [OpenAI Web Search Guide](https://platform.openai.com/docs/guides/tools-web-search)
 - [OpenAI File Search Guide](https://platform.openai.com/docs/guides/tools-file-search)
 - [OpenAI Code Interpreter Guide](https://platform.openai.com/docs/guides/tools-code-interpreter)
+- [OpenAI Image Generation Guide](https://platform.openai.com/docs/guides/image-generation)
 - [OpenAI Responses API Announcement](https://openai.com/index/new-tools-for-building-agents/)
 - [Deep Research API Cookbook](https://cookbook.openai.com/examples/deep_research_api/introduction_to_deep_research_api)
 
@@ -279,7 +296,7 @@ Vertex AI supports built-in tools from both Google and Anthropic, depending on t
 
 #### For Gemini Models on Vertex AI
 
-When using Gemini models (e.g., `gemini-2.0-flash`), the following Google-native tools are available:
+When using Gemini models (e.g., `gemini-3.1-pro-preview`), the following Google-native tools are available:
 
 | Tool | Description |
 |------|-------------|

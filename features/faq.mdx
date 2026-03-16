@@ -179,8 +179,20 @@ Yes, PromptLayer supports MCP functions in agents. The MCP Action node allows yo
     style={{width: "100%", height: "400px"}}
 ></iframe>
 
-## How do I use OpenAI's built-in tools (Web Search, File Search)?
+## How do I use OpenAI's built-in tools (Web Search, File Search, Image Generation)?
 
-PromptLayer supports OpenAI's built-in tools from the Responses API, including Web Search and File Search with Vector Stores. These tools enable your prompts to access real-time web information and search through uploaded documents—all without writing custom function definitions.
+PromptLayer supports OpenAI's built-in tools from the Responses API, including Web Search, File Search with Vector Stores, and Image Generation. These tools enable your prompts to access real-time web information, search through uploaded documents, and generate images—all without writing custom function definitions.
 
-Learn how to set up and use these tools in our [Tool Calling documentation](/features/prompt-registry/tool-calling#built-in-tools-openai-responses-api).
+Learn how to set up and use these tools in our [Tool Calling documentation](/features/prompt-registry/tool-calling#openai-and-azure-openai-responses-api).
+
+## Does PromptLayer support image generation?
+
+Yes. PromptLayer supports image generation across multiple providers:
+
+- **OpenAI Images API** — Use dedicated image models like `gpt-image-1`, `dall-e-3`, and `dall-e-2` to generate images from text prompts. Select "Images API" in the API dropdown when using OpenAI or OpenAI Azure.
+- **OpenAI Responses API (Image Generation tool)** — Enable the built-in `image_generation` tool in the Responses API for conversational image generation. The model decides when to generate images based on the conversation.
+- **Google Gemini** — Gemini image models (`gemini-2.5-flash-image`, `gemini-3-pro-image-preview`) generate images natively as part of their response. Works with both Google and Vertex AI providers.
+
+Image generation is supported in the Playground, Prompt Registry, Evaluations, and via the SDK with `pl.run()`. Generated images are automatically stored, tracked, and viewable in the dashboard.
+
+See the full [Image Generation guide](/features/image-generation) for setup instructions, parameters, and code examples.

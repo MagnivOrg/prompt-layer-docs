@@ -240,7 +240,37 @@ Each message in a Prompt Blueprint should be a dictionary with the following str
     ]
 }
 ```
-You're absolutely right - let me update that part of the documentation to show a more realistic tool response format that uses structured JSON data. Here's the revised section:
+
+### Example Assistant Message with Generated Image
+
+When a model generates an image (via OpenAI Images API, Responses API `image_generation` tool, or Google Gemini image models), the response includes `output_media` content blocks:
+
+```python
+{
+    "role": "assistant",
+    "content": [
+        {"type": "text", "text": "Here is the image you requested:"},
+        {
+            "type": "output_media",
+            "id": "ig_abc123",
+            "url": "https://...",
+            "mime_type": "image/png",
+            "media_type": "image",
+            "provider_metadata": {
+                "revised_prompt": "A photorealistic sunset over mountains...",
+                "size": "1024x1024",
+                "quality": "high"
+            }
+        }
+    ]
+}
+```
+
+The `provider_metadata` field varies by provider:
+- **OpenAI**: `revised_prompt`, `size`, `quality`, `background`, `output_format`
+- **Google Gemini**: `aspect_ratio`, `image_size`
+
+See the [Image Generation guide](/features/image-generation) for full details on setup and usage.
 
 ## Tools and Function Calling
 
@@ -274,7 +304,36 @@ prompt_template = {
 }
 ```
 
-The `parameters` field is of interest because it specifies the expected input parameters for the function. The LLM provider will use this information to generate the appropriate tool call. You can define the `parameters` using [JSON Schema](https://json-schema.org) format. You can read moe about how OpenAI uses JSON Schema for defining parameters [here](https://platform.openai.com/docs/guides/function-calling). And you can read more about how Anthropic uses JSON Schema for defining parameters [here](https://docs.anthropic.com/en/docs/build-with-claude/tool-use).
+The `parameters` field is of interest because it specifies the expected input parameters for the function. The LLM provider will use this information to generate the appropriate tool call. You can define the `parameters` using [JSON Schema](https://json-schema.org) format. You can read more about how OpenAI uses JSON Schema for defining parameters [here](https://platform.openai.com/docs/guides/function-calling). And you can read more about how Anthropic uses JSON Schema for defining parameters [here](https://docs.anthropic.com/en/docs/build-with-claude/tool-use).
+
+### Built-in Tools
+
+In addition to custom function tools, the Prompt Blueprint supports **built-in tools** provided by LLM providers. These are pre-defined tools like web search, file search, code interpreter, and image generation.
+
+```python
+tools = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "parameters": {
+                "type": "object",
+                "properties": {"location": {"type": "string"}}
+            }
+        }
+    },
+    {
+        "type": "image_generation",
+        "id": "builtin_image_gen",
+        "name": "Image Generation",
+        "description": "Generate images from text prompts",
+        "provider": "openai",
+        "config": {"type": "image_generation"}
+    }
+]
+```
+
+The `type` field distinguishes between custom function tools (`"function"`) and built-in tools (`"web_search"`, `"file_search"`, `"code_interpreter"`, `"image_generation"`, `"google_maps"`). Built-in tools are configured in the Prompt Registry UI — see [Tool Calling](/features/prompt-registry/tool-calling#openai-and-azure-openai-responses-api) for details.
 
 ### Tool Variables
 

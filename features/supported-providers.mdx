@@ -9,8 +9,9 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 
 ### OpenAI
 
-- Chat Completions and Responses API are both supported.
-- Function/Tool Calling (including built-in Responses API tools: Web Search, File Search, Code Interpreter, Image Generation, MCP, Shell, Apply Patch) — see [Tool Calling](/features/prompt-registry/tool-calling#openai-responses-api).
+- Chat Completions, Responses API, and Images API are all supported.
+- Function/Tool Calling (including built-in Responses API tools: Web Search, File Search, Image Generation) — see [Tool Calling](/features/prompt-registry/tool-calling#openai-and-azure-openai-responses-api).
+- **Image Generation** via three paths: Images API (`dall-e-2`, `dall-e-3`, `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`), Responses API `image_generation` tool, and GPT Image models — see [Image Generation](/features/image-generation).
 - JSON mode / structured outputs.
 - Vision models (e.g., `gpt-4-vision`) — see [FAQ: multimodal](/features/faq#does-promptlayer-support-multi-modal-image-models-like-gpt-4-vision).
 - Streaming via SDK (Python/JS).
@@ -19,6 +20,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 ### OpenAI Azure
 
 - Same usage as OpenAI but configured with Azure deployment settings.
+- Chat Completions, Responses API, and Images API are all supported — including the `image_generation` built-in tool and Images API models.
 - Ensure deployment name, API version, and resource URL are correctly configured.
 - Most OpenAI features apply; some params differ per Azure config.
 
@@ -32,8 +34,9 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 
 ### Google (Gemini)
 
-- Multimodal support for images.
+- Multimodal support for images (input and output).
 - Built-in tools: Google Search, Google Maps, Code Execution, URL Context, File Search — see [Tool Calling](/features/prompt-registry/tool-calling#google-gemini).
+- **Native image generation** with Gemini image models (`gemini-2.5-flash-image`, `gemini-3-pro-image-preview`, etc.) — see [Image Generation](/features/image-generation#google-gemini--native-image-generation).
 - Use either the direct Google provider or Vertex AI based on your infrastructure preference.
 
 ### Vertex AI
@@ -42,6 +45,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 - Built-in tools vary by model family — see [Tool Calling](/features/prompt-registry/tool-calling#vertex-ai):
   - Gemini models: Web Search, Google Maps, Code Execution, URL Context.
   - Claude models: Web Search, Bash, Text Editor.
+- Gemini image models are fully supported for native image generation via Vertex AI — see [Image Generation](/features/image-generation#google-gemini--native-image-generation).
 - Configure project, region, and credentials as required by Vertex AI.
 
 ### Amazon Bedrock
@@ -108,6 +112,7 @@ Capabilities:
 - Tool/Function Calling and streaming availability depend on the provider/model.
 
 ## Related Docs
+- [Image Generation](/features/image-generation)
 - [Custom Providers](/features/custom-providers)
 - [Tool Calling](/features/prompt-registry/tool-calling)
 - [Template Variables](/features/prompt-registry/template-variables)
