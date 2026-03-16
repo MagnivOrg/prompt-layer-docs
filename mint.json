@@ -195,7 +195,7 @@
           ]
         },
         {
-          "group": "Folders",
+          "group": "Unified Registry",
           "pages": [
             "reference/create-folder",
             "reference/update-folder",
