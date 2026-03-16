@@ -17,6 +17,78 @@ Please read the [LiteLLM documentation page](https://docs.litellm.ai/docs/observ
 
 [LlamaIndex](https://www.llamaindex.ai/) is a data framework for LLM-based applications. Read more about our integration on the [LlamaIndex documentation page](https://docs.llamaindex.ai/en/stable/module_guides/observability/observability.html#promptlayer)
 
+## Claude Code
+
+PromptLayer supports integration with [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), allowing you to send Claude Code traces directly to PromptLayer using the PromptLayer plugin, whether you use Claude Code from the CLI or through the SDK.
+
+To set up:
+
+1. Install the plugin
+
+```bash
+claude plugin marketplace add MagnivOrg/promptlayer-claude-plugins
+claude plugin install trace@promptlayer-claude-plugins
+```
+
+2. Run the setup script
+
+```bash
+$HOME/.claude/plugins/marketplaces/promptlayer-claude-plugins/plugins/trace/setup.sh
+```
+
+3. Enter your PromptLayer API key and keep the default endpoint: `https://api.promptlayer.com/v1/traces`
+4. Start Claude Code and run a prompt
+
+Once configured, PromptLayer will capture Claude Code sessions, LLM calls, tool calls, prompts, completions, token usage, and model metadata.
+
+For troubleshooting and additional details, see the [PromptLayer Claude Code plugin repository](https://github.com/MagnivOrg/promptlayer-claude-plugins).
+
+## Vercel AI SDK
+
+PromptLayer supports integration with the [Vercel AI SDK](https://ai-sdk.dev/docs), allowing you to export OpenTelemetry traces from your application directly to PromptLayer.
+
+To set up:
+
+1. Install OpenTelemetry packages
+
+```bash
+npm install @opentelemetry/sdk-node \
+  @opentelemetry/exporter-trace-otlp-http \
+  @opentelemetry/resources
+```
+
+2. Configure OpenTelemetry with PromptLayer as the exporter
+
+```ts
+const sdk = new NodeSDK({
+  serviceName: "your-app-name",
+  resource: resourceFromAttributes({
+    "promptlayer.telemetry.source": "vercel-ai-sdk",
+  }),
+  traceExporter: new OTLPTraceExporter({
+    url: "https://api.promptlayer.com/v1/traces",
+    headers: {
+      "X-API-Key": process.env.PROMPTLAYER_API_KEY,
+    },
+  }),
+});
+```
+
+3. Start the SDK before AI calls and shut it down before exit
+4. Add `experimental_telemetry` to your AI SDK calls
+
+```ts
+experimental_telemetry: {
+  isEnabled: true,
+  recordInputs: true,
+  recordOutputs: true,
+}
+```
+
+For best results, set `promptlayer.telemetry.source` to `vercel-ai-sdk` so PromptLayer can parse the traces correctly.
+
+Once configured, PromptLayer will capture LLM calls, inputs and outputs, token usage, tool traces, workflow spans, and model metadata.
+
 ## Hugging Face
 
 PromptLayer supports integration with [Hugging Face](https://huggingface.co/models), allowing you to use any model available on Hugging Face within the platform. To set up:
@@ -107,4 +179,3 @@ To use custom models:
 6. Configure any model-specific parameters
 
 Custom Vertex AI models are fully integrated with all platform features including Prompt Registry, Evaluations, and request tracking.
-
