@@ -4,6 +4,34 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 16, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Runtime Tool Variables in Prompt Templates**
+Dynamic tool injection now supports variable substitution, enabling templates to generate tool definitions on-the-fly based on runtime context.
+- Tool schemas can include variables (e.g., `{{user_id}}`, `{{domain}}`) that resolve during template execution
+- Supports nested variable resolution within tool parameters and descriptions
+- Enables dynamic function calling patterns where tool availability adapts to request context
+
+**Chat Message Annotations**
+Annotations can now be added directly to individual messages in chat-mode conversations for improved debugging and analysis.
+- Attach metadata, tags, or notes to specific assistant or user messages
+- Track message-level performance metrics and quality assessments
+
+#### Improvements
+
+- Enhanced function/tool overview dialog displays complete schema details with improved formatting
+- Improved citation modal rendering with better support for complex reference structures
+- Streamlined Docker image build process reduces deployment time
+- Better visual distinction between different tool types in the functions list view
+- Optimized frontend bundle size through refined dependency management
+
+---
+
+
 ## March 15, 2026
 
 ### Deployment 1
