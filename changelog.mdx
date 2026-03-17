@@ -4,6 +4,40 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 17, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Public API for Dataset Rows**
+New REST API endpoint to programmatically retrieve paginated rows from `Datasets`, enabling integration with external tools and workflows.
+- Access dataset rows via `/api/public/v2/datasets/{id}/rows` with support for search and pagination
+- Returns structured row data matching dataset column definitions
+- Supports up to 100 rows per request with flexible filtering
+
+**Public API for Evaluation Results**
+New REST API endpoint to fetch evaluation results programmatically, combining dataset inputs with evaluation scores.
+- Access evaluation rows via `/api/public/v2/evaluations/{id}/rows` endpoint
+- Returns both dataset input variables and evaluation cell results in a unified format
+- Enables automated analysis and reporting on evaluation performance
+
+**Enhanced OpenTelemetry Tracing Support**
+Expanded tracing instrumentation to support additional SDKs and frameworks for automatic request logging.
+- Improved compatibility with diverse instrumentation libraries
+- More reliable extraction of provider and model information from traces
+
+#### Improvements
+
+- Enhanced input variable detection in `Playground` with truncation and tooltip support for long variable names
+- Improved link handling in Wrangler AI for better navigation across all resource types
+- Refined organization members table pagination for more consistent data loading
+- Updated API key input styling across provider configuration pages for better visual consistency
+- Improved deduplication logic for file annotations to prevent duplicate entries
+
+---
+
+
 ## March 16, 2026
 
 ### Deployment 1
