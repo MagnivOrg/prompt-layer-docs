@@ -975,7 +975,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key to authorize the operation. Can also use JWT authentication."
+            "description": "Your PromptLayer API key."
           }
         ],
         "requestBody": {
@@ -1236,7 +1236,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key to authorize the operation. Can also use JWT authentication."
+            "description": "Your PromptLayer API key."
           }
         ],
         "requestBody": {
@@ -2005,7 +2005,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key or JWT token for authentication. Use 'X-API-KEY' header for API key or 'Authorization: Bearer' header for JWT."
+            "description": "Your PromptLayer API key."
           },
           {
             "name": "dataset_group_id",
@@ -2328,6 +2328,328 @@
         }
       }
     },
+    "/api/public/v2/datasets/{dataset_id}/rows": {
+      "get": {
+        "summary": "Get Dataset Rows",
+        "operationId": "getDatasetRows",
+        "tags": [
+          "datasets"
+        ],
+        "description": "Retrieve paginated rows from a dataset. Each row is an array of cells matching the order of the `columns` array. All cells have `{\"type\": \"dataset\", \"value\": ...}`.",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the dataset to retrieve rows from"
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific workspace ID. Defaults to current user's workspace."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Number of rows per page (max 100)"
+          },
+          {
+            "name": "q",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Search query for filtering rows"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Ordered list of column names"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": ["dataset"]
+                            },
+                            "value": {
+                              "description": "The cell value"
+                            }
+                          },
+                          "required": ["type", "value"]
+                        }
+                      },
+                      "description": "Array of rows, each row is an array of cells"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "per_page": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "pages": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "columns",
+                    "rows",
+                    "page",
+                    "per_page",
+                    "total",
+                    "pages"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/evaluations/{evaluation_id}/rows": {
+      "get": {
+        "summary": "Get Evaluation Rows",
+        "operationId": "getEvaluationRows",
+        "tags": [
+          "evaluations"
+        ],
+        "description": "Retrieve paginated evaluation results with dataset input variables and evaluation cell outcomes. Each row is an array of cells matching the order of the `columns` array. Dataset input cells have `{\"type\": \"dataset\", \"value\": ...}`. Eval result cells have `{\"type\": \"eval\", \"status\": ..., \"value\": ...}`.",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "evaluation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "The ID of the evaluation to retrieve rows from"
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by specific workspace ID. Defaults to current user's workspace."
+          },
+          {
+            "name": "page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "default": 1
+            },
+            "description": "Page number for pagination"
+          },
+          {
+            "name": "per_page",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 10
+            },
+            "description": "Number of rows per page (max 100)"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Ordered list of column names. Dataset columns appear first, followed by evaluation columns."
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "array",
+                        "items": {
+                          "type": "object",
+                          "properties": {
+                            "type": {
+                              "type": "string",
+                              "enum": ["dataset", "eval"]
+                            },
+                            "value": {
+                              "description": "The cell value"
+                            },
+                            "status": {
+                              "type": "string",
+                              "enum": ["PASSED", "FAILED", null],
+                              "description": "Evaluation status (only for eval cells)"
+                            },
+                            "error_message": {
+                              "type": "string",
+                              "description": "Error details (only present for failed eval cells)"
+                            }
+                          },
+                          "required": ["type"]
+                        }
+                      },
+                      "description": "Array of rows, each row is an array of cells"
+                    },
+                    "page": {
+                      "type": "integer"
+                    },
+                    "per_page": {
+                      "type": "integer"
+                    },
+                    "total": {
+                      "type": "integer"
+                    },
+                    "pages": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "columns",
+                    "rows",
+                    "page",
+                    "per_page",
+                    "total",
+                    "pages"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace_id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Evaluation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/public/v2/evaluations": {
       "get": {
         "summary": "List Evaluations",
@@ -2343,7 +2665,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key or JWT token for authentication. Use 'X-API-KEY' header for API key or 'Authorization: Bearer' header for JWT."
+            "description": "Your PromptLayer API key."
           },
           {
             "name": "workspace_id",
@@ -2477,7 +2799,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "API key or JWT token for authentication. Use 'X-API-KEY' header for API key or 'Authorization: Bearer' header for JWT."
+            "description": "Your PromptLayer API key."
           }
         ],
         "requestBody": {
