@@ -89,6 +89,60 @@ For best results, set `promptlayer.telemetry.source` to `vercel-ai-sdk` so Promp
 
 Once configured, PromptLayer will capture LLM calls, inputs and outputs, token usage, tool traces, workflow spans, and model metadata.
 
+## OpenAI Agents SDK
+
+PromptLayer supports the OpenAI Agents SDK in both [JavaScript](https://openai.github.io/openai-agents-js/) and [Python](https://openai.github.io/openai-agents-python/), allowing you to export agent traces directly to PromptLayer with a native PromptLayer trace processor.
+
+To set up:
+
+1. Install the required packages
+
+<CodeGroup>
+```bash JavaScript
+npm install promptlayer @openai/agents
+```
+
+```bash Python
+pip install "promptlayer[openai-agents]"
+```
+</CodeGroup>
+
+2. Register PromptLayer tracing before your first agent run:
+
+<CodeGroup>
+```ts JavaScript
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+
+const processor = await instrumentOpenAIAgents();
+```
+
+```python Python
+from promptlayer.integrations.openai_agents import instrument_openai_agents
+
+instrument_openai_agents()
+```
+</CodeGroup>
+
+3. Flush tracing before process exit so PromptLayer receives the final spans:
+
+<CodeGroup>
+```ts JavaScript
+await processor.forceFlush();
+await processor.shutdown();
+```
+
+```python Python
+# Optional - if you created your own tracer provider
+tracer_provider.force_flush()
+tracer_provider.shutdown()
+```
+</CodeGroup>
+
+4. Set your environment variables:
+
+- `OPENAI_API_KEY`
+- `PROMPTLAYER_API_KEY`
+
 ## Hugging Face
 
 PromptLayer supports integration with [Hugging Face](https://huggingface.co/models), allowing you to use any model available on Hugging Face within the platform. To set up:
