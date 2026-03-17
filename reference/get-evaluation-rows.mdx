@@ -1,0 +1,67 @@
+---
+title: "Get Evaluation Rows"
+openapi: "GET /api/public/v2/evaluations/{evaluation_id}/rows"
+description: "Retrieve paginated evaluation results with dataset inputs and evaluation outcomes."
+---
+
+Retrieve paginated evaluation results with dataset input variables and evaluation cell outcomes. Each row is an array of cells matching the order of the `columns` array. Dataset input columns appear first, followed by evaluation result columns.
+
+### Authentication
+
+This endpoint requires API key authentication.
+
+### Cell Formats
+
+There are two types of cells in the response:
+
+**Dataset cells** contain the input data:
+
+```json
+{
+  "type": "dataset",
+  "value": "input value"
+}
+```
+
+**Evaluation cells** contain the evaluation results:
+
+```json
+{
+  "type": "eval",
+  "status": "PASSED",
+  "value": "result value"
+}
+```
+
+Failed evaluation cells may also include an `error_message` field:
+
+```json
+{
+  "type": "eval",
+  "status": "FAILED",
+  "value": null,
+  "error_message": "Error details"
+}
+```
+
+### Example Response
+
+```json
+{
+  "success": true,
+  "message": "success",
+  "columns": ["input", "expected_output", "accuracy", "relevance"],
+  "rows": [
+    [
+      {"type": "dataset", "value": "What is PromptLayer?"},
+      {"type": "dataset", "value": "A prompt management platform"},
+      {"type": "eval", "status": "PASSED", "value": 0.95},
+      {"type": "eval", "status": "PASSED", "value": 0.88}
+    ]
+  ],
+  "page": 1,
+  "per_page": 10,
+  "pages": 3,
+  "total": 25
+}
+```

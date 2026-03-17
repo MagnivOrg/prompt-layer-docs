@@ -1,0 +1,46 @@
+---
+title: "Get Dataset Rows"
+openapi: "GET /api/public/v2/datasets/{dataset_id}/rows"
+description: "Retrieve paginated rows from a dataset."
+---
+
+Retrieve paginated rows from a dataset with cell-level data. Each row is an array of cells matching the order of the `columns` array.
+
+### Authentication
+
+This endpoint requires API key authentication.
+
+### Cell Format
+
+All cells use a uniform format:
+
+```json
+{
+  "type": "dataset",
+  "value": "cell value"
+}
+```
+
+### Searching Rows
+
+Use the `q` parameter to filter dataset rows by content. The search matches against cell values in the dataset.
+
+### Example Response
+
+```json
+{
+  "success": true,
+  "message": "success",
+  "columns": ["input", "expected_output"],
+  "rows": [
+    [
+      {"type": "dataset", "value": "What is PromptLayer?"},
+      {"type": "dataset", "value": "A prompt management platform"}
+    ]
+  ],
+  "page": 1,
+  "per_page": 10,
+  "pages": 5,
+  "total": 45
+}
+```

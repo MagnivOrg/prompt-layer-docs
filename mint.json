@@ -167,6 +167,7 @@
           "group": "Datasets",
           "pages": [
             "reference/list-datasets",
+            "reference/get-dataset-rows",
             "reference/create-dataset-group",
             "reference/create-dataset-version-from-file",
             "reference/create-dataset-version-from-filter-params"
@@ -176,6 +177,7 @@
           "group": "Evaluations",
           "pages": [
             "reference/list-evaluations",
+            "reference/get-evaluation-rows",
             "reference/create-reports",
             "reference/run-report",
             "reference/get-report",
