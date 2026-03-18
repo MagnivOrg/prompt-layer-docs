@@ -1,14 +1,15 @@
 ---
 title: "Deployment Strategies"
-description: Choose from three integration patterns. Direct SDK calls, webhook caching, or managed agents.
+description: Choose from four integration patterns. Direct SDK calls, webhook caching, GitOps with CI/CD, or managed agents.
 icon: ship
 ---
 
-PromptLayer fits into your stack at three levels of sophistication:
+PromptLayer fits into your stack at four levels of sophistication:
 
 1. **`promptlayer_client.run`** – zero-setup SDK sugar  
 2. **Webhook-driven caching** – maintain local cache of prompt templates
-3. **Managed Agents** – let PromptLayer orchestrate everything server-side  
+3. **GitOps with Webhooks** – keep Git as your source of truth with bi-directional sync
+4. **Managed Agents** – let PromptLayer orchestrate everything server-side  
 
 
 <Frame>
@@ -111,6 +112,71 @@ Read the full guide: **[PromptLayer Webhooks ↗](/features/prompt-registry/webh
 
 ---
 
+# GitOps with Webhooks
+
+For teams that want **Git as the source of truth** for prompts, webhooks enable a full bi-directional sync between PromptLayer and your repository. This is the recommended pattern for teams with existing CI/CD pipelines (GitHub Actions, GitLab CI, etc.) that want prompt changes to go through the same review and deploy process as code changes.
+
+### Change starts on PromptLayer
+
+When someone edits a prompt or approves a release label in PromptLayer, a webhook fires to your system. Your webhook handler creates a merge request (or pull request) in your repo with the updated prompt. From there, your normal CI/CD pipeline takes over — code review, automated evals, deploy.
+
+Key webhook events for this flow:
+- `prompt_template_version_created` – a new version of a prompt was saved
+- `prompt_template_label_moved` – a release label (e.g. `prod`) was moved to a new version
+- `prompt_template_label_change_approved` – a protected release label change was approved
+
+See the full list of events in the [Webhooks docs](/features/prompt-registry/webhooks).
+
+```mermaid
+sequenceDiagram
+  autonumber
+  participant PL as PromptLayer
+  participant WH as Your Webhook Handler
+  participant GIT as GitLab / GitHub
+  participant CI as CI/CD Pipeline
+
+  PL->>WH: webhook (e.g. label approved)
+  WH->>GIT: create merge request with updated prompt
+  GIT->>CI: MR triggers CI pipeline
+  CI->>CI: run evals / tests
+  CI-->>PL: (optional) push eval results back via API
+```
+
+### Change starts in code
+
+When an engineer updates a prompt directly in the repo, your CI/CD pipeline can publish it back to PromptLayer using the REST API or SDK. This keeps PromptLayer in sync without any manual steps.
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+pl_client = PromptLayer(api_key="...")
+
+# In your CI/CD pipeline after prompt file changes
+pl_client.templates.publish(
+    prompt_name="order-summary",
+    prompt_template="Your updated prompt template here",
+)
+```
+
+```bash GitLab CI / GitHub Actions
+# Example CI step — publish prompt to PromptLayer
+curl -X POST https://api.promptlayer.com/prompt-templates \
+  -H "X-API-KEY: $PROMPTLAYER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d @prompts/order-summary.json
+```
+
+</CodeGroup>
+
+### Closing the loop with eval results
+
+If your CI/CD pipeline runs evaluations as part of the deploy process, you can push those results back to PromptLayer so everything is visible in one place. This means your team doesn't lose observability just because the deploy happened outside of PromptLayer.
+
+> 💡 **Tip** – Combine this with [protected release labels](/features/prompt-registry/release-labels) and approval workflows so that a prompt change in PromptLayer requires approval before the webhook fires and the MR is created.
+
+---
+
 # Run fully-managed Agents
 
 For complex workflows requiring orchestration, use PromptLayer's managed agent infrastructure.
@@ -160,13 +226,15 @@ Learn more: **[Agents documentation ↗](/why-promptlayer/agents)**
 
 ## Which pattern should I pick?
 
-| Requirement                 | `promptlayer_client.run` | Webhook Cache | Managed Agent |
-| --------------------------- | :----------------------: | :-----------: | :-----------: |
-| ⏱️ *extreme latency reqs*   |             ❌            |       ✅       |       ✅       |
-| 🛠 *Single LLM call*        |             ✅            |       ✅       |       ➖       |
-| 🌩 *Complex plans / tools*  |             ➖            |       ➖       |       ✅       |
-| 👥 *Non-eng prompt editors* |             ✅            |       ✅       |       ✅       |
-| 🧰 *Zero ops overhead*      |             ✅            |       ➖       |       ✅       |
+| Requirement                 | `promptlayer_client.run` | Webhook Cache | GitOps | Managed Agent |
+| --------------------------- | :----------------------: | :-----------: | :----: | :-----------: |
+| ⏱️ *extreme latency reqs*   |             ❌            |       ✅       |   ➖   |       ✅       |
+| 🛠 *Single LLM call*        |             ✅            |       ✅       |   ✅   |       ➖       |
+| 🌩 *Complex plans / tools*  |             ➖            |       ➖       |   ➖   |       ✅       |
+| 👥 *Non-eng prompt editors* |             ✅            |       ✅       |   ✅   |       ✅       |
+| 🧰 *Zero ops overhead*      |             ✅            |       ➖       |   ➖   |       ✅       |
+| 🔀 *Git as source of truth* |             ➖            |       ➖       |   ✅   |       ➖       |
+| 🔁 *Bi-directional sync*    |             ➖            |       ➖       |   ✅   |       ➖       |
 
 ---
 
