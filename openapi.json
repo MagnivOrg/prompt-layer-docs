@@ -3406,6 +3406,9 @@
               }
             }
           },
+          "202": {
+            "description": "Execution is still in progress. At least one node is in a non-final status (QUEUED or RUNNING)."
+          },
           "400": {
             "description": "Bad Request"
           },
