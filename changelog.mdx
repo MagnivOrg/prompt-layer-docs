@@ -25,6 +25,20 @@ PromptLayer now supports OpenAI's GPT-5.4 Mini and GPT-5.4 Nano models in the `P
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Chat History Injection for Prompt Templates**
+Prompt template blocks in evaluations can now inject chat history messages from a dataset column directly into chat prompts.
+- Enable chat history injection in the Advanced Settings section of the prompt template block configuration
+- Select a source column containing message objects with role and content fields
+- Messages are automatically appended to the end of your prompt template
+- Supports both JSON and JSON5 formatted message lists for flexible data sources
+
+---
+
 ## March 17, 2026
 
 ### Deployment 1
