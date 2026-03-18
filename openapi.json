@@ -3406,6 +3406,49 @@
               }
             }
           },
+          "202": {
+            "description": "Execution is still in progress. At least one node is in a non-final status (QUEUED or RUNNING).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "oneOf": [
+                    {
+                      "type": "object",
+                      "additionalProperties": {
+                        "type": "object",
+                        "properties": {
+                          "status": {
+                            "type": "string",
+                            "description": "The status of the node execution."
+                          },
+                          "value": {
+                            "description": "The output value of the node."
+                          },
+                          "error_message": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Error message if the node failed."
+                          },
+                          "raw_error_message": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Raw error message if the node failed."
+                          },
+                          "is_output_node": {
+                            "type": "boolean",
+                            "description": "Whether this node is an output node."
+                          }
+                        }
+                      }
+                    },
+                    {
+                      "description": "The main output value of the workflow execution when return_all_outputs is false."
+                    }
+                  ]
+                }
+              }
+            }
+          },
           "400": {
             "description": "Bad Request"
           },
