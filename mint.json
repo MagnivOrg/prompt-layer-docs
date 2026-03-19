@@ -34,7 +34,8 @@
         "languages/javascript",
         "languages/rest-api",
         "languages/mcp",
-        "languages/integrations"
+        "languages/integrations",
+        "languages/opentelemetry"
       ]
     },
     {
