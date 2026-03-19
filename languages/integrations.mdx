@@ -19,9 +19,16 @@ Please read the [LiteLLM documentation page](https://docs.litellm.ai/docs/observ
 
 ## Claude Code
 
-PromptLayer supports integration with [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview), allowing you to send Claude Code traces directly to PromptLayer using the PromptLayer plugin, whether you use Claude Code from the CLI or through the SDK.
+PromptLayer supports [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) in two setup modes:
 
-To set up:
+- **CLI:** install the PromptLayer Claude plugin directly into Claude Code.
+- **SDK:** use the PromptLayer JavaScript or Python helper to inject the same tracing plugin and environment variables into `ClaudeAgentOptions`.
+
+The underlying tracing is the same in both cases. If you're using the SDK, you do not need to manually install the plugin or discover the plugin path yourself.
+
+### CLI: Direct Plugin Install
+
+Use this path if you're running Claude Code from the terminal and want PromptLayer enabled globally.
 
 1. Install the plugin
 
@@ -39,9 +46,70 @@ $HOME/.claude/plugins/marketplaces/promptlayer-claude-plugins/plugins/trace/setu
 3. Enter your PromptLayer API key and keep the default endpoint: `https://api.promptlayer.com/v1/traces`
 4. Start Claude Code and run a prompt
 
+### SDK: JavaScript Or Python
+
+Use this path if you're embedding Claude Code through Anthropic's SDK and want PromptLayer configured in code.
+
+<Note>
+The PromptLayer Claude SDK helpers currently support macOS and Linux. Windows is not supported.
+</Note>
+
+1. Install the required packages
+
+<CodeGroup>
+```bash JavaScript
+npm install promptlayer @anthropic-ai/claude-agent-sdk
+```
+
+```bash Python
+pip install "promptlayer[claude-agents]"
+```
+</CodeGroup>
+
+2. Generate PromptLayer Claude config and pass it into `ClaudeAgentOptions`
+
+<CodeGroup>
+```ts JavaScript
+import { ClaudeAgentOptions } from "@anthropic-ai/claude-agent-sdk";
+import { getClaudeConfig } from "promptlayer/claude-agents";
+
+const plClaudeConfig = getClaudeConfig();
+
+const options = new ClaudeAgentOptions({
+  model: "sonnet",
+  cwd: process.cwd(),
+  plugins: [plClaudeConfig.plugin],
+  env: {
+    ...plClaudeConfig.env,
+  },
+});
+```
+
+```python Python
+from claude_agent_sdk import ClaudeAgentOptions
+from promptlayer.integrations.claude_agents import get_claude_config
+
+pl_claude_config = get_claude_config()
+
+options = ClaudeAgentOptions(
+    model="sonnet",
+    cwd=".",
+    plugins=[pl_claude_config.plugin],
+    env={**pl_claude_config.env},
+)
+```
+</CodeGroup>
+
+`getClaudeConfig()` and `get_claude_config()` read `PROMPTLAYER_API_KEY` by default and return:
+
+- a local plugin reference for Claude SDK `plugins`
+- PromptLayer environment variables for Claude SDK `env`
+
+3. Start your Claude SDK client or agent with those options
+
 Once configured, PromptLayer will capture Claude Code sessions, LLM calls, tool calls, prompts, completions, token usage, and model metadata.
 
-For troubleshooting and additional details, see the [PromptLayer Claude Code plugin repository](https://github.com/MagnivOrg/promptlayer-claude-plugins).
+For troubleshooting and additional details on the direct plugin install path, see the [PromptLayer Claude Code plugin repository](https://github.com/MagnivOrg/promptlayer-claude-plugins).
 
 ## Vercel AI SDK
 
