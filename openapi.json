@@ -3818,6 +3818,271 @@
         }
       }
     },
+    "/workflows/{workflow_id_or_name}": {
+      "get": {
+        "summary": "Get Agent",
+        "operationId": "getWorkflow",
+        "tags": [
+          "workflow"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          },
+          {
+            "name": "workflow_id_or_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The agent ID or name."
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0
+            },
+            "description": "Specific version number to retrieve. Mutually exclusive with `label`."
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Release label name to retrieve (e.g. 'prod', 'staging'). Mutually exclusive with `version`."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Agent retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "workflow_id": {
+                      "type": "integer",
+                      "description": "Unique identifier for the agent"
+                    },
+                    "workflow_name": {
+                      "type": "string",
+                      "description": "Name of the agent"
+                    },
+                    "version": {
+                      "type": "integer",
+                      "description": "Version number"
+                    },
+                    "workflow_version_id": {
+                      "type": "integer",
+                      "description": "Unique identifier for this version"
+                    },
+                    "commit_message": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Commit message for this version"
+                    },
+                    "required_input_variables": {
+                      "type": "object",
+                      "nullable": true,
+                      "description": "Input variable names mapped to their types",
+                      "additionalProperties": {
+                        "type": "string"
+                      }
+                    },
+                    "release_labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "Release labels attached to this version"
+                    },
+                    "created_at": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "ISO 8601 timestamp of when this version was created"
+                    },
+                    "nodes": {
+                      "type": "array",
+                      "description": "Full node definitions including configuration and dependencies",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "UUID of the node"
+                          },
+                          "workflow_version_id": {
+                            "type": "integer",
+                            "description": "Version ID this node belongs to"
+                          },
+                          "name": {
+                            "type": "string",
+                            "description": "Node name (unique within a version)"
+                          },
+                          "node_type": {
+                            "type": "string",
+                            "description": "Type of node (e.g. PROMPT_TEMPLATE, CODE_EXECUTION, VARIABLE)"
+                          },
+                          "is_output_node": {
+                            "type": "boolean",
+                            "description": "Whether this node is an output node"
+                          },
+                          "configuration": {
+                            "type": "object",
+                            "description": "Full node configuration (structure depends on node_type)"
+                          },
+                          "dependencies": {
+                            "type": "array",
+                            "items": {
+                              "type": "string"
+                            },
+                            "description": "Names of nodes this node depends on"
+                          }
+                        },
+                        "required": ["id", "name", "node_type", "is_output_node", "configuration", "dependencies"]
+                      }
+                    },
+                    "edges": {
+                      "type": "array",
+                      "description": "Connections between nodes with optional conditionals",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "string",
+                            "description": "UUID of the edge"
+                          },
+                          "source_node_name": {
+                            "type": "string",
+                            "description": "Name of the source node"
+                          },
+                          "target_node_name": {
+                            "type": "string",
+                            "description": "Name of the target node"
+                          },
+                          "is_and": {
+                            "type": "boolean",
+                            "description": "Whether all conditionals must be true (AND) or any (OR)"
+                          },
+                          "conditionals": {
+                            "type": "array",
+                            "description": "Conditional rules for this edge",
+                            "items": {
+                              "type": "object"
+                            }
+                          }
+                        },
+                        "required": ["id", "source_node_name", "target_node_name", "is_and"]
+                      }
+                    }
+                  },
+                  "required": ["success", "workflow_id", "workflow_name", "version", "workflow_version_id", "nodes", "edges"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent or version not found"
+          },
+          "422": {
+            "description": "Validation Error (e.g. both version and label specified)"
+          }
+        }
+      }
+    },
+    "/workflows/{workflow_id_or_name}/labels": {
+      "get": {
+        "summary": "Get Agent Labels",
+        "operationId": "getWorkflowLabels",
+        "tags": [
+          "workflow",
+          "release-labels"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your API key for authentication."
+          },
+          {
+            "name": "workflow_id_or_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The agent ID or name."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Labels retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "release_labels": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "release_label": {
+                            "type": "string",
+                            "description": "Label name (e.g. 'prod', 'staging')"
+                          },
+                          "release_label_id": {
+                            "type": "integer",
+                            "description": "Unique identifier for the label"
+                          },
+                          "workflow_version_id": {
+                            "type": "integer",
+                            "description": "Version ID this label points to"
+                          },
+                          "workflow_version_number": {
+                            "type": "integer",
+                            "description": "Version number this label points to"
+                          }
+                        },
+                        "required": ["release_label", "release_label_id", "workflow_version_id", "workflow_version_number"]
+                      }
+                    }
+                  },
+                  "required": ["success", "release_labels"]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Agent not found"
+          }
+        }
+      }
+    },
     "/workflows/{workflow_name}/run": {
       "post": {
         "summary": "Run Workflow",
