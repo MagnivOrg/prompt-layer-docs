@@ -4,6 +4,33 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 19, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Chat View for Request Traces**
+View LLM request traces in a conversation-style chat interface for easier readability.
+- Toggle between chat view and traditional template view
+- See message flow with role-based avatars (user/assistant/system)
+- Available in request logs and playground pages
+
+**Enhanced Workflow API**
+The `GET /workflows` endpoint now returns full workflow structure including nodes and edges.
+- Query specific versions using `?version=N` parameter
+- Query by release label using `?label=my-label` parameter
+- New `GET /workflows/{id}/labels` endpoint lists all release labels for a workflow
+
+#### Improvements
+
+- Expanded structured output support for additional Bedrock models (Nova, Llama, Mistral families)
+- Better error handling and logging for workflow code execution nodes
+- Improved loading states in shared request pages
+
+---
+
+
 ## March 18, 2026
 
 ### Deployment 1
