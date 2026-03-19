@@ -191,6 +191,8 @@
           "group": "Agents",
           "pages": [
             "reference/list-workflows",
+            "reference/get-workflow",
+            "reference/get-workflow-labels",
             "reference/create-workflow",
             "reference/patch-workflow",
             "reference/run-workflow",
