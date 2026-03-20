@@ -4,6 +4,33 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 20, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Public Trace API Endpoint**
+New `/api/public/v2/traces/<trace_id>` endpoint allows you to retrieve all spans and request logs associated with a trace ID, making it easier to programmatically access complete trace data for debugging and analysis.
+- Returns all spans in the trace with their associated request log IDs
+- Scoped to your workspace for security
+- Complements the existing request log retrieval endpoint
+
+**Enhanced Request Log API Response**
+The `/api/public/v2/request/<request_id>` endpoint now includes the `trace_id` field in the response, enabling you to navigate from individual requests to their complete traces.
+
+**Workflow Details in API Response**
+The workflow retrieval endpoint now returns the complete `workflow` object in the response, providing full metadata and configuration details alongside the existing `workflow_id`, `workflow_name`, and `version` fields.
+
+#### Improvements
+
+- Enhanced template rendering error detection for Anthropic and Google system messages in Jinja2 templates
+- Improved reliability when retrieving large request logs with automatic retry logic for transient failures
+- Better error messages when request log data is temporarily unavailable
+
+---
+
+
 ## March 19, 2026
 
 ### Deployment 1
