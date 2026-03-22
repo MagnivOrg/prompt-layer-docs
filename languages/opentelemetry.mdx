@@ -1,0 +1,200 @@
+---
+title: "OpenTelemetry"
+icon: "tower-broadcast"
+---
+
+PromptLayer natively supports [OpenTelemetry (OTEL)](https://opentelemetry.io/), the industry-standard observability framework. You can send traces from **any** OpenTelemetry-compatible SDK or Collector directly to PromptLayer — no PromptLayer SDK required.
+
+This is ideal when:
+
+- Your framework isn't listed on the [Integrations](/languages/integrations) page
+- You already have an OpenTelemetry pipeline and want to add PromptLayer as a destination
+- You want vendor-neutral instrumentation
+
+<Note>
+If you're using a supported framework like the [Vercel AI SDK](/languages/integrations#vercel-ai-sdk), [OpenAI Agents SDK](/languages/integrations#openai-agents-sdk), or [Claude Code](/languages/integrations#claude-code), see the [Integrations](/languages/integrations) page for framework-specific setup — those integrations handle the OTEL configuration for you.
+</Note>
+
+## How It Works
+
+PromptLayer exposes an [OTLP/HTTP endpoint](/reference/otlp-ingest-traces) at:
+
+```
+https://api.promptlayer.com/v1/traces
+```
+
+Any OpenTelemetry SDK or Collector can export traces to this endpoint. Spans that include [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.
+
+## Setup
+
+Configure your OpenTelemetry SDK to export traces to PromptLayer using the OTLP/HTTP exporter.
+
+<CodeGroup>
+```python Python
+from opentelemetry.sdk.trace import TracerProvider
+from opentelemetry.sdk.trace.export import BatchSpanProcessor
+from opentelemetry.sdk.resources import Resource
+from opentelemetry.exporter.otlp.proto.http.trace_exporter import OTLPSpanExporter
+
+# Install required packages:
+# pip install opentelemetry-sdk opentelemetry-exporter-otlp-proto-http
+
+exporter = OTLPSpanExporter(
+    endpoint="https://api.promptlayer.com/v1/traces",
+    headers={"X-API-KEY": "your-promptlayer-api-key"},
+)
+
+provider = TracerProvider(
+    resource=Resource.create({"service.name": "my-llm-app"})
+)
+provider.add_span_processor(BatchSpanProcessor(exporter))
+
+# Use the tracer to create spans
+tracer = provider.get_tracer("my-llm-app")
+```
+
+```javascript JavaScript
+// Install required packages:
+// npm install @opentelemetry/sdk-node @opentelemetry/exporter-trace-otlp-http @opentelemetry/resources
+
+import { NodeSDK } from "@opentelemetry/sdk-node";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-http";
+import { resourceFromAttributes } from "@opentelemetry/resources";
+
+const sdk = new NodeSDK({
+  serviceName: "my-llm-app",
+  resource: resourceFromAttributes({
+    "service.name": "my-llm-app",
+  }),
+  traceExporter: new OTLPTraceExporter({
+    url: "https://api.promptlayer.com/v1/traces",
+    headers: {
+      "X-API-Key": process.env.PROMPTLAYER_API_KEY,
+    },
+  }),
+});
+
+sdk.start();
+
+// Shut down before exit to flush remaining spans
+process.on("beforeExit", async () => {
+  await sdk.shutdown();
+});
+```
+</CodeGroup>
+
+## GenAI Semantic Conventions
+
+Spans that use [GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-spans/) are automatically parsed into PromptLayer request logs. Add these attributes to your LLM call spans:
+
+| Attribute | Description |
+|---|---|
+| `gen_ai.request.model` | Model name (e.g. `gpt-4`, `claude-sonnet-4-20250514`) |
+| `gen_ai.provider.name` | Provider (e.g. `openai`, `anthropic`) |
+| `gen_ai.operation.name` | Operation type (`chat`, `text_completion`, `embeddings`) |
+| `gen_ai.usage.input_tokens` | Input token count |
+| `gen_ai.usage.output_tokens` | Output token count |
+| `gen_ai.input.messages` | Request messages |
+| `gen_ai.output.messages` | Response messages |
+| `gen_ai.request.temperature` | Temperature parameter |
+| `gen_ai.request.max_tokens` | Max tokens parameter |
+| `gen_ai.response.finish_reasons` | Finish reasons |
+
+### Event-Based Conventions
+
+PromptLayer also supports the newer [event-based GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/) where message content is sent as span events rather than span attributes. This format is used by frameworks like [LiveKit](https://docs.livekit.io/) and newer versions of OpenTelemetry GenAI instrumentation.
+
+The following event types are recognized:
+
+| Event Name | Description |
+|---|---|
+| `gen_ai.system.message` | System message |
+| `gen_ai.user.message` | User message |
+| `gen_ai.assistant.message` | Assistant message (including tool calls) |
+| `gen_ai.tool.message` | Tool/function result message |
+| `gen_ai.choice` | Model response/choice |
+
+Event attributes like `gen_ai.system.message.content`, `gen_ai.user.message.content`, and tool call data are automatically extracted and mapped to PromptLayer request logs.
+
+<Note>
+When both attribute-based messages (`gen_ai.input.messages`) and event-based messages are present on the same span, attribute-based messages take priority.
+</Note>
+
+## Linking to Prompt Templates
+
+You can associate OTEL spans with prompt templates in your PromptLayer workspace by setting custom span attributes:
+
+| Attribute | Type | Description |
+|---|---|---|
+| `promptlayer.prompt.name` | string | Name of the prompt template |
+| `promptlayer.prompt.id` | integer | ID of the prompt template (alternative to `name`) |
+| `promptlayer.prompt.version` | integer | Specific version number (optional) |
+| `promptlayer.prompt.label` | string | Label to resolve version (e.g. `production`) |
+
+<CodeGroup>
+```python Python
+from opentelemetry import trace
+
+tracer = trace.get_tracer("my-llm-app")
+
+with tracer.start_as_current_span("llm-call") as span:
+    # Link this span to a prompt template
+    span.set_attribute("promptlayer.prompt.name", "my-prompt")
+    span.set_attribute("promptlayer.prompt.label", "production")
+
+    # Add GenAI attributes
+    span.set_attribute("gen_ai.request.model", "gpt-4")
+    span.set_attribute("gen_ai.provider.name", "openai")
+
+    # ... make your LLM call ...
+```
+
+```javascript JavaScript
+import { trace } from "@opentelemetry/api";
+
+const tracer = trace.getTracer("my-llm-app");
+
+tracer.startActiveSpan("llm-call", (span) => {
+  // Link this span to a prompt template
+  span.setAttribute("promptlayer.prompt.name", "my-prompt");
+  span.setAttribute("promptlayer.prompt.label", "production");
+
+  // Add GenAI attributes
+  span.setAttribute("gen_ai.request.model", "gpt-4");
+  span.setAttribute("gen_ai.provider.name", "openai");
+
+  // ... make your LLM call ...
+
+  span.end();
+});
+```
+</CodeGroup>
+
+## Using an OpenTelemetry Collector
+
+If you're already running an [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), you can add PromptLayer as an additional exporter in your Collector config:
+
+```yaml
+exporters:
+  otlphttp/promptlayer:
+    endpoint: "https://api.promptlayer.com"
+    headers:
+      X-API-Key: "${PROMPTLAYER_API_KEY}"
+
+service:
+  pipelines:
+    traces:
+      exporters: [otlphttp/promptlayer]
+```
+
+This lets you fan out traces to PromptLayer alongside your existing observability backends (Datadog, New Relic, Jaeger, etc.) without changing your application code.
+
+## Content Types
+
+The endpoint accepts both binary protobuf (`application/x-protobuf`, recommended) and JSON (`application/json`) encodings. Both support `Content-Encoding: gzip`.
+
+## Next Steps
+
+- [OTLP Ingest Traces API Reference](/reference/otlp-ingest-traces) — full endpoint documentation
+- [Integrations](/languages/integrations) — framework-specific setups (Vercel AI SDK, OpenAI Agents, Claude Code)
+- [Traces](/running-requests/traces) — PromptLayer SDK native tracing with `@traceable` and `wrapWithSpan`

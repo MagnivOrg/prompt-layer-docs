@@ -34,7 +34,8 @@
         "languages/javascript",
         "languages/rest-api",
         "languages/mcp",
-        "languages/integrations"
+        "languages/integrations",
+        "languages/opentelemetry"
       ]
     },
     {
@@ -154,6 +155,7 @@
           "group": "Tracking",
           "pages": [
             "reference/get-request",
+            "reference/get-trace",
             "reference/search-request-logs",
             "reference/log-request",
             "reference/track-prompt",
