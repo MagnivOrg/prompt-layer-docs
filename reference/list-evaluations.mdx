@@ -19,3 +19,9 @@ Use the `status` parameter to control which evaluations are returned based on th
 - `active` (default): Returns only active evaluations
 - `deleted`: Returns only deleted/archived evaluations
 - `all`: Returns both active and deleted evaluations
+
+### Including Batch Runs
+
+Use the `include_runs` parameter to include batch run details nested under each evaluation. When set to `true`, each evaluation object in the response will include a `runs` array containing all of its batch runs with their status and cell status counts.
+
+This is useful for programmatically discovering batch run IDs without needing to inspect the UI.

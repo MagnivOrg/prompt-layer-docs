@@ -155,6 +155,7 @@
           "group": "Tracking",
           "pages": [
             "reference/get-request",
+            "reference/get-trace",
             "reference/search-request-logs",
             "reference/log-request",
             "reference/track-prompt",

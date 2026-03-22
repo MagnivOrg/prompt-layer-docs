@@ -100,6 +100,26 @@ Spans that use [GenAI semantic conventions](https://opentelemetry.io/docs/specs/
 | `gen_ai.request.max_tokens` | Max tokens parameter |
 | `gen_ai.response.finish_reasons` | Finish reasons |
 
+### Event-Based Conventions
+
+PromptLayer also supports the newer [event-based GenAI semantic conventions](https://opentelemetry.io/docs/specs/semconv/gen-ai/gen-ai-events/) where message content is sent as span events rather than span attributes. This format is used by frameworks like [LiveKit](https://docs.livekit.io/) and newer versions of OpenTelemetry GenAI instrumentation.
+
+The following event types are recognized:
+
+| Event Name | Description |
+|---|---|
+| `gen_ai.system.message` | System message |
+| `gen_ai.user.message` | User message |
+| `gen_ai.assistant.message` | Assistant message (including tool calls) |
+| `gen_ai.tool.message` | Tool/function result message |
+| `gen_ai.choice` | Model response/choice |
+
+Event attributes like `gen_ai.system.message.content`, `gen_ai.user.message.content`, and tool call data are automatically extracted and mapped to PromptLayer request logs.
+
+<Note>
+When both attribute-based messages (`gen_ai.input.messages`) and event-based messages are present on the same span, attribute-based messages take priority.
+</Note>
+
 ## Linking to Prompt Templates
 
 You can associate OTEL spans with prompt templates in your PromptLayer workspace by setting custom span attributes:

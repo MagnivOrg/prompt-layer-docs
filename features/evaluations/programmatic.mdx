@@ -451,6 +451,7 @@ Reference a prompt template stored in the Prompt Registry:
         "max_tokens": 500
       }
     },
+    "chat_history_source": "chat_messages_column",  // Optional: Dataset column containing chat history (list of {role, content} messages) to append to the prompt
     "verbose": false,                   // Optional: Include detailed response info
     "return_template_only": false       // Optional: Return template without executing
   },
@@ -502,6 +503,10 @@ Define a prompt template directly in the configuration without saving it to the 
 
 <Info>
 You must provide exactly one of `template` (registry reference) or `inline_template` (inline content) in the configuration. They are mutually exclusive.
+</Info>
+
+<Info>
+**Chat History Source**: For chat-type prompts, you can use `chat_history_source` to specify a dataset column containing a list of chat messages (each with `role` and `content` fields). These messages are appended to the end of the prompt template before execution, allowing you to test prompts with different conversation histories. The column value should be a JSON array of message objects, e.g. `[{"role": "user", "content": "Hello"}, {"role": "assistant", "content": "Hi there!"}]`.
 </Info>
 
 #### ENDPOINT

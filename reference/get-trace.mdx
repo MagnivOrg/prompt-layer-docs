@@ -1,0 +1,29 @@
+---
+title: "Get Trace"
+openapi: "GET /api/public/v2/traces/{trace_id}"
+---
+
+Retrieve all spans for a given trace ID. Each span includes its metadata and, if it generated a request log, the associated `request_log_id`.
+
+This is useful for:
+
+- **Trace inspection**: View the full execution flow of a traced operation
+- **Linking spans to requests**: Find which spans generated PromptLayer request logs
+- **Debugging**: Follow the execution path across multiple LLM calls
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header.
+
+### Example
+
+```bash
+curl -H "X-API-KEY: your_api_key" \
+  https://api.promptlayer.com/api/public/v2/traces/a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6
+```
+
+### Related
+
+- [Get Request](/reference/get-request) - Retrieve a single request (includes `trace_id`)
+- [Traces](/running-requests/traces) - PromptLayer SDK tracing with `@traceable`
+- [OpenTelemetry](/languages/opentelemetry) - Send traces from any OTEL SDK
