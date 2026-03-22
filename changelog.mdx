@@ -14,6 +14,25 @@ icon: "clock-rotate-left"
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Evaluation Runs API Enhancement**
+The public API now supports retrieving batch runs nested within evaluations for easier programmatic access to evaluation results.
+- Added `include_runs` parameter to the list evaluations endpoint
+- When enabled, returns each evaluation with its associated batch runs and their current status
+- Includes detailed statistics and status counts for each run
+
+#### Improvements
+
+- Enhanced display of requests from additional LLM providers in the dashboard
+- Improved handling of chat completion requests across different provider formats
+- Better status tracking for evaluation batch runs
+
+---
+
 ## March 20, 2026
 
 ### Deployment 1
