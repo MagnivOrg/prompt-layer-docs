@@ -172,7 +172,10 @@
             "reference/get-dataset-rows",
             "reference/create-dataset-group",
             "reference/create-dataset-version-from-file",
-            "reference/create-dataset-version-from-filter-params"
+            "reference/create-dataset-version-from-filter-params",
+            "reference/create-draft-dataset-version",
+            "reference/add-request-log-to-dataset",
+            "reference/save-draft-dataset-version"
           ]
         },
         {

@@ -73,14 +73,14 @@ For clients that support stdio transport (e.g. Claude Desktop, Cursor), you can 
 
 ## Available Tools
 
-The MCP server exposes 34 tools covering all major PromptLayer features:
+The MCP server exposes 37 tools covering all major PromptLayer features:
 
 | Category | Tools |
 |---|---|
 | **Prompt Templates** | `get-prompt-template`, `get-prompt-template-raw`, `list-prompt-templates`, `publish-prompt-template`, `list-prompt-template-labels`, `create-prompt-label`, `move-prompt-label`, `delete-prompt-label`, `get-snippet-usage` |
 | **Request Logs** | `get-request`, `search-request-logs`, `get-trace` |
 | **Tracking** | `log-request`, `create-spans-bulk` |
-| **Datasets** | `list-datasets`, `get-dataset-rows`, `create-dataset-group`, `create-dataset-version-from-file`, `create-dataset-version-from-filter-params` |
+| **Datasets** | `list-datasets`, `get-dataset-rows`, `create-dataset-group`, `create-dataset-version-from-file`, `create-dataset-version-from-filter-params`, `create-draft-dataset-version`, `add-request-log-to-dataset`, `save-draft-dataset-version` |
 | **Evaluations** | `list-evaluations`, `get-evaluation-rows`, `create-report`, `run-report`, `get-report`, `get-report-score`, `update-report-score-card`, `delete-reports-by-name` |
 | **Agents** | `list-workflows`, `create-workflow`, `patch-workflow`, `run-workflow`, `get-workflow-version-execution-results`, `get-workflow` |
 | **Folders** | `create-folder`, `edit-folder`, `get-folder-entities`, `move-folder-entities`, `delete-folder-entities`, `resolve-folder-id` |

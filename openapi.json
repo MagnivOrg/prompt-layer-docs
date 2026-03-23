@@ -3335,6 +3335,331 @@
         }
       }
     },
+    "/api/public/v2/dataset-versions/create-draft": {
+      "post": {
+        "summary": "Create Draft Dataset Version",
+        "operationId": "createDraftDatasetVersion",
+        "tags": [
+          "datasets"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication. This endpoint supports API key authentication only."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_group_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "ID of the dataset group to create a draft version for"
+                  },
+                  "source_dataset_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Optional. ID of an existing dataset version to copy rows from. Must belong to the same dataset group."
+                  }
+                },
+                "required": [
+                  "dataset_group_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Empty draft created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "draft_dataset_id": {
+                      "type": "integer",
+                      "description": "ID of the created draft dataset"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "draft_dataset_id"
+                  ]
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Draft created, rows being copied from source dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "draft_dataset_id": {
+                      "type": "integer",
+                      "description": "ID of the created draft dataset"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "draft_dataset_id"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied to this dataset group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset group or source dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "A draft version already exists for this dataset group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/dataset-versions/add-request-log": {
+      "post": {
+        "summary": "Add Request Log to Draft Dataset",
+        "operationId": "addRequestLogToDatasetVersion",
+        "tags": [
+          "datasets"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication. This endpoint supports API key authentication only."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_group_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "ID of the dataset group containing the draft"
+                  },
+                  "request_log_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "ID of the request log to add as a dataset row"
+                  }
+                },
+                "required": [
+                  "dataset_group_id",
+                  "request_log_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Request log added to draft dataset",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "draft_dataset_id": {
+                      "type": "integer",
+                      "description": "ID of the draft dataset"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "draft_dataset_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Request log and dataset must belong to the same workspace",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied to this dataset group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset group, draft, or request log not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/dataset-versions/save-draft": {
+      "post": {
+        "summary": "Save Draft Dataset Version",
+        "operationId": "saveDraftDatasetVersion",
+        "tags": [
+          "datasets"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication. This endpoint supports API key authentication only."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "dataset_group_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "ID of the dataset group containing the draft to save"
+                  }
+                },
+                "required": [
+                  "dataset_group_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Dataset save job queued",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "draft_dataset_id": {
+                      "type": "integer",
+                      "description": "ID of the draft dataset being saved"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "draft_dataset_id"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Access denied to this dataset group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Dataset group not found or no draft version exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/prompt-templates": {
       "get": {
         "tags": [

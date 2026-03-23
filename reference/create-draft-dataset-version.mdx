@@ -1,0 +1,27 @@
+---
+title: "Create Draft Dataset Version"
+openapi: "POST /api/public/v2/dataset-versions/create-draft"
+---
+
+Create a new draft dataset version for a dataset group. A draft (version_number = -1) is a mutable staging area where you can add rows before publishing.
+
+### Authentication
+
+This endpoint requires API key authentication only.
+
+### Workflow
+
+This endpoint is the first step in the dataset version creation workflow:
+
+1. **Create draft** — Use this endpoint to create a draft
+2. **Add rows** — Use [Add Request Log](/reference/add-request-log-to-dataset) to add request logs as rows
+3. **Save** — Use [Save Draft](/reference/save-draft-dataset-version) to publish as a new version
+
+### Source Dataset
+
+Optionally provide `source_dataset_id` to copy rows from an existing dataset version. The source dataset must belong to the same dataset group. When a source is provided, rows are copied asynchronously in the background (returns 202).
+
+### Notes
+
+- Only one draft can exist per dataset group at a time. Returns 409 if a draft already exists.
+- Without `source_dataset_id`, an empty draft is created (returns 201).
