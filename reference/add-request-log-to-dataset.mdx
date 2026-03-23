@@ -1,0 +1,26 @@
+---
+title: "Add Request Log to Dataset"
+openapi: "POST /api/public/v2/dataset-versions/add-request-log"
+---
+
+Add a request log as a new row in the draft dataset version. The request log's input variables, metadata, scores, tags, prompt, and response are extracted and added as columns.
+
+### Authentication
+
+This endpoint requires API key authentication only.
+
+### Prerequisites
+
+A draft version must already exist for the dataset group. Use [Create Draft](/reference/create-draft-dataset-version) first.
+
+### Workflow
+
+1. **Create draft** — Use [Create Draft](/reference/create-draft-dataset-version)
+2. **Add rows** — Call this endpoint one or more times to add request logs
+3. **Save** — Use [Save Draft](/reference/save-draft-dataset-version) to publish
+
+### Notes
+
+- The request log and dataset group must belong to the same workspace.
+- New columns are automatically added based on the request log's data fields.
+- Returns 404 if no draft exists — call `create-draft` first.
