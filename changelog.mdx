@@ -4,6 +4,26 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## March 24, 2026
+
+### Deployment 1
+
+#### New Features
+**Public API Request Search Suggestions**
+Developers can now fetch autocomplete suggestions for request log searches via the public API, enabling programmatic access to the same search experience available in the dashboard.
+- New `/api/public/v2/requests/suggestions` endpoint for retrieving field value suggestions
+- Supports filtering suggestions by field type, prefix, metadata key, and structured filter groups
+- Rate limited to 10 requests per minute for API stability
+
+#### Improvements
+- Updated Python SDK to version 1.2.4 with enhanced features and bug fixes
+- Fixed Pro plan upgrade button incorrectly appearing disabled when at user limit
+- Simplified internal request search filtering for improved query performance
+- Enhanced structured search payload handling for more consistent filter behavior
+
+---
+
+
 ## March 23, 2026
 
 ### Deployment 1
