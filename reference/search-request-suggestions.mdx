@@ -1,0 +1,114 @@
+---
+title: "Search Request Suggestions"
+openapi: "GET /api/public/v2/requests/suggestions"
+description: "Get autocomplete suggestions for request log search fields."
+---
+
+Get possible values for a given request log field, optionally filtered by a prefix. This is useful for:
+
+- **Search UIs**: Power autocomplete dropdowns for search fields
+- **Discovery**: Find which engines, tags, metadata keys, or other values exist in your logs
+- **Scoped suggestions**: Narrow suggestions to requests matching a filter group
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header.
+
+<Warning>
+This endpoint is rate limited to **10 requests per minute**.
+</Warning>
+
+## Parameters
+
+### `field` (required)
+
+The request log field to get suggestions for. Available fields:
+
+| Field | Description |
+|-------|-------------|
+| `engine` | Model names used in requests |
+| `provider_type` | LLM providers (e.g. `openai`, `anthropic`) |
+| `prompt_id` | Prompt template IDs |
+| `prompt` | Prompt template names (use `prompt_id` param to scope to a specific prompt) |
+| `tags` | Tags attached to requests |
+| `metadata_keys` | Metadata key names present in requests |
+| `status` | Request statuses (e.g. `success`, `error`) |
+| `tool_names` | Tool names used in requests |
+| `output_keys` | Keys present in flattened output |
+| `input_variable_keys` | Input variable key names |
+| `metadata_values` | Values for a specific metadata key (requires `metadata_key` param) |
+| `output_values` | Values for a specific output key (requires `metadata_key` param) |
+| `input_variable_values` | Values for a specific input variable key (requires `metadata_key` param) |
+
+### `prefix` (optional)
+
+A case-insensitive prefix string to filter suggestions. For example, `prefix=gpt` would return engines starting with "gpt".
+
+### `metadata_key` (optional)
+
+Required when `field` is `metadata_values`, `output_values`, or `input_variable_values`. Specifies which nested key to retrieve values for.
+
+### `prompt_id` (optional)
+
+Filter suggestions to a specific prompt template. Only used when `field` is `prompt`.
+
+### `filter_group` (optional)
+
+A JSON-encoded filter group to scope suggestions to matching requests. Uses the same filter group syntax as the [Search Request Logs](/reference/search-request-logs) endpoint.
+
+## Examples
+
+### Get available engines
+
+```bash
+curl -G https://api.promptlayer.com/api/public/v2/requests/suggestions \
+  -H "X-API-KEY: your_api_key" \
+  -d "field=engine"
+```
+
+### Autocomplete tags with prefix
+
+```bash
+curl -G https://api.promptlayer.com/api/public/v2/requests/suggestions \
+  -H "X-API-KEY: your_api_key" \
+  -d "field=tags" \
+  -d "prefix=prod"
+```
+
+### Get metadata values for a specific key
+
+```bash
+curl -G https://api.promptlayer.com/api/public/v2/requests/suggestions \
+  -H "X-API-KEY: your_api_key" \
+  -d "field=metadata_values" \
+  -d "metadata_key=user_id" \
+  -d "prefix=customer"
+```
+
+### Scoped suggestions with filter group
+
+```bash
+curl -G https://api.promptlayer.com/api/public/v2/requests/suggestions \
+  -H "X-API-KEY: your_api_key" \
+  -d "field=tags" \
+  --data-urlencode 'filter_group={"logic":"AND","filters":[{"field":"engine","operator":"is","value":"gpt-4o"}]}'
+```
+
+### Response
+
+```json
+{
+  "success": true,
+  "values": [
+    "production",
+    "staging",
+    "prod-v2"
+  ]
+}
+```
+
+### Related
+
+- [Search Request Logs](/reference/search-request-logs) - Search and filter request logs
+- [Search Data Model](/features/prompt-history/search-data-model) - How your data is indexed
+- [Advanced Search](/why-promptlayer/advanced-search) - Using search in the dashboard
