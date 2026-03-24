@@ -5496,6 +5496,123 @@
           }
         }
       }
+    },
+    "/api/public/v2/requests/suggestions": {
+      "get": {
+        "summary": "Search Request Suggestions",
+        "operationId": "getRequestSearchSuggestions",
+        "tags": [
+          "tracking"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication."
+          },
+          {
+            "name": "field",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "engine", "provider_type", "prompt_id", "prompt", "tags",
+                "metadata_keys", "status", "tool_names", "output_keys",
+                "input_variable_keys", "metadata_values", "output_values",
+                "input_variable_values"
+              ]
+            },
+            "description": "The request log field to get suggestions for."
+          },
+          {
+            "name": "prefix",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive prefix to filter suggestions."
+          },
+          {
+            "name": "metadata_key",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Required when field is metadata_values, output_values, or input_variable_values. Specifies which key to get values for."
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter suggestions to a specific prompt template (only used when field is prompt)."
+          },
+          {
+            "name": "filter_group",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "JSON-encoded filter group to scope suggestions to matching requests."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of suggestion values.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "values": {
+                      "type": "array",
+                      "items": {},
+                      "description": "List of suggestion values matching the query."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "429": {
+            "description": "Rate limit exceeded (10 requests per minute)."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -10532,14 +10649,6 @@
         "title": "SearchRequestLogsRequest",
         "description": "Search and filter request logs with structured filters, free-text search, sorting, and pagination.",
         "properties": {
-          "filters": {
-            "type": "array",
-            "nullable": true,
-            "description": "List of structured filters. Multiple filters are combined with AND logic.",
-            "items": {
-              "$ref": "#/components/schemas/StructuredFilter"
-            }
-          },
           "filter_group": {
             "nullable": true,
             "description": "Nested filter group with AND/OR logic. Use this for complex queries.",

@@ -157,6 +157,7 @@
             "reference/get-request",
             "reference/get-trace",
             "reference/search-request-logs",
+            "reference/search-request-suggestions",
             "reference/log-request",
             "reference/track-prompt",
             "reference/track-score",

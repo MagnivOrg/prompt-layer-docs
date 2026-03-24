@@ -21,14 +21,17 @@ This endpoint is rate limited to **10 requests per minute**. Results are capped 
 
 ## Filters
 
-Filters let you narrow results by any request log field. Pass them in the `filters` array — multiple filters are combined with AND logic.
+Use `filter_group` to narrow results by any request log field. Wrap your filters in a group with `"logic": "AND"` or `"logic": "OR"` to combine them.
 
 ```json
 {
-  "filters": [
-    { "field": "engine", "operator": "is", "value": "gpt-4o" },
-    { "field": "cost", "operator": "gte", "value": 0.01 }
-  ]
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "engine", "operator": "is", "value": "gpt-4o" },
+      { "field": "cost", "operator": "gte", "value": 0.01 }
+    ]
+  }
 }
 ```
 
@@ -157,14 +160,17 @@ If an exact match filter isn't returning expected results, the value may be stor
 
 ```json
 {
-  "filters": [
-    {
-      "field": "metadata",
-      "operator": "key_equals",
-      "value": "customer_123",
-      "nested_key": "user_id"
-    }
-  ]
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      {
+        "field": "metadata",
+        "operator": "key_equals",
+        "value": "customer_123",
+        "nested_key": "user_id"
+      }
+    ]
+  }
 }
 ```
 
@@ -174,7 +180,7 @@ If an exact match filter isn't returning expected results, the value may be stor
 
 ## Complex Filters with AND/OR Logic
 
-For more sophisticated queries, use `filter_group` to combine filters with AND/OR logic. Groups can be nested recursively.
+Filter groups can be nested recursively to build complex AND/OR queries.
 
 ```json
 {
@@ -194,10 +200,6 @@ For more sophisticated queries, use `filter_group` to combine filters with AND/O
 }
 ```
 
-<Tip>
-You can use `filters` and `filter_group` together — they are combined with AND logic.
-</Tip>
-
 ## Free-Text Search
 
 The `q` parameter performs a fuzzy prefix search across the prompt input and LLM output text. Combine it with filters to narrow results.
@@ -205,9 +207,12 @@ The `q` parameter performs a fuzzy prefix search across the prompt input and LLM
 ```json
 {
   "q": "refund policy",
-  "filters": [
-    { "field": "tags", "operator": "contains", "value": "customer-support" }
-  ]
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "tags", "operator": "contains", "value": "customer-support" }
+    ]
+  }
 }
 ```
 
@@ -233,10 +238,13 @@ curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
   -H "X-API-KEY: your_api_key" \
   -H "Content-Type: application/json" \
   -d '{
-    "filters": [
-      { "field": "cost", "operator": "gte", "value": 0.10 },
-      { "field": "request_start_time", "operator": "after", "value": "2025-03-14T00:00:00Z" }
-    ],
+    "filter_group": {
+      "logic": "AND",
+      "filters": [
+        { "field": "cost", "operator": "gte", "value": 0.10 },
+        { "field": "request_start_time", "operator": "after", "value": "2025-03-14T00:00:00Z" }
+      ]
+    },
     "sort_by": "cost",
     "sort_order": "desc"
   }'
@@ -246,10 +254,13 @@ curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
 
 ```json
 {
-  "filters": [
-    { "field": "prompt_id", "operator": "is", "value": 1234 },
-    { "field": "status", "operator": "is", "value": "error" }
-  ]
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "prompt_id", "operator": "is", "value": 1234 },
+      { "field": "status", "operator": "is", "value": "error" }
+    ]
+  }
 }
 ```
 
@@ -257,14 +268,17 @@ curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
 
 ```json
 {
-  "filters": [
-    {
-      "field": "metadata",
-      "operator": "key_equals",
-      "value": "customer_123",
-      "nested_key": "user_id"
-    }
-  ]
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      {
+        "field": "metadata",
+        "operator": "key_equals",
+        "value": "customer_123",
+        "nested_key": "user_id"
+      }
+    ]
+  }
 }
 ```
 
@@ -272,9 +286,12 @@ curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
 
 ```json
 {
-  "filters": [
-    { "field": "engine", "operator": "is", "value": "gpt-4o" }
-  ],
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "engine", "operator": "is", "value": "gpt-4o" }
+    ]
+  },
   "page": 3,
   "per_page": 25,
   "sort_by": "request_start_time",
@@ -317,6 +334,7 @@ curl -X POST https://api.promptlayer.com/api/public/v2/requests/search \
 
 ### Related
 
+- [Search Suggestions](/reference/search-request-suggestions) - Get autocomplete suggestions for search fields
 - [Search Data Model](/features/prompt-history/search-data-model) - How your data is indexed and what's searchable
 - [Get Request](/reference/get-request) - Retrieve the full payload of a single request
 - [Advanced Search](/why-promptlayer/advanced-search) - Using search in the dashboard
