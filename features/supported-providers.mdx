@@ -28,6 +28,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 
 - Tool Use (Anthropic Messages API).
 - Built-in tools: Web Search, Bash, Code Execution, Text Editor — see [Tool Calling](/features/prompt-registry/tool-calling#anthropic).
+- **Prompt Caching** — supported on all Claude models. See [Anthropic Prompt Caching](#anthropic-prompt-caching) below.
 - Claude 3 family supports image inputs.
 - Streaming via SDK.
 - If you previously used "Anthropic Bedrock", migrate to the native Anthropic provider or to Claude via Amazon Bedrock.
@@ -45,12 +46,14 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 - Built-in tools vary by model family — see [Tool Calling](/features/prompt-registry/tool-calling#vertex-ai):
   - Gemini models: Web Search, Google Maps, Code Execution, URL Context.
   - Claude models: Web Search, Bash, Text Editor.
+- **Prompt Caching** — supported for Claude models on Vertex AI. See [Anthropic Prompt Caching](#anthropic-prompt-caching) below.
 - Gemini image models are fully supported for native image generation via Vertex AI — see [Image Generation](/features/image-generation#google-gemini--native-image-generation).
 - Configure project, region, and credentials as required by Vertex AI.
 
 ### Amazon Bedrock
 
 - Access Anthropic Claude, Meta Llama, Mistral, Cohere, AI21 Jamba, Nova, DeepSeek, Gemma, and GPT-OSS models via AWS Bedrock Converse API.
+- **Prompt Caching** — supported for Claude models on Bedrock (PromptLayer handles the Bedrock `cachePoint` format automatically). See [Anthropic Prompt Caching](#anthropic-prompt-caching) below.
 - Capabilities vary per model family—see tool calling support below.
 - Streaming via SDK (Python/JS).
 
@@ -110,6 +113,52 @@ Capabilities:
 - Works in Logs, Prompt Registry, and Playground.
 - Evaluations: supported when the provider's OpenAI-compat layer matches PromptLayer parameters; remove unsupported params if needed (e.g., some providers do not support "seed").
 - Tool/Function Calling and streaming availability depend on the provider/model.
+
+## Anthropic Prompt Caching
+
+Anthropic's [prompt caching](https://docs.anthropic.com/en/docs/build-with-claude/prompt-caching) lets you cache repeated content (system instructions, tool definitions, few-shot examples) so it isn't re-processed on every request. Cached input tokens cost up to 90% less than uncached tokens after the initial write.
+
+PromptLayer supports this for Claude models on **Anthropic**, **Vertex AI**, and **Amazon Bedrock**.
+
+### Automatic caching
+
+Set a cache duration in the **Advanced Model Controls** (Prompt Caching dropdown) to automatically cache system messages and tool definitions.
+
+<img src="/images/playground/anthropic-caching-model-dropdown.png" alt="Advanced Model Controls with Prompt Caching enabled and 5 minutes selected" />
+
+Available durations:
+
+| Duration | Providers |
+|----------|-----------|
+| **5 minutes** | Anthropic, Vertex AI, Amazon Bedrock (all supported Claude models) |
+| **1 hour** | Anthropic, Vertex AI, Amazon Bedrock (Claude Sonnet 4.5 only) |
+
+### Block-level caching
+
+For fine-grained control, you can mark individual content blocks for caching directly in the Playground. When a Claude model is selected, cacheable blocks display a small cache icon.
+
+<img src="/images/playground/cache-icon-system-message.png" alt="System message block in the Playground with the Cache control visible" />
+
+Cacheable blocks:
+
+- **Text blocks** in system, user, or assistant messages
+- **Tool calls** in assistant messages
+- **Tool results** in tool messages
+- **Tool definitions** in the Tool & Output Editor
+
+<img src="/images/playground/cache-icon-tools.png" alt="Tool & Output Editor with Cache control next to a tool definition" />
+
+### Viewing cache usage
+
+When caching is active, the request log detail page shows **Cache Write** and **Cache Read** token counts alongside the standard metrics.
+
+<img src="/images/anthropic-cache-request-log-detail.png" alt="Request log detail showing Cache Write token count and prompt/response" />
+
+Content blocks that were marked for caching also display a cache badge in the request log, matching the indicator shown in the Playground.
+
+<Note>
+Anthropic requires a minimum of 1,024 tokens (2,048 for Claude 3.5 Haiku) in the cached content for caching to activate.
+</Note>
 
 ## Related Docs
 - [Image Generation](/features/image-generation)
