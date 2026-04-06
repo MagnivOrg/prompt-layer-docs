@@ -4,6 +4,47 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "clock-rotate-left"
 ---
 
+## April 06, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Model Catalog with Rich Metadata**
+Enhanced model selection with detailed metadata display including pricing, context windows, supported capabilities, and knowledge cutoffs.
+- Hover over any model in dropdowns to view comprehensive details
+- Compare input/output pricing across providers at a glance
+- See supported parameters and modalities before configuring
+- View deprecation dates and latency characteristics
+
+**Wrangler AI Follow Mode**
+New follow mode in Wrangler AI that automatically scrolls to show latest agent activity.
+- Toggle follow mode to stay synchronized with agent progress
+- Manual scroll disables follow mode temporarily
+- Floating widget shows active progress items during agent runs
+- Visual glow overlay indicates when agents are working
+
+**Advanced Request Log Search**
+Intelligent query routing automatically selects optimal search backend based on query complexity and date range.
+- Recent data queries use high-performance search
+- Complex historical queries automatically fall back to full database
+- Date range picker shows data availability cutoffs
+- Search suggestions indicate field availability for selected time ranges
+
+#### Improvements
+
+- Added 22 new models across providers: Amazon Bedrock (9), OpenAI (3), VertexAI (7), Mistral (3)
+- Deprecated 39 outdated models with clear retirement dates in model catalog
+- Fixed incorrect parameter configurations on 28+ models (temperature ranges, max tokens, reasoning settings)
+- Enhanced Anthropic models with adaptive thinking controls and effort settings
+- Improved model dropdown with provider icons and categorized grouping
+- Added prompt caching support for Claude models on Bedrock and VertexAI
+- Fixed snippet override behavior when viewing shared templates
+- Enhanced Cohere models with reasoning token display and vision support
+
+---
+
+
 ## March 31, 2026
 
 ### Deployment 1
