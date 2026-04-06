@@ -211,6 +211,42 @@ tracer_provider.shutdown()
 - `OPENAI_API_KEY`
 - `PROMPTLAYER_API_KEY`
 
+## OpenRouter
+
+PromptLayer supports ingesting traces from [OpenRouter](https://openrouter.ai) through OpenRouter's Broadcast integration for the [OpenTelemetry Collector](https://openrouter.ai/docs/guides/features/broadcast/otel-collector).
+
+To set up:
+
+1. Get your PromptLayer API key from your PromptLayer workspace
+2. In OpenRouter, go to **Settings -> Observability**
+3. Toggle **Enable Broadcast**
+4. Click the edit icon next to **OpenTelemetry Collector**
+5. Leave the default name or rename the destination if you want
+6. Configure the destination with PromptLayer's OTLP endpoint:
+
+```text
+Endpoint: https://api.promptlayer.com/v1/traces
+```
+
+7. Add your PromptLayer API key in the headers JSON:
+
+```json
+{
+  "X-API-Key": "pl_..."
+}
+```
+
+8. Click **Test Connection**
+9. Click **Send Trace** if you want to verify the integration end-to-end from OpenRouter's UI
+10. Save the destination once the test passes
+11. Send requests through OpenRouter as usual
+
+Once configured, PromptLayer will ingest the OpenRouter OTLP spans and convert GenAI spans into trace views and request logs.
+
+<Tip>
+This integration is for ingesting traces from OpenRouter into PromptLayer. If you also want to use OpenRouter models inside PromptLayer as a provider, see [OpenRouter](/features/openrouter-integration).
+</Tip>
+
 ## Hugging Face
 
 PromptLayer supports integration with [Hugging Face](https://huggingface.co/models), allowing you to use any model available on Hugging Face within the platform. To set up:
