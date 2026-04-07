@@ -1,0 +1,245 @@
+{
+  "$schema": "https://mintlify.com/docs.json",
+  "theme": "mint",
+  "name": "PromptLayer",
+  "colors": {
+    "primary": "#12A7D3",
+    "light": "#81D7F7",
+    "dark": "#004E7A"
+  },
+  "favicon": "/logo/favicon.png",
+  "navigation": {
+    "groups": [
+      {
+        "group": "Get Started",
+        "pages": [
+          "introduction",
+          "quickstart",
+          "quickstart-part-two",
+          "tutorial-videos",
+          "migration",
+          "self-hosted",
+          "changelog"
+        ]
+      },
+      {
+        "group": "Languages & Environments",
+        "pages": [
+          "languages/python",
+          "languages/javascript",
+          "languages/rest-api",
+          "languages/mcp",
+          "languages/integrations",
+          "languages/opentelemetry"
+        ]
+      },
+      {
+        "group": "Usage Documentation",
+        "pages": [
+          "features/prompt-history/sharing-prompts",
+          {
+            "group": "Prompt Registry",
+            "icon": "notebook",
+            "pages": [
+              "features/prompt-registry/overview",
+              "features/prompt-registry/snippets",
+              "features/prompt-registry/release-labels",
+              "features/prompt-registry/dynamic-release-labels",
+              "features/prompt-registry/tool-calling",
+              "features/prompt-registry/structured-outputs",
+              "features/prompt-registry/input-variable-sets",
+              "features/prompt-registry/template-variables",
+              "features/prompt-registry/placeholder-messages",
+              "running-requests/prompt-blueprints",
+              "features/prompt-registry/webhooks",
+              "features/prompt-registry/zero-downtime-releases"
+            ]
+          },
+          {
+            "group": "Running Requests",
+            "icon": "circle-play",
+            "pages": [
+              "running-requests/promptlayer-run",
+              "running-requests/promptlayer-run-agent",
+              "running-requests/traces"
+            ]
+          },
+          {
+            "group": "Advanced Logging",
+            "icon": "cassette-tape",
+            "pages": [
+              "features/prompt-history/request-id",
+              "features/prompt-history/tagging-requests",
+              "features/prompt-history/metadata",
+              "features/prompt-history/scoring-requests",
+              "features/prompt-history/tracking-templates",
+              "features/prompt-history/custom-logging",
+              "features/prompt-history/structured-output-logging",
+              "features/prompt-history/search-data-model"
+            ]
+          },
+          "onboarding-guides/deployment-strategies",
+          {
+            "group": "Models & Integrations",
+            "icon": "plug",
+            "pages": [
+              "features/supported-providers",
+              "features/image-generation",
+              "features/custom-providers",
+              "features/exa-integration",
+              "features/xai-integration",
+              "features/openrouter-integration"
+            ]
+          },
+          "features/faq"
+        ]
+      },
+      {
+        "group": "Why PromptLayer?",
+        "pages": [
+          "why-promptlayer/prompt-management",
+          "why-promptlayer/advanced-search",
+          "why-promptlayer/ab-releases",
+          {
+            "group": "Evaluations",
+            "icon": "vial-circle-check",
+            "pages": [
+              "features/evaluations/overview",
+              "features/evaluations/continuous-integration",
+              "features/evaluations/examples",
+              "features/evaluations/building-pipelines",
+              "features/evaluations/eval-types",
+              "features/evaluations/column-types",
+              "features/evaluations/score-card",
+              "features/evaluations/datasets",
+              "features/evaluations/programmatic",
+              "why-promptlayer/voice-agents"
+            ]
+          },
+          "why-promptlayer/agents",
+          "why-promptlayer/multi-turn-chat",
+          "why-promptlayer/fine-tuning",
+          "why-promptlayer/analytics",
+          "why-promptlayer/evaluation-and-ranking",
+          "why-promptlayer/playground",
+          "why-promptlayer/shared-workspaces",
+          "why-promptlayer/rbac",
+          "why-promptlayer/how-it-works"
+        ]
+      },
+      {
+        "group": "Reference",
+        "pages": [
+          "reference/rest-api-reference",
+          {
+            "group": "Prompt Templates",
+            "pages": [
+              "reference/templates-get",
+              "reference/templates-get-raw",
+              "reference/list-prompt-templates",
+              "reference/templates-publish",
+              "reference/templates-patch",
+              "reference/templates-labels-get",
+              "reference/prompt-labels-create",
+              "reference/prompt-labels-patch",
+              "reference/prompt-labels-delete",
+              "reference/get-snippet-usage"
+            ]
+          },
+          {
+            "group": "Tracking",
+            "pages": [
+              "reference/get-request",
+              "reference/get-trace",
+              "reference/search-request-logs",
+              "reference/search-request-suggestions",
+              "reference/log-request",
+              "reference/track-prompt",
+              "reference/track-score",
+              "reference/track-metadata",
+              "reference/spans-bulk",
+              "reference/otlp-ingest-traces"
+            ]
+          },
+          {
+            "group": "Datasets",
+            "pages": [
+              "reference/list-datasets",
+              "reference/get-dataset-rows",
+              "reference/create-dataset-group",
+              "reference/create-dataset-version-from-file",
+              "reference/create-dataset-version-from-filter-params",
+              "reference/create-draft-dataset-version",
+              "reference/add-request-log-to-dataset",
+              "reference/save-draft-dataset-version"
+            ]
+          },
+          {
+            "group": "Evaluations",
+            "pages": [
+              "reference/list-evaluations",
+              "reference/get-evaluation-rows",
+              "reference/create-reports",
+              "reference/run-report",
+              "reference/get-report",
+              "reference/get-report-score",
+              "reference/add-report-columns",
+              "reference/update-report-score-card",
+              "reference/delete-reports-by-name"
+            ]
+          },
+          {
+            "group": "Agents",
+            "pages": [
+              "reference/list-workflows",
+              "reference/get-workflow",
+              "reference/get-workflow-labels",
+              "reference/create-workflow",
+              "reference/patch-workflow",
+              "reference/run-workflow",
+              "reference/workflow-version-execution-results"
+            ]
+          },
+          {
+            "group": "Unified Registry",
+            "pages": [
+              "reference/create-folder",
+              "reference/update-folder",
+              "reference/list-folder-entities",
+              "reference/move-folder-entities",
+              "reference/delete-folder-entities",
+              "reference/resolve-folder-id"
+            ]
+          }
+        ]
+      }
+    ]
+  },
+  "logo": {
+    "light": "/logo/logo.png",
+    "dark": "/logo/dark.png"
+  },
+  "api": {
+    "mdx": {
+      "server": "https://api.promptlayer.com"
+    }
+  },
+  "background": {
+    "image": "/background.png"
+  },
+  "navbar": {
+    "links": [
+      {
+        "label": "Contact Us",
+        "href": "mailto:hello@promptlayer.com"
+      }
+    ]
+  },
+  "footer": {
+    "socials": {
+      "twitter": "https://twitter.com/promptlayer",
+      "linkedin": "https://www.linkedin.com/company/promptlayer/",
+      "discord": "https://discord.gg/DBAhQbW39S"
+    }
+  }
+}
