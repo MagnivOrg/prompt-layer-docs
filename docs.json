@@ -240,6 +240,7 @@
   },
   "footer": {
     "socials": {
+      "github": "https://github.com/MagnivOrg",
       "twitter": "https://twitter.com/promptlayer",
       "linkedin": "https://www.linkedin.com/company/promptlayer/",
       "discord": "https://discord.gg/DBAhQbW39S"
