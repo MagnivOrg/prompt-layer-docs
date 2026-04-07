@@ -215,6 +215,9 @@
       }
     ]
   },
+  "contextual": {
+    "options": ["copy", "view"]
+  },
   "logo": {
     "light": "/logo/logo.png",
     "dark": "/logo/dark.png"
