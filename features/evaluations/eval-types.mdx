@@ -15,20 +15,7 @@ The _Prompt Template_ evaluation type allows you to execute a prompt template fr
 
 ### Custom API Endpoint
 
-The _Custom API Endpoint_ enables you to set up a webhook that our system will call (POST) with all the columns to the left of the API endpoint when that cell is executed. As cells are processed sequentially, we will call this endpoint with all the columns to the left as the given payload, and the returned result will be displayed. This feature allows for extensive customization to accommodate specific use cases and integrate with external systems or custom evaluators.
-
-The payload will be in the form of 
-    
-    ```json
-        {
-            data: {
-                "column1": "value1",
-                "column2": "value2",
-                "column3": "value3",
-                ...
-            }
-        }
-    ```
+The _Custom API Endpoint_ enables you to set up a webhook that our system will call (POST) with all the columns to the left of the API endpoint when that cell is executed. As cells are processed sequentially, we will call this endpoint with the columns in the payload, and the returned result will be displayed. This feature allows for extensive customization to accommodate specific use cases and integrate with external systems or custom evaluators.
 
 ### MCP
 
