@@ -1,0 +1,24 @@
+---
+title: "Delete Evaluation Pipeline"
+openapi: "DELETE /reports/{report_id}"
+---
+
+Archive a single evaluation pipeline by ID. Prefer this over [Delete Reports by Name](/reference/delete-reports-by-name) when you have the report's ID, since names can collide across pipelines.
+
+## Example
+
+```python
+import requests
+
+response = requests.delete(
+    "https://api.promptlayer.com/reports/456",
+    headers={"X-API-KEY": "your-api-key"},
+)
+# {"success": true, "message": "Report archived successfully"}
+```
+
+## Error Responses
+
+| Status | Error |
+|---|---|
+| `404` | Report not found or not accessible |

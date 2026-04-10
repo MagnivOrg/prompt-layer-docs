@@ -49,8 +49,16 @@ Here are the calls you can make via our REST API:
 - [Get Report](/reference/get-report)
 - [Get Report Score](/reference/get-report-score)
 - [Add Report Columns](/reference/add-report-columns)
+- [Edit Evaluation Pipeline Column](/reference/edit-report-column)
+- [Delete Evaluation Pipeline Column](/reference/delete-report-column)
 - [Update Report Score Card](/reference/update-report-score-card)
+- [Rename Evaluation Pipeline](/reference/rename-report)
+- [Delete Evaluation Pipeline](/reference/delete-report)
 - [Delete Reports by Name](/reference/delete-reports-by-name)
+
+<Tip>
+Pass `folder_id` on `Create Evaluation Pipeline` (and on the create endpoints under [Prompt Templates](#prompt-templates), [Datasets](#datasets), and [Agents](#agents)) to organize new resources directly into a folder. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) to look up an ID, or [Create Folder](/reference/create-folder) to make one. See [Unified Registry](#unified-registry).
+</Tip>
 
 ### Agents
 

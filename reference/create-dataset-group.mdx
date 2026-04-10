@@ -3,8 +3,31 @@ title: "Create Dataset Group"
 openapi: "POST /api/public/v2/dataset-groups"
 ---
 
-Create a new dataset group within a workspace. When a dataset group is created, an initial draft dataset (version_number = -1) is automatically created. Dataset group names must be unique within a workspace.
+Create a new dataset group within a workspace. When a dataset group is created, an initial draft dataset (`version_number = -1`) is automatically created. Dataset group names must be unique within a workspace.
 
 ### Authentication
 
 This endpoint requires API key authentication.
+
+## Request Parameters
+
+| Parameter | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | Yes | Name for the dataset group. Must be unique within the workspace. |
+| `workspace_id` | `integer` | No | Workspace ID. Defaults to the workspace associated with the API key. |
+| `folder_id` | `integer` | No | Folder ID to create the dataset group in. If omitted, the dataset group is created at the workspace root. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) to look up an ID from a path, or [Create Folder](/reference/create-folder) to make one. |
+
+## Example: create a dataset group inside a folder
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.promptlayer.com/api/public/v2/dataset-groups",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "name": "Customer support eval set",
+        "folder_id": 17,
+    },
+)
+```

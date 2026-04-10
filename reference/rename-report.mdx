@@ -1,0 +1,37 @@
+---
+title: "Rename Evaluation Pipeline"
+openapi: "PATCH /reports/{report_id}/rename"
+---
+
+Rename or retag an evaluation pipeline. Provide `name`, `tags`, or both. Use this instead of recreating a misnamed pipeline.
+
+## Request Body
+
+At least one of `name` or `tags` must be provided.
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `name` | `string` | No | New name for the pipeline. 1–255 characters. |
+| `tags` | `string[]` | No | Replacement tags. Pass an empty array to clear all tags. |
+
+## Example
+
+```python
+import requests
+
+response = requests.patch(
+    "https://api.promptlayer.com/reports/456/rename",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "name": "Customer support — production blueprint",
+        "tags": ["production", "support"],
+    },
+)
+```
+
+## Error Responses
+
+| Status | Error |
+|---|---|
+| `400` | Neither `name` nor `tags` was provided |
+| `404` | Report not found or not accessible |

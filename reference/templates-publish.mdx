@@ -4,3 +4,48 @@ openapi: "POST /rest/prompt-templates"
 ---
 
 Publish Prompt Template allows you to programmatically create a new version of a prompt template and make it available for use in the application.
+
+## Request Body
+
+The request body has two top-level objects: `prompt_template` (template metadata) and `prompt_version` (the version content).
+
+### `prompt_template`
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `prompt_name` | `string` | Yes | The unique prompt name within the workspace. 1–512 characters. |
+| `tags` | `string[]` | No | Tags to attach to the prompt registry entry. |
+| `folder_id` | `integer` | No | The ID of the folder to publish the prompt template into. If omitted, the prompt is created at the workspace root. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) to look up an ID from a path, or [Create Folder](/reference/create-folder) to make one. |
+| `workspace_id` | `integer` | No | Optional workspace override; defaults to the workspace associated with the API key. |
+
+### `prompt_version`
+
+The version body (`prompt_template`, `commit_message`, `metadata`, `provider_id`, etc.) is documented in the schema below.
+
+## Example: publish into a folder
+
+```python
+import requests
+
+response = requests.post(
+    "https://api.promptlayer.com/rest/prompt-templates",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "prompt_template": {
+            "prompt_name": "summarizer",
+            "tags": ["production", "summarization"],
+            "folder_id": 42,
+        },
+        "prompt_version": {
+            "prompt_template": {
+                "type": "chat",
+                "messages": [
+                    {"role": "system", "content": [{"type": "text", "text": "You are a summarizer."}]},
+                    {"role": "user", "content": [{"type": "text", "text": "{input}"}]},
+                ],
+            },
+            "commit_message": "Initial release",
+        },
+    },
+)
+```

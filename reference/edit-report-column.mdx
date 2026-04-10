@@ -1,0 +1,52 @@
+---
+title: "Edit Evaluation Pipeline Column"
+openapi: "PATCH /report-columns/{report_column_id}"
+---
+
+Update an existing column on an evaluation pipeline. Use this to fix a bug in a `CODE_EXECUTION` script, change a column's `configuration`, rename it, or move it to a new position — without recreating the whole pipeline.
+
+## Important Notes
+
+- **Cannot edit DATASET columns.** The protected columns sourced from the dataset cannot be modified.
+- **Blueprint pipelines only.** Columns on a finished batch run cannot be edited; only columns on the blueprint can.
+- **Unique names required.** If you change `name`, the new name must not collide with another column in the same pipeline.
+- **Position changes shift other columns.** Moving a column to a new `position` re-numbers the surrounding columns.
+- **Cells are re-queued.** Editing a column queues all cells in that column (and any column to the right of it) for re-execution.
+
+## Request Body
+
+| Field | Type | Required | Description |
+|---|---|---|---|
+| `report_id` | `integer` | Yes | Parent evaluation pipeline ID. Must match the column's report. |
+| `column_type` | `string` | Yes | Column type (e.g. `LLM_ASSERTION`, `CODE_EXECUTION`, `PROMPT_TEMPLATE`). `DATASET` is not allowed. See [Node & Column Types](/features/evaluations/column-types). |
+| `configuration` | `object` | No | Replacement column configuration. Schema depends on `column_type`. |
+| `name` | `string` | No | New column name. Must be unique within the pipeline. |
+| `position` | `integer` | No | New 1-based position. Cannot overwrite dataset columns. |
+
+## Example
+
+```python
+import requests
+
+response = requests.patch(
+    "https://api.promptlayer.com/report-columns/789",
+    headers={"X-API-KEY": "your-api-key"},
+    json={
+        "report_id": 456,
+        "column_type": "CODE_EXECUTION",
+        "name": "Strict JSON check",
+        "configuration": {
+            "code": "import json\\ntry:\\n    json.loads(response)\\n    return True\\nexcept Exception:\\n    return False",
+            "language": "PYTHON",
+        },
+    },
+)
+```
+
+## Error Responses
+
+| Status | Error |
+|---|---|
+| `400` | Validation failed (invalid type/configuration, duplicate name, etc.) |
+| `403` | Cannot edit a `DATASET` column or a non-blueprint column |
+| `404` | Report column not found |
