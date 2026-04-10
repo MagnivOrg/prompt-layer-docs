@@ -24,6 +24,27 @@ icon: "clock-rotate-left"
 
 ---
 
+
+### Deployment 3
+
+#### New Features
+
+**Universal Skill Collections**
+Skill Collections now support a vendor-agnostic mode that allows you to create portable skills without committing to a specific AI provider structure.
+- Toggle between provider-specific layouts (Claude Code, OpenAI Agent, Copilot) and a universal format directly in the editor
+- Universal mode stores skills in a flat structure that can be adapted to any provider later
+- Switch providers at any time while preserving your skill content and organization
+
+#### Improvements
+
+- Skill Collection versions now track the provider setting at the time of each save
+- Empty folders in Skill Collections are now properly displayed in version history and diffs
+- Provider changes are now shown as a separate item in version review and diff views
+- Creating new files in universal mode defaults to a plain file instead of requiring skill metadata
+- Restoring a previous version now correctly restores the provider setting from that version
+
+---
+
 ## April 09, 2026
 
 ### Deployment 1
