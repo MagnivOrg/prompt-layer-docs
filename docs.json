@@ -27,6 +27,7 @@
         "group": "Languages & Environments",
         "pages": [
           "languages/python",
+          "languages/python-cache",
           "languages/javascript",
           "languages/rest-api",
           "languages/mcp",

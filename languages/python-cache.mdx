@@ -1,0 +1,98 @@
+---
+title: "Python SDK Cache"
+description: "Use PromptLayer Python SDK template caching to reduce latency and improve resilience during transient outages."
+---
+
+The PromptLayer Python SDK supports an in-memory template cache to reduce fetch latency and improve resilience when the PromptLayer API has transient failures.
+
+## Why Use It
+
+Enable cache when you want to:
+
+- Reduce repeated template fetch latency
+- Lower dependency on real-time PromptLayer API availability
+- Continue serving recently known-good templates during temporary API issues
+
+## Enable Cache
+
+Pass `cache_ttl_seconds` when creating a client.
+
+```python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(
+    api_key="pl_****",
+    cache_ttl_seconds=300,  # cache templates for 5 minutes
+)
+```
+
+Async client works the same way:
+
+```python
+from promptlayer import AsyncPromptLayer
+
+pl = AsyncPromptLayer(
+    api_key="pl_****",
+    cache_ttl_seconds=300,
+)
+```
+
+## How It Works
+
+When cache is enabled, `templates.get()` and `run()` use the following flow:
+
+1. Return a fresh cached template if available.
+2. If cache is stale or missing, fetch from API and refresh cache.
+3. If API fetch fails with a transient error and a stale template exists, serve the stale template.
+
+<Info>
+Stale fallback only applies to transient API errors (for example, timeout, connection, or internal server errors).
+</Info>
+
+## Cache Key
+
+Entries are scoped by prompt identifier values:
+
+- Prompt name
+- Version
+- Label
+- Provider
+- Model
+
+This prevents mixing templates across different releases or model/provider variants.
+
+## Important Behavior
+
+- Cache is in-memory and process-local (not shared across machines/containers).
+- Requests that include `metadata_filters` or `model_parameter_overrides` bypass cache.
+- Templates requiring server-side rendering features may be fetched without cache for correctness.
+- Publishing a template through `templates.publish()` invalidates cache entries for that prompt name.
+
+## Practical Guidance
+
+- Start with `cache_ttl_seconds` between `60` and `300`.
+- Use shorter TTL for frequently edited prompts.
+- Use longer TTL for stable prompts where lower latency matters most.
+- Keep `throw_on_error=True` if you want hard failures when no cache entry is available.
+
+## Example
+
+```python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(cache_ttl_seconds=120)
+
+# First request fetches from API and caches
+result1 = pl.run(
+    prompt_name="support-reply",
+    input_variables={"issue": "billing"},
+)
+
+# Subsequent requests within TTL reuse cache (faster)
+result2 = pl.run(
+    prompt_name="support-reply",
+    input_variables={"issue": "billing"},
+)
+```
+
+To keep responses current while still gaining resilience, pair caching with Prompt Registry release labels and your normal prompt rollout process.

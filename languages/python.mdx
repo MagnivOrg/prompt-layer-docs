@@ -26,6 +26,21 @@ Optionally, you can specify the API key and base URL in the client.
 promptlayer_client = PromptLayer(api_key="pl_****", base_url="https://api.promptlayer.com")
 ```
 
+## SDK Cache (Latency + Resilience)
+
+You can enable SDK-level template caching to reduce latency and improve resilience during transient PromptLayer API issues:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer_client = PromptLayer(
+    api_key="pl_****",
+    cache_ttl_seconds=300,
+)
+```
+
+See the full guide: [Python SDK Cache](/languages/python-cache).
+
 ## Using the `run` Method (Recommended)
 
 The easiest way to use PromptLayer is with the `run()` method. It fetches a prompt template from the [Prompt Registry](/features/prompt-registry/overview), executes it against your configured LLM provider, and logs the result — all in one call.
