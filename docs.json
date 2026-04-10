@@ -221,7 +221,8 @@
   },
   "logo": {
     "light": "/logo/logo.png",
-    "dark": "/logo/dark.png"
+    "dark": "/logo/dark.png",
+    "href": "/overview"
   },
   "api": {
     "mdx": {

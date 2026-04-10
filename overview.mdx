@@ -1,0 +1,360 @@
+---
+title: PromptLayer Documentation
+description: Version, test, and monitor every prompt and agent with evals, tracing, and datasets.
+mode: custom
+---
+
+export const MiniIcon = ({ children }) => (
+  <svg
+    viewBox="0 0 24 24"
+    fill="none"
+    stroke="currentColor"
+    strokeWidth="1.8"
+    strokeLinecap="round"
+    strokeLinejoin="round"
+    className="promptlayer-mini-icon"
+    aria-hidden="true"
+  >
+    {children}
+  </svg>
+)
+
+export const TagsIcon = (
+  <MiniIcon>
+    <path d="M7 3h6l8 8-6 6-8-8V3Z" />
+    <circle cx="10" cy="7" r="1.25" />
+  </MiniIcon>
+)
+
+export const ShuffleIcon = (
+  <MiniIcon>
+    <path d="M16 3h5v5" />
+    <path d="M4 20 21 3" />
+    <path d="M21 16v5h-5" />
+    <path d="M15 15 21 21" />
+    <path d="M4 4l5 5" />
+  </MiniIcon>
+)
+
+export const ChartIcon = (
+  <MiniIcon>
+    <path d="M4 20v-8" />
+    <path d="M10 20V6" />
+    <path d="M16 20v-5" />
+    <path d="M22 20V9" />
+  </MiniIcon>
+)
+
+export const ShieldIcon = (
+  <MiniIcon>
+    <path d="M12 3 5 6v6c0 4.5 2.9 7.8 7 9 4.1-1.2 7-4.5 7-9V6l-7-3Z" />
+  </MiniIcon>
+)
+
+export const KeyIcon = (
+  <MiniIcon>
+    <circle cx="8" cy="14" r="4" />
+    <path d="M12 14h9" />
+    <path d="M18 14v-3" />
+    <path d="M21 14v-2" />
+  </MiniIcon>
+)
+
+export const ServerIcon = (
+  <MiniIcon>
+    <rect x="3" y="4" width="18" height="6" rx="2" />
+    <rect x="3" y="14" width="18" height="6" rx="2" />
+    <path d="M7 7h.01" />
+    <path d="M7 17h.01" />
+    <path d="M11 7h6" />
+    <path d="M11 17h6" />
+  </MiniIcon>
+)
+
+export const FileCodeIcon = (
+  <MiniIcon>
+    <path d="M14 3H7a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V8Z" />
+    <path d="M14 3v5h5" />
+    <path d="m10 13-2 2 2 2" />
+    <path d="m14 13 2 2-2 2" />
+  </MiniIcon>
+)
+
+export const BotIcon = (
+  <MiniIcon>
+    <rect x="5" y="8" width="14" height="10" rx="3" />
+    <path d="M12 4v4" />
+    <path d="M8 12h.01" />
+    <path d="M16 12h.01" />
+    <path d="M9 18v2" />
+    <path d="M15 18v2" />
+    <path d="m7 8-2-2" />
+    <path d="m17 8 2-2" />
+  </MiniIcon>
+)
+
+export const SwapIcon = (
+  <MiniIcon>
+    <path d="M17 3l4 4-4 4" />
+    <path d="M21 7H3" />
+    <path d="m7 13-4 4 4 4" />
+    <path d="M3 17h18" />
+  </MiniIcon>
+)
+
+export const PackageIcon = (
+  <MiniIcon>
+    <path d="M12 3 4 7v10l8 4 8-4V7l-8-4Z" />
+    <path d="m4 7 8 4 8-4" />
+    <path d="M12 11v10" />
+  </MiniIcon>
+)
+
+export const PuzzleIcon = (
+  <MiniIcon>
+    <path d="M9 7V5a2 2 0 1 1 4 0v2h3a2 2 0 0 1 2 2v3h-2a2 2 0 1 0 0 4h2v3a2 2 0 0 1-2 2h-3v-2a2 2 0 1 0-4 0v2H8a2 2 0 0 1-2-2v-3h2a2 2 0 1 0 0-4H6V9a2 2 0 0 1 2-2Z" />
+  </MiniIcon>
+)
+
+export const RocketIcon = (
+  <MiniIcon>
+    <path d="M5 19c2.5-6.5 6.5-10.5 13-13 2.5 6.5-1.5 10.5-8 13H5Z" />
+    <path d="m14.5 9.5 3-3" />
+    <circle cx="14" cy="10" r="1.5" />
+    <path d="m6 18-1 3 3-1" />
+    <path d="m8 16-3-3" />
+  </MiniIcon>
+)
+
+export const PenIcon = (
+  <MiniIcon>
+    <path d="M12 20h9" />
+    <path d="m16.5 3.5 4 4L8 20l-5 1 1-5L16.5 3.5Z" />
+  </MiniIcon>
+)
+
+export const heroFeatures = [
+  {
+    title: "Prompt Registry",
+    description: "Version prompts outside your codebase with reusable templates and inputs.",
+    href: "/features/prompt-registry/overview",
+    imageSrc: "/images/promptlayer/icon-prompt-management.png",
+  },
+  {
+    title: "Observability",
+    description: "Inspect traces, latency, token usage, and production behavior across every request.",
+    href: "/quickstart#logs-and-analytics",
+    imageSrc: "/images/promptlayer/icon-monitor-usage.png",
+  },
+  {
+    title: "Agents",
+    description: "Compose multi-step agent flows with reusable components, branching, and orchestration.",
+    href: "/why-promptlayer/agents",
+    imageSrc: "/images/promptlayer/icon-agents.png",
+  },
+  {
+    title: "Evaluations",
+    description: "Score prompt and agent changes before shipping them.",
+    href: "/features/evaluations/overview",
+    imageSrc: "/images/promptlayer/icon-evaluations-v2.png",
+  },
+  {
+    title: "Dataset Management",
+    description: "Build, organize, and reuse datasets for evaluation, regression testing, and iteration.",
+    href: "/features/evaluations/datasets",
+    imageSrc: "/images/promptlayer/icon-dataset-management-v2.png",
+  },
+  {
+    title: "Skills Registry",
+    description: "Store and reuse structured skills so agents can consistently apply the right capabilities.",
+    imageSrc: "/images/promptlayer/icon-skills-registry.png",
+  },
+]
+
+export const platformFeatures = [
+  {
+    title: "Release Labels",
+    description: "Promote tested prompt versions across environments without changing application code.",
+    href: "/features/prompt-registry/release-labels#release-labels",
+    icon: TagsIcon,
+  },
+  {
+    title: "AB Testing",
+    description: "Compare prompt variants in production and route traffic based on measured performance.",
+    href: "/why-promptlayer/ab-releases",
+    icon: ShuffleIcon,
+  },
+  {
+    title: "Analytics",
+    description: "Track usage, quality, and outcome trends as prompts and agents evolve over time.",
+    href: "/why-promptlayer/analytics",
+    icon: ChartIcon,
+  },
+  {
+    title: "Role-Based Access Control",
+    description: "Manage workspace permissions with granular roles for engineers, operators, and reviewers.",
+    href: "/why-promptlayer/rbac",
+    icon: ShieldIcon,
+  },
+  {
+    title: "Single Sign-On",
+    description: "Enable secure team access with enterprise identity providers and centralized login flows.",
+    href: "/self-hosted#security-&-authentication",
+    icon: KeyIcon,
+  },
+  {
+    title: "Self-Hosting",
+    description: "Deploy PromptLayer in your own environment when security or compliance requires it.",
+    href: "/self-hosted",
+    icon: ServerIcon,
+  },
+]
+
+export const resources = [
+  {
+    title: "API Reference",
+    description: "Explore the SDK and API surface for prompt execution, datasets, and workflows.",
+    href: "/reference/rest-api-reference",
+    icon: FileCodeIcon,
+  },
+  {
+    title: "MCP",
+    description: "Documentation for model context protocol integrations, tools, and connected workflows.",
+    href: "/languages/mcp",
+    icon: BotIcon,
+  },
+  {
+    title: "Migration Guides",
+    description: "Move hard-coded prompts and ad hoc eval scripts into a managed PromptLayer workflow.",
+    href: "/migration",
+    icon: SwapIcon,
+  },
+  {
+    title: "SDKs",
+    description: "Official client libraries, examples, and package references for supported runtimes.",
+    href: "/languages/python",
+    icon: PackageIcon,
+  },
+  {
+    title: "OpenTelemetry Integrations",
+    description: "Connect PromptLayer with model providers, tracing pipelines, and internal tooling.",
+    href: "/languages/integrations",
+    icon: PuzzleIcon,
+  },
+  {
+    title: "Changelog",
+    description: "Product updates covering PromptLayer platform improvements and launches.",
+    href: "/changelog",
+    icon: RocketIcon,
+  },
+  {
+    title: "Blog",
+    description: "Engineering and product insights from the PromptLayer team.",
+    href: "https://www.promptlayer.com/blog/",
+    icon: PenIcon,
+    external: true,
+  },
+]
+
+export const HeroFeatureCard = ({ title, description, href, imageSrc }) => {
+  const content = (
+    <>
+      <div className="promptlayer-feature-badge">
+        <img
+          src={imageSrc}
+          alt=""
+          aria-hidden="true"
+          width="40"
+          height="40"
+          className="promptlayer-feature-icon"
+        />
+      </div>
+      <h3 className="promptlayer-feature-title">{title}</h3>
+      <p className="promptlayer-feature-description">{description}</p>
+    </>
+  )
+
+  if (href) {
+    return (
+      <a href={href} className="promptlayer-feature-card promptlayer-card-interactive">
+        {content}
+      </a>
+    )
+  }
+
+  return <div className="promptlayer-feature-card">{content}</div>
+}
+
+export const InfoCard = ({ title, description, href, icon, external = false }) => {
+  const content = (
+    <>
+      {external && <span className="promptlayer-card-arrow">↗</span>}
+      <div className="promptlayer-info-icon">{icon}</div>
+      <h3 className="promptlayer-info-title">{title}</h3>
+      <p className="promptlayer-info-description">{description}</p>
+    </>
+  )
+
+  if (href) {
+    return (
+      <a
+        href={href}
+        className="promptlayer-info-card promptlayer-card-interactive"
+        target={external ? "_blank" : undefined}
+        rel={external ? "noreferrer" : undefined}
+      >
+        {content}
+      </a>
+    )
+  }
+
+  return <div className="promptlayer-info-card">{content}</div>
+}
+
+<div className="promptlayer-landing">
+  <section className="promptlayer-hero">
+    <div className="promptlayer-hero-copy">
+      <div className="promptlayer-hero-logo-wrap">
+        <img
+          src="/images/promptlayer/promptlayer-cake.png"
+          alt="PromptLayer logo"
+          width="80"
+          height="80"
+          className="promptlayer-hero-logo"
+        />
+      </div>
+      <h1 className="promptlayer-hero-title">PromptLayer</h1>
+      <p className="promptlayer-hero-description">
+        Version, test, and monitor every prompt and agent with evals, tracing, and datasets.
+      </p>
+      <a href="/quickstart" className="promptlayer-quickstart-button">
+        Go to Quickstart
+        <span aria-hidden="true">→</span>
+      </a>
+    </div>
+
+    <div className="promptlayer-feature-grid">
+      {heroFeatures.map((feature) => (
+        <HeroFeatureCard key={feature.title} {...feature} />
+      ))}
+    </div>
+  </section>
+
+  <section className="promptlayer-section">
+    <h2 className="promptlayer-section-title">Features</h2>
+    <div className="promptlayer-info-grid">
+      {platformFeatures.map((feature) => (
+        <InfoCard key={feature.title} {...feature} />
+      ))}
+    </div>
+  </section>
+
+  <section className="promptlayer-section">
+    <h2 className="promptlayer-section-title">Resources</h2>
+    <div className="promptlayer-info-grid">
+      {resources.map((resource) => (
+        <InfoCard key={resource.title} {...resource} />
+      ))}
+    </div>
+  </section>
+</div>
