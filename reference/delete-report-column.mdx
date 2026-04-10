@@ -1,0 +1,31 @@
+---
+title: "Delete Evaluation Pipeline Column"
+openapi: "DELETE /report-columns/{report_column_id}"
+---
+
+Delete a single column from an evaluation pipeline. Surrounding columns shift left to fill the gap.
+
+## Important Notes
+
+- **Cannot delete DATASET columns.** The protected columns sourced from the dataset cannot be deleted.
+- **Blueprint pipelines only.** Columns on a finished batch run cannot be deleted; only columns on the blueprint can.
+- **Cells are re-queued.** Any column to the right of the deleted column has its cells re-queued for execution, since references may have shifted.
+
+## Example
+
+```python
+import requests
+
+response = requests.delete(
+    "https://api.promptlayer.com/report-columns/789",
+    headers={"X-API-KEY": "your-api-key"},
+)
+# 204 No Content on success
+```
+
+## Error Responses
+
+| Status | Error |
+|---|---|
+| `403` | Cannot delete a non-blueprint column |
+| `404` | Report column not found, or column is a `DATASET` column |

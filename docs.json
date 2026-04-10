@@ -185,7 +185,11 @@
               "reference/get-report",
               "reference/get-report-score",
               "reference/add-report-columns",
+              "reference/edit-report-column",
+              "reference/delete-report-column",
               "reference/update-report-score-card",
+              "reference/rename-report",
+              "reference/delete-report",
               "reference/delete-reports-by-name"
             ]
           },

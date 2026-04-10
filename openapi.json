@@ -1807,6 +1807,60 @@
             "description": "Report not found or not accessible"
           }
         }
+      },
+      "delete": {
+        "summary": "Delete Evaluation Pipeline",
+        "description": "Archive a single evaluation pipeline by ID. Prefer this over deleteReportsByName when you have the report's ID, since names can collide.",
+        "operationId": "deleteReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the evaluation pipeline to archive."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Pipeline archived successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "404": {
+            "description": "Report not found or not accessible"
+          }
+        }
       }
     },
     "/reports/{report_id}/score": {
@@ -1986,6 +2040,266 @@
           },
           "404": {
             "description": "Report not found"
+          }
+        }
+      }
+    },
+    "/reports/{report_id}/rename": {
+      "patch": {
+        "summary": "Rename Evaluation Pipeline",
+        "description": "Rename or retag an evaluation pipeline. Provide name, tags, or both. Use this instead of recreating a misnamed pipeline.",
+        "operationId": "renameReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the evaluation pipeline to rename."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "description": "New name for the evaluation pipeline."
+                  },
+                  "tags": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Replacement tags. Pass an empty array to clear all tags."
+                  }
+                },
+                "description": "At least one of name or tags must be provided."
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Pipeline renamed successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "report": {
+                      "type": "object",
+                      "description": "The updated report"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error - neither name nor tags was provided"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "404": {
+            "description": "Report not found or not accessible"
+          }
+        }
+      }
+    },
+    "/report-columns/{report_column_id}": {
+      "patch": {
+        "summary": "Edit Evaluation Pipeline Column",
+        "description": "Update an existing column on an evaluation pipeline. Use this to fix a bug in a CODE_EXECUTION script, change a column's configuration, rename it, or reorder it — without recreating the whole pipeline. Cannot edit DATASET columns. Editing a column re-queues the affected cells.",
+        "operationId": "editReportColumn",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_column_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the report column to edit."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "report_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Parent evaluation pipeline ID. Must match the column's report."
+                  },
+                  "column_type": {
+                    "type": "string",
+                    "description": "Column type. DATASET is not allowed.",
+                    "enum": [
+                      "ABSOLUTE_NUMERIC_DISTANCE",
+                      "AI_DATA_EXTRACTION",
+                      "ASSERT_VALID",
+                      "CONVERSATION_SIMULATOR",
+                      "COALESCE",
+                      "CODE_EXECUTION",
+                      "COMBINE_COLUMNS",
+                      "COMPARE",
+                      "CONTAINS",
+                      "COSINE_SIMILARITY",
+                      "COUNT",
+                      "ENDPOINT",
+                      "MCP",
+                      "HUMAN",
+                      "JSON_PATH",
+                      "LLM_ASSERTION",
+                      "MATH_OPERATOR",
+                      "MIN_MAX",
+                      "PARSE_VALUE",
+                      "APPLY_DIFF",
+                      "PROMPT_TEMPLATE",
+                      "REGEX",
+                      "REGEX_EXTRACTION",
+                      "VARIABLE",
+                      "XML_PATH",
+                      "WORKFLOW",
+                      "CODING_AGENT"
+                    ]
+                  },
+                  "configuration": {
+                    "type": "object",
+                    "description": "Replacement column configuration. Schema varies by column_type.",
+                    "additionalProperties": true
+                  },
+                  "name": {
+                    "type": "string",
+                    "minLength": 1,
+                    "description": "New column name. Must be unique within the pipeline."
+                  },
+                  "position": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "New 1-based position. Cannot overwrite dataset columns."
+                  }
+                },
+                "required": [
+                  "report_id",
+                  "column_type"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "report_column": {
+                      "type": "object",
+                      "description": "The updated column"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation failed (invalid type/configuration, duplicate name, etc.)"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "403": {
+            "description": "Forbidden - Cannot edit DATASET columns or non-blueprint columns"
+          },
+          "404": {
+            "description": "Report column not found or not accessible"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Evaluation Pipeline Column",
+        "description": "Delete a single column from an evaluation pipeline. Surrounding columns shift left to fill the gap. Cannot delete DATASET columns. Cells in columns to the right of the deleted column are re-queued.",
+        "operationId": "deleteReportColumn",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_column_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the report column to delete."
+          },
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Column deleted successfully"
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "403": {
+            "description": "Forbidden - Cannot delete non-blueprint columns"
+          },
+          "404": {
+            "description": "Report column not found, or column is a DATASET column"
           }
         }
       }
@@ -2999,6 +3313,12 @@
                     "type": "integer",
                     "minimum": 1,
                     "description": "Optional: ID of the workspace where the dataset group will be created. If not provided, uses the workspace associated with your API key."
+                  },
+                  "folder_id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "nullable": true,
+                    "description": "Optional folder ID to create the dataset group inside. If omitted, the dataset group is created at the workspace root."
                   }
                 },
                 "required": [
