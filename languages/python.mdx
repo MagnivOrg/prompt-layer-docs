@@ -26,21 +26,6 @@ Optionally, you can specify the API key and base URL in the client.
 promptlayer_client = PromptLayer(api_key="pl_****", base_url="https://api.promptlayer.com")
 ```
 
-## SDK Cache (Latency + Resilience)
-
-You can enable SDK-level template caching to reduce latency and improve resilience during transient PromptLayer API issues:
-
-```python
-from promptlayer import PromptLayer
-
-promptlayer_client = PromptLayer(
-    api_key="pl_****",
-    cache_ttl_seconds=300,
-)
-```
-
-See the full guide: [Python SDK Cache](/languages/python-cache).
-
 ## Using the `run` Method (Recommended)
 
 The easiest way to use PromptLayer is with the `run()` method. It fetches a prompt template from the [Prompt Registry](/features/prompt-registry/overview), executes it against your configured LLM provider, and logs the result â€” all in one call.
@@ -66,6 +51,63 @@ The `run()` method works with any provider configured in your prompt template â€
 After making your first few requests, you should be able to see them in the PromptLayer dashboard!
 
 <img src="/images/prompt-in-dashboard.png" />
+
+## SDK Cache
+
+The PromptLayer Python SDK supports an in-memory template cache to reduce fetch latency and improve resilience when the PromptLayer API has transient failures.
+
+Enable cache when you want to:
+
+- Reduce repeated template fetch latency
+- Lower dependency on real-time PromptLayer API availability
+- Continue serving recently known-good templates during temporary API issues
+
+Pass `cache_ttl_seconds` when creating a client:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer_client = PromptLayer(
+    api_key="pl_****",
+    cache_ttl_seconds=300,  # each prompt template is cached for 5 minutes
+)
+```
+
+Async client works the same way:
+
+```python
+from promptlayer import AsyncPromptLayer
+
+async_promptlayer_client = AsyncPromptLayer(
+    api_key="pl_****",
+    cache_ttl_seconds=300,
+)
+```
+
+### How It Works
+
+When cache is enabled, `templates.get()` and `run()` use this flow:
+
+1. Return a fresh cached template if available.
+2. If cache is stale or missing, fetch from API and refresh cache.
+3. If API fetch fails with a transient error and a stale template exists, serve the stale template.
+
+<Info>
+Stale fallback only applies to transient API errors (for example, timeout, connection, or internal server errors).
+</Info>
+
+### Important Behavior
+
+- Cache is in-memory and process-local (not shared across machines/containers).
+- Requests with `metadata_filters` or `model_parameter_overrides` bypass cache.
+- Publishing via `templates.publish()` invalidates cache for that prompt name.
+
+### Practical Guidance
+
+- Start with `cache_ttl_seconds` between `60` and `300`.
+- Use a shorter TTL if your prompts change frequently.
+- Use a longer TTL if your prompts are stable and lower latency matters most.
+- Keep `throw_on_error=True` if you want hard failures when no cache entry is available.
 
 ## Custom Logging with `log_request`
 
