@@ -51,6 +51,54 @@ console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].cont
 
 The `run()` method works with any provider configured in your prompt template — OpenAI, Anthropic, Google, and more. See the [Run documentation](/running-requests/promptlayer-run) for full details.
 
+## SDK Cache
+
+The PromptLayer JavaScript SDK supports an in-memory template cache to reduce fetch latency and improve resilience when the PromptLayer API has transient failures.
+
+Enable cache when you want to:
+
+- Reduce repeated template fetch latency
+- Lower dependency on real-time PromptLayer API availability
+- Continue serving recently known-good templates during temporary API issues
+
+Pass `cacheTtlSeconds` when creating a client:
+
+```js
+import { PromptLayer } from "promptlayer";
+
+const promptLayerClient = new PromptLayer({
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+  cacheTtlSeconds: 300, // each prompt template is cached for 5 minutes
+});
+```
+
+### How It Works
+
+When cache is enabled, `templates.get()` and `run()` use this flow:
+
+1. Return a fresh cached template if available.
+2. If cache is stale or missing, fetch from API and refresh cache.
+3. If API fetch fails with a transient error and a stale template exists, serve the stale template.
+
+<Info>
+Stale fallback applies to transient API failures such as retryable HTTP errors (including `429` and `5xx`) and network-level issues.
+</Info>
+
+### Important Behavior
+
+- Cache is in-memory and process-local (not shared across machines/containers).
+- Requests with `metadataFilters` or `modelParameterOverrides` bypass cache.
+- Publishing via `templates.publish()` invalidates cache for that prompt name.
+- Call `promptLayerClient.invalidate("prompt-name")` to clear one prompt from cache.
+- Call `promptLayerClient.invalidate()` to clear the full SDK cache.
+
+### Practical Guidance
+
+- Start with `cacheTtlSeconds` between `60` and `300`.
+- Use a shorter TTL if your prompts change frequently.
+- Use a longer TTL if your prompts are stable and lower latency matters most.
+- Keep `throwOnError: true` if you want hard failures when no cache entry is available.
+
 ## Custom Logging with `logRequest`
 
 If you need more control — for example, using your own LLM client, a custom provider, or background processing — you can use `logRequest` to manually log requests to PromptLayer.
