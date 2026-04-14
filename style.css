@@ -17,18 +17,15 @@
 }
 
 .promptlayer-hero-logo-wrap {
-  display: flex;
-  width: 6rem;
-  height: 6rem;
-  align-items: center;
-  justify-content: center;
+  width: 5rem;
+  aspect-ratio: 173 / 150;
   margin-bottom: 1.5rem;
 }
 
 .promptlayer-hero-logo {
   display: block;
-  width: 5rem;
-  height: 5rem;
+  width: 100%;
+  height: 100%;
   object-fit: contain;
   filter: grayscale(1) brightness(0.1);
   opacity: 0.8;
