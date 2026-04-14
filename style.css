@@ -200,6 +200,16 @@
   }
 }
 
+@media (max-width: 1023px) {
+  body:has(.promptlayer-landing) #navbar .relative > button.flex.items-center.h-14.py-4.px-5.lg\:hidden.focus\:outline-0.w-full.text-left {
+    display: none;
+  }
+
+  body:has(.promptlayer-landing) #content-container > div.flex.flex-row-reverse.gap-12.box-border.w-full {
+    padding-top: 4rem;
+  }
+}
+
 @media (min-width: 1280px) {
   .promptlayer-feature-grid,
   .promptlayer-info-grid {
