@@ -126,9 +126,10 @@
 }
 
 .promptlayer-feature-icon {
-  width: 2.5rem;
+  display: block;
+  width: auto;
   height: 2.5rem;
-  object-fit: contain;
+  max-width: 2.5rem;
 }
 
 .promptlayer-feature-title,
