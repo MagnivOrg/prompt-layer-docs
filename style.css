@@ -26,12 +26,10 @@
 }
 
 .promptlayer-hero-logo {
+  display: block;
   width: 5rem;
   height: 5rem;
-  background-image: url("/images/promptlayer/promptlayer-cake.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  object-fit: contain;
   filter: grayscale(1) brightness(0.1);
   opacity: 0.8;
   pointer-events: none;
