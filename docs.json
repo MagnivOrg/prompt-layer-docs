@@ -8,12 +8,14 @@
     "dark": "#004E7A"
   },
   "favicon": "/logo/favicon.png",
+  "seo": {
+    "indexing": "all"
+  },
   "navigation": {
     "groups": [
       {
         "group": "Get Started",
         "pages": [
-          "introduction",
           "quickstart",
           "quickstart-part-two",
           "tutorial-videos",
@@ -225,7 +227,8 @@
   },
   "logo": {
     "light": "/logo/logo.png",
-    "dark": "/logo/dark.png"
+    "dark": "/logo/dark.png",
+    "href": "/overview"
   },
   "api": {
     "mdx": {
@@ -250,5 +253,15 @@
       "github": "https://github.com/MagnivOrg",
       "discord": "https://discord.gg/DBAhQbW39S"
     }
-  }
+  },
+  "redirects": [
+    {
+      "source": "/",
+      "destination": "/overview"
+    },
+    {
+      "source": "/introduction",
+      "destination": "/overview"
+    }
+  ]
 }

@@ -1,0 +1,284 @@
+.promptlayer-landing {
+  margin: 0 auto;
+  max-width: 72rem;
+  padding: 3rem 1.5rem 4rem;
+}
+
+.promptlayer-hero {
+  display: grid;
+  gap: 2rem;
+  margin-bottom: 4rem;
+}
+
+.promptlayer-hero-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+}
+
+.promptlayer-hero-logo-wrap {
+  display: flex;
+  width: 6rem;
+  height: 6rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.5rem;
+}
+
+.promptlayer-hero-logo {
+  width: 5rem;
+  height: 5rem;
+  background-image: url("/images/promptlayer/promptlayer-cake.png");
+  background-position: center;
+  background-repeat: no-repeat;
+  background-size: contain;
+  filter: grayscale(1) brightness(0.1);
+  opacity: 0.8;
+  pointer-events: none;
+  user-select: none;
+}
+
+.promptlayer-hero-title {
+  margin: 0 0 0.75rem;
+  font-size: 1.875rem;
+  line-height: 1.15;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+.promptlayer-hero-description {
+  margin: 0 0 1.5rem;
+  font-size: 1rem;
+  line-height: 1.7;
+  color: #475569;
+}
+
+.promptlayer-quickstart-button {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.5rem;
+  border-radius: 0.75rem;
+  background: rgb(245, 207, 99);
+  color: rgb(67, 44, 16);
+  font-size: 0.95rem;
+  font-weight: 600;
+  line-height: 1;
+  padding: 0.875rem 1.25rem;
+  text-decoration: none;
+  transition:
+    background-color 160ms ease,
+    transform 160ms ease,
+    box-shadow 160ms ease;
+}
+
+.promptlayer-quickstart-button:hover {
+  background: rgb(239, 198, 82);
+  transform: translateY(-1px);
+}
+
+.promptlayer-feature-grid,
+.promptlayer-info-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1rem;
+}
+
+.promptlayer-feature-card,
+.promptlayer-info-card {
+  position: relative;
+  display: block;
+  border: 1px solid rgba(15, 23, 42, 0.12);
+  background: rgba(255, 255, 255, 0.92);
+  text-decoration: none;
+  color: inherit;
+  transition:
+    background-color 110ms ease-out,
+    border-color 110ms ease-out;
+}
+
+.promptlayer-feature-card {
+  border-radius: 1rem;
+  padding: 1.5rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.06);
+}
+
+.promptlayer-info-card {
+  border-radius: 0.875rem;
+  padding: 1.25rem;
+  box-shadow: 0 1px 2px rgba(15, 23, 42, 0.05);
+}
+
+.promptlayer-card-interactive:hover {
+  border-color: rgba(15, 23, 42, 0.14);
+  background: rgba(255, 255, 255, 0.97);
+  box-shadow:
+    0 6px 16px -10px rgba(15, 23, 42, 0.16),
+    0 0 0 1px rgba(15, 23, 42, 0.04);
+}
+
+.promptlayer-feature-badge {
+  display: flex;
+  width: 4rem;
+  height: 4rem;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 1.25rem;
+  border-radius: 1.5rem;
+  background: rgba(245, 207, 99, 0.16);
+  box-shadow:
+    0 1px 2px rgba(67, 44, 16, 0.05),
+    inset 0 0 0 1px rgba(67, 44, 16, 0.04);
+}
+
+.promptlayer-feature-icon {
+  width: 2.5rem;
+  height: 2.5rem;
+  object-fit: contain;
+}
+
+.promptlayer-feature-title,
+.promptlayer-info-title {
+  margin: 0 0 0.5rem;
+  color: #0f172a;
+  font-size: 1rem;
+  font-weight: 600;
+  line-height: 1.35;
+}
+
+.promptlayer-feature-description,
+.promptlayer-info-description {
+  margin: 0;
+  color: #475569;
+  font-size: 0.925rem;
+  line-height: 1.65;
+}
+
+.promptlayer-info-icon {
+  display: inline-flex;
+  margin-bottom: 1rem;
+  color: #0f172a;
+}
+
+.promptlayer-heroicon {
+  width: 1.5rem;
+  height: 1.5rem;
+}
+
+.promptlayer-card-arrow {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  color: #64748b;
+  opacity: 0.55;
+  font-size: 0.95rem;
+  line-height: 1;
+  transition: opacity 110ms ease-out;
+}
+
+.promptlayer-card-interactive:hover .promptlayer-card-arrow {
+  opacity: 1;
+}
+
+.promptlayer-section {
+  margin-bottom: 4rem;
+}
+
+.promptlayer-section-title {
+  margin: 0 0 1.5rem;
+  font-size: 1.5rem;
+  line-height: 1.25;
+  font-weight: 700;
+  color: #0f172a;
+}
+
+@media (min-width: 640px) {
+  .promptlayer-feature-grid,
+  .promptlayer-info-grid {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (min-width: 1024px) {
+  .promptlayer-hero {
+    grid-template-columns: 300px minmax(0, 1fr);
+  }
+}
+
+@media (min-width: 1280px) {
+  .promptlayer-feature-grid,
+  .promptlayer-info-grid {
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+html.dark .promptlayer-hero-logo {
+  filter: grayscale(0.2) brightness(1.08);
+  opacity: 0.94;
+}
+
+html.dark .promptlayer-hero-title,
+html.dark .promptlayer-feature-title,
+html.dark .promptlayer-info-title,
+html.dark .promptlayer-section-title,
+html.dark .promptlayer-info-icon {
+  color: #f8fafc;
+}
+
+html.dark .promptlayer-hero-description,
+html.dark .promptlayer-feature-description,
+html.dark .promptlayer-info-description {
+  color: #cbd5e1;
+}
+
+html.dark .promptlayer-feature-card,
+html.dark .promptlayer-info-card {
+  border-color: rgba(161, 161, 170, 0.2);
+  background: linear-gradient(180deg, rgba(34, 36, 41, 0.94) 0%, rgba(24, 26, 31, 0.97) 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.025);
+}
+
+html.dark .promptlayer-card-interactive:hover {
+  border-color: rgba(212, 212, 216, 0.24);
+  background: linear-gradient(180deg, rgba(44, 46, 52, 0.98) 0%, rgba(30, 32, 38, 0.99) 100%);
+  box-shadow:
+    0 12px 28px -14px rgba(2, 6, 23, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+html.dark .promptlayer-feature-badge {
+  background: rgba(214, 199, 167, 1);
+  box-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.28),
+    inset 0 0 0 1px rgba(255, 248, 235, 0.18);
+}
+
+html.dark .promptlayer-info-icon {
+  color: #d4d4d8;
+}
+
+html.dark .promptlayer-feature-icon {
+  filter: none;
+  opacity: 0.96;
+}
+
+html.dark .promptlayer-card-arrow {
+  color: #a1a1aa;
+  opacity: 0.82;
+}
+
+html.dark .promptlayer-quickstart-button {
+  background: rgb(245, 207, 99);
+  color: rgb(48, 32, 11);
+  box-shadow:
+    0 10px 24px -16px rgba(245, 207, 99, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+html.dark .promptlayer-quickstart-button:hover {
+  background: rgb(248, 214, 117);
+  box-shadow:
+    0 14px 28px -18px rgba(245, 207, 99, 0.82),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
+}
