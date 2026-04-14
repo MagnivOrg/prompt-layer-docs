@@ -206,39 +206,74 @@
   }
 }
 
-@media (prefers-color-scheme: dark) {
-  .promptlayer-feature-card,
-  .promptlayer-info-card {
-    border-color: rgba(148, 163, 184, 0.22);
-    background: rgba(15, 23, 42, 0.66);
-    box-shadow: 0 1px 2px rgba(0, 0, 0, 0.24);
-  }
+html.dark .promptlayer-hero-logo {
+  filter: grayscale(0.2) brightness(1.08);
+  opacity: 0.94;
+}
 
-  .promptlayer-card-interactive:hover {
-    border-color: rgba(148, 163, 184, 0.18);
-    background: rgba(15, 23, 42, 0.7);
-    box-shadow:
-      0 8px 18px -10px rgba(0, 0, 0, 0.42),
-      0 0 0 1px rgba(148, 163, 184, 0.04);
-  }
+html.dark .promptlayer-hero-title,
+html.dark .promptlayer-feature-title,
+html.dark .promptlayer-info-title,
+html.dark .promptlayer-section-title,
+html.dark .promptlayer-info-icon {
+  color: #f8fafc;
+}
 
-  .promptlayer-hero-title,
-  .promptlayer-feature-title,
-  .promptlayer-info-title,
-  .promptlayer-section-title,
-  .promptlayer-info-icon {
-    color: #f8fafc;
-  }
+html.dark .promptlayer-hero-description,
+html.dark .promptlayer-feature-description,
+html.dark .promptlayer-info-description {
+  color: #cbd5e1;
+}
 
-  .promptlayer-hero-description,
-  .promptlayer-feature-description,
-  .promptlayer-info-description,
-  .promptlayer-card-arrow {
-    color: #cbd5e1;
-  }
+html.dark .promptlayer-feature-card,
+html.dark .promptlayer-info-card {
+  border-color: rgba(161, 161, 170, 0.2);
+  background: linear-gradient(180deg, rgba(34, 36, 41, 0.94) 0%, rgba(24, 26, 31, 0.97) 100%);
+  box-shadow:
+    0 1px 2px rgba(0, 0, 0, 0.32),
+    0 0 0 1px rgba(255, 255, 255, 0.025);
+}
 
-  .promptlayer-hero-logo {
-    filter: grayscale(1) brightness(12);
-    opacity: 0.75;
-  }
+html.dark .promptlayer-card-interactive:hover {
+  border-color: rgba(212, 212, 216, 0.24);
+  background: linear-gradient(180deg, rgba(44, 46, 52, 0.98) 0%, rgba(30, 32, 38, 0.99) 100%);
+  box-shadow:
+    0 12px 28px -14px rgba(2, 6, 23, 0.9),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
+}
+
+html.dark .promptlayer-feature-badge {
+  background: rgba(214, 199, 167, 1);
+  box-shadow:
+    0 1px 2px rgba(2, 6, 23, 0.28),
+    inset 0 0 0 1px rgba(255, 248, 235, 0.18);
+}
+
+html.dark .promptlayer-info-icon {
+  color: #d4d4d8;
+}
+
+html.dark .promptlayer-feature-icon {
+  filter: none;
+  opacity: 0.96;
+}
+
+html.dark .promptlayer-card-arrow {
+  color: #a1a1aa;
+  opacity: 0.82;
+}
+
+html.dark .promptlayer-quickstart-button {
+  background: rgb(245, 207, 99);
+  color: rgb(48, 32, 11);
+  box-shadow:
+    0 10px 24px -16px rgba(245, 207, 99, 0.75),
+    0 0 0 1px rgba(255, 255, 255, 0.04);
+}
+
+html.dark .promptlayer-quickstart-button:hover {
+  background: rgb(248, 214, 117);
+  box-shadow:
+    0 14px 28px -18px rgba(245, 207, 99, 0.82),
+    0 0 0 1px rgba(255, 255, 255, 0.06);
 }
