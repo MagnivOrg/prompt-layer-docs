@@ -4,294 +4,16 @@ description: Version, test, and monitor every prompt and agent with evals, traci
 mode: custom
 ---
 
-export const HeroIcon = ({ children }) => (
-  <svg
-    viewBox="0 0 24 24"
-    fill="none"
-    stroke="currentColor"
-    strokeWidth="1.5"
-    strokeLinecap="round"
-    strokeLinejoin="round"
-    className="promptlayer-heroicon"
-    aria-hidden="true"
-  >
-    {children}
-  </svg>
-)
-
-export const TagIcon = (
-  <HeroIcon>
-    <path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-    <path d="M6 6h.008v.008H6V6Z" />
-  </HeroIcon>
-)
-
-export const ArrowsRightLeftIcon = (
-  <HeroIcon>
-    <path d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-  </HeroIcon>
-)
-
-export const ChartBarSquareIcon = (
-  <HeroIcon>
-    <path d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
-  </HeroIcon>
-)
-
-export const ShieldCheckIcon = (
-  <HeroIcon>
-    <path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-  </HeroIcon>
-)
-
-export const KeyIcon = (
-  <HeroIcon>
-    <path d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-  </HeroIcon>
-)
-
-export const ServerStackIcon = (
-  <HeroIcon>
-    <path d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />
-  </HeroIcon>
-)
-
-export const CodeBracketIcon = (
-  <HeroIcon>
-    <path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
-  </HeroIcon>
-)
-
-export const WrenchIcon = (
-  <HeroIcon>
-    <path d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z" />
-    <path d="M4.867 19.125h.008v.008h-.008v-.008Z" />
-  </HeroIcon>
-)
-
-export const ArrowPathIcon = (
-  <HeroIcon>
-    <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-  </HeroIcon>
-)
-
-export const CubeIcon = (
-  <HeroIcon>
-    <path d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-  </HeroIcon>
-)
-
-export const PuzzlePieceIcon = (
-  <HeroIcon>
-    <path d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z" />
-  </HeroIcon>
-)
-
-export const RocketLaunchIcon = (
-  <HeroIcon>
-    <path d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-  </HeroIcon>
-)
-
-export const PencilSquareIcon = (
-  <HeroIcon>
-    <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-  </HeroIcon>
-)
-
-export const heroFeatures = [
-  {
-    title: "Prompt Registry",
-    description: "Version prompts outside your codebase with reusable templates and inputs.",
-    href: "/features/prompt-registry/overview",
-    imageSrc: "/images/promptlayer/icon-prompt-management.png",
-  },
-  {
-    title: "Observability",
-    description: "Inspect traces, latency, token usage, and production behavior across every request.",
-    href: "/quickstart#logs-and-analytics",
-    imageSrc: "/images/promptlayer/icon-monitor-usage.png",
-  },
-  {
-    title: "Agents",
-    description: "Compose multi-step workflows with reusable components, branching, and orchestration.",
-    href: "/why-promptlayer/agents",
-    imageSrc: "/images/promptlayer/icon-agents.png",
-  },
-  {
-    title: "Evaluations",
-    description: "Score prompt and agent changes before shipping them.",
-    href: "/features/evaluations/overview",
-    imageSrc: "/images/promptlayer/icon-evaluations-v2.png",
-  },
-  {
-    title: "Dataset Management",
-    description: "Build, organize, and reuse datasets for evaluation, regression testing, and iteration.",
-    href: "/features/evaluations/datasets",
-    imageSrc: "/images/promptlayer/icon-dataset-management-v2.png",
-  },
-  {
-    title: "Skills Registry",
-    description: "Store and reuse structured skills so agents can consistently apply the right capabilities.",
-    imageSrc: "/images/promptlayer/icon-skills-registry.png",
-  },
-]
-
-export const platformFeatures = [
-  {
-    title: "Release Labels",
-    description: "Promote tested prompt versions across environments without changing application code.",
-    href: "/features/prompt-registry/release-labels#release-labels",
-    icon: TagIcon,
-  },
-  {
-    title: "AB Testing",
-    description: "Compare prompt variants in production and route traffic based on measured performance.",
-    href: "/why-promptlayer/ab-releases",
-    icon: ArrowsRightLeftIcon,
-  },
-  {
-    title: "Analytics",
-    description: "Track usage, quality, and outcome trends as prompts and agents evolve over time.",
-    href: "/why-promptlayer/analytics",
-    icon: ChartBarSquareIcon,
-  },
-  {
-    title: "Role-Based Access Control",
-    description: "Manage workspace permissions with granular roles for engineers, operators, and reviewers.",
-    href: "/why-promptlayer/rbac",
-    icon: ShieldCheckIcon,
-  },
-  {
-    title: "Single Sign-On",
-    description: "Enable secure team access with enterprise identity providers and centralized login flows.",
-    href: "/self-hosted#security-&-authentication",
-    icon: KeyIcon,
-  },
-  {
-    title: "Self-Hosting",
-    description: "Deploy PromptLayer in your own environment when security or compliance requires it.",
-    href: "/self-hosted",
-    icon: ServerStackIcon,
-  },
-]
-
-export const resources = [
-  {
-    title: "API Reference",
-    description: "Explore the SDK and API surface for prompt execution, datasets, and workflows.",
-    href: "/reference/rest-api-reference",
-    icon: CodeBracketIcon,
-  },
-  {
-    title: "MCP",
-    description: "Documentation for model context protocol integrations, tools, and connected workflows.",
-    href: "/languages/mcp",
-    icon: WrenchIcon,
-  },
-  {
-    title: "Migration Guides",
-    description: "Move hard-coded prompts and ad hoc eval scripts into a managed PromptLayer workflow.",
-    href: "/migration",
-    icon: ArrowPathIcon,
-  },
-  {
-    title: "SDKs",
-    description: "Official client libraries, examples, and package references for supported runtimes.",
-    href: "/languages/python",
-    icon: CubeIcon,
-  },
-  {
-    title: "OpenTelemetry Integrations",
-    description: "Connect PromptLayer with model providers, tracing pipelines, and internal tooling.",
-    href: "/languages/integrations",
-    icon: PuzzlePieceIcon,
-  },
-  {
-    title: "Changelog",
-    description: "Product updates covering PromptLayer platform improvements and launches.",
-    href: "/changelog",
-    icon: RocketLaunchIcon,
-  },
-  {
-    title: "Blog",
-    description: "Engineering and product insights from the PromptLayer team.",
-    href: "https://www.promptlayer.com/blog/",
-    icon: PencilSquareIcon,
-    external: true,
-    showExternalArrow: false,
-  },
-]
-
-export const HeroFeatureCard = ({ title, description, href, imageSrc }) => {
-  const content = (
-    <>
-      <div className="promptlayer-feature-badge">
-        <img
-          src={imageSrc}
-          alt=""
-          aria-hidden="true"
-          width="40"
-          height="40"
-          className="promptlayer-feature-icon"
-        />
-      </div>
-      <h3 className="promptlayer-feature-title">{title}</h3>
-      <p className="promptlayer-feature-description">{description}</p>
-    </>
-  )
-
-  if (href) {
-    return (
-      <a href={href} className="promptlayer-feature-card promptlayer-card-interactive">
-        {content}
-      </a>
-    )
-  }
-
-  return <div className="promptlayer-feature-card">{content}</div>
-}
-
-export const InfoCard = ({
-  title,
-  description,
-  href,
-  icon,
-  external = false,
-  showExternalArrow = true,
-}) => {
-  const content = (
-    <>
-      {external && showExternalArrow && <span className="promptlayer-card-arrow">↗</span>}
-      <div className="promptlayer-info-icon">{icon}</div>
-      <h3 className="promptlayer-info-title">{title}</h3>
-      <p className="promptlayer-info-description">{description}</p>
-    </>
-  )
-
-  if (href) {
-    return (
-      <a
-        href={href}
-        className="promptlayer-info-card promptlayer-card-interactive"
-        target={external ? "_blank" : undefined}
-        rel={external ? "noreferrer" : undefined}
-      >
-        {content}
-      </a>
-    )
-  }
-
-  return <div className="promptlayer-info-card">{content}</div>
-}
-
 <div className="promptlayer-landing">
   <section className="promptlayer-hero">
     <div className="promptlayer-hero-copy">
       <div className="promptlayer-hero-logo-wrap">
-        <div
-          role="img"
-          aria-label="PromptLayer logo"
+        <img
+          src="/images/promptlayer/promptlayer-cake.png"
+          alt=""
+          aria-hidden="true"
+          width="173"
+          height="150"
           className="promptlayer-hero-logo"
         />
       </div>
@@ -306,27 +28,433 @@ export const InfoCard = ({
     </div>
 
     <div className="promptlayer-feature-grid">
-      {heroFeatures.map((feature) => (
-        <HeroFeatureCard key={feature.title} {...feature} />
-      ))}
+      <a
+        href="/features/prompt-registry/overview"
+        className="promptlayer-feature-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-feature-badge">
+          <img
+            src="/images/promptlayer/icon-prompt-management.png"
+            alt=""
+            aria-hidden="true"
+            width="188"
+            height="197"
+            className="promptlayer-feature-icon"
+          />
+        </div>
+        <h3 className="promptlayer-feature-title">Prompt Registry</h3>
+        <p className="promptlayer-feature-description">
+          Version prompts outside your codebase with reusable templates and inputs.
+        </p>
+      </a>
+
+      <a
+        href="/quickstart#logs-and-analytics"
+        className="promptlayer-feature-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-feature-badge">
+          <img
+            src="/images/promptlayer/icon-monitor-usage.png"
+            alt=""
+            aria-hidden="true"
+            width="160"
+            height="158"
+            className="promptlayer-feature-icon"
+          />
+        </div>
+        <h3 className="promptlayer-feature-title">Observability</h3>
+        <p className="promptlayer-feature-description">
+          Inspect traces, latency, token usage, and production behavior across every request.
+        </p>
+      </a>
+
+      <a
+        href="/why-promptlayer/agents"
+        className="promptlayer-feature-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-feature-badge">
+          <img
+            src="/images/promptlayer/icon-agents.png"
+            alt=""
+            aria-hidden="true"
+            width="160"
+            height="158"
+            className="promptlayer-feature-icon"
+          />
+        </div>
+        <h3 className="promptlayer-feature-title">Agents</h3>
+        <p className="promptlayer-feature-description">
+          Compose multi-step workflows with reusable components, branching, and orchestration.
+        </p>
+      </a>
+
+      <a
+        href="/features/evaluations/overview"
+        className="promptlayer-feature-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-feature-badge">
+          <img
+            src="/images/promptlayer/icon-evaluations-v2.png"
+            alt=""
+            aria-hidden="true"
+            width="160"
+            height="158"
+            className="promptlayer-feature-icon"
+          />
+        </div>
+        <h3 className="promptlayer-feature-title">Evaluations</h3>
+        <p className="promptlayer-feature-description">
+          Score prompt and agent changes before shipping them.
+        </p>
+      </a>
+
+      <a
+        href="/features/evaluations/datasets"
+        className="promptlayer-feature-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-feature-badge">
+          <img
+            src="/images/promptlayer/icon-dataset-management-v2.png"
+            alt=""
+            aria-hidden="true"
+            width="160"
+            height="158"
+            className="promptlayer-feature-icon"
+          />
+        </div>
+        <h3 className="promptlayer-feature-title">Dataset Management</h3>
+        <p className="promptlayer-feature-description">
+          Build, organize, and reuse datasets for evaluation, regression testing, and iteration.
+        </p>
+      </a>
+
+      <div className="promptlayer-feature-card">
+        <div className="promptlayer-feature-badge">
+          <img
+            src="/images/promptlayer/icon-skills-registry.png"
+            alt=""
+            aria-hidden="true"
+            width="232"
+            height="211"
+            className="promptlayer-feature-icon"
+          />
+        </div>
+        <h3 className="promptlayer-feature-title">Skills Registry</h3>
+        <p className="promptlayer-feature-description">
+          Store and reuse structured skills so agents can consistently apply the right capabilities.
+        </p>
+      </div>
     </div>
   </section>
 
   <section className="promptlayer-section">
     <h2 className="promptlayer-section-title">Features</h2>
     <div className="promptlayer-info-grid">
-      {platformFeatures.map((feature) => (
-        <InfoCard key={feature.title} {...feature} />
-      ))}
+      <a
+        href="/features/prompt-registry/release-labels#release-labels"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
+            <path d="M6 6h.008v.008H6V6Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Release Labels</h3>
+        <p className="promptlayer-info-description">
+          Promote tested prompt versions across environments without changing application code.
+        </p>
+      </a>
+
+      <a
+        href="/why-promptlayer/ab-releases"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">AB Testing</h3>
+        <p className="promptlayer-info-description">
+          Compare prompt variants in production and route traffic based on measured performance.
+        </p>
+      </a>
+
+      <a
+        href="/why-promptlayer/analytics"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Analytics</h3>
+        <p className="promptlayer-info-description">
+          Track usage, quality, and outcome trends as prompts and agents evolve over time.
+        </p>
+      </a>
+
+      <a
+        href="/why-promptlayer/rbac"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Role-Based Access Control</h3>
+        <p className="promptlayer-info-description">
+          Manage workspace permissions with granular roles for engineers, operators, and reviewers.
+        </p>
+      </a>
+
+      <a
+        href="/self-hosted#security-&-authentication"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Single Sign-On</h3>
+        <p className="promptlayer-info-description">
+          Enable secure team access with enterprise identity providers and centralized login flows.
+        </p>
+      </a>
+
+      <a href="/self-hosted" className="promptlayer-info-card promptlayer-card-interactive">
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Self-Hosting</h3>
+        <p className="promptlayer-info-description">
+          Deploy PromptLayer in your own environment when security or compliance requires it.
+        </p>
+      </a>
     </div>
   </section>
 
   <section className="promptlayer-section">
     <h2 className="promptlayer-section-title">Resources</h2>
     <div className="promptlayer-info-grid">
-      {resources.map((resource) => (
-        <InfoCard key={resource.title} {...resource} />
-      ))}
+      <a
+        href="/reference/rest-api-reference"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">API Reference</h3>
+        <p className="promptlayer-info-description">
+          Explore the SDK and API surface for prompt execution, datasets, and workflows.
+        </p>
+      </a>
+
+      <a href="/languages/mcp" className="promptlayer-info-card promptlayer-card-interactive">
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z" />
+            <path d="M4.867 19.125h.008v.008h-.008v-.008Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">MCP</h3>
+        <p className="promptlayer-info-description">
+          Documentation for model context protocol integrations, tools, and connected workflows.
+        </p>
+      </a>
+
+      <a href="/migration" className="promptlayer-info-card promptlayer-card-interactive">
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Migration Guides</h3>
+        <p className="promptlayer-info-description">
+          Move hard-coded prompts and ad hoc eval scripts into a managed PromptLayer workflow.
+        </p>
+      </a>
+
+      <a href="/languages/python" className="promptlayer-info-card promptlayer-card-interactive">
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">SDKs</h3>
+        <p className="promptlayer-info-description">
+          Official client libraries, examples, and package references for supported runtimes.
+        </p>
+      </a>
+
+      <a
+        href="/languages/integrations"
+        className="promptlayer-info-card promptlayer-card-interactive"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">OpenTelemetry Integrations</h3>
+        <p className="promptlayer-info-description">
+          Connect PromptLayer with model providers, tracing pipelines, and internal tooling.
+        </p>
+      </a>
+
+      <a href="/changelog" className="promptlayer-info-card promptlayer-card-interactive">
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Changelog</h3>
+        <p className="promptlayer-info-description">
+          Product updates covering PromptLayer platform improvements and launches.
+        </p>
+      </a>
+
+      <a
+        href="https://www.promptlayer.com/blog/"
+        className="promptlayer-info-card promptlayer-card-interactive"
+        target="_blank"
+        rel="noreferrer"
+      >
+        <div className="promptlayer-info-icon">
+          <svg
+            viewBox="0 0 24 24"
+            fill="none"
+            stroke="currentColor"
+            strokeWidth="1.5"
+            strokeLinecap="round"
+            strokeLinejoin="round"
+            className="promptlayer-heroicon"
+            aria-hidden="true"
+          >
+            <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
+          </svg>
+        </div>
+        <h3 className="promptlayer-info-title">Blog</h3>
+        <p className="promptlayer-info-description">
+          Engineering and product insights from the PromptLayer team.
+        </p>
+      </a>
     </div>
   </section>
 </div>

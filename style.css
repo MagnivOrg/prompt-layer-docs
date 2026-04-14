@@ -17,21 +17,16 @@
 }
 
 .promptlayer-hero-logo-wrap {
-  display: flex;
-  width: 6rem;
-  height: 6rem;
-  align-items: center;
-  justify-content: center;
+  width: 5rem;
+  aspect-ratio: 173 / 150;
   margin-bottom: 1.5rem;
 }
 
 .promptlayer-hero-logo {
-  width: 5rem;
-  height: 5rem;
-  background-image: url("/images/promptlayer/promptlayer-cake.png");
-  background-position: center;
-  background-repeat: no-repeat;
-  background-size: contain;
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: contain;
   filter: grayscale(1) brightness(0.1);
   opacity: 0.8;
   pointer-events: none;
@@ -131,9 +126,10 @@
 }
 
 .promptlayer-feature-icon {
-  width: 2.5rem;
+  display: block;
+  width: auto;
   height: 2.5rem;
-  object-fit: contain;
+  max-width: 2.5rem;
 }
 
 .promptlayer-feature-title,
