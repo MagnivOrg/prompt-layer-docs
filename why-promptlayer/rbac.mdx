@@ -91,22 +91,23 @@ Only organization owners can create custom roles. When creating a custom role, y
 
 RBAC uses fine-grained permissions that control specific actions:
 
+- **`PROMPT_CREATE`**: Create and duplicate prompt templates
 - **`PROMPT_EDIT`**: Edit prompt templates, create versions, modify metadata
+- **`PROMPT_DELETE`**: Delete prompt templates
 - **`PROMPT_DEPLOY`**: Create labels, deploy changes, move labels between versions
+- **`WORKFLOW_CREATE`**: Create and duplicate workflows
 - **`WORKFLOW_EDIT`**: Edit workflows, create versions, modify structure
+- **`WORKFLOW_DELETE`**: Delete workflows
 - **`WORKFLOW_DEPLOY`**: Create workflow labels, deploy workflow changes
-- **`DATASET_EDIT`**: Create and manage datasets and dataset groups
-- **`REPORT_EDIT`**: Create, edit, and run reports and evaluations
+- **`DATASET_CREATE`**: Create and duplicate datasets and dataset groups
+- **`DATASET_EDIT`**: Edit datasets and dataset groups
+- **`DATASET_DELETE`**: Delete datasets and dataset groups
+- **`REPORT_CREATE`**: Create and duplicate reports and evaluations
+- **`REPORT_EDIT`**: Edit and run reports and evaluations
+- **`REPORT_DELETE`**: Delete reports and evaluations
 - **`METADATA_EDIT`**: Edit metadata associated with requests
 - **`MANAGE_API_KEYS`**: Create and delete API keys
 - **`ADMIN`**: Full administrative access, including managing member roles
-
-<Warning color="yellow">
-  The `ADMIN` permission grants full administrative access and allows users to
-  perform destructive workspace-wide actions, including inviting and removing
-  other members from the workspace, even other admins. Grant this permission
-  only to trusted team members who need full administrative control.
-</Warning>
 
 ## Enabling RBAC
 
