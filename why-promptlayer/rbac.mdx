@@ -81,32 +81,56 @@ PromptLayer provides four default roles that cover most common use cases:
 
 ## Custom Roles
 
-![Create Custom Role](/images/rbac-create-role.png)
-
 Beyond the default roles, you can create custom roles tailored to your organization's specific needs. Custom roles are defined at the organization level and can be reused across all workspaces.
 
 Only organization owners can create custom roles. When creating a custom role, you select which permissions to include, allowing you to create roles that match your team's workflow exactly. For example, you might create a "QA Tester" role that can only edit reports and datasets, or a "Deployment Manager" role that combines `Publisher` and `Developer` permissions.
+
+### Creating a Custom Role
+
+<Note>
+  RBAC must be enabled for your organization before you can create or view
+  custom roles. Only organization owners can create custom roles.
+</Note>
+
+1. Go to your organization settings
+2. Select your organization to open its details
+3. Open the **Workspace Roles** tab
+4. Click **+ Create Role** in the top right
+5. Enter a **Role Name** that describes the role's purpose (e.g. "QA Tester")
+6. Select the **permissions** to include, grouped by resource (Prompts, Agents, Datasets, Evaluations, Workspace)
+7. Click **Create Role** to save
+
+![Create Custom Role](/images/rbac-create-role.png)
+
+Once created, the role appears alongside the default roles in the **Workspace Roles** tab and can be assigned to any workspace member in your organization. You can update or delete custom roles from the same tab using the row actions menu.
+
+<Warning color="yellow">
+  Granting the `ADMIN` permission gives a role full administrative control,
+  including the ability to manage members and other roles. Only include it when
+  you intend to create an admin-equivalent role.
+</Warning>
 
 ## Permissions
 
 RBAC uses fine-grained permissions that control specific actions:
 
+- **`PROMPT_CREATE`**: Create and duplicate prompt templates
 - **`PROMPT_EDIT`**: Edit prompt templates, create versions, modify metadata
+- **`PROMPT_DELETE`**: Delete prompt templates
 - **`PROMPT_DEPLOY`**: Create labels, deploy changes, move labels between versions
+- **`WORKFLOW_CREATE`**: Create and duplicate workflows
 - **`WORKFLOW_EDIT`**: Edit workflows, create versions, modify structure
+- **`WORKFLOW_DELETE`**: Delete workflows
 - **`WORKFLOW_DEPLOY`**: Create workflow labels, deploy workflow changes
-- **`DATASET_EDIT`**: Create and manage datasets and dataset groups
-- **`REPORT_EDIT`**: Create, edit, and run reports and evaluations
+- **`DATASET_CREATE`**: Create and duplicate datasets and dataset groups
+- **`DATASET_EDIT`**: Edit datasets and dataset groups
+- **`DATASET_DELETE`**: Delete datasets and dataset groups
+- **`REPORT_CREATE`**: Create and duplicate reports and evaluations
+- **`REPORT_EDIT`**: Edit and run reports and evaluations
+- **`REPORT_DELETE`**: Delete reports and evaluations
 - **`METADATA_EDIT`**: Edit metadata associated with requests
 - **`MANAGE_API_KEYS`**: Create and delete API keys
 - **`ADMIN`**: Full administrative access, including managing member roles
-
-<Warning color="yellow">
-  The `ADMIN` permission grants full administrative access and allows users to
-  perform destructive workspace-wide actions, including inviting and removing
-  other members from the workspace, even other admins. Grant this permission
-  only to trusted team members who need full administrative control.
-</Warning>
 
 ## Enabling RBAC
 
@@ -121,11 +145,11 @@ Users with the `ADMIN` permission in a workspace can assign roles to members of 
 To manage a member's roles:
 
 1. Go to your organization settings
-2. Select your organization
-3. Navigate to Workspaces
-4. Select the workspace
-5. Click the three dots menu next to the member
-6. Choose "Manage roles"
+2. Select your organization to open its details
+3. On the **Members** tab, click the member you want to manage
+4. In the **User Details** panel, open the **User's Workspaces** tab
+5. On the workspace row you want to update, open the row actions menu
+6. Choose **Manage Roles**
 
 ![Manage Roles](/images/rbac-manage-roles.png)
 
