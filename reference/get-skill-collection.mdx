@@ -1,0 +1,14 @@
+---
+title: "Get Skill Collection"
+openapi: "GET /api/public/v2/skill-collections/{identifier}"
+---
+
+Fetch a skill collection by UUID, collection name, or root path.
+
+### Response formats
+
+Use `format=zip` to download the selected version as a ZIP archive.
+
+Omit the `format` parameter to receive the JSON payload shown in the schema.
+
+You can pin the response to a specific saved version with `version`, or to a labeled version with `label`.

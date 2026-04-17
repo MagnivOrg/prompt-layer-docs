@@ -208,6 +208,16 @@
             ]
           },
           {
+            "group": "Skill Collections",
+            "pages": [
+              "reference/list-skill-collections",
+              "reference/create-skill-collection",
+              "reference/get-skill-collection",
+              "reference/update-skill-collection",
+              "reference/save-skill-collection-version"
+            ]
+          },
+          {
             "group": "Unified Registry",
             "pages": [
               "reference/create-folder",

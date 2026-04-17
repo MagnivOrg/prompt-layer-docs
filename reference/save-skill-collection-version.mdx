@@ -1,0 +1,12 @@
+---
+title: "Save Skill Collection Version"
+openapi: "POST /api/public/v2/skill-collections/{identifier}/versions"
+---
+
+Create a new saved version of a skill collection.
+
+### Request formats
+
+Use `application/json` to send `file_updates`, `moves`, `deletes`, `commit_message`, and `release_label` directly.
+
+Use `multipart/form-data` to upload a ZIP archive plus metadata encoded as a JSON string in `metadata` or `json`.
