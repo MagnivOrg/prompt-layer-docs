@@ -499,6 +499,9 @@ The following table provides an overview of the methods currently available in b
 | `track.prompt()`   | Tracks a prompt.              | `promptlayer_client.track.prompt()`   | `async_promptlayer_client.track.prompt()`   |
 | `track.score()`    | Tracks a score.               | `promptlayer_client.track.score()`    | `async_promptlayer_client.track.score()`    |
 | `log_request()`    | Logs a request.               | `promptlayer_client.log_request()`    | `async_promptlayer_client.log_request()`    |
+| `skills.pull()`    | Retrieves a skill collection or a specific version. | `promptlayer_client.skills.pull()`    | `async_promptlayer_client.skills.pull()`    |
+| `skills.publish()` | Creates and publishes a new skill collection. | `promptlayer_client.skills.publish()` | `async_promptlayer_client.skills.publish()` |
+| `skills.update()`  | Renames a skill collection and/or saves a new version. | `promptlayer_client.skills.update()`  | `async_promptlayer_client.skills.update()`  |
 
 > **Note:** All asynchronous methods require an active event loop. Use them within an `async` function and run the function using `asyncio.run()` or another method suitable for managing event loops (e.g., `await` in Jupyter notebooks).
 
