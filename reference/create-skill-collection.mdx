@@ -1,0 +1,12 @@
+---
+title: "Create Skill Collection"
+openapi: "POST /api/public/v2/skill-collections"
+---
+
+Create a new skill collection using either a JSON body or a multipart form upload with a ZIP archive.
+
+### Request formats
+
+Use `application/json` when sending file contents inline through the `files` array.
+
+Use `multipart/form-data` when uploading a ZIP archive. Pass metadata as a JSON string in `metadata` or `json`, and include the file in `archive` or `zip`.

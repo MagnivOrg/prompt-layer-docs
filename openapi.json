@@ -5817,6 +5817,456 @@
         }
       }
     },
+    "/api/public/v2/skill-collections": {
+      "get": {
+        "summary": "List Skill Collections",
+        "operationId": "listSkillCollectionsPublic",
+        "tags": [
+          "skill-collections"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of skill collections.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListSkillCollectionsResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace_id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Skill Collection",
+        "operationId": "createSkillCollectionPublic",
+        "tags": [
+          "skill-collections"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSkillCollectionRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateSkillCollectionMultipartRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Skill collection created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateSkillCollectionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or business rule error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace_id or plan limit reached.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported content type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/skill-collections/{identifier}": {
+      "get": {
+        "summary": "Get Skill Collection",
+        "operationId": "getSkillCollectionPublic",
+        "tags": [
+          "skill-collections"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Skill collection UUID, name, or root_path."
+          },
+          {
+            "name": "format",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "zip"
+              ]
+            },
+            "description": "Omit this parameter for JSON, or use `zip` for an archive download."
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Fetch a version pinned by release label. Mutually exclusive with `version`."
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Fetch a specific version number. Mutually exclusive with `label`."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "JSON payload or ZIP archive.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetSkillCollectionResponse"
+                }
+              },
+              "application/zip": {
+                "schema": {
+                  "type": "string",
+                  "format": "binary"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace_id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Collection, label, or version not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Skill Collection",
+        "operationId": "updateSkillCollectionPublic",
+        "tags": [
+          "skill-collections"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Skill collection UUID, name, or root_path."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateSkillCollectionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Skill collection updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateSkillCollectionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace_id.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Skill collection not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/skill-collections/{identifier}/versions": {
+      "post": {
+        "summary": "Save Skill Collection Version",
+        "operationId": "saveSkillCollectionVersionPublic",
+        "tags": [
+          "skill-collections"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Skill collection UUID, name, or root_path."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveSkillCollectionVersionRequest"
+              }
+            },
+            "multipart/form-data": {
+              "schema": {
+                "$ref": "#/components/schemas/SaveSkillCollectionVersionMultipartRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Skill collection version created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SaveSkillCollectionVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation or business rule error.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace_id or plan limit reached.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Skill collection not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported content type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/public/v2/requests/suggestions": {
       "get": {
         "summary": "Search Request Suggestions",
@@ -6608,6 +7058,404 @@
           "error"
         ],
         "description": "Error response format."
+      },
+      "SkillCollectionErrorResponse": {
+        "type": "object",
+        "description": "Error response format returned by the public skill collection endpoints.",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              false
+            ],
+            "description": "Indicates that the request failed."
+          },
+          "message": {
+            "type": "string",
+            "description": "Error message explaining why the request failed."
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "SkillCollection": {
+        "type": "object",
+        "description": "A skill collection container in the public API.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "root_path": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "nullable": true
+          },
+          "is_deleted": {
+            "type": "boolean"
+          },
+          "created_by": {
+            "type": "integer",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_by": {
+            "type": "integer",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "SkillCollectionVersion": {
+        "type": "object",
+        "description": "A saved version of a skill collection.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "skill_collection_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "number": {
+            "type": "integer"
+          },
+          "root_path_at_version": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string",
+            "nullable": true
+          },
+          "file_paths": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "commit_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "release_label": {
+            "type": "string",
+            "nullable": true
+          },
+          "archived": {
+            "type": "boolean"
+          },
+          "created_by": {
+            "type": "integer",
+            "nullable": true
+          },
+          "user_email": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "InitialFileUpdate": {
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "FileUpdate": {
+        "type": "object",
+        "required": [
+          "path"
+        ],
+        "properties": {
+          "path": {
+            "type": "string"
+          },
+          "content": {
+            "type": "string",
+            "default": ""
+          }
+        }
+      },
+      "FileMove": {
+        "type": "object",
+        "required": [
+          "old_path",
+          "new_path"
+        ],
+        "properties": {
+          "old_path": {
+            "type": "string"
+          },
+          "new_path": {
+            "type": "string"
+          }
+        }
+      },
+      "CreateSkillCollectionRequest": {
+        "type": "object",
+        "required": [
+          "name"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "provider": {
+            "type": "string",
+            "nullable": true
+          },
+          "files": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/InitialFileUpdate"
+            },
+            "default": []
+          },
+          "commit_message": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "CreateSkillCollectionMultipartRequest": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "string",
+            "description": "JSON string metadata containing `name`, `folder_id`, `provider`, `files`, and `commit_message`."
+          },
+          "json": {
+            "type": "string",
+            "description": "Alternative metadata JSON string."
+          },
+          "archive": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional ZIP archive upload."
+          },
+          "zip": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional ZIP archive upload alias."
+          }
+        }
+      },
+      "UpdateSkillCollectionRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SaveSkillCollectionVersionRequest": {
+        "type": "object",
+        "properties": {
+          "file_updates": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileUpdate"
+            },
+            "default": []
+          },
+          "moves": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/FileMove"
+            },
+            "default": []
+          },
+          "deletes": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "commit_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "release_label": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "SaveSkillCollectionVersionMultipartRequest": {
+        "type": "object",
+        "properties": {
+          "metadata": {
+            "type": "string",
+            "description": "JSON string metadata containing `moves`, `deletes`, `commit_message`, `release_label`, and `file_updates`."
+          },
+          "json": {
+            "type": "string",
+            "description": "Alternative metadata JSON string."
+          },
+          "archive": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional ZIP archive upload."
+          },
+          "zip": {
+            "type": "string",
+            "format": "binary",
+            "description": "Optional ZIP archive upload alias."
+          }
+        }
+      },
+      "ListSkillCollectionsResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "skill_collections"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "skill_collections": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/SkillCollection"
+            }
+          }
+        }
+      },
+      "GetSkillCollectionResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "skill_collection",
+          "files",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "skill_collection": {
+            "$ref": "#/components/schemas/SkillCollection"
+          },
+          "files": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "version": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/SkillCollectionVersion"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          }
+        }
+      },
+      "CreateSkillCollectionResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "skill_collection"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "skill_collection": {
+            "$ref": "#/components/schemas/SkillCollection"
+          }
+        }
+      },
+      "UpdateSkillCollectionResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "skill_collection"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "skill_collection": {
+            "$ref": "#/components/schemas/SkillCollection"
+          }
+        }
+      },
+      "SaveSkillCollectionVersionResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "version": {
+            "$ref": "#/components/schemas/SkillCollectionVersion"
+          }
+        }
       },
       "Base": {
         "properties": {
