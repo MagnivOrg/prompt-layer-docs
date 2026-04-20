@@ -1,0 +1,109 @@
+---
+title: "Tune skills for your team"
+description: "Edit Skill Collections you own in the dashboard: provider layout, folder names, frontmatter, size limits, and SDK pull pins."
+icon: "sliders"
+---
+
+Use this guide when you **edit by hand** in the PromptLayer UI. For bulk edits and migrations with natural language, see [Editing with Wrangler AI](/features/skill-collections/editing-with-wrangler).
+
+## Switch provider layout
+
+The dashboard lets you align the collection with **Claude Code**, **OpenAI/Codex**, **OpenClaw**, or **Universal**. Switching layout preserves your skill content while changing which root files and paths PromptLayer expects.
+
+![Provider selector](/images/skill-collections/provider-selector.gif)
+
+If you use **Codex**, treat it as the **OpenAI** provider: include **`AGENTS.md`** and each skill folder should have **`agents/openai.yaml`** alongside **`SKILL.md`**.
+
+## Rename skills to match your conventions
+
+Each skill usually lives in its own folder with a **`SKILL.md`**. Renaming the folder effectively renames the skill; update the **`name`** field in frontmatter to match.
+
+![Renaming a skill folder](/images/skill-collections/folder-renaming.gif)
+
+## Frontmatter
+
+Machine-readable metadata belongs in the **first** YAML block at the top of **`SKILL.md`**. The editor treats the first `--- ... ---` block as frontmatter.
+
+**Required:**
+
+- **`name`** — Short identifier used in the editor and for discovery.
+- **`description`** — What the skill does **and when** it should run (discovery text).
+
+**Optional:**
+
+- **`disable-model-invocation: true`** — Manual-only skill (no implicit invocation).
+
+**Example:**
+
+```markdown
+---
+name: search-logs
+description: Search PromptLayer request logs. Use when the user asks to find or filter past requests.
+---
+
+# Search logs
+
+## Instructions
+
+...
+```
+
+For **OpenAI/Codex**, keep UX and policy fields in **`my-skill/agents/openai.yaml`** (for example `interface.display_name`, `policy.allow_implicit_invocation`) rather than stuffing provider-specific metadata into **`SKILL.md`** frontmatter.
+
+**YAML tips:** If a value contains `:` or quotes, use valid YAML; the editor will reserialize safely.
+
+![Editing skill frontmatter](/images/skill-collections/frontmatter-title-editor.gif)
+
+## Adapt examples to your stack
+
+Replace generic examples with your ticket system, runbooks, and internal links so the skills match how your team works.
+
+## Size and plan limits
+
+PromptLayer shows **recommended** sizes in the editor; the hard ceiling is **5 MiB per file**.
+
+| File / area | Guidance |
+| --- | --- |
+| **`SKILL.md`** | About **8,000 characters** (~1,500–2,000 words) per skill |
+| **`CLAUDE.md`** | Up to **~40,000 characters** recommended |
+| **`AGENTS.md`** | Up to **32,768 characters** (32 KB) recommended |
+| **OpenClaw `workspace/AGENTS.md`** | About **32,000 characters** recommended |
+
+**Plan file counts:** Free up to **30** files per collection, Pro **50**, Team **100** (defaults; see [changelog](/changelog)).
+
+Put long reference material in sibling files (**`reference.md`**, **`examples.md`**) and link from **`SKILL.md`**.
+
+## Versioning and review
+
+Every save creates a new version with a **commit message**. Optional **release labels** (for example `staging`, `production`) mark which version agents should pull.
+
+![Version diff](/images/skill-collections/version-diff.png)
+
+Use version history to compare changes and roll back if needed.
+
+## Pin SDK pulls to a label
+
+After you label a stable version, clients can pull that snapshot instead of latest:
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+import os
+
+client = PromptLayer(api_key=os.environ["PROMPTLAYER_API_KEY"])
+client.skills.pull("my-collection", label="production")
+```
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+
+const client = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+await client.skills.pull("my-collection", { label: "production" });
+```
+
+</CodeGroup>
+
+<Tip>
+  Publish experimental changes under a **`staging`** label first. Point automation at **`production`** only after you have reviewed the diff and tested with your agent.
+</Tip>
