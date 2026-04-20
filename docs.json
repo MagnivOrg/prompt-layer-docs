@@ -26,10 +26,15 @@
         ]
       },
       {
+        "group": "SDKs",
+        "pages": [
+          "sdks/python",
+          "sdks/javascript"
+        ]
+      },
+      {
         "group": "Languages & Environments",
         "pages": [
-          "languages/python",
-          "languages/javascript",
           "languages/rest-api",
           "languages/mcp",
           "languages/integrations",
@@ -283,6 +288,14 @@
     {
       "source": "/introduction",
       "destination": "/overview"
+    },
+    {
+      "source": "/languages/python",
+      "destination": "/sdks/python"
+    },
+    {
+      "source": "/languages/javascript",
+      "destination": "/sdks/javascript"
     }
   ]
 }
