@@ -92,6 +92,8 @@ Stale fallback only applies to transient API errors (for example, timeout, conne
 - Cache is in-memory and process-local (not shared across machines/containers).
 - Requests with `metadata_filters` or `model_parameter_overrides` bypass cache.
 - Publishing via `templates.publish()` invalidates cache for that prompt name.
+- Call `promptlayer_client.invalidate("prompt-name")` to clear one prompt from cache.
+- Call `promptlayer_client.invalidate()` to clear the full SDK cache.
 
 ### Practical Guidance
 
