@@ -40,7 +40,8 @@ We notify you for these events:
 | `report_finished`                    | When a evaluation report is completed. | <ul><li>`report_id` (number)</li><li>`report_name` (string)</li></ul> |
 | `dataset_version_created_by_file`    | When a dataset version is successfully created from a file upload. | <ul><li>`dataset_id` (number)</li><li>`dataset_version_number` (number)</li></ul> |
 | `dataset_version_created_by_file_failed` | When dataset file processing fails. | <ul><li>`error_message` (string)</li></ul> |
-| `dataset_version_created_from_filter_params` | When a dataset version is created from filter parameters. | <ul><li>`dataset_id` (number)</li><li>`rows_added` (number)</li><li>`dataset_version_number` (number)</li></ul> | 
+| `dataset_version_created_from_filter_params` | When a dataset version is created from filter parameters. | <ul><li>`dataset_id` (number)</li><li>`rows_added` (number)</li><li>`dataset_version_number` (number)</li></ul> |
+| `skill_collection_files_changed`     | When a Skill Collection is created, a new version is saved, a collection is deleted, or a version is restored. | <ul><li>`skill_collection_id` (string)</li><li>`source` (string: `collection_created`, `version_save`, `collection_deleted`, or `version_restored`)</li><li>`affected_paths` (array of collection-relative paths)</li><li>`version_number` (number, optional)</li></ul> |
 
 ### Example Payload
 

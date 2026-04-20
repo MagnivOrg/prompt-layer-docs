@@ -4,13 +4,13 @@ description: "Versioned folders of agent instructions (SKILL.md files) you can s
 icon: "book-sparkles"
 ---
 
-A **Skill Collection** is a versioned set of files that teach your coding agent how to behave: each skill usually lives in its own folder with a `SKILL.md`, plus provider-specific config (for example `CLAUDE.md` or `AGENTS.md`). You can edit in the PromptLayer dashboard, track versions with commit messages and release labels, share a public link, let others **Remix** a copy into their workspace, and **pull** the collection into a local agent environment with the PromptLayer SDK.
+A **Skill Collection** is a versioned folder of instructions that teach your coding agent how to behave. Each skill lives in its own subfolder with a `SKILL.md`, alongside provider-specific config (like `CLAUDE.md` or `AGENTS.md`). Edit in the PromptLayer dashboard, version with commit messages and release labels, share a public link, let others **Remix** a copy, and **pull** the collection into your local agent with the PromptLayer SDK.
 
 ![Skill Collection editor](/images/skill-collections/overview-editor.png)
 
 ## Supported layouts
 
-PromptLayer can scaffold and export skills for several agent environments:
+Skill Collections support the following agent environments:
 
 | Layout             | Core config     | Typical skill paths                                             |
 | ------------------ | --------------- | --------------------------------------------------------------- |
@@ -19,7 +19,7 @@ PromptLayer can scaffold and export skills for several agent environments:
 | **OpenClaw**       | `openclaw.json` | `workspace/skills/my-skill/SKILL.md` plus workspace files       |
 | **Universal**      | Flexible        | Portable structure; you can switch to a specific provider later |
 
-When you export or pull as a zip, PromptLayer can add the on-disk prefixes your tool expects (for example `.claude/`, `.agents/`, `.openclaw/`). When you use the **public API**, send paths **relative to the collection root** (for example `triage/SKILL.md`), not exported paths like `.claude/skills/triage/SKILL.md`.
+**Exports and zip pulls** include the on-disk prefix your tool expects (`.claude/`, `.agents/`, `.openclaw/`). **Public API calls** use paths relative to the collection root (e.g. `triage/SKILL.md`) — not the exported form like `.claude/skills/triage/SKILL.md`.
 
 ## What you can do
 

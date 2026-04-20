@@ -181,44 +181,7 @@ File paths in the JSON response follow the same convention as the SDK: provider-
 
 ## Skill Collection webhooks
 
-If you want your own systems to react when a Skill Collection changes, configure a workspace webhook in **Settings -> Webhook**. Skill Collections currently emit one webhook event:
-
-| Event type | When it fires | `details` fields |
-| --- | --- | --- |
-| `skill_collection_files_changed` | When a collection is created, a new version is saved, a collection is deleted, or a version is restored | `skill_collection_id`, `source`, `affected_paths`, optional `version_number` |
-
-The `source` field is one of:
-
-- `collection_created`
-- `version_save`
-- `collection_deleted`
-- `version_restored`
-
-PromptLayer sends the same top-level webhook envelope used elsewhere in the product:
-
-```json
-{
-  "event_type": "skill_collection_files_changed",
-  "details": {
-    "skill_collection_id": "<skill_collection_id>",
-    "source": "version_save",
-    "affected_paths": [
-      "CLAUDE.md",
-      "triage/SKILL.md"
-    ],
-    "version_number": 18
-  },
-  "user_id": "<user_id>",
-  "user_name": "<user_name>",
-  "user_email": "<user_email>",
-  "workspace_id": "<workspace_id>",
-  "timestamp": "<timestamp>"
-}
-```
-
-`affected_paths` is a deduped list of collection-relative paths that changed. Some webhook deliveries may include extra fields in `details` for specific actions, such as `restored_from_version_id` when a version is restored.
-
-For signature verification and general webhook setup, see [Webhooks](/features/prompt-registry/webhooks).
+Skill Collections emit a `skill_collection_files_changed` event when a collection is created, saved, deleted, or restored. To subscribe and verify signatures, see [Webhooks](/features/prompt-registry/webhooks).
 
 ## CI pattern
 
