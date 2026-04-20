@@ -68,6 +68,17 @@
             ]
           },
           {
+            "group": "Skill Collections",
+            "icon": "book-sparkles",
+            "pages": [
+              "features/skill-collections/overview",
+              "features/skill-collections/editing-with-wrangler",
+              "features/skill-collections/sharing-and-remixing",
+              "features/skill-collections/pulling-skills",
+              "features/skill-collections/tuning-skills"
+            ]
+          },
+          {
             "group": "Advanced Logging",
             "icon": "cassette-tape",
             "pages": [

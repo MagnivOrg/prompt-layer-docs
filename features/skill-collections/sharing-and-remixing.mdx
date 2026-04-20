@@ -1,0 +1,42 @@
+---
+title: "Sharing and remixing collections"
+description: "Publish a read-only Skill Collection link, let others remix it into their own workspace, and point them to the public pull flow."
+icon: "share"
+---
+
+Use shared Skill Collections when you want other people to **inspect**, **remix**, or **pull** your agent setup without giving them access to your private workspace.
+
+## Share a public version
+
+Open a saved Skill Collection version in the dashboard and click **Share**. PromptLayer opens a dialog where you can publish a public link and decide whether **Remix** should be available.
+
+![Share dialog for a Skill Collection](/images/skill-collections/share-dialog.png)
+
+<Info>
+  Shared pages are read-only. Viewers can browse the collection, download it as
+  a zip, and copy it, but they cannot edit the original collection in your
+  workspace.
+</Info>
+
+## What viewers see on the shared page
+
+The public page shows the collection's file tree and file contents so someone can understand the layout before they install or copy it.
+
+![Shared Skill Collection page](/images/skill-collections/shared-page.png)
+
+This works well for starter kits, team playbooks, example agent setups, or public templates you want others to learn from.
+
+## Let others remix your collection
+
+If you enable **Remix**, people viewing the shared page can copy the collection into their own workspace and start editing from there.
+
+![Remix Skill Collection dialog](/images/skill-collections/remix-dialog.png)
+
+A remix creates a separate Skill Collection owned by the destination workspace. After that, the new owner can rename skills, adjust frontmatter, switch providers, and publish their own versions without changing the original.
+
+## Typical use cases
+
+- Publish an opinionated starter collection for new repositories.
+- Share a reference agent setup that customers can adapt to their stack.
+- Distribute internal best practices across teams without handing out workspace access.
+- Pair public sharing with pinned pulls so downstream projects load a stable version.

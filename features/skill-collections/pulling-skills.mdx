@@ -1,0 +1,229 @@
+---
+title: "Pulling skills into your agent"
+description: "Download a Skill Collection with the PromptLayer SDK or public REST API so Claude Code, Codex, Cursor, or OpenClaw can load it from disk."
+icon: "download"
+---
+
+After Wrangler (or you) finalizes a Skill Collection in the dashboard, your coding agent loads skills from **files on disk**. Use **`client.skills.pull()`** to fetch the collection, then write the files to your project.
+
+<Info>
+  You can generate these exact snippets for your own collection from the dashboard: open a Skill Collection and click **Pull via SDK**.
+</Info>
+
+## Prerequisites
+
+Set your API key in the environment:
+
+```bash
+export PROMPTLAYER_API_KEY="your_promptlayer_api_key"
+```
+
+## Pull as a folder of files
+
+`skills.pull()` returns a response with a **`files`** map (path → text content). For provider-specific collections, those paths already include the provider prefix (`.claude/...`, `.agents/...`, or `.openclaw/...`), so the simplest thing to do is **write each file at its returned path from your project root**. Everything lands where your agent expects it.
+
+<CodeGroup>
+
+```python Python
+# pip install -U promptlayer
+import os
+from pathlib import Path
+
+from promptlayer import PromptLayer
+
+client = PromptLayer(api_key=os.environ["PROMPTLAYER_API_KEY"])
+
+result = client.skills.pull("my-collection")
+if result is None:
+    raise ValueError("No skill collection returned.")
+
+for relative_path, content in result["files"].items():
+    output_path = Path(relative_path)
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(content, encoding="utf-8")
+```
+
+```js JavaScript
+// npm install promptlayer
+import { PromptLayer } from "promptlayer";
+import { mkdir, writeFile } from "node:fs/promises";
+import path from "node:path";
+
+const client = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+
+const result = await client.skills.pull("my-collection");
+if (!result || result instanceof ArrayBuffer) {
+  throw new Error("Expected a JSON skill collection response.");
+}
+
+for (const [relativePath, content] of Object.entries(result.files)) {
+  await mkdir(path.dirname(relativePath), { recursive: true });
+  await writeFile(relativePath, content, "utf8");
+}
+```
+
+</CodeGroup>
+
+For a **Claude Code** collection, this produces `.claude/CLAUDE.md`, `.claude/skills/<name>/SKILL.md`, etc. For **Codex**, you get `.agents/AGENTS.md`, and for **OpenClaw** you get `.openclaw/...`. **Universal** collections have no prefix and land in your project root as-is.
+
+### Writing to a custom directory
+
+If you want to rename the output directory (for example, write a Claude Code collection under `.agents` instead of `.claude`), strip the known provider prefix from each path and join the remainder to your target directory:
+
+<CodeGroup>
+
+```python Python
+output_dir = Path("custom-dir")
+prefix = ".claude/"  # your collection's provider prefix
+
+for relative_path, content in result["files"].items():
+    target = relative_path[len(prefix):] if relative_path.startswith(prefix) else relative_path
+    output_path = output_dir / target
+    output_path.parent.mkdir(parents=True, exist_ok=True)
+    output_path.write_text(content, encoding="utf-8")
+```
+
+```js JavaScript
+const outputDir = "custom-dir";
+const prefix = ".claude/";
+
+for (const [relativePath, content] of Object.entries(result.files)) {
+  const target = relativePath.startsWith(prefix)
+    ? relativePath.slice(prefix.length)
+    : relativePath;
+  const outputPath = path.join(outputDir, target);
+  await mkdir(path.dirname(outputPath), { recursive: true });
+  await writeFile(outputPath, content, "utf8");
+}
+```
+
+</CodeGroup>
+
+| Provider | Prefix in response paths |
+| --- | --- |
+| **Claude Code** | `.claude/` |
+| **OpenAI / Codex** | `.agents/` |
+| **OpenClaw** | `.openclaw/` |
+| **Universal** | _(no prefix)_ |
+
+## Pin a version or release label
+
+Pass `version=` or `label=` to pull an immutable snapshot instead of latest.
+
+<CodeGroup>
+
+```python Python
+client.skills.pull("my-collection", version=12)
+client.skills.pull("my-collection", label="production")
+```
+
+```js JavaScript
+await client.skills.pull("my-collection", { version: 12 });
+await client.skills.pull("my-collection", { label: "production" });
+```
+
+</CodeGroup>
+
+## Pull as a zip archive
+
+Pass `format="zip"` to get a binary archive instead of a JSON file map. The archive already contains the provider's on-disk layout, so unzip it at your project root.
+
+<CodeGroup>
+
+```python Python
+import os
+from pathlib import Path
+
+from promptlayer import PromptLayer
+
+client = PromptLayer(api_key=os.environ["PROMPTLAYER_API_KEY"])
+
+zip_archive = client.skills.pull("my-collection", format="zip")
+if not isinstance(zip_archive, bytes):
+    raise ValueError("Expected a zip archive.")
+
+Path("skills.zip").write_bytes(zip_archive)
+```
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+import { writeFile } from "node:fs/promises";
+
+const client = new PromptLayer({ apiKey: process.env.PROMPTLAYER_API_KEY });
+
+const zipArchive = await client.skills.pull("my-collection", { format: "zip" });
+if (!(zipArchive instanceof ArrayBuffer)) {
+  throw new Error("Expected a zip archive.");
+}
+
+await writeFile("skills.zip", Buffer.from(zipArchive));
+```
+
+</CodeGroup>
+
+## Raw REST API
+
+Use **`GET`** against the public API when you are not using an SDK:
+
+```http
+GET https://api.promptlayer.com/api/public/v2/skill-collections/<identifier>
+```
+
+Optional query parameters:
+
+| Parameter | Purpose |
+| --- | --- |
+| `format=zip` | Return a zip archive instead of JSON |
+| `version=<n>` | Pin to a specific version number |
+| `label=<name>` | Pin to a release label |
+
+File paths in the JSON response follow the same convention as the SDK: provider-specific collections include the `.claude/`, `.agents/`, or `.openclaw/` prefix; universal collections are root-relative. Zip exports always include the provider layout.
+
+## Skill Collection webhooks
+
+If you want your own systems to react when a Skill Collection changes, configure a workspace webhook in **Settings -> Webhook**. Skill Collections currently emit one webhook event:
+
+| Event type | When it fires | `details` fields |
+| --- | --- | --- |
+| `skill_collection_files_changed` | When a collection is created, a new version is saved, a collection is deleted, or a version is restored | `skill_collection_id`, `source`, `affected_paths`, optional `version_number` |
+
+The `source` field is one of:
+
+- `collection_created`
+- `version_save`
+- `collection_deleted`
+- `version_restored`
+
+PromptLayer sends the same top-level webhook envelope used elsewhere in the product:
+
+```json
+{
+  "event_type": "skill_collection_files_changed",
+  "details": {
+    "skill_collection_id": "<skill_collection_id>",
+    "source": "version_save",
+    "affected_paths": [
+      "CLAUDE.md",
+      "triage/SKILL.md"
+    ],
+    "version_number": 18
+  },
+  "user_id": "<user_id>",
+  "user_name": "<user_name>",
+  "user_email": "<user_email>",
+  "workspace_id": "<workspace_id>",
+  "timestamp": "<timestamp>"
+}
+```
+
+`affected_paths` is a deduped list of collection-relative paths that changed. Some webhook deliveries may include extra fields in `details` for specific actions, such as `restored_from_version_id` when a version is restored.
+
+For signature verification and general webhook setup, see [Webhooks](/features/prompt-registry/webhooks).
+
+## CI pattern
+
+<Tip>
+  Run **`skills.pull`** in your build or deploy pipeline with a pinned **`label`** (for example `production`) so your agent loads a stable snapshot instead of whatever was latest when the job last ran.
+</Tip>
+
+For more on labels and review, see [Tune skills for your team](/features/skill-collections/tuning-skills).

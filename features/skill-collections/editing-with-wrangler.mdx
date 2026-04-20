@@ -1,0 +1,35 @@
+---
+title: "Editing with Wrangler AI"
+description: "Use PromptLayer's in-dashboard assistant to create, edit, rename, and migrate Skill Collections without learning SKILL.md conventions yourself."
+icon: "message-bot"
+---
+
+**Wrangler AI** is PromptLayer's in-dashboard assistant. Ask it to **create**, **edit**, **rename**, or **migrate** Skill Collections. Wrangler already follows PromptLayer's skill conventions, so you do not need to memorize `SKILL.md` frontmatter or folder layouts yourself.
+
+## Where to find Wrangler
+
+Open Wrangler from the **left sidebar** of the dashboard, then use the full chat pane when you want more room to work.
+
+![Wrangler AI button and chat pane](/images/skill-collections/wrangler-button.png)
+
+## Mention a Skill Collection with `@`
+
+In the Wrangler chat input, type **`@`** and choose a Skill Collection from the list. That attaches the collection as context so Wrangler can make precise edits or migrations against the right project.
+
+![Mention a Skill Collection](/images/skill-collections/wrangler-mention.png)
+
+## Things you can ask Wrangler
+
+- "Create a `support-skills` collection with a triage skill for my team."
+- "Add an `escalation` skill that handles urgent tickets."
+- "Rename every skill in `@support-skills` to kebab-case."
+- "Migrate `@support-skills` from Claude Code to Codex."
+- "Move `@support-skills` to OpenClaw and populate the workspace files."
+
+## How migrations work
+
+Wrangler translates the file layout and metadata for your target provider while preserving instructions and examples, then saves the result as a **new version** so nothing is lost.
+
+## Rolling back
+
+If you need to undo a change, open **version history** for the collection, pick an earlier version, and restore it. See [Versioning and review](/features/skill-collections/tuning-skills#versioning-and-review) for the same workflow when editing by hand.
