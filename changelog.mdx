@@ -30,6 +30,32 @@ icon: "rocket"
 
 ---
 
+
+### Deployment 4
+
+#### New Features
+
+**API Key Restrictions for Playground and Workflows**
+The Playground and Workflows now enforce workspace-level provider API key requirements. Users on trial Team plans can continue using PromptLayer-provided API keys, while others must configure their own provider credentials in Settings to run prompts and workflows.
+- Prevents unauthorized use of shared infrastructure resources
+- Clear error messages guide users to add missing provider API keys
+- Enhanced access controls across all dashboard execution contexts
+
+**Snippet Management Improvements**
+Snippets are now formally distinguished from regular prompts with a dedicated `is_snippet` flag, improving organization and filtering.
+- More accurate snippet identification in the registry
+- Better separation between reusable snippets and standalone prompts
+
+#### Improvements
+
+- Enhanced model parameter handling in the Playground UI
+- Improved template format consistency checks in Playground
+- Better error messaging when provider API keys are missing
+- Streamlined snippet display components
+- More reliable workflow node execution validation
+
+---
+
 ## April 16, 2026
 
 ### Deployment 1
