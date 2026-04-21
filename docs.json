@@ -33,10 +33,14 @@
         ]
       },
       {
+        "group": "Agents",
+        "pages": [
+          "agents/mcp"
+        ]
+      },
+      {
         "group": "Languages & Environments",
         "pages": [
-          "languages/rest-api",
-          "languages/mcp",
           "languages/integrations",
           "languages/opentelemetry"
         ]
@@ -147,9 +151,9 @@
         ]
       },
       {
-        "group": "Reference",
+        "group": "REST API Reference",
         "pages": [
-          "reference/rest-api-reference",
+          "reference/introduction",
           {
             "group": "Prompt Templates",
             "pages": [
