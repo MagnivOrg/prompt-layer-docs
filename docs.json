@@ -39,13 +39,6 @@
         ]
       },
       {
-        "group": "Languages & Environments",
-        "pages": [
-          "languages/integrations",
-          "languages/opentelemetry"
-        ]
-      },
-      {
         "group": "Usage Documentation",
         "pages": [
           "features/prompt-history/sharing-prompts",
@@ -97,6 +90,7 @@
               "features/prompt-history/scoring-requests",
               "features/prompt-history/tracking-templates",
               "features/prompt-history/custom-logging",
+              "features/opentelemetry",
               "features/prompt-history/structured-output-logging",
               "features/prompt-history/search-data-model"
             ]
@@ -107,6 +101,7 @@
             "icon": "plug",
             "pages": [
               "features/supported-providers",
+              "features/integrations",
               "features/image-generation",
               "features/custom-providers",
               "features/exa-integration",
