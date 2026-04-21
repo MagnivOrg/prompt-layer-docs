@@ -7,12 +7,12 @@ PromptLayer natively supports [OpenTelemetry (OTEL)](https://opentelemetry.io/),
 
 This is ideal when:
 
-- Your framework isn't listed on the [Integrations](/languages/integrations) page
+- Your framework isn't listed on the [Integrations](/features/integrations) page
 - You already have an OpenTelemetry pipeline and want to add PromptLayer as a destination
 - You want vendor-neutral instrumentation
 
 <Note>
-If you're using a supported framework like the [Vercel AI SDK](/languages/integrations#vercel-ai-sdk), [OpenAI Agents SDK](/languages/integrations#openai-agents-sdk), or [Claude Code](/languages/integrations#claude-code), see the [Integrations](/languages/integrations) page for framework-specific setup — those integrations handle the OTEL configuration for you.
+If you're using a supported framework like the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [OpenAI Agents SDK](/features/integrations#openai-agents-sdk), or [Claude Code](/features/integrations#claude-code), see the [Integrations](/features/integrations) page for framework-specific setup — those integrations handle the OTEL configuration for you.
 </Note>
 
 ## How It Works
@@ -196,5 +196,5 @@ The endpoint accepts both binary protobuf (`application/x-protobuf`, recommended
 ## Next Steps
 
 - [OTLP Ingest Traces API Reference](/reference/otlp-ingest-traces) — full endpoint documentation
-- [Integrations](/languages/integrations) — framework-specific setups (Vercel AI SDK, OpenAI Agents, Claude Code)
+- [Integrations](/features/integrations) — framework-specific setups (Vercel AI SDK, OpenAI Agents, Claude Code)
 - [Traces](/running-requests/traces) — PromptLayer SDK native tracing with `@traceable` and `wrapWithSpan`

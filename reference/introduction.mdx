@@ -1,13 +1,17 @@
 ---
-title: "REST API Reference"
-icon: "webhook"
+title: "Introduction"
+description: "Use the PromptLayer REST API to manage prompts, agents, evaluations, datasets, request logs, traces, and other workspace resources programmatically."
 ---
 
-The primary way to access PromptLayer is through our [Python](/sdks/python) or [JavaScript](/sdks/javascript) SDK libraries. The SDKs are built on top of our REST API.
+The PromptLayer REST API lets you interact with your workspace directly over HTTP so you can automate updates, run workflows, log activity, and export or organize data from your own systems.
 
-If you use another language, you can interact directly with the REST API.
+## Authentication
 
-Here are the calls you can make via our REST API:
+Authenticate API requests with a PromptLayer API key using the `X-API-Key` header.
+
+Generate API keys from the API keys page in your PromptLayer dashboard. Each workspace has its own API keys, and requests use the workspace associated with the key by default.
+
+## Endpoints
 
 ### Prompt Templates
 

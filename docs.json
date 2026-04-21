@@ -19,7 +19,6 @@
           "quickstart",
           "quickstart-part-two",
           "tutorial-videos",
-          "agent-access",
           "migration",
           "self-hosted",
           "changelog"
@@ -33,12 +32,9 @@
         ]
       },
       {
-        "group": "Languages & Environments",
+        "group": "Agents",
         "pages": [
-          "languages/rest-api",
-          "languages/mcp",
-          "languages/integrations",
-          "languages/opentelemetry"
+          "agents/mcp"
         ]
       },
       {
@@ -93,6 +89,7 @@
               "features/prompt-history/scoring-requests",
               "features/prompt-history/tracking-templates",
               "features/prompt-history/custom-logging",
+              "features/opentelemetry",
               "features/prompt-history/structured-output-logging",
               "features/prompt-history/search-data-model"
             ]
@@ -103,6 +100,7 @@
             "icon": "plug",
             "pages": [
               "features/supported-providers",
+              "features/integrations",
               "features/image-generation",
               "features/custom-providers",
               "features/exa-integration",
@@ -147,9 +145,9 @@
         ]
       },
       {
-        "group": "Reference",
+        "group": "REST API Reference",
         "pages": [
-          "reference/rest-api-reference",
+          "reference/introduction",
           {
             "group": "Prompt Templates",
             "pages": [
