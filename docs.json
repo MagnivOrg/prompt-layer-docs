@@ -40,12 +40,12 @@
       {
         "group": "Usage Documentation",
         "pages": [
-          "features/prompt-history/sharing-prompts",
           {
             "group": "Prompt Registry",
             "icon": "notebook",
             "pages": [
               "features/prompt-registry/overview",
+              "features/prompt-history/sharing-prompts",
               "features/prompt-registry/snippets",
               "features/prompt-registry/release-labels",
               "features/prompt-registry/dynamic-release-labels",
@@ -59,15 +59,46 @@
               "features/prompt-registry/zero-downtime-releases"
             ]
           },
+          "features/evaluations/datasets",
           {
-            "group": "Running Requests",
-            "icon": "circle-play",
+            "group": "Evaluations",
+            "icon": "vial-circle-check",
             "pages": [
-              "running-requests/promptlayer-run",
-              "running-requests/promptlayer-run-agent",
-              "running-requests/traces"
+              "features/evaluations/overview",
+              "features/evaluations/building-pipelines",
+              "features/evaluations/eval-types",
+              "features/evaluations/column-types",
+              "features/evaluations/score-card",
+              "features/evaluations/continuous-integration",
+              "features/evaluations/examples",
+              "features/evaluations/programmatic",
+              "why-promptlayer/voice-agents"
             ]
           },
+          {
+            "group": "Observability",
+            "icon": "chart-column",
+            "pages": [
+              "features/observability",
+              "running-requests/traces",
+              {
+                "group": "Advanced Logging",
+                "icon": "cassette-tape",
+                "pages": [
+                  "features/prompt-history/request-id",
+                  "features/prompt-history/tagging-requests",
+                  "features/prompt-history/metadata",
+                  "features/prompt-history/scoring-requests",
+                  "features/prompt-history/tracking-templates",
+                  "features/prompt-history/custom-logging",
+                  "features/opentelemetry",
+                  "features/prompt-history/structured-output-logging",
+                  "features/prompt-history/search-data-model"
+                ]
+              }
+            ]
+          },
+          "why-promptlayer/agents",
           {
             "group": "Skill Collections",
             "icon": "book-sparkles",
@@ -78,20 +109,18 @@
               "features/skill-collections/pulling-skills",
               "features/skill-collections/tuning-skills"
             ]
-          },
+          }
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
           {
-            "group": "Advanced Logging",
-            "icon": "cassette-tape",
+            "group": "Running Requests",
+            "icon": "circle-play",
             "pages": [
-              "features/prompt-history/request-id",
-              "features/prompt-history/tagging-requests",
-              "features/prompt-history/metadata",
-              "features/prompt-history/scoring-requests",
-              "features/prompt-history/tracking-templates",
-              "features/prompt-history/custom-logging",
-              "features/opentelemetry",
-              "features/prompt-history/structured-output-logging",
-              "features/prompt-history/search-data-model"
+              "running-requests/promptlayer-run",
+              "running-requests/promptlayer-run-agent"
             ]
           },
           "onboarding-guides/deployment-strategies",
@@ -117,23 +146,6 @@
           "why-promptlayer/prompt-management",
           "why-promptlayer/advanced-search",
           "why-promptlayer/ab-releases",
-          {
-            "group": "Evaluations",
-            "icon": "vial-circle-check",
-            "pages": [
-              "features/evaluations/overview",
-              "features/evaluations/continuous-integration",
-              "features/evaluations/examples",
-              "features/evaluations/building-pipelines",
-              "features/evaluations/eval-types",
-              "features/evaluations/column-types",
-              "features/evaluations/score-card",
-              "features/evaluations/datasets",
-              "features/evaluations/programmatic",
-              "why-promptlayer/voice-agents"
-            ]
-          },
-          "why-promptlayer/agents",
           "why-promptlayer/multi-turn-chat",
           "why-promptlayer/fine-tuning",
           "why-promptlayer/analytics",
