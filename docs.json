@@ -19,22 +19,7 @@
           "quickstart",
           "quickstart-part-two",
           "tutorial-videos",
-          "migration",
-          "self-hosted",
           "changelog"
-        ]
-      },
-      {
-        "group": "SDKs",
-        "pages": [
-          "sdks/python",
-          "sdks/javascript"
-        ]
-      },
-      {
-        "group": "Agents",
-        "pages": [
-          "agents/mcp"
         ]
       },
       {
@@ -44,6 +29,10 @@
             "group": "Prompt Registry",
             "icon": "notebook",
             "pages": [
+              "why-promptlayer/prompt-management",
+              "why-promptlayer/ab-releases",
+              "why-promptlayer/evaluation-and-ranking",
+              "why-promptlayer/playground",
               "features/prompt-registry/overview",
               "features/prompt-history/sharing-prompts",
               "features/prompt-registry/snippets",
@@ -80,6 +69,8 @@
             "icon": "chart-column",
             "pages": [
               "features/observability",
+              "why-promptlayer/advanced-search",
+              "why-promptlayer/analytics",
               "running-requests/traces",
               {
                 "group": "Advanced Logging",
@@ -109,6 +100,14 @@
               "features/skill-collections/pulling-skills",
               "features/skill-collections/tuning-skills"
             ]
+          },
+          {
+            "group": "Organizations & Workspaces",
+            "icon": "users-gear",
+            "pages": [
+              "why-promptlayer/shared-workspaces",
+              "why-promptlayer/rbac"
+            ]
           }
         ]
       },
@@ -123,6 +122,10 @@
               "running-requests/promptlayer-run-agent"
             ]
           },
+          "migration",
+          "self-hosted",
+          "why-promptlayer/multi-turn-chat",
+          "why-promptlayer/fine-tuning",
           "onboarding-guides/deployment-strategies",
           {
             "group": "Models & Integrations",
@@ -137,23 +140,26 @@
               "features/openrouter-integration"
             ]
           },
-          "features/faq"
+          {
+            "group": "FAQ",
+            "pages": [
+              "features/faq",
+              "why-promptlayer/how-it-works"
+            ]
+          }
         ]
       },
       {
-        "group": "Why PromptLayer?",
+        "group": "SDKs",
         "pages": [
-          "why-promptlayer/prompt-management",
-          "why-promptlayer/advanced-search",
-          "why-promptlayer/ab-releases",
-          "why-promptlayer/multi-turn-chat",
-          "why-promptlayer/fine-tuning",
-          "why-promptlayer/analytics",
-          "why-promptlayer/evaluation-and-ranking",
-          "why-promptlayer/playground",
-          "why-promptlayer/shared-workspaces",
-          "why-promptlayer/rbac",
-          "why-promptlayer/how-it-works"
+          "sdks/python",
+          "sdks/javascript"
+        ]
+      },
+      {
+        "group": "Agents",
+        "pages": [
+          "agents/mcp"
         ]
       },
       {
