@@ -3731,23 +3731,6 @@
                     "type": "boolean",
                     "default": false,
                     "description": "When true, pivot metadata keys into dataset columns. Requires `metadata_and` or `metadata_or` to be set."
-                  },
-                  "prompt_template": {
-                    "deprecated": true,
-                    "type": "object",
-                    "description": "Deprecated. Use `prompt_templates_include` instead.",
-                    "required": ["name"],
-                    "properties": {
-                      "name": { "type": "string" },
-                      "version_numbers": {
-                        "type": "array",
-                        "items": { "type": "integer" }
-                      },
-                      "labels": {
-                        "type": "array",
-                        "items": { "type": "string" }
-                      }
-                    }
                   }
                 },
                 "required": [
