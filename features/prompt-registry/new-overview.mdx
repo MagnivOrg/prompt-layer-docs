@@ -1,0 +1,94 @@
+---
+title: "Overview"
+description: "Use Prompt Registry as the system of record for prompt versions, testing, releases, and observability."
+icon: "book"
+---
+
+Prompt Registry is PromptLayer's system of record for Prompt Templates. It gives your team one place to create templates, organize them outside the codebase, test changes in Playground, release the right version with labels, and monitor how each prompt performs in production.
+
+Use Prompt Registry when you want a faster workflow for prompt iteration without losing version history, deployment control, or visibility into results.
+
+A **Prompt Template** is the central artifact in PromptLayer. It is a reusable, versioned prompt definition that can include your messages, template variables, model settings, and other runtime configuration. Prompt Registry is where your team stores, versions, releases, and monitors those prompt templates over time.
+
+## What you can do
+
+- Organize prompts with folders, tags, and workspace search.
+- Save new versions with commit messages and review version history over time.
+- Release prompts with labels such as `prod` or `staging`, and protect important labels with approval flows.
+- Open any prompt in Playground to test, edit, and save changes back as a new version.
+- Review prompt-level logs, analytics, evaluations, and related assets from the prompt page.
+- Share prompts for review and collaboration without sending code diffs around.
+
+## How it fits together
+
+1. Create a Prompt Template in the Registry and define its messages, variables, and model settings.
+2. Test the prompt in Playground with real inputs before publishing changes.
+3. Assign a release label to the version your application should use at runtime.
+4. Monitor logs, analytics, and evaluations to decide what to improve next.
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+
+pl_client = PromptLayer(api_key="YOUR_API_KEY")
+
+response = pl_client.run(
+    prompt_name="support-assistant",
+    prompt_release_label="prod",
+    input_variables={
+        "customer_name": "Jordan",
+        "issue": "My subscription was charged twice.",
+    },
+)
+```
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+
+const promptLayerClient = new PromptLayer({ apiKey: "YOUR_API_KEY" });
+
+const response = await promptLayerClient.run({
+  promptName: "support-assistant",
+  promptReleaseLabel: "prod",
+  inputVariables: {
+    customer_name: "Jordan",
+    issue: "My subscription was charged twice.",
+  },
+});
+```
+
+</CodeGroup>
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Template Variables"
+    icon="pen-ruler"
+    href="/features/prompt-registry/template-variables"
+  >
+    Learn how to add dynamic variables with f-strings or Jinja2.
+  </Card>
+  <Card
+    title="Release Labels"
+    icon="tag"
+    href="/features/prompt-registry/release-labels"
+  >
+    Deploy the right prompt version in production without code changes.
+  </Card>
+  <Card
+    title="Playground"
+    icon="circle-play"
+    href="/why-promptlayer/playground"
+  >
+    Test prompts, replay requests, and save changes back to the registry.
+  </Card>
+  <Card
+    title="Evaluations"
+    icon="vial-circle-check"
+    href="/features/evaluations/overview"
+  >
+    Measure prompt quality with batch tests, backtests, and scoring workflows.
+  </Card>
+</CardGroup>

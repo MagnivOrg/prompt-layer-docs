@@ -29,23 +29,18 @@
             "group": "Prompt Registry",
             "icon": "notebook",
             "pages": [
-              "why-promptlayer/prompt-management",
-              "why-promptlayer/ab-releases",
-              "why-promptlayer/evaluation-and-ranking",
-              "why-promptlayer/playground",
-              "features/prompt-registry/overview",
-              "features/prompt-history/sharing-prompts",
+              "features/prompt-registry/new-overview",
+              "features/prompt-registry/template-variables",
+              "features/prompt-registry/input-variable-sets",
               "features/prompt-registry/snippets",
+              "features/prompt-registry/placeholder-messages",
+              "features/prompt-registry/structured-outputs",
+              "features/prompt-registry/tool-calling",
+              "why-promptlayer/playground",
+              "features/prompt-history/sharing-prompts",
               "features/prompt-registry/release-labels",
               "features/prompt-registry/dynamic-release-labels",
-              "features/prompt-registry/tool-calling",
-              "features/prompt-registry/structured-outputs",
-              "features/prompt-registry/input-variable-sets",
-              "features/prompt-registry/template-variables",
-              "features/prompt-registry/placeholder-messages",
-              "running-requests/prompt-blueprints",
-              "features/prompt-registry/webhooks",
-              "features/prompt-registry/zero-downtime-releases"
+              "why-promptlayer/ab-releases"
             ]
           },
           "features/evaluations/datasets",
@@ -127,6 +122,9 @@
           "why-promptlayer/multi-turn-chat",
           "why-promptlayer/fine-tuning",
           "onboarding-guides/deployment-strategies",
+          "features/prompt-registry/zero-downtime-releases",
+          "features/prompt-registry/webhooks",
+          "running-requests/prompt-blueprints",
           {
             "group": "Models & Integrations",
             "icon": "plug",
@@ -147,6 +145,14 @@
               "why-promptlayer/how-it-works"
             ]
           }
+        ]
+      },
+      {
+        "group": "Archive",
+        "pages": [
+          "features/prompt-registry/overview",
+          "why-promptlayer/prompt-management",
+          "why-promptlayer/evaluation-and-ranking"
         ]
       },
       {
