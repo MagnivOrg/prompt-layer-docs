@@ -1,9 +1,9 @@
 ---
-title: "Run Agent"
+title: "Run Workflow"
 icon: "network-wired"
 ---
 
-The `run_workflow()` method initiates the execution of predefined Agents in PromptLayer, allowing you to start complex, multi-step sequences. For a comprehensive understanding of Agents, including their use cases, key concepts, and versioning, please refer to the [Agents documentation](/why-promptlayer/agents).
+The `run_workflow()` method initiates the execution of predefined Workflows in PromptLayer, allowing you to start complex, multi-step sequences. For a comprehensive understanding of Workflows, including their use cases, key concepts, and versioning, please refer to the [Workflows documentation](/why-promptlayer/workflows).
 
 ## Basic Usage
 
@@ -15,7 +15,7 @@ from promptlayer import PromptLayer
 pl = PromptLayer(api_key="your_api_key")
 
 response = pl.run_workflow(
-    workflow_name="Your Agent Name",
+    workflow_name="Your Workflow Name",
     workflow_version=1
 )
 
@@ -28,7 +28,7 @@ import { PromptLayer } from "promptlayer";
 const pl = new PromptLayer({ apiKey: "your_api_key" });
 
 const response = await pl.runWorkflow({
-  workflowName: "Your Agent Name",
+  workflowName: "Your Workflow Name",
   workflowVersion: 1
 });
 
@@ -39,16 +39,16 @@ console.log(response);
 
 ## Parameters
 
-- `workflow_name` / `workflowName` (str, required): The name of the Agent to run.
-- `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be used in the Agent.
-- `metadata` (Dict[str, str], optional): Additional metadata for the Agent run.
-- `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the Agent version.
-- `workflow_version` / `workflowVersion` (int, optional): Specific version number of the Agent to run.
-- `return_all_outputs` / `returnAllOutputs` (bool, optional): Whether to return all outputs from the Agent execution.
+- `workflow_name` / `workflowName` (str, required): The name of the Workflow to run.
+- `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be used in the Workflow.
+- `metadata` (Dict[str, str], optional): Additional metadata for the Workflow run.
+- `workflow_label_name` / `workflowLabelName` (str, optional): Label name for the Workflow version.
+- `workflow_version` / `workflowVersion` (int, optional): Specific version number of the Workflow to run.
+- `return_all_outputs` / `returnAllOutputs` (bool, optional): Whether to return all outputs from the Workflow execution.
 
 ## Return Value
 
-By default, when `return_all_outputs` / `returnAllOutputs` is `false`, the method returns only the final node’s output as a single value; when set to `true`, it returns a dictionary (Python) or object (JavaScript) containing detailed outputs (including status) for each node in the agent.
+By default, when `return_all_outputs` / `returnAllOutputs` is `false`, the method returns only the final node’s output as a single value; when set to `true`, it returns a dictionary (Python) or object (JavaScript) containing detailed outputs (including status) for each node in the workflow.
 
 ### When `return_all_outputs` / `returnAllOutputs` is False (default):
 
@@ -97,14 +97,14 @@ Example response:
 
 ```python Python
 response = pl.run_workflow(
-    workflow_name="Data Analysis Agent",
+    workflow_name="Data Analysis Workflow",
     input_variables={"dataset_url": "https://example.com/data.csv"}
 )
 ```
 
 ```js JavaScript
 const response = await pl.runWorkflow({
-  workflowName: "Data Analysis Agent",
+  workflowName: "Data Analysis Workflow",
   inputVariables: { dataset_url: "https://example.com/data.csv" }
 });
 ```
@@ -117,48 +117,48 @@ const response = await pl.runWorkflow({
 
 ```python Python
 response = pl.run_workflow(
-    workflow_name="Customer Service Agent",
+    workflow_name="Customer Service Workflow",
     metadata={"customer_id": "12345"}
 )
 ```
 
 ```js JavaScript
 const response = await pl.runWorkflow({
-  workflowName: "Customer Service Agent",
+  workflowName: "Customer Service Workflow",
   metadata: { customer_id: "12345" }
 });
 ```
 
 </CodeGroup>
 
-### Using Agent Labels
+### Using Workflow Labels
 
 <CodeGroup>
 
 ```python Python
 response = pl.run_workflow(
-    workflow_name="Marketing Campaign Agent",
+    workflow_name="Marketing Campaign Workflow",
     workflow_label_name="production"
 )
 ```
 
 ```js JavaScript
 const response = await pl.runWorkflow({
-  workflowName: "Marketing Campaign Agent",
+  workflowName: "Marketing Campaign Workflow",
   workflowLabelName: "production"
 });
 ```
 
 </CodeGroup>
 
-## Run Agents using the REST API
+## Run Workflows using the REST API
 
-**Step 1: Kick off the agent run**
+**Step 1: Kick off the workflow run**
 
-Start by making a request to ["POST /workflows/agentName/run"](/reference/run-workflow).
+Start by making a request to ["POST /workflows/workflowName/run"](/reference/run-workflow).
 
 This request requires:
-- `input_variables` – JSON object with the variables the agent needs
+- `input_variables` – JSON object with the variables the workflow needs
 - `metadata` – *optional* JSON for extra metadata
 - `return_all_outputs` – Set to `true` if you want to include all intermediate node results
 
@@ -180,15 +180,15 @@ When polling (suggestion):
 
 Depending on if you set `return_all_outputs` or not, you will either return the output value or all node values on completion.
 
-## Run Agents with Callback Webhooks
+## Run Workflows with Callback Webhooks
 
-Instead of polling for results, you can provide a `callback_url` when initiating the agent run. This is ideal for long-running agents and webhook-based integrations.
+Instead of polling for results, you can provide a `callback_url` when initiating the workflow run. This is ideal for long-running workflows and webhook-based integrations.
 
 **How it works:**
 
-1. **Make a single request** to ["POST /workflows/agentName/run"](/reference/run-workflow) with a `callback_url` parameter
+1. **Make a single request** to ["POST /workflows/workflowName/run"](/reference/run-workflow) with a `callback_url` parameter
 2. **Receive immediate response** with HTTP 202 (Accepted) and the `workflow_version_execution_id`
-3. **PromptLayer executes the agent** asynchronously in the background
+3. **PromptLayer executes the workflow** asynchronously in the background
 4. **Results are POSTed** to your callback URL when complete
 
 **Example request:**
@@ -204,7 +204,7 @@ Instead of polling for results, you can provide a `callback_url` when initiating
 
 **Callback payload:**
 
-When the agent completes, PromptLayer will POST the execution results to your callback URL:
+When the workflow completes, PromptLayer will POST the execution results to your callback URL:
 
 ```json
 {
@@ -221,4 +221,4 @@ When the agent completes, PromptLayer will POST the execution results to your ca
 }
 ```
 
-This approach eliminates the need for polling and handles timeouts gracefully, making it perfect for webhook-based integrations. 
+This approach eliminates the need for polling and handles timeouts gracefully, making it perfect for webhook-based integrations.

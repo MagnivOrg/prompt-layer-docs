@@ -1,6 +1,6 @@
 ---
 title: "Deployment Strategies"
-description: Choose from four integration patterns. Direct SDK calls, webhook caching, GitOps with CI/CD, or managed agents.
+description: Choose from four integration patterns. Direct SDK calls, webhook caching, GitOps with CI/CD, or managed workflows.
 icon: ship
 ---
 
@@ -9,7 +9,7 @@ PromptLayer fits into your stack at four levels of sophistication:
 1. **`promptlayer_client.run`** – zero-setup SDK sugar  
 2. **Webhook-driven caching** – maintain local cache of prompt templates
 3. **GitOps with Webhooks** – keep Git as your source of truth with bi-directional sync
-4. **Managed Agents** – let PromptLayer orchestrate everything server-side  
+4. **Managed Workflows** – let PromptLayer orchestrate everything server-side  
 
 
 <Frame>
@@ -171,13 +171,13 @@ If your CI/CD pipeline runs evaluations as part of the deploy process, you can p
 
 ---
 
-# Run fully-managed Agents
+# Run fully-managed Workflows
 
-For complex workflows requiring orchestration, use PromptLayer's managed agent infrastructure.
+For complex pipelines requiring orchestration, use PromptLayer's managed workflow infrastructure.
 
 ### How it works
-1. Define multi-step workflows in PromptLayer's Agent Builder
-2. Trigger agent execution via API
+1. Define multi-step workflows in PromptLayer's Workflow Builder
+2. Trigger workflow execution via API
 3. Monitor execution on PromptLayer servers
 4. Receive results via webhook or polling
 
@@ -193,7 +193,7 @@ from promptlayer import PromptLayer
 promptlayer_client = PromptLayer(api_key="…")
 
 execution = promptlayer_client.run_workflow(  # SDK method
-    workflow_name="customer_support_agent",   # <- this is an Agent
+    workflow_name="customer_support_workflow",
     workflow_label_name="prod",
     input_variables={"ticket_id": 123}
 )
@@ -204,7 +204,7 @@ import { PromptLayer } from "promptlayer";
 const promptlayer_client = new PromptLayer({ apiKey: "…" });
 
 const execution = await promptlayer_client.runWorkflow({
-  workflowName: "customer_support_agent",    // <- this is an Agent
+  workflowName: "customer_support_workflow",
   workflowLabelName: "prod",
   inputVariables: { ticket_id: 123 }
 });
@@ -214,13 +214,13 @@ const execution = await promptlayer_client.runWorkflow({
 
 Because execution is server-side, you inherit centralized tracing, cost analytics, and secure sandboxed tool-nodes without extra ops.
 
-Learn more: **[Agents documentation ↗](/why-promptlayer/agents)**
+Learn more: **[Workflows documentation ↗](/why-promptlayer/workflows)**
 
 ---
 
 ## Which pattern should I pick?
 
-| Requirement                 | `promptlayer_client.run` | Webhook Cache | GitOps | Managed Agent |
+| Requirement                 | `promptlayer_client.run` | Webhook Cache | GitOps | Managed Workflow |
 | --------------------------- | :----------------------: | :-----------: | :----: | :-----------: |
 | ⏱️ *extreme latency reqs*   |             ❌            |       ✅       |   ➖   |       ✅       |
 | 🛠 *Single LLM call*        |             ✅            |       ✅       |   ✅   |       ➖       |
@@ -236,7 +236,7 @@ Learn more: **[Agents documentation ↗](/why-promptlayer/agents)**
 
 * **Quickstart** – [Your first prompt](/quickstart)
 * **Webhooks** – [Events & signature verification](/features/prompt-registry/webhooks)
-* **Agents** – [Concepts & versioning](/why-promptlayer/agents)
+* **Workflows** – [Concepts & versioning](/why-promptlayer/workflows)
 * **CI for prompts** – [Continuous Integration guide](/features/evaluations/ci)
 
 ---

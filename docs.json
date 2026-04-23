@@ -32,7 +32,7 @@
         ]
       },
       {
-        "group": "Agents",
+        "group": "Workflows",
         "pages": [
           "agents/mcp"
         ]
@@ -64,7 +64,7 @@
             "icon": "circle-play",
             "pages": [
               "running-requests/promptlayer-run",
-              "running-requests/promptlayer-run-agent",
+              "running-requests/promptlayer-run-workflow",
               "running-requests/traces"
             ]
           },
@@ -133,7 +133,7 @@
               "why-promptlayer/voice-agents"
             ]
           },
-          "why-promptlayer/agents",
+          "why-promptlayer/workflows",
           "why-promptlayer/multi-turn-chat",
           "why-promptlayer/fine-tuning",
           "why-promptlayer/analytics",
@@ -210,7 +210,7 @@
             ]
           },
           {
-            "group": "Agents",
+            "group": "Workflows",
             "pages": [
               "reference/list-workflows",
               "reference/get-workflow",
@@ -294,6 +294,14 @@
     {
       "source": "/languages/javascript",
       "destination": "/sdks/javascript"
+    },
+    {
+      "source": "/why-promptlayer/agents",
+      "destination": "/why-promptlayer/workflows"
+    },
+    {
+      "source": "/running-requests/promptlayer-run-agent",
+      "destination": "/running-requests/promptlayer-run-workflow"
     }
   ]
 }

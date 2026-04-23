@@ -1,9 +1,9 @@
 ---
-title: "Get Agent Version Execution Results"
+title: "Get Workflow Version Execution Results"
 openapi: "GET /workflow-version-execution-results"
 ---
 
-Retrieve the execution results of a specific Agent version. You can include all output nodes by setting the `return_all_outputs` query parameter to `true`.
+Retrieve the execution results of a specific Workflow version. You can include all output nodes by setting the `return_all_outputs` query parameter to `true`.
 
 | Status | Meaning |
 |--------|---------|
@@ -11,8 +11,6 @@ Retrieve the execution results of a specific Agent version. You can include all 
 | **202** | Execution is **still running**. At least one node is in a non-final status (`QUEUED` or `RUNNING`). |
 
 The response body schema is the same for both status codes. Poll until you receive a `200`.
-
-Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
 
 <ResponseExample>
 

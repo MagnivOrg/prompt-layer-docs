@@ -1,15 +1,13 @@
 ---
-title: "Get Agent"
+title: "Get Workflow"
 openapi: "GET /workflows/{workflow_id_or_name}"
 ---
 
-Retrieve an agent (workflow) by ID or name, including full node configuration, edges, and version details.
+Retrieve a workflow by ID or name, including full node configuration, edges, and version details.
 
 By default, the latest version is returned. Optionally specify `version` (version number) or `label` (release label like "prod") to retrieve a specific version. These parameters are mutually exclusive.
 
-The response includes the complete node definitions with their `configuration` and `dependencies`, making it suitable for inspecting or replicating an agent's setup.
-
-Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
+The response includes the complete node definitions with their `configuration` and `dependencies`, making it suitable for inspecting or replicating a workflow's setup.
 
 ## Examples
 
@@ -19,7 +17,7 @@ Please note that this feature was previously called "Workflows" and is now calle
 import requests
 
 response = requests.get(
-    "https://api.promptlayer.com/workflows/my-agent",
+    "https://api.promptlayer.com/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
 )
 ```
@@ -28,7 +26,7 @@ response = requests.get(
 
 ```python
 response = requests.get(
-    "https://api.promptlayer.com/workflows/my-agent",
+    "https://api.promptlayer.com/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     params={"version": 3},
 )
@@ -38,7 +36,7 @@ response = requests.get(
 
 ```python
 response = requests.get(
-    "https://api.promptlayer.com/workflows/my-agent",
+    "https://api.promptlayer.com/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     params={"label": "prod"},
 )
