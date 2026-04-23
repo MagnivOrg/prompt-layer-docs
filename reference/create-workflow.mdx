@@ -1,11 +1,9 @@
 ---
-title: "Create Agent"
+title: "Create Workflow"
 openapi: "POST /rest/workflows"
 ---
 
-Create a new Agent or a new version of an existing Agent programmatically. This endpoint allows you to define the complete agent configuration including nodes, edges (conditional connections), input variables, and release labels.
-
-Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
+Create a new Workflow or a new version of an existing Workflow programmatically. This endpoint allows you to define the complete workflow configuration including nodes, edges (conditional connections), input variables, and release labels.
 
 ## HTTP Request
 
@@ -19,9 +17,9 @@ The request body expects a JSON object with the following structure:
 
 ```json
 {
-  "name": "string (optional, for new agents)",
-  "workflow_id": "integer (optional, for new version of existing agent)",
-  "workflow_name": "string (optional, for new version of existing agent)",
+  "name": "string (optional, for new workflows)",
+  "workflow_id": "integer (optional, for new version of existing workflow)",
+  "workflow_name": "string (optional, for new version of existing workflow)",
   "folder_id": "integer (optional)",
   "commit_message": "string (optional)",
   "nodes": [
@@ -57,12 +55,12 @@ The request body expects a JSON object with the following structure:
 
 ### Parameters
 
-#### Agent Identification
+#### Workflow Identification
 
-- **name** (string, optional): The name for a new agent. If not provided, a name will be auto-generated. Cannot be used with `workflow_id` or `workflow_name`.
-- **workflow_id** (integer, optional): The ID of an existing agent to create a new version for.
-- **workflow_name** (string, optional): The name of an existing agent to create a new version for.
-- **folder_id** (integer, optional): The folder ID to place the agent in.
+- **name** (string, optional): The name for a new workflow. If not provided, a name will be auto-generated. Cannot be used with `workflow_id` or `workflow_name`.
+- **workflow_id** (integer, optional): The ID of an existing workflow to create a new version for.
+- **workflow_name** (string, optional): The name of an existing workflow to create a new version for.
+- **folder_id** (integer, optional): The folder ID to place the workflow in.
 
 #### Version Details
 
@@ -70,9 +68,9 @@ The request body expects a JSON object with the following structure:
 
 #### Nodes
 
-Each node represents a step in the agent workflow:
+Each node represents a step in the workflow:
 
-- **name** (string, required): Unique name for the node within this agent.
+- **name** (string, required): Unique name for the node within this workflow.
 - **node_type** (string, required): The type of node. See [Node Types](#node-types) below.
 - **configuration** (object, required): Node-specific configuration.
 - **dependencies** (array of strings, optional): Names of nodes or input variables this node depends on.
@@ -101,7 +99,7 @@ Edges define conditional branching between nodes:
 
 ## Node Types
 
-Agents use the same node types as evaluation pipelines. For the complete list of supported node types and their detailed configuration options, see the [Node & Column Types](/features/evaluations/column-types) documentation.
+Workflows use the same node types as evaluation pipelines. For the complete list of supported node types and their detailed configuration options, see the [Node & Column Types](/features/evaluations/column-types) documentation.
 
 Common node types include:
 
@@ -148,7 +146,7 @@ Common node types include:
 
 ## Examples
 
-### Create a Simple Agent
+### Create a Simple Workflow
 
 ```python
 import requests
@@ -157,7 +155,7 @@ response = requests.post(
     "https://api.promptlayer.com/rest/workflows",
     headers={"X-API-KEY": "your-api-key"},
     json={
-        "name": "greeting-agent",
+        "name": "greeting-workflow",
         "commit_message": "Initial version",
         "nodes": [
             {
@@ -175,14 +173,14 @@ response = requests.post(
 )
 ```
 
-### Create an Agent with Multiple Nodes
+### Create a Workflow with Multiple Nodes
 
 ```python
 response = requests.post(
     "https://api.promptlayer.com/rest/workflows",
     headers={"X-API-KEY": "your-api-key"},
     json={
-        "name": "classifier-agent",
+        "name": "classifier-workflow",
         "nodes": [
             {
                 "name": "classify",
@@ -226,14 +224,14 @@ response = requests.post(
 )
 ```
 
-### Create an Agent with Conditional Edges
+### Create a Workflow with Conditional Edges
 
 ```python
 response = requests.post(
     "https://api.promptlayer.com/rest/workflows",
     headers={"X-API-KEY": "your-api-key"},
     json={
-        "name": "routing-agent",
+        "name": "routing-workflow",
         "nodes": [
             {
                 "name": "router",
@@ -286,7 +284,7 @@ response = requests.post(
 )
 ```
 
-### Create a New Version of an Existing Agent
+### Create a New Version of an Existing Workflow
 
 ```python
 # By workflow ID
@@ -306,7 +304,7 @@ response = requests.post(
     "https://api.promptlayer.com/rest/workflows",
     headers={"X-API-KEY": "your-api-key"},
     json={
-        "workflow_name": "my-agent",
+        "workflow_name": "my-workflow",
         "commit_message": "v2 updates",
         "nodes": [...],
         "release_labels": ["production"]

@@ -1,11 +1,9 @@
 ---
-title: "Run Agent"
+title: "Run Workflow"
 openapi: "POST /workflows/{workflow_name}/run"
 ---
 
-Initiate the execution of a specific Agent by its name. You can specify input variables, metadata, and choose which version of the Agent to run.
-
-Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
+Initiate the execution of a specific Workflow by its name. You can specify input variables, metadata, and choose which version of the Workflow to run.
 
 ## HTTP Request
 
@@ -13,7 +11,7 @@ Please note that this feature was previously called "Workflows" and is now calle
 
 ## Path Parameters
 
-- **workflow_name** (string, required): The name of the Agent you wish to execute.
+- **workflow_name** (string, required): The name of the Workflow you wish to execute.
 
 ## Request Body
 
@@ -38,18 +36,18 @@ The request body expects a JSON object with the following structure:
 
 ### Parameters
 
-- **workflow_label_name** (string, optional): The label of the specific Agent version to run.
-- **workflow_version_number** (integer, optional): The version number of the Agent to run.
+- **workflow_label_name** (string, optional): The label of the specific Workflow version to run.
+- **workflow_version_number** (integer, optional): The version number of the Workflow to run.
 - **metadata** (object, optional): Additional metadata to attach to the execution.
-- **input_variables** (object, optional): Input variables for the Agent execution.
+- **input_variables** (object, optional): Input variables for the Workflow execution.
 - **return_all_outputs** (boolean, optional, default: false): Whether to return all node outputs or just the final output.
-- **callback_url** (string, optional): An HTTP URL where execution results will be POSTed when the Agent completes. When provided, the API returns HTTP 202 (Accepted) immediately and sends results to this URL asynchronously. Ideal for long-running agents and webhook-based integrations.
+- **callback_url** (string, optional): An HTTP URL where execution results will be POSTed when the Workflow completes. When provided, the API returns HTTP 202 (Accepted) immediately and sends results to this URL asynchronously. Ideal for long-running workflows and webhook-based integrations.
 
 ## Response
 
 **Status Code**: 201 (Created) or 202 (Accepted) if `callback_url` is provided
 
-When a `callback_url` is provided, PromptLayer will POST the following to your callback URL when the agent completes:
+When a `callback_url` is provided, PromptLayer will POST the following to your callback URL when the workflow completes:
 
 ```json
 {
