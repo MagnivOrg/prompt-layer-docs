@@ -3,7 +3,13 @@ title: "Create Dataset Version from Request History"
 openapi: "POST /api/public/v2/dataset-versions/from-filter-params"
 ---
 
-Create a new dataset version by filtering existing request logs. The dataset is populated asynchronously based on the provided filter parameters.
+Create a new dataset version from existing request logs. The dataset is populated asynchronously based on the body you send. The endpoint supports three input modes (in order of precedence):
+
+1. **Explicit ids** — supply `request_log_ids` to add a fixed set of requests by id.
+2. **Structured filter group** — supply `filter_group` (optionally with `q`, `sort_by`, `sort_order`) to use the structured search backend (OpenSearch where available, with a Postgres fallback for pre-cutover data).
+3. **Legacy filter params** — supply any combination of `start_time`, `end_time`, `tags`, `metadata`, `scores`, `prompt_id`, etc. (Existing clients keep working unchanged.)
+
+When more than one mode is supplied, the highest-priority one is used and the others are ignored.
 
 ### Authentication
 
@@ -11,22 +17,61 @@ This endpoint requires API key authentication only.
 
 ### Asynchronous Processing
 
-This endpoint initiates an asynchronous job to process the request logs based on the filter parameters. The actual dataset version creation happens in the background. A draft dataset (version_number = -1) is created immediately.
+This endpoint always queues a background job to populate the dataset. A draft dataset (`version_number = -1`) is created immediately; the job emails the user and fires the webhook on completion.
+
+The job is capped at **50,000** request logs per run. `request_log_ids` arrays larger than 50,000 are rejected at validation time.
 
 ### Webhooks
 
 The following webhook is triggered when the process completes:
 
-- `dataset_version_created_from_filter_params` - Sent when the dataset version is successfully created, includes:
+- `dataset_version_created_from_filter_params` — sent when the dataset version is successfully created. Payload:
   - `dataset_id`: ID of the created dataset
   - `rows_added`: Number of rows added to the dataset
   - `dataset_version_number`: Final version number assigned
 
+### Modes in detail
+
+#### Explicit ids
+
+```json
+{
+  "dataset_group_id": 123,
+  "request_log_ids": [1001, 1002, 1003]
+}
+```
+
+All ids must belong to the same workspace as the dataset group; otherwise the call returns `400`. Datasets created in this mode are **static snapshots** — `filter_params` is left null, and they cannot be refreshed via the run-report `refresh_dataset` flow.
+
+#### Structured filter group
+
+```json
+{
+  "dataset_group_id": 123,
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "request_start_time", "operator": "between", "value": ["2025-01-01T00:00:00Z", "2025-12-31T23:59:59Z"] },
+      { "field": "tags", "operator": "in", "value": ["staging"] }
+    ]
+  },
+  "q": "timeout",
+  "sort_by": "request_start_time",
+  "sort_order": "desc"
+}
+```
+
+This payload is enumerated through OpenSearch when the date range is on or after the OpenSearch cutover; otherwise it falls back to Postgres for the supported subset. The full `filter_group` payload is persisted to the dataset so refresh-based replay continues to work.
+
+#### Legacy
+
+The original filter shape (`start_time`, `end_time`, `tags`, `metadata`, `scores`, `prompt_id`, etc.) is unchanged and continues to be supported.
+
 ### Notes
 
-- If an existing draft dataset exists for the dataset group, it will be updated with new filter params
-- If no matching request logs are found, an empty dataset version is created
-- Failed drafts are automatically cleaned up
+- If a draft dataset already exists for the dataset group, it will be reused; the new payload overwrites its `filter_params`.
+- If no matching request logs are found, an empty dataset version is created.
+- Failed drafts are automatically cleaned up.
 
 ### Filtering by metadata
 
