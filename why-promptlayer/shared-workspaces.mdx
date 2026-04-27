@@ -1,91 +1,40 @@
 ---
-title: "Organizations & Workspaces"
-icon: "handshake-simple"
+title: "Overview"
+description: "Use organizations and workspaces to manage teams, environments, access, billing, and shared resources in PromptLayer."
+icon: "book"
 ---
 
-The Organizations & Workspaces feature in PromptLayer provides a comprehensive system for team collaboration and resource management. Organizations serve as the top-level container for your company, while workspaces allow you to organize projects, teams, and resources within your organization.
+Organizations and workspaces help your team separate projects, environments, and access in PromptLayer. Use them to manage members, organize resources, control permissions, and track usage across your company.
 
-## Key Features
+An **organization** is the top-level account for your company. It manages billing, members, settings, and usage across every workspace.
 
-- **Organization Management**: Centralized control over your entire company's PromptLayer usage
-- **Workspace Organization**: Create multiple workspaces for different teams, projects, or environments
-- **Role-Based Access Control**: Manage permissions at both organization and workspace levels
-- **Resource Sharing**: Share prompts, evaluations, and other resources across your team
-- **Billing Management**: Consolidated billing and usage tracking at the organization level
+A **workspace** is a shared environment inside an organization. Teams use workspaces to collaborate on prompts, evaluations, datasets, logs, and other PromptLayer resources.
 
-## Organizations
+## What you can do
 
-An organization represents your company or top-level entity in PromptLayer. It provides:
+- Manage members, organization roles, billing, settings, and usage in one place.
+- Create workspaces for teams, projects, or environments such as production, staging, and development.
+- Share prompts, evaluations, datasets, and request history with the right teammates.
+- Control workspace access with default roles, custom roles, and fine-grained RBAC.
 
-- Centralized billing and subscription management
-- User management across all workspaces
-- Organization-wide settings and configurations
-- Usage tracking and analytics
+## How it fits together
 
-### Organization Roles
+1. Create or join an organization for your company.
+2. Create workspaces for the teams, projects, or environments you want to separate.
+3. Invite members and assign organization roles or workspace roles.
+4. Use RBAC when you need precise permissions for editing, publishing, API keys, datasets, evaluations, and admin actions.
+5. Review billing and usage at the organization level.
 
-Organizations support different user roles:
+## Next steps
 
-- **Owner**: Full administrative access, billing management, and ability to manage all workspaces
-- **Admin**: Can manage users, create workspaces, and access all workspace data
-- **Member**: Default role with access to assigned workspaces
-
-For more granular workspace-level permission control, [RBAC (Role-Based Access Control)](/why-promptlayer/rbac) allows you to define custom roles and fine-grained permissions at the workspace level.
-
-### Managing Your Organization
-
-Organization settings allow you to:
-
-- Manage organization members and their roles
-- View billing and subscription details
-- Configure organization-wide settings
-- Monitor usage across all workspaces
-
-## Workspaces
-
-Workspaces are collaborative environments within your organization where teams can:
-
-- Share prompt templates and evaluations
-- Collaborate on projects
-- Organize resources by team or project
-- Maintain separate environments (dev, staging, production)
-
-### Creating a Workspace
-
-You can create a new workspace by clicking the 'Create Workspace' button from the workspace dropdown.
-
-![Create Workspaces Button](/images/workspaces-create-button.png)
-
-Choose a unique name for your workspace to enhance its identity and ease of recognition among team members.
-
-![Create Workspaces Modal](/images/workspaces-create-modal.png)
-
-### Workspace Management
-
-Upon creating a workspace, you'll be designated as the workspace administrator. This role empowers you to:
-
-- Invite new members to the workspace
-- Manage member permissions
-- Remove members from the workspace
-- Configure workspace-specific settings
-- Delete the workspace if needed
-
-![Workspaces Management](/images/workspaces-management.png)
-
-### Workspace Roles and Permissions
-
-Each workspace supports granular permission control:
-
-- **Workspace Admin**: Full control over workspace settings and members
-- **Editor**: Can create, edit, and delete resources within the workspace
-- **Viewer**: Read-only access to workspace resources
-
-## Best Practices
-
-Organizations typically structure workspaces by team (Engineering, Data Science, Product), by project, or by environment (dev, staging, production). When managing access, follow the principle of least privilege and regularly review workspace memberships to ensure proper access control.
-
-## Billing and Limits
-
-- Billing is managed at the organization level
-- Workspace limits depend on your subscription plan
-- Usage is tracked across all workspaces in your organization
+<CardGroup cols={2}>
+  <Card title="Organizations" icon="users-gear" href="/why-promptlayer/organizations">
+    Manage company-level members, roles, billing, settings, and usage.
+  </Card>
+  <Card title="Workspaces" icon="handshake-simple" href="/why-promptlayer/workspaces">
+    Create shared environments for teams, projects, and deployment stages.
+  </Card>
+  <Card title="RBAC" icon="shield" href="/why-promptlayer/rbac">
+    Define reusable roles and assign fine-grained permissions by workspace.
+  </Card>
+</CardGroup>

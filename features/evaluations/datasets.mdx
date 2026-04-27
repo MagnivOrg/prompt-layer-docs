@@ -3,7 +3,6 @@ title: "Datasets"
 icon: "chart-simple"
 ---
 
-
 Datasets are often used for evaluations, but they can also be exported. Each dataset can be assigned a name for easy search later on.
 
 You can create a dataset from your LLM request history or by uploading a dataset file.
@@ -12,8 +11,7 @@ You can create a dataset from your LLM request history or by uploading a dataset
 
 Creating a dataset from your history is straightforward using the Dataset dialogue. Here, you can build a dataset from your request history. The dataset will include metadata, input variable context, tags, and the request response. This is useful for backtesting new prompt versions.
 
-When creating a dataset from your history, several options are available for customization. You have the option to use time filters to narrow down the history included in the dataset by specifying a start and end time. Additionally, you can refine your dataset by including specific metadata or prompt templates, where metadata involves key-value pairs and prompt templates can be specified by name and version numbers. For those seeking more advanced customization, filtering based on a search query, specific scoring criteria, or tags can be used to build your dataset. 
-
+When creating a dataset from your history, several options are available for customization. You have the option to use time filters to narrow down the history included in the dataset by specifying a start and end time. Additionally, you can refine your dataset by including specific metadata or prompt templates, where metadata involves key-value pairs and prompt templates can be specified by name and version numbers. For those seeking more advanced customization, filtering based on a search query, specific scoring criteria, or tags can be used to build your dataset.
 
 ## Creating a Dataset File
 
@@ -41,7 +39,6 @@ In the JSON format, each test case is represented as a separate JSON object. The
     "location": "Chicago"
   }
 ]
-
 ```
 
 In the above example, the prompt template may contain input variables like `{name}`, `{age}`, and `{location}`. Each test case object provides the corresponding values for these variables.
@@ -50,7 +47,7 @@ In the above example, the prompt template may contain input variables like `{nam
 
 In the CSV format, each test case is represented as a separate row in the CSV file. The column headers correspond to the input variable names defined in the prompt template. The cells in each row represent the specific input values for each test case. Here's an example:
 
-```
+```csv
 name,age,location
 John Doe,30,New York
 Jane Smith,35,Los Angeles

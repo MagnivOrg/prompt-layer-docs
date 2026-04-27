@@ -18,56 +18,80 @@
         "pages": [
           "quickstart",
           "quickstart-part-two",
-          "tutorial-videos",
-          "migration",
-          "self-hosted",
-          "changelog"
-        ]
-      },
-      {
-        "group": "SDKs",
-        "pages": [
-          "sdks/python",
-          "sdks/javascript"
-        ]
-      },
-      {
-        "group": "Workflows",
-        "pages": [
-          "agents/mcp"
+          "tutorial-videos"
         ]
       },
       {
         "group": "Usage Documentation",
         "pages": [
-          "features/prompt-history/sharing-prompts",
           {
             "group": "Prompt Registry",
             "icon": "notebook",
             "pages": [
-              "features/prompt-registry/overview",
+              "features/prompt-registry/new-overview",
+              "features/prompt-registry/template-variables",
+              "features/prompt-registry/input-variable-sets",
               "features/prompt-registry/snippets",
+              "features/prompt-registry/placeholder-messages",
+              "features/prompt-registry/structured-outputs",
+              "features/prompt-registry/tool-calling",
+              "why-promptlayer/playground",
+              "features/prompt-history/sharing-prompts",
               "features/prompt-registry/release-labels",
               "features/prompt-registry/dynamic-release-labels",
-              "features/prompt-registry/tool-calling",
-              "features/prompt-registry/structured-outputs",
-              "features/prompt-registry/input-variable-sets",
-              "features/prompt-registry/template-variables",
-              "features/prompt-registry/placeholder-messages",
-              "running-requests/prompt-blueprints",
-              "features/prompt-registry/webhooks",
-              "features/prompt-registry/zero-downtime-releases"
+              "why-promptlayer/ab-releases"
             ]
           },
           {
-            "group": "Running Requests",
-            "icon": "circle-play",
+            "group": "Datasets",
+            "icon": "database",
             "pages": [
-              "running-requests/promptlayer-run",
-              "running-requests/promptlayer-run-workflow",
-              "running-requests/traces"
+              "features/evaluations/datasets-overview",
+              "features/evaluations/datasets-create-from-file",
+              "features/evaluations/datasets-create-from-history"
             ]
           },
+          {
+            "group": "Evaluations",
+            "icon": "vial-circle-check",
+            "pages": [
+              "features/evaluations/overview",
+              "features/evaluations/building-pipelines",
+              "features/evaluations/eval-types",
+              "features/evaluations/column-types",
+              "features/evaluations/score-card",
+              "features/evaluations/continuous-integration",
+              "features/evaluations/programmatic",
+              "features/evaluations/examples",
+              "why-promptlayer/voice-agents"
+            ]
+          },
+          {
+            "group": "Observability",
+            "icon": "chart-column",
+            "pages": [
+              "features/observability",
+              "why-promptlayer/advanced-search",
+              "why-promptlayer/analytics",
+              "running-requests/traces",
+              {
+                "group": "Advanced Logging",
+                "icon": "cassette-tape",
+                "pages": [
+                  "features/prompt-history/request-id",
+                  "features/prompt-history/tagging-requests",
+                  "features/prompt-history/metadata",
+                  "features/prompt-history/scoring-requests",
+                  "features/prompt-history/tracking-templates",
+                  "features/prompt-history/custom-logging",
+                  "features/opentelemetry",
+                  "features/prompt-history/structured-output-logging",
+                  "features/prompt-history/search-data-model"
+                ]
+              }
+            ]
+          },
+          "why-promptlayer/workflows",
           {
             "group": "Skill Collections",
             "icon": "book-sparkles",
@@ -80,68 +104,80 @@
             ]
           },
           {
-            "group": "Advanced Logging",
-            "icon": "cassette-tape",
+            "group": "Orgs & Workspaces",
+            "icon": "users-gear",
             "pages": [
-              "features/prompt-history/request-id",
-              "features/prompt-history/tagging-requests",
-              "features/prompt-history/metadata",
-              "features/prompt-history/scoring-requests",
-              "features/prompt-history/tracking-templates",
-              "features/prompt-history/custom-logging",
-              "features/opentelemetry",
-              "features/prompt-history/structured-output-logging",
-              "features/prompt-history/search-data-model"
+              "why-promptlayer/shared-workspaces",
+              "why-promptlayer/organizations",
+              "why-promptlayer/workspaces",
+              "why-promptlayer/rbac"
             ]
-          },
-          "onboarding-guides/deployment-strategies",
+          }
+        ]
+      },
+      {
+        "group": "Guides",
+        "pages": [
           {
-            "group": "Models & Integrations",
+            "group": "Providers & Models",
             "icon": "plug",
             "pages": [
               "features/supported-providers",
+              {
+                "group": "Custom Providers",
+                "icon": "plug",
+                "pages": [
+                  "features/custom-providers",
+                  "features/exa-integration",
+                  "features/xai-integration",
+                  "features/openrouter-integration"
+                ]
+              },
               "features/integrations",
-              "features/image-generation",
-              "features/custom-providers",
-              "features/exa-integration",
-              "features/xai-integration",
-              "features/openrouter-integration"
+              "features/image-generation"
+            ]
+          },
+          {
+            "group": "Implementation",
+            "icon": "ship",
+            "pages": [
+              "onboarding-guides/deployment-strategies",
+              "self-hosted",
+              "migration"
+            ]
+          },
+          {
+            "group": "Additional Use Cases",
+            "icon": "lightbulb",
+            "pages": [
+              "why-promptlayer/multi-turn-chat",
+              "why-promptlayer/fine-tuning",
+              {
+                "group": "Running Requests",
+                "icon": "circle-play",
+                "pages": [
+                  "running-requests/promptlayer-run",
+                  "running-requests/promptlayer-run-workflow"
+                ]
+              },
+              "features/prompt-registry/zero-downtime-releases",
+              "running-requests/prompt-blueprints"
             ]
           },
           "features/faq"
         ]
       },
       {
-        "group": "Why PromptLayer?",
+        "group": "SDKs",
         "pages": [
-          "why-promptlayer/prompt-management",
-          "why-promptlayer/advanced-search",
-          "why-promptlayer/ab-releases",
-          {
-            "group": "Evaluations",
-            "icon": "vial-circle-check",
-            "pages": [
-              "features/evaluations/overview",
-              "features/evaluations/continuous-integration",
-              "features/evaluations/examples",
-              "features/evaluations/building-pipelines",
-              "features/evaluations/eval-types",
-              "features/evaluations/column-types",
-              "features/evaluations/score-card",
-              "features/evaluations/datasets",
-              "features/evaluations/programmatic",
-              "why-promptlayer/voice-agents"
-            ]
-          },
-          "why-promptlayer/workflows",
-          "why-promptlayer/multi-turn-chat",
-          "why-promptlayer/fine-tuning",
-          "why-promptlayer/analytics",
-          "why-promptlayer/evaluation-and-ranking",
-          "why-promptlayer/playground",
-          "why-promptlayer/shared-workspaces",
-          "why-promptlayer/rbac",
-          "why-promptlayer/how-it-works"
+          "sdks/python",
+          "sdks/javascript"
+        ]
+      },
+      {
+        "group": "Agents",
+        "pages": [
+          "agents/mcp"
         ]
       },
       {
@@ -243,6 +279,12 @@
             ]
           }
         ]
+      },
+      {
+        "group": "Webhooks",
+        "pages": [
+          "features/prompt-registry/webhooks"
+        ]
       }
     ]
   },
@@ -264,6 +306,10 @@
   },
   "navbar": {
     "links": [
+      {
+        "label": "Changelog",
+        "href": "/changelog"
+      },
       {
         "label": "Contact Us",
         "href": "mailto:hello@promptlayer.com"

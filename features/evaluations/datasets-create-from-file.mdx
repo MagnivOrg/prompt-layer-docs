@@ -1,0 +1,66 @@
+---
+title: "Create from File"
+icon: "file-arrow-up"
+---
+
+Use file upload when you already have a prepared set of test cases and want the fastest path to a structured dataset version. PromptLayer accepts CSV and JSON files so you can turn offline examples, QA sheets, or exported test cases into reusable evaluation inputs.
+
+JSON or CSV files are accepted for the dataset input file.
+
+## Create a Dataset in the UI
+
+If you're starting in the PromptLayer app, this is the fastest path to upload a prepared dataset file.
+
+1. Go to the workspace where you want to store the dataset.
+2. Click **New** and create a **Dataset**.
+4. Click **Upload data**.
+5. Choose a CSV or JSON file from your computer.
+6. Review the imported rows and click **Save Dataset** when you are ready to publish the version.
+
+## Create Datasets Programmatically
+
+You can also create datasets from uploaded CSV or JSON files through the API. This is useful when you want to automate evaluation setup, sync prepared test cases from another system, or integrate dataset creation into your own workflow.
+
+- [Create Dataset Group](/reference/create-dataset-group) - Create the dataset group that will contain your draft and saved versions.
+- [Create Dataset Version from File](/reference/create-dataset-version-from-file) - Upload a CSV or JSON file and create a dataset version asynchronously.
+- [List Datasets](/reference/list-datasets) - Retrieve dataset groups and versions in your workspace.
+- [Get Dataset Rows](/reference/get-dataset-rows) - Inspect the rows in a saved dataset version after import.
+
+## File Formats
+
+PromptLayer accepts CSV and JSON files for dataset uploads.
+
+### CSV
+
+In CSV format, the column headers define the columns and each record is a separate row.
+
+```csv
+name,age,location
+John Doe,30,New York
+Jane Smith,35,Los Angeles
+Michael Johnson,40,Chicago
+```
+
+### JSON
+
+In JSON format, each row is a separate object. The object keys define the column names, and the values should be the values you want in the dataset.
+
+```json
+[
+  {
+    "name": "John Doe",
+    "age": 30,
+    "location": "New York"
+  },
+  {
+    "name": "Jane Smith",
+    "age": 35,
+    "location": "Los Angeles"
+  },
+  {
+    "name": "Michael Johnson",
+    "age": 40,
+    "location": "Chicago"
+  }
+]
+```

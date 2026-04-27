@@ -1,0 +1,57 @@
+---
+title: "Overview"
+description: "Use Datasets as the versioned system of record for evaluation inputs, backtests, and batch workflows."
+icon: "book"
+---
+
+Datasets are PromptLayer's versioned system of record for evaluation inputs and historical examples. Use them when you want a reusable set of test cases for evaluations, backtests, regression checks, or batch workflows.
+
+A **Dataset Group** is the container for one dataset over time. Inside that group, you edit a **draft** dataset, save numbered versions, and reuse those versions across evaluations. You can create data by uploading a CSV or JSON file, building from request history, or turning evaluation outputs back into a dataset for the next iteration.
+
+## What you can do
+
+- Create datasets from files, request history, or evaluation results.
+- Edit draft datasets before publishing a version, including adding rows, renaming or deleting columns, updating values, and converting columns to JSON.
+- Organize dataset groups with folders, tags, changelog history, and archive controls.
+- Reuse a specific dataset version in an evaluation blueprint, or update a blueprint to a different dataset later.
+- Export datasets to CSV and use report outputs to seed the next round of testing.
+
+## How it fits together
+
+1. Create a dataset group and populate a draft.
+2. Edit the draft and save a version.
+3. Attach that version to an evaluation blueprint.
+4. Run full batches, review results and history, and feed outputs into the next dataset iteration.
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card
+    title="Evaluations"
+    icon="vial-circle-check"
+    href="/features/evaluations/overview"
+  >
+    Learn how datasets power evaluation blueprints, scoring, and batch runs.
+  </Card>
+  <Card
+    title="Programmatic Evals"
+    icon="terminal"
+    href="/features/evaluations/programmatic"
+  >
+    Build datasets and evaluations from code or CI workflows.
+  </Card>
+  <Card
+    title="Create from File"
+    icon="file-arrow-up"
+    href="/reference/create-dataset-version-from-file"
+  >
+    Upload a CSV or JSON file to create a new dataset version.
+  </Card>
+  <Card
+    title="Create from History"
+    icon="history"
+    href="/reference/create-dataset-version-from-filter-params"
+  >
+    Build a dataset version from filtered request history.
+  </Card>
+</CardGroup>
