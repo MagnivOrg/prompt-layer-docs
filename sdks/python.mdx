@@ -361,9 +361,9 @@ async def main():
 asyncio.run(main())
 ```
 
-#### Example 2: Async Agent Execution
+#### Example 2: Async Workflow Execution
 
-Run Agents asynchronously for better efficiency:
+Run Workflows asynchronously for better efficiency:
 
 ```python
 import asyncio
@@ -373,7 +373,7 @@ async def main():
     async_promptlayer_client = AsyncPromptLayer(api_key="pl_****")
 
     response = await async_promptlayer_client.run_workflow(
-        workflow_name="example_agent",
+        workflow_name="example_workflow",
         workflow_version=1,
         input_variables={"num1": "1", "num2": "2"},
         return_all_outputs=True,

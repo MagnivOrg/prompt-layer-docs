@@ -3,7 +3,7 @@ title: "Multi-Turn Chat"
 icon: "messages"
 ---
 
-Building reliable conversational AI systems requires careful management of state and conversation history. This guide explains how to implement multi-turn chat using PromptLayer's stateless approach, which enhances reliability and makes your agents easier to test and debug.
+Building reliable conversational AI systems requires careful management of state and conversation history. This guide explains how to implement multi-turn chat using PromptLayer's stateless approach, which enhances reliability and makes your workflows easier to test and debug.
 
 ## Why Stateless Turns?
 
@@ -192,7 +192,7 @@ def run_conversation_with_tools(user_question):
 </Accordion>
 
 <Note>
-You can also implement this pattern using agents for more complex workflows with multiple nodes and conditional logic. See [Running Agents](/running-requests/promptlayer-run-agent) for details on using `promptlayer_client.run_agent()`.
+You can also implement this pattern using workflows for more complex pipelines with multiple nodes and conditional logic. See [Running Workflows](/running-requests/promptlayer-run-workflow) for details on using `promptlayer_client.run_workflow()`.
 </Note>
 
 ## Designing Your Stateless Prompt
@@ -267,7 +267,7 @@ promptlayer_client.run(
 
 ## Handling Tool Calls
 
-For agents that use tools, maintain tool state externally. See our [Tool Calling](/features/prompt-registry/tool-calling) documentation for setting up tool definitions in your prompts:
+For workflows that use tools, maintain tool state externally. See our [Tool Calling](/features/prompt-registry/tool-calling) documentation for setting up tool definitions in your prompts:
 
 ```python
 def handle_tool_execution(agent_response, tool_registry):
@@ -305,6 +305,6 @@ Learn more about setting up comprehensive evaluations in our [Evaluation and Ran
 
 - Explore [Message Placeholders](/features/prompt-registry/placeholder-messages) for dynamic prompt construction
 - Set up [Evaluations](/features/evaluations/overview) for your conversational flows
-- Learn about [Agent development](/why-promptlayer/agents) for complex workflows
+- Learn about [Workflow development](/why-promptlayer/workflows) for complex pipelines
 - Read our guide on [Tool Calling](/features/prompt-registry/tool-calling) for implementing tool-enabled assistants
 - Check out [Structured Outputs](/features/prompt-registry/structured-outputs) for formatted responses

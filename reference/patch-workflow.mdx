@@ -1,16 +1,14 @@
 ---
-title: "Update Agent (PATCH)"
+title: "Update Workflow (PATCH)"
 openapi: "PATCH /rest/workflows/{workflow_id_or_name}"
 ---
 
-Partially update an Agent by creating a new version with merged changes. This endpoint allows you to modify specific nodes without resending the entire configuration.
+Partially update a Workflow by creating a new version with merged changes. This endpoint allows you to modify specific nodes without resending the entire configuration.
 
 The PATCH operation:
 1. Fetches the specified base version (or latest if not specified)
 2. Merges your node updates with existing nodes
 3. Creates a new version with the merged configuration
-
-Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
 
 ## HTTP Request
 
@@ -18,7 +16,7 @@ Please note that this feature was previously called "Workflows" and is now calle
 
 ## Path Parameters
 
-- **workflow_id_or_name** (string, required): The ID or name of the Agent to update.
+- **workflow_id_or_name** (string, required): The ID or name of the Workflow to update.
 
 ## Request Body
 
@@ -77,7 +75,7 @@ The `nodes` object is keyed by node name:
   "success": true,
   "message": "Workflow version created successfully",
   "workflow_id": 123,
-  "workflow_name": "my-agent",
+  "workflow_name": "my-workflow",
   "workflow_version_id": 789,
   "version_number": 3,
   "base_version": 2,
@@ -106,7 +104,7 @@ Update just the configuration of one node while preserving everything else:
 import requests
 
 response = requests.patch(
-    "https://api.promptlayer.com/rest/workflows/my-agent",
+    "https://api.promptlayer.com/rest/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     json={
         "commit_message": "Updated prompt template version",
@@ -126,11 +124,11 @@ response = requests.patch(
 
 ### Add a New Node
 
-Add a new node to an existing agent:
+Add a new node to an existing workflow:
 
 ```python
 response = requests.patch(
-    "https://api.promptlayer.com/rest/workflows/my-agent",
+    "https://api.promptlayer.com/rest/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     json={
         "commit_message": "Added logging node",
@@ -151,11 +149,11 @@ response = requests.patch(
 
 ### Remove a Node
 
-Remove a node from the agent:
+Remove a node from the workflow:
 
 ```python
 response = requests.patch(
-    "https://api.promptlayer.com/rest/workflows/my-agent",
+    "https://api.promptlayer.com/rest/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     json={
         "commit_message": "Removed deprecated node",
@@ -172,7 +170,7 @@ Create a new version based on an older version (not the latest):
 
 ```python
 response = requests.patch(
-    "https://api.promptlayer.com/rest/workflows/my-agent",
+    "https://api.promptlayer.com/rest/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     json={
         "base_version": 5,  # Branch from version 5
@@ -192,7 +190,7 @@ response = requests.patch(
 
 ```python
 response = requests.patch(
-    "https://api.promptlayer.com/rest/workflows/my-agent",
+    "https://api.promptlayer.com/rest/workflows/my-workflow",
     headers={"X-API-KEY": "your-api-key"},
     json={
         "commit_message": "Major update",

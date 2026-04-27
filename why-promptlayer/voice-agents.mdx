@@ -10,7 +10,7 @@ Voice agents represent a powerful evolution in AI-powered customer interactions,
 Building a production-ready voice agent (like an after-hours appointment assistant or customer support line) requires careful orchestration of multiple AI components. PromptLayer serves as your central platform for:
 
 - **[Prompt Engineering & Version Control](/features/prompt-registry/new-overview)**: Iterate rapidly on conversation prompts without code deployments
-- **[Multi-Step Workflow Design](/why-promptlayer/agents)**: Build complex voice agent logic with visual drag-and-drop interfaces
+- **[Multi-Step Workflow Design](/why-promptlayer/workflows)**: Build complex voice agent logic with visual drag-and-drop interfaces
 - **Comprehensive [Observability](/why-promptlayer/analytics)**: Track every interaction with full context of what was said and how the agent responded
 - **[Rigorous Evaluation](/features/evaluations/overview)**: Test conversation flows, measure quality, and catch issues before they reach customers
 - **Cost Optimization**: Monitor token usage and latency across all voice interactions
@@ -81,7 +81,7 @@ Route 50% of calls to each version and use PromptLayer's analytics to determine 
 
 ## Building Multi-Step Voice Workflows
 
-Voice agents often require complex logic: transcribe speech → understand intent → fetch information → generate response → synthesize speech. PromptLayer's [Agents](/why-promptlayer/agents) feature lets you design these workflows visually.
+Voice agents often require complex logic: transcribe speech → understand intent → fetch information → generate response → synthesize speech. PromptLayer's [Workflows](/why-promptlayer/workflows) feature lets you design these workflows visually.
 
 ### Agent Workflow Example
 
@@ -196,7 +196,7 @@ PromptLayer evaluations automatically track and display latency for each request
 
 ## Observability for Voice Interactions
 
-PromptLayer's [Observability](/platform/observability) suite gives you full visibility into every voice interaction, even though the audio itself flows through external services.
+PromptLayer's [Observability](/features/observability) suite gives you full visibility into every voice interaction, even though the audio itself flows through external services.
 
 ### What You Can Track
 
@@ -233,7 +233,7 @@ Test with diverse conversation scenarios (cooperative customers, difficult cases
 To begin building voice agents with PromptLayer:
 
 1. **Create voice agent prompts** in the [Prompt Registry](/features/prompt-registry/new-overview)
-2. **Design multi-step workflows** with [Agents](/why-promptlayer/agents) if needed
+2. **Design multi-step workflows** with [Workflows](/why-promptlayer/workflows) if needed
 3. **Build evaluation datasets** covering your expected call types
 4. **Set up evaluation pipelines** with relevant quality checks
 5. **Integrate with your voice platform** (VAPI, ElevenLabs, etc.) via API

@@ -3,7 +3,7 @@ title: "Quickstart"
 icon: "flag-checkered"
 ---
 
-PromptLayer is your workbench for AI engineering. Version, test, and monitor every prompt and agent with robust evals and tracing. Empower domain experts to iterate alongside engineers in the visual editor.
+PromptLayer is your workbench for AI engineering. Version, test, and monitor every prompt and workflow with robust evals and tracing. Empower domain experts to iterate alongside engineers in the visual editor.
 
 This tutorial walks you through building an AI application that generates cake recipes. By the end, you'll know how to:
 
@@ -187,7 +187,7 @@ All prompts work across models, including [function calling and tool use](/featu
 
 Once your prompt is ready, PromptLayer can manage which version goes live. Release labels let you control which version is in production, so you can update prompts without touching code.
 
-For engineers: PromptLayer offers several [integration patterns](/onboarding-guides/deployment-strategies) including our Python or TypeScript SDKs, webhook-driven caching, fully managed agents, or [self-hosted](/self-hosted) deployments.
+For engineers: PromptLayer offers several [deployment strategies](/onboarding-guides/deployment-strategies) including our Python or TypeScript SDKs, webhook-driven caching, fully managed workflows, or [self-hosted](/self-hosted) deployments.
 
 ### Release Labels
 
@@ -220,32 +220,32 @@ To start an A/B test, assign release labels to different prompt versions and con
 
 Learn more about [A/B testing](/why-promptlayer/ab-releases).
 
-## Building Agents
+## Building Workflows
 
-Agents are multi-step AI workflows. Unlike a single prompt, an agent can chain multiple prompts together, use tools, and make decisions based on intermediate results.
+Workflows are multi-step AI pipelines. Unlike a single prompt, a workflow can chain multiple prompts together, use tools, and make decisions based on intermediate results.
 
-For example, you could extend the cake recipe generator into an agent that:
+For example, you could extend the cake recipe generator into a workflow that:
 
 1. Generates the recipe (using our prompt from earlier)
 2. Scales the ingredients for 100 people
 3. Calculates the total cost based on current grocery prices
 
-Create an agent by clicking **New** → **Agent**. You can build workflows visually using a drag-and-drop editor. Connect prompts, add conditionals, and loop over data. No code required.
+Create a workflow by clicking **New** → **Workflow**. You can build workflows visually using a drag-and-drop editor. Connect prompts, add conditionals, and loop over data. No code required.
 
 <Frame>
-  <img src="/new-quickstart-images/recipe-agent.png" alt="Creating an agent" />
+  <img src="/new-quickstart-images/recipe-agent.png" alt="Creating a workflow" />
 </Frame>
 
-Like prompts, agents are versioned with commit messages and can be retrieved via the SDK.
+Like prompts, workflows are versioned with commit messages and can be retrieved via the SDK.
 
 <Frame>
   <img
     src="/new-quickstart-images/agent-version-list.png"
-    alt="Agent version history"
+    alt="Workflow version history"
   />
 </Frame>
 
-Learn more about [Agents](/why-promptlayer/agents).
+Learn more about [Workflows](/why-promptlayer/workflows).
 
 ## Evaluations
 
@@ -298,7 +298,7 @@ From the logs table, you can select historical requests and click **Backtest** t
 
 ### Traces and Spans
 
-For agents, [traces](/running-requests/traces) show each step of the workflow as spans. You can see timing, inputs, and outputs for every step. Traces are OpenTelemetry (OTEL) compatible, so you can integrate with your existing observability stack.
+For workflows, [traces](/running-requests/traces) show each step as spans. You can see timing, inputs, and outputs for every step. Traces are OpenTelemetry (OTEL) compatible, so you can integrate with your existing observability stack.
 
 <Frame>
   <img src="/images/new_traces.gif" alt="Trace visualization" />

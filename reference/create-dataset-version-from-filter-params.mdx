@@ -27,3 +27,22 @@ The following webhook is triggered when the process completes:
 - If an existing draft dataset exists for the dataset group, it will be updated with new filter params
 - If no matching request logs are found, an empty dataset version is created
 - Failed drafts are automatically cleaned up
+
+### Filtering by metadata
+
+Metadata filters are provided as a list of `{key, value}` pairs under either `metadata_and` (all must match) or `metadata_or` (any must match). Values are compared as strings.
+
+```json
+{
+  "dataset_group_id": 20123,
+  "prompt_templates_include": [{ "name": "generate-summary" }],
+  "metadata_and": [
+    { "key": "app_name", "value": "local" }
+  ],
+  "start_time": "2026-04-22T17:00:00Z",
+  "end_time": "2026-04-23T17:00:00Z",
+  "limit": 25
+}
+```
+
+Unknown fields in the request body are ignored silently, so a typo such as `"metadata": { "app_name": "local" }` will not produce an error — it simply will not filter. Use `metadata_and` / `metadata_or` exactly as shown above.

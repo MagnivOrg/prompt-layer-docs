@@ -1,10 +1,8 @@
 ---
-title: "Get Agent Labels"
+title: "Get Workflow Labels"
 openapi: "GET /workflows/{workflow_id_or_name}/labels"
 ---
 
-List all release labels for an agent (workflow). Returns each label with its name, ID, and the version it points to.
+List all release labels for a workflow. Returns each label with its name, ID, and the version it points to.
 
-This mirrors the [Get Prompt Template Labels](/reference/templates-get-labels) endpoint.
-
-Please note that this feature was previously called "Workflows" and is now called "Agents". Some references to "Workflows" remain in our SDK and will be updated before the feature exits beta.
+This mirrors the [Get Prompt Template Labels](/reference/templates-labels-get) endpoint.

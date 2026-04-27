@@ -1,5 +1,5 @@
 ---
-title: "Agents"
+title: "Workflows"
 icon: "sitemap"
 ---
 
@@ -13,9 +13,9 @@ icon: "sitemap"
   allowfullscreen
 ></iframe>
 
-PromptLayer Agents let you quickly build, launch, and manage AI workflows that use multiple LLMs and business rules. You can create and test these AI systems easily using a visual drag-and-drop tool, and then deploy them without needing to worry about complex infrastructure management.
+PromptLayer Workflows let you quickly build, launch, and manage AI workflows that use multiple LLMs and business rules. You can create and test these AI systems easily using a visual drag-and-drop tool, and then deploy them without needing to worry about complex infrastructure management.
 
-![Agent DAG](/images/agents/workflow-dag.png)
+![Workflow DAG](/images/agents/workflow-dag.png)
 
 ## Use Cases
 
@@ -27,7 +27,7 @@ Improve AI-generated responses by using results from multiple LLM calls, either 
 - Enhanced decision-making by considering multiple perspectives
 - Higher reliability through comparing multiple AI answers
 
-### 2. **Building Complex Agents**
+### 2. **Building Complex Workflows**
 
 Create advanced AI systems that can handle multi-step tasks and solve complex problems. These systems can:
 
@@ -39,27 +39,27 @@ Create advanced AI systems that can handle multi-step tasks and solve complex pr
 
 ### 1. Input Variables
 
-Input Variables are the data you feed into an Agent. They can be text, numbers, or other information the Agent uses in its various steps to produce the final result.
+Input Variables are the data you feed into a Workflow. They can be text, numbers, or other information the Workflow uses in its various steps to produce the final result.
 
 ![Input Variables](/images/agents/input-variables.png)
 
 ### 2. Nodes
 
-Nodes are the building blocks of the Agent. Each node represents a specific action or decision. Types include:
+Nodes are the building blocks of the Workflow. Each node represents a specific action or decision. Types include:
 
 - **Prompt Template**: Make an LLM call using a prompt template from the registry or an [inline template](#inline-templates) defined directly in the node configuration.
 - **Callback Endpoint**: Make external API calls (ex: RAG steps) or trigger callback requests after workflow processes finish.
 - **Coding Agent**: Execute AI coding agents (such as Claude Code) in a sandboxed environment for data transformations, file processing, and complex analysis. [Learn more about Coding Agent](/features/evaluations/eval-types#coding-agent)
-- **For Loop**: Iterate over collections, running a prompt or sub-workflow on each item. [Learn more about For Loop](/running-requests/workflow-loops#for-loop-for_loop)
-- **While Loop**: Execute repeatedly until a condition is met. [Learn more about While Loop](/running-requests/workflow-loops#while-loop-while_loop)
+- **For Loop**: Iterate over collections, running a prompt or sub-workflow on each item.
+- **While Loop**: Execute repeatedly until a condition is met.
 - **Math Operator**: Perform numerical comparisons or calculations between different data sources.
 - **Parse Value**: Extract and process specific data types like strings, numbers, or JSON from inputs.
 
 <Info>
-  **Want to learn about all available node types?** Agent nodes use the same
+  **Want to learn about all available node types?** Workflow nodes use the same
   building blocks as evaluation types. [View all eval
   types](/features/evaluations/eval-types) to see the full catalog of nodes you
-  can use in your agents, including LLM assertions, data extraction,
+  can use in your workflows, including LLM assertions, data extraction,
   conversation simulators, and more.
 </Info>
 
@@ -67,7 +67,7 @@ Nodes are the building blocks of the Agent. Each node represents a specific acti
 
 ### 3. Conditional Edges
 
-Conditional Edges allow you to create branching logic within your Agent workflows. By clicking on an edge between nodes, you can define conditions that determine the path your workflow will take. Conditions can be combined using logical operators such as **AND** or **OR**, and support comparisons including:
+Conditional Edges allow you to create branching logic within your Workflows. By clicking on an edge between nodes, you can define conditions that determine the path your workflow will take. Conditions can be combined using logical operators such as **AND** or **OR**, and support comparisons including:
 
 - Equal (`==`)
 - Not Equal (`!=`)
@@ -76,13 +76,13 @@ Conditional Edges allow you to create branching logic within your Agent workflow
 - Less Than or Equal To (`<=`)
 - Greater Than or Equal To (`>=`)
 
-You can compare values against numbers or booleans, and multiple conditions can be combined to create complex branching logic. This enables your Agent to dynamically route execution paths based on intermediate results or external data, allowing for more sophisticated and context-aware workflows.
+You can compare values against numbers or booleans, and multiple conditions can be combined to create complex branching logic. This enables your Workflow to dynamically route execution paths based on intermediate results or external data, allowing for more sophisticated and context-aware workflows.
 
 ![Conditional Edges](/images/agents/conditional-edges.png)
 
 ### 4. Output Nodes
 
-Output Nodes determine what your Agent returns as its final result. When using Conditional Edges to create different paths in your workflow, you can place multiple Output Nodes at the end of different branches. Similar to a "return statement" in programming, whichever Output Node executes successfully first will provide the final output. This allows your Agent to deliver different results based on the specific conditions that were met during the workflow.
+Output Nodes determine what your Workflow returns as its final result. When using Conditional Edges to create different paths in your workflow, you can place multiple Output Nodes at the end of different branches. Similar to a "return statement" in programming, whichever Output Node executes successfully first will provide the final output. This allows your Workflow to deliver different results based on the specific conditions that were met during the workflow.
 
 ![Output Nodes](/images/agents/output-node.png)
 
@@ -90,7 +90,7 @@ Output Nodes determine what your Agent returns as its final result. When using C
 
 Prompt Template nodes can reference a template from the Prompt Registry or define a template inline. Inline templates are useful for quick iteration and experimentation without committing a prompt to the registry.
 
-When creating or updating an agent programmatically, use `inline_template` instead of `template` in a Prompt Template node's configuration:
+When creating or updating a workflow programmatically, use `inline_template` instead of `template` in a Prompt Template node's configuration:
 
 ```json
 {
@@ -135,14 +135,14 @@ You must provide exactly one of `template` (registry reference) or `inline_templ
 
 ## Versioning
 
-Agent versioning automatically tracks changes over time. Each update creates a new version, allowing you to safely experiment with new ideas while keeping the current production version stable. You can view the full history of your Agent's changes, which helps with team collaboration and iterative development.
+Workflow versioning automatically tracks changes over time. Each update creates a new version, allowing you to safely experiment with new ideas while keeping the current production version stable. You can view the full history of your Workflow's changes, which helps with team collaboration and iterative development.
 
 ![Versioning](/images/agents/versions.png)
 
-## Running an Agent
+## Running a Workflow
 
-You can run an Agent in three ways: using the [Python or JavaScript SDK](/running-requests/promptlayer-run-agent), via the [REST API with polling](/running-requests/promptlayer-run-agent#run-agents-using-the-rest-api), or with the [REST API using callback webhooks](/running-requests/promptlayer-run-agent#run-agents-with-callback-webhooks) for long-running agents.
+You can run a Workflow in three ways: using the [Python or JavaScript SDK](/running-requests/promptlayer-run-workflow), via the [REST API with polling](/running-requests/promptlayer-run-workflow#run-workflows-using-the-rest-api), or with the [REST API using callback webhooks](/running-requests/promptlayer-run-workflow#run-workflows-with-callback-webhooks) for long-running workflows.
 
-After running an Agent, the full trace, including spans from all nodes, will be visible in the left traces menu. This allows you to visualize the execution path and see intermediate outputs at each step, helping you debug and optimize your Agent.
+After running a Workflow, the full trace, including spans from all nodes, will be visible in the left traces menu. This allows you to visualize the execution path and see intermediate outputs at each step, helping you debug and optimize your Workflow.
 
 ![Traces](/images/agents/spans.png)

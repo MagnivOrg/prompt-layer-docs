@@ -1,6 +1,6 @@
 ---
 title: "Introduction"
-description: "Use the PromptLayer REST API to manage prompts, agents, evaluations, datasets, request logs, traces, and other workspace resources programmatically."
+description: "Use the PromptLayer REST API to manage prompts, workflows, evaluations, datasets, request logs, traces, and other workspace resources programmatically."
 ---
 
 The PromptLayer REST API lets you interact with your workspace directly over HTTP so you can automate updates, run workflows, log activity, and export or organize data from your own systems.
@@ -61,16 +61,16 @@ Generate API keys from the API keys page in your PromptLayer dashboard. Each wor
 - [Delete Reports by Name](/reference/delete-reports-by-name)
 
 <Tip>
-Pass `folder_id` on `Create Evaluation Pipeline` (and on the create endpoints under [Prompt Templates](#prompt-templates), [Datasets](#datasets), and [Agents](#agents)) to organize new resources directly into a folder. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) to look up an ID, or [Create Folder](/reference/create-folder) to make one. See [Unified Registry](#unified-registry).
+Pass `folder_id` on `Create Evaluation Pipeline` (and on the create endpoints under [Prompt Templates](#prompt-templates), [Datasets](#datasets), and [Workflows](#workflows)) to organize new resources directly into a folder. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) to look up an ID, or [Create Folder](/reference/create-folder) to make one. See [Unified Registry](#unified-registry).
 </Tip>
 
-### Agents
+### Workflows
 
-- [List Agents](/reference/list-workflows)
-- [Create Agent](/reference/create-workflow)
-- [Update Agent](/reference/patch-workflow)
-- [Run Agent](/reference/run-workflow)
-- [Get Agent Version Execution Results](/reference/workflow-version-execution-results)
+- [List Workflows](/reference/list-workflows)
+- [Create Workflow](/reference/create-workflow)
+- [Update Workflow](/reference/patch-workflow)
+- [Run Workflow](/reference/run-workflow)
+- [Get Workflow Version Execution Results](/reference/workflow-version-execution-results)
 
 ### Skill Collections
 

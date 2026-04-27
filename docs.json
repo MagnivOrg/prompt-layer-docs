@@ -18,7 +18,10 @@
         "pages": [
           "quickstart",
           "quickstart-part-two",
-          "tutorial-videos"
+          "tutorial-videos",
+          "migration",
+          "self-hosted",
+          "changelog"
         ]
       },
       {
@@ -39,7 +42,10 @@
               "features/prompt-history/sharing-prompts",
               "features/prompt-registry/release-labels",
               "features/prompt-registry/dynamic-release-labels",
-              "why-promptlayer/ab-releases"
+              "why-promptlayer/ab-releases",
+              "features/prompt-registry/webhooks",
+              "features/prompt-registry/zero-downtime-releases",
+              "running-requests/prompt-blueprints"
             ]
           },
           {
@@ -92,7 +98,7 @@
               }
             ]
           },
-          "why-promptlayer/agents",
+          "why-promptlayer/workflows",
           {
             "group": "Skill Collections",
             "icon": "book-sparkles",
@@ -158,11 +164,9 @@
                 "icon": "circle-play",
                 "pages": [
                   "running-requests/promptlayer-run",
-                  "running-requests/promptlayer-run-agent"
+                  "running-requests/promptlayer-run-workflow"
                 ]
-              },
-              "features/prompt-registry/zero-downtime-releases",
-              "running-requests/prompt-blueprints"
+              }
             ]
           },
           "features/faq"
@@ -176,7 +180,7 @@
         ]
       },
       {
-        "group": "Agents",
+        "group": "Workflows",
         "pages": [
           "agents/mcp"
         ]
@@ -247,7 +251,7 @@
             ]
           },
           {
-            "group": "Agents",
+            "group": "Workflows",
             "pages": [
               "reference/list-workflows",
               "reference/get-workflow",
@@ -279,12 +283,6 @@
               "reference/resolve-folder-id"
             ]
           }
-        ]
-      },
-      {
-        "group": "Webhooks",
-        "pages": [
-          "features/prompt-registry/webhooks"
         ]
       }
     ]
@@ -341,6 +339,14 @@
     {
       "source": "/languages/javascript",
       "destination": "/sdks/javascript"
+    },
+    {
+      "source": "/why-promptlayer/agents",
+      "destination": "/why-promptlayer/workflows"
+    },
+    {
+      "source": "/running-requests/promptlayer-run-agent",
+      "destination": "/running-requests/promptlayer-run-workflow"
     }
   ]
 }

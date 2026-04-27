@@ -3522,69 +3522,215 @@
                   "dataset_group_id": {
                     "type": "integer",
                     "minimum": 1,
-                    "description": "ID of the dataset group where the new version will be created"
+                    "description": "ID of the dataset group where the new version will be created."
                   },
                   "variables_to_parse": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "List of variables to parse from the request logs"
-                  },
-                  "prompt_id": {
-                    "type": "integer",
-                    "description": "Filter by specific prompt ID"
-                  },
-                  "prompt_version_id": {
-                    "type": "integer",
-                    "description": "Filter by specific prompt version ID"
-                  },
-                  "prompt_label_id": {
-                    "type": "integer",
-                    "description": "Filter by specific prompt label ID"
-                  },
-                  "workspace_id": {
-                    "type": "integer",
-                    "description": "Filter by specific workspace ID"
+                    "description": "List of input variables to extract as columns in the resulting dataset."
                   },
                   "start_time": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Filter logs after this timestamp (ISO format)"
+                    "description": "Filter logs after this timestamp (ISO 8601). Example: 2026-04-22T17:00:00Z."
                   },
                   "end_time": {
                     "type": "string",
                     "format": "date-time",
-                    "description": "Filter logs before this timestamp (ISO format)"
+                    "description": "Filter logs before this timestamp (ISO 8601). Example: 2026-04-23T17:00:00Z."
                   },
-                  "tags": {
+                  "limit": {
+                    "type": "integer",
+                    "minimum": 0,
+                    "maximum": 50000,
+                    "description": "Maximum number of request logs to include. Capped at 50,000."
+                  },
+                  "q": {
+                    "type": "string",
+                    "description": "Free-text search query applied to the prompt input and LLM output."
+                  },
+                  "id": {
+                    "type": "integer",
+                    "minimum": 1,
+                    "description": "Filter to a single request log by its numeric id."
+                  },
+                  "starred": {
+                    "type": "boolean",
+                    "description": "When true, only include starred request logs."
+                  },
+                  "order_by_random": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When true, sample request logs in random order. Requires `limit` to be set."
+                  },
+                  "metadata_and": {
+                    "type": "array",
+                    "description": "Filter logs whose metadata matches ALL of the provided key/value pairs.",
+                    "items": {
+                      "type": "object",
+                      "required": ["key", "value"],
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "maxLength": 1024,
+                          "description": "Metadata key."
+                        },
+                        "value": {
+                          "type": "string",
+                          "description": "Metadata value (values are stored as strings)."
+                        }
+                      }
+                    }
+                  },
+                  "metadata_or": {
+                    "type": "array",
+                    "description": "Filter logs whose metadata matches ANY of the provided key/value pairs.",
+                    "items": {
+                      "type": "object",
+                      "required": ["key", "value"],
+                      "properties": {
+                        "key": {
+                          "type": "string",
+                          "maxLength": 1024
+                        },
+                        "value": {
+                          "type": "string"
+                        }
+                      }
+                    }
+                  },
+                  "tags_and": {
                     "type": "array",
                     "items": {
                       "type": "string"
                     },
-                    "description": "Filter by specific tags"
+                    "description": "Filter logs that have ALL of the provided tags."
                   },
-                  "metadata": {
-                    "type": "object",
-                    "additionalProperties": {
+                  "tags_or": {
+                    "type": "array",
+                    "items": {
                       "type": "string"
                     },
-                    "description": "Filter by metadata key-value pairs"
+                    "description": "Filter logs that have ANY of the provided tags."
                   },
-                  "scores": {
-                    "type": "object",
-                    "additionalProperties": {
+                  "prompt_templates_include": {
+                    "type": "array",
+                    "description": "Include logs associated with any of these prompt templates. Matches by template name, with optional version and/or release label narrowing.",
+                    "items": {
                       "type": "object",
+                      "required": ["name"],
                       "properties": {
-                        "min": {
-                          "type": "number"
+                        "name": {
+                          "type": "string",
+                          "description": "Prompt template name."
                         },
-                        "max": {
-                          "type": "number"
+                        "version_numbers": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          },
+                          "description": "Restrict to these specific template version numbers."
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          },
+                          "description": "Restrict to template versions tagged with these release labels (e.g. `prod`, `staging`)."
                         }
                       }
+                    }
+                  },
+                  "prompt_templates_exclude": {
+                    "type": "array",
+                    "description": "Exclude logs associated with any of these prompt templates. Same shape as `prompt_templates_include`.",
+                    "items": {
+                      "type": "object",
+                      "required": ["name"],
+                      "properties": {
+                        "name": {
+                          "type": "string"
+                        },
+                        "version_numbers": {
+                          "type": "array",
+                          "items": {
+                            "type": "integer"
+                          }
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  },
+                  "scores": {
+                    "type": "array",
+                    "description": "Filter logs by score comparisons. Each entry asserts that the named score satisfies `operator value`.",
+                    "items": {
+                      "type": "object",
+                      "required": ["name", "operator", "value"],
+                      "properties": {
+                        "name": {
+                          "type": "string",
+                          "maxLength": 512,
+                          "description": "Score name."
+                        },
+                        "operator": {
+                          "type": "string",
+                          "enum": [">", "<", ">=", "<=", "="],
+                          "description": "Comparison operator."
+                        },
+                        "value": {
+                          "type": "integer",
+                          "minimum": 0,
+                          "description": "Score value to compare against."
+                        }
+                      }
+                    }
+                  },
+                  "status": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "enum": ["SUCCESS", "WARNING", "ERROR"]
                     },
-                    "description": "Filter by score ranges"
+                    "description": "Filter logs by request status."
+                  },
+                  "sort_by": {
+                    "type": "string",
+                    "enum": [
+                      "request_start_time",
+                      "input_tokens",
+                      "output_tokens",
+                      "price",
+                      "score",
+                      "latency",
+                      "prompt_name",
+                      "status"
+                    ],
+                    "description": "Field to sort results by."
+                  },
+                  "sort_order": {
+                    "type": "string",
+                    "enum": ["asc", "desc"],
+                    "description": "Sort direction. Defaults to `desc` when `sort_by` is provided."
+                  },
+                  "include_fields": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Additional request-log fields to materialize as dataset columns."
+                  },
+                  "transpose_metadata_columns": {
+                    "type": "boolean",
+                    "default": false,
+                    "description": "When true, pivot metadata keys into dataset columns. Requires `metadata_and` or `metadata_or` to be set."
                   }
                 },
                 "required": [
