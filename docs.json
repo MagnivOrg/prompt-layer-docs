@@ -175,7 +175,7 @@
         ]
       },
       {
-        "group": "Workflows",
+        "group": "Agents",
         "pages": [
           "agents/mcp"
         ]
