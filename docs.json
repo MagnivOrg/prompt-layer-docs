@@ -43,7 +43,16 @@
               "why-promptlayer/ab-releases"
             ]
           },
-          "features/evaluations/datasets",
+          {
+            "group": "Datasets",
+            "icon": "database",
+            "pages": [
+              "features/evaluations/datasets-overview",
+              "features/evaluations/datasets-create-from-file",
+              "features/evaluations/datasets-create-from-history",
+              "features/evaluations/datasets"
+            ]
+          },
           {
             "group": "Evaluations",
             "icon": "vial-circle-check",
@@ -54,8 +63,8 @@
               "features/evaluations/column-types",
               "features/evaluations/score-card",
               "features/evaluations/continuous-integration",
-              "features/evaluations/examples",
               "features/evaluations/programmatic",
+              "features/evaluations/examples",
               "why-promptlayer/voice-agents"
             ]
           },
@@ -101,6 +110,8 @@
             "icon": "users-gear",
             "pages": [
               "why-promptlayer/shared-workspaces",
+              "why-promptlayer/organizations",
+              "why-promptlayer/workspaces",
               "why-promptlayer/rbac"
             ]
           }
@@ -132,10 +143,16 @@
               "features/supported-providers",
               "features/integrations",
               "features/image-generation",
-              "features/custom-providers",
-              "features/exa-integration",
-              "features/xai-integration",
-              "features/openrouter-integration"
+              {
+                "group": "Custom Providers",
+                "icon": "plug",
+                "pages": [
+                  "features/custom-providers",
+                  "features/exa-integration",
+                  "features/xai-integration",
+                  "features/openrouter-integration"
+                ]
+              }
             ]
           },
           {
@@ -145,14 +162,6 @@
               "why-promptlayer/how-it-works"
             ]
           }
-        ]
-      },
-      {
-        "group": "Archive",
-        "pages": [
-          "features/prompt-registry/overview",
-          "why-promptlayer/prompt-management",
-          "why-promptlayer/evaluation-and-ranking"
         ]
       },
       {

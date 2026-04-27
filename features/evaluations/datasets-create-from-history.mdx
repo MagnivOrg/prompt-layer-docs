@@ -1,0 +1,28 @@
+---
+title: "Create from History"
+icon: "history"
+---
+
+Use request history when you want to build datasets from real production or staging traffic. This is a strong fit for backtesting, regression testing, and creating evaluation sets from the prompts, metadata, and outcomes your system has already seen.
+
+Creating a dataset from history is straightforward using the Dataset dialog. PromptLayer can build a dataset from your request history, including metadata, input variable context, tags, and the request response. This is especially useful when you want to evaluate a new prompt version against real historical examples.
+
+When creating a dataset from history, you can narrow what gets included by filtering on:
+
+- Time range
+- Metadata key-value pairs
+- Prompt templates and version numbers
+- Search query
+- Scores
+- Tags
+
+## Related REST APIs
+
+- [Create Dataset Group](/reference/create-dataset-group) - Create the dataset group that will contain your draft and saved versions.
+- [Create Dataset Version from Request History](/reference/create-dataset-version-from-filter-params) - Recommended direct path for creating a dataset version from filtered request logs.
+- [Create Draft Dataset Version](/reference/create-draft-dataset-version) - Start a draft dataset manually when you want a more controlled, multi-step workflow.
+- [Add Request Log to Dataset](/reference/add-request-log-to-dataset) - Add individual request logs to a draft dataset as rows.
+- [Save Draft Dataset Version](/reference/save-draft-dataset-version) - Publish the draft as a saved dataset version.
+- [Get Dataset Rows](/reference/get-dataset-rows) - Inspect the rows in the resulting dataset version.
+
+The filter-params endpoint is the recommended way to create a dataset from history in one step. The draft, add-request-log, and save-draft endpoints support a more advanced manual workflow when you want precise control over how rows are assembled.
