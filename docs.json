@@ -18,8 +18,7 @@
         "pages": [
           "quickstart",
           "quickstart-part-two",
-          "tutorial-videos",
-          "changelog"
+          "tutorial-videos"
         ]
       },
       {
@@ -106,7 +105,7 @@
             ]
           },
           {
-            "group": "Organizations & Workspaces",
+            "group": "Orgs & Workspaces",
             "icon": "users-gear",
             "pages": [
               "why-promptlayer/shared-workspaces",
@@ -121,28 +120,10 @@
         "group": "Guides",
         "pages": [
           {
-            "group": "Running Requests",
-            "icon": "circle-play",
-            "pages": [
-              "running-requests/promptlayer-run",
-              "running-requests/promptlayer-run-agent"
-            ]
-          },
-          "migration",
-          "self-hosted",
-          "why-promptlayer/multi-turn-chat",
-          "why-promptlayer/fine-tuning",
-          "onboarding-guides/deployment-strategies",
-          "features/prompt-registry/zero-downtime-releases",
-          "features/prompt-registry/webhooks",
-          "running-requests/prompt-blueprints",
-          {
-            "group": "Models & Integrations",
+            "group": "Providers & Models",
             "icon": "plug",
             "pages": [
               "features/supported-providers",
-              "features/integrations",
-              "features/image-generation",
               {
                 "group": "Custom Providers",
                 "icon": "plug",
@@ -152,16 +133,39 @@
                   "features/xai-integration",
                   "features/openrouter-integration"
                 ]
-              }
+              },
+              "features/integrations",
+              "features/image-generation"
             ]
           },
           {
-            "group": "FAQ",
+            "group": "Implementation",
+            "icon": "ship",
             "pages": [
-              "features/faq",
-              "why-promptlayer/how-it-works"
+              "onboarding-guides/deployment-strategies",
+              "self-hosted",
+              "migration"
             ]
-          }
+          },
+          {
+            "group": "Additional Use Cases",
+            "icon": "lightbulb",
+            "pages": [
+              "why-promptlayer/multi-turn-chat",
+              "why-promptlayer/fine-tuning",
+              {
+                "group": "Running Requests",
+                "icon": "circle-play",
+                "pages": [
+                  "running-requests/promptlayer-run",
+                  "running-requests/promptlayer-run-agent"
+                ]
+              },
+              "features/prompt-registry/zero-downtime-releases",
+              "running-requests/prompt-blueprints"
+            ]
+          },
+          "features/faq"
         ]
       },
       {
@@ -276,6 +280,12 @@
             ]
           }
         ]
+      },
+      {
+        "group": "Webhooks",
+        "pages": [
+          "features/prompt-registry/webhooks"
+        ]
       }
     ]
   },
@@ -297,6 +307,10 @@
   },
   "navbar": {
     "links": [
+      {
+        "label": "Changelog",
+        "href": "/changelog"
+      },
       {
         "label": "Contact Us",
         "href": "mailto:hello@promptlayer.com"
