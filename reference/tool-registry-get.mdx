@@ -1,0 +1,10 @@
+---
+title: "Get Tool Registry"
+openapi: "GET /api/public/v2/tool-registry/{identifier}"
+---
+
+Retrieve a tool from the Tool Registry by ID or name. Optionally resolve a specific version using the `label` or `version` query parameter. If neither is specified, the latest version is returned.
+
+The `identifier` can be either:
+- A numeric tool ID (e.g., `123`)
+- A tool name (e.g., `get_weather`)

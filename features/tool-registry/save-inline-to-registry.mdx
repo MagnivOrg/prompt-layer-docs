@@ -1,0 +1,40 @@
+---
+title: "Save Inline to Registry"
+icon: "floppy-disk"
+---
+
+Already have a tool defined inline in a prompt? You don't need to recreate it in the registry. Save it directly with one click.
+
+## How It Works
+
+1. Open a prompt in the **Playground** that has an inline function tool
+2. Click **Save as...** on the tool in the functions list
+3. Choose a **name** and **folder** location
+4. Click **Save**
+
+The inline tool definition is saved to the registry, and the inline reference in your prompt is replaced with a registry reference automatically.
+
+<Frame>
+  <img src="/images/tool-registry/save-to-registry.png" alt="Save inline tool to registry" />
+</Frame>
+
+## When to Use This
+
+**Prototyping → Production workflow:**
+
+You're iterating on a tool schema in the Playground — tweaking parameters, testing with the LLM, getting it right. Once it works, save it to the registry so other prompts can reuse it.
+
+**Migrating existing prompts:**
+
+You have 10 prompts that each define the same `get_weather` tool inline. Open one, save its tool to the registry, then update the other 9 to use the registry reference instead of their inline copies. Now you have one source of truth.
+
+## What Happens After Saving
+
+- A new tool is created in the registry with version 1
+- The tool definition is frozen as the first version
+- Your prompt's inline tool is replaced with a registry reference
+- The prompt now resolves the tool from the registry at runtime
+
+<Tip>
+Only inline function tools show the "Save as..." button. Built-in tools (like web search) and tool variables cannot be saved to the registry.
+</Tip>
