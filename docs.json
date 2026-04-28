@@ -44,12 +44,25 @@
           },
           {
             "group": "Tool Registry",
+            "tag": "New",
             "pages": [
               "features/tool-registry/overview",
               "features/tool-registry/using-in-prompts",
               "features/tool-registry/save-inline-to-registry"
             ],
             "icon": "wrench"
+          },
+          {
+            "group": "Skill Collections",
+            "tag": "New",
+            "icon": "book-sparkles",
+            "pages": [
+              "features/skill-collections/overview",
+              "features/skill-collections/editing-with-wrangler",
+              "features/skill-collections/sharing-and-remixing",
+              "features/skill-collections/pulling-skills",
+              "features/skill-collections/tuning-skills"
+            ]
           },
           {
             "group": "Datasets",
@@ -101,17 +114,6 @@
             ]
           },
           "why-promptlayer/workflows",
-          {
-            "group": "Skill Collections",
-            "icon": "book-sparkles",
-            "pages": [
-              "features/skill-collections/overview",
-              "features/skill-collections/editing-with-wrangler",
-              "features/skill-collections/sharing-and-remixing",
-              "features/skill-collections/pulling-skills",
-              "features/skill-collections/tuning-skills"
-            ]
-          },
           {
             "group": "Orgs & Workspaces",
             "icon": "users-gear",
