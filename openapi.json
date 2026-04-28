@@ -2133,7 +2133,7 @@
     "/report-columns/{report_column_id}": {
       "patch": {
         "summary": "Edit Evaluation Pipeline Column",
-        "description": "Update an existing column on an evaluation pipeline. Use this to fix a bug in a CODE_EXECUTION script, change a column's configuration, rename it, or reorder it — without recreating the whole pipeline. Cannot edit DATASET columns. Editing a column re-queues the affected cells.",
+        "description": "Update an existing column on an evaluation pipeline. Use this to fix a bug in a CODE_EXECUTION script, change a column's configuration, rename it, or reorder it \u2014 without recreating the whole pipeline. Cannot edit DATASET columns. Editing a column re-queues the affected cells.",
         "operationId": "editReportColumn",
         "tags": [
           "reports"
@@ -2913,13 +2913,18 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "enum": ["dataset"]
+                              "enum": [
+                                "dataset"
+                              ]
                             },
                             "value": {
                               "description": "The cell value"
                             }
                           },
-                          "required": ["type", "value"]
+                          "required": [
+                            "type",
+                            "value"
+                          ]
                         }
                       },
                       "description": "Array of rows, each row is an array of cells"
@@ -3065,14 +3070,21 @@
                           "properties": {
                             "type": {
                               "type": "string",
-                              "enum": ["dataset", "eval"]
+                              "enum": [
+                                "dataset",
+                                "eval"
+                              ]
                             },
                             "value": {
                               "description": "The cell value"
                             },
                             "status": {
                               "type": "string",
-                              "enum": ["PASSED", "FAILED", null],
+                              "enum": [
+                                "PASSED",
+                                "FAILED",
+                                null
+                              ],
                               "description": "Evaluation status (only for eval cells)"
                             },
                             "error_message": {
@@ -3080,7 +3092,9 @@
                               "description": "Error details (only present for failed eval cells)"
                             }
                           },
-                          "required": ["type"]
+                          "required": [
+                            "type"
+                          ]
                         }
                       },
                       "description": "Array of rows, each row is an array of cells"
@@ -4927,7 +4941,14 @@
                             "description": "Names of nodes this node depends on"
                           }
                         },
-                        "required": ["id", "name", "node_type", "is_output_node", "configuration", "dependencies"]
+                        "required": [
+                          "id",
+                          "name",
+                          "node_type",
+                          "is_output_node",
+                          "configuration",
+                          "dependencies"
+                        ]
                       }
                     },
                     "edges": {
@@ -4960,11 +4981,24 @@
                             }
                           }
                         },
-                        "required": ["id", "source_node_name", "target_node_name", "is_and"]
+                        "required": [
+                          "id",
+                          "source_node_name",
+                          "target_node_name",
+                          "is_and"
+                        ]
                       }
                     }
                   },
-                  "required": ["success", "workflow_id", "workflow_name", "version", "workflow_version_id", "nodes", "edges"]
+                  "required": [
+                    "success",
+                    "workflow_id",
+                    "workflow_name",
+                    "version",
+                    "workflow_version_id",
+                    "nodes",
+                    "edges"
+                  ]
                 }
               }
             }
@@ -5040,11 +5074,19 @@
                             "description": "Version number this label points to"
                           }
                         },
-                        "required": ["release_label", "release_label_id", "workflow_version_id", "workflow_version_number"]
+                        "required": [
+                          "release_label",
+                          "release_label_id",
+                          "workflow_version_id",
+                          "workflow_version_number"
+                        ]
                       }
                     }
                   },
-                  "required": ["success", "release_labels"]
+                  "required": [
+                    "success",
+                    "release_labels"
+                  ]
                 }
               }
             }
@@ -5419,13 +5461,31 @@
               "oneOf": [
                 {
                   "type": "string",
-                  "enum": ["FOLDER", "PROMPT", "SNIPPET", "WORKFLOW", "DATASET", "REPORT", "AB_TEST", "INPUT_VARIABLE_SET"]
+                  "enum": [
+                    "FOLDER",
+                    "PROMPT",
+                    "SNIPPET",
+                    "WORKFLOW",
+                    "DATASET",
+                    "REPORT",
+                    "AB_TEST",
+                    "INPUT_VARIABLE_SET"
+                  ]
                 },
                 {
                   "type": "array",
                   "items": {
                     "type": "string",
-                    "enum": ["FOLDER", "PROMPT", "SNIPPET", "WORKFLOW", "DATASET", "REPORT", "AB_TEST", "INPUT_VARIABLE_SET"]
+                    "enum": [
+                      "FOLDER",
+                      "PROMPT",
+                      "SNIPPET",
+                      "WORKFLOW",
+                      "DATASET",
+                      "REPORT",
+                      "AB_TEST",
+                      "INPUT_VARIABLE_SET"
+                    ]
                   }
                 }
               ],
@@ -5791,7 +5851,7 @@
           "otlp"
         ],
         "summary": "Ingest Traces (OTLP)",
-        "description": "Ingest OpenTelemetry traces using the standard OTLP/HTTP protocol.\n\nThis endpoint accepts an `ExportTraceServiceRequest` as defined by the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/otel/protocol/otlp/#otlphttp). Spans carrying [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.\n\nSupported content types:\n- `application/x-protobuf` — binary protobuf encoding (recommended)\n- `application/json` — JSON encoding\n\nGzip `Content-Encoding` is supported for both formats.\n\nSpans can include `promptlayer.prompt.name` (or `promptlayer.prompt.id`) and `promptlayer.prompt.version` (or `promptlayer.prompt.label`) attributes to link the generated request log to an existing prompt template in your workspace.",
+        "description": "Ingest OpenTelemetry traces using the standard OTLP/HTTP protocol.\n\nThis endpoint accepts an `ExportTraceServiceRequest` as defined by the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/otel/protocol/otlp/#otlphttp). Spans carrying [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.\n\nSupported content types:\n- `application/x-protobuf` \u2014 binary protobuf encoding (recommended)\n- `application/json` \u2014 JSON encoding\n\nGzip `Content-Encoding` is supported for both formats.\n\nSpans can include `promptlayer.prompt.name` (or `promptlayer.prompt.id`) and `promptlayer.prompt.version` (or `promptlayer.prompt.label`) attributes to link the generated request log to an existing prompt template in your workspace.",
         "operationId": "ingestOtlpTraces",
         "parameters": [
           {
@@ -6437,9 +6497,18 @@
             "schema": {
               "type": "string",
               "enum": [
-                "engine", "provider_type", "prompt_id", "prompt", "tags",
-                "metadata_keys", "status", "tool_names", "output_keys",
-                "input_variable_keys", "metadata_values", "output_values",
+                "engine",
+                "provider_type",
+                "prompt_id",
+                "prompt",
+                "tags",
+                "metadata_keys",
+                "status",
+                "tool_names",
+                "output_keys",
+                "input_variable_keys",
+                "metadata_values",
+                "output_values",
                 "input_variable_values"
               ]
             },
@@ -6526,6 +6595,240 @@
           },
           "429": {
             "description": "Rate limit exceeded (10 requests per minute)."
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry": {
+      "get": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "List Tool Registries",
+        "description": "List all tools in the Tool Registry for the workspace.",
+        "operationId": "list_tool_registries",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "tool_registries": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "workspace_id": {
+                            "type": "integer"
+                          },
+                          "folder_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "created_at": {
+                            "type": "string"
+                          },
+                          "updated_at": {
+                            "type": "string"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Create Tool Registry",
+        "description": "Create a new tool in the Tool Registry with an initial version.",
+        "operationId": "create_tool_registry",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "name",
+                  "tool_definition"
+                ],
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "Tool name (unique per workspace)"
+                  },
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "Tool definition in OpenAI function-calling format"
+                  },
+                  "folder_id": {
+                    "type": "integer",
+                    "description": "Folder ID to place tool in",
+                    "nullable": true
+                  },
+                  "commit_message": {
+                    "type": "string",
+                    "description": "Commit message for the initial version",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Tool created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "tool_registry": {
+                      "type": "object"
+                    },
+                    "version": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}": {
+      "get": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Get Tool Registry",
+        "description": "Get a tool from the Tool Registry by ID or name. Optionally resolve a specific version by label or version number.",
+        "operationId": "get_tool_registry",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve version by label name (e.g. production)"
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve by specific version number"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "tool_registry": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "workspace_id": {
+                          "type": "integer"
+                        },
+                        "labels": {
+                          "type": "array",
+                          "items": {
+                            "type": "object"
+                          }
+                        },
+                        "version": {
+                          "type": "object",
+                          "nullable": true
+                        },
+                        "tool_definition": {
+                          "type": "object",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
           }
         }
       }
@@ -7951,26 +8254,66 @@
                 "propertyName": "type"
               },
               "oneOf": [
-                {"$ref": "#/components/schemas/TextContent"},
-                {"$ref": "#/components/schemas/ThinkingContent"},
-                {"$ref": "#/components/schemas/CodeContent"},
-                {"$ref": "#/components/schemas/ImageContent"},
-                {"$ref": "#/components/schemas/MediaContent"},
-                {"$ref": "#/components/schemas/MediaVariable"},
-                {"$ref": "#/components/schemas/OutputMediaContent"},
-                {"$ref": "#/components/schemas/ServerToolUseContent"},
-                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                {"$ref": "#/components/schemas/McpListToolsContent"},
-                {"$ref": "#/components/schemas/McpCallContent"},
-                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/ShellCallContent"},
-                {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                },
+                {
+                  "$ref": "#/components/schemas/OutputMediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ServerToolUseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/WebSearchToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeExecutionResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpListToolsContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalRequestContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalResponseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallOutputContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                }
               ]
             },
             "title": "Content",
@@ -8497,12 +8840,21 @@
           "type": {
             "const": "output_media",
             "default": "output_media",
-            "enum": ["output_media"],
+            "enum": [
+              "output_media"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
@@ -8516,18 +8868,31 @@
             "title": "Mime Type"
           },
           "media_type": {
-            "enum": ["image", "video", "audio"],
+            "enum": [
+              "image",
+              "video",
+              "audio"
+            ],
             "default": "image",
             "title": "Media Type",
             "type": "string"
           },
           "provider_metadata": {
-            "anyOf": [{"type": "object"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Provider Metadata"
           }
         },
-        "required": ["url"],
+        "required": [
+          "url"
+        ],
         "title": "OutputMediaContent",
         "type": "object"
       },
@@ -8537,7 +8902,9 @@
           "type": {
             "const": "code",
             "default": "code",
-            "enum": ["code"],
+            "enum": [
+              "code"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8546,17 +8913,33 @@
             "title": "Code"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
           "container_id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Container Id"
           }
         },
-        "required": ["code"],
+        "required": [
+          "code"
+        ],
         "title": "CodeContent",
         "type": "object"
       },
@@ -8566,7 +8949,9 @@
           "type": {
             "const": "server_tool_use",
             "default": "server_tool_use",
-            "enum": ["server_tool_use"],
+            "enum": [
+              "server_tool_use"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8584,7 +8969,10 @@
             "title": "Input"
           }
         },
-        "required": ["id", "name"],
+        "required": [
+          "id",
+          "name"
+        ],
         "title": "ServerToolUseContent",
         "type": "object"
       },
@@ -8593,7 +8981,9 @@
           "type": {
             "const": "web_search_result",
             "default": "web_search_result",
-            "enum": ["web_search_result"],
+            "enum": [
+              "web_search_result"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8613,7 +9003,14 @@
             "title": "Encrypted Content"
           },
           "page_age": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Page Age"
           }
@@ -8627,7 +9024,9 @@
           "type": {
             "const": "web_search_tool_result",
             "default": "web_search_tool_result",
-            "enum": ["web_search_tool_result"],
+            "enum": [
+              "web_search_tool_result"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8644,7 +9043,9 @@
             "title": "Content"
           }
         },
-        "required": ["tool_use_id"],
+        "required": [
+          "tool_use_id"
+        ],
         "title": "WebSearchToolResultContent",
         "type": "object"
       },
@@ -8654,7 +9055,9 @@
           "type": {
             "const": "code_execution_result",
             "default": "code_execution_result",
-            "enum": ["code_execution_result"],
+            "enum": [
+              "code_execution_result"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8668,7 +9071,9 @@
             "title": "Outcome"
           }
         },
-        "required": ["output"],
+        "required": [
+          "output"
+        ],
         "title": "CodeExecutionResultContent",
         "type": "object"
       },
@@ -8678,12 +9083,21 @@
           "type": {
             "const": "mcp_list_tools",
             "default": "mcp_list_tools",
-            "enum": ["mcp_list_tools"],
+            "enum": [
+              "mcp_list_tools"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
@@ -8693,13 +9107,25 @@
             "title": "Server Label"
           },
           "tools": {
-            "items": {"type": "object"},
+            "items": {
+              "type": "object"
+            },
             "type": "array",
             "default": [],
             "title": "Tools"
           },
           "error": {
-            "anyOf": [{"type": "string"}, {"type": "object"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Error"
           }
@@ -8713,12 +9139,21 @@
           "type": {
             "const": "mcp_call",
             "default": "mcp_call",
-            "enum": ["mcp_call"],
+            "enum": [
+              "mcp_call"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
@@ -8738,17 +9173,41 @@
             "title": "Arguments"
           },
           "output": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Output"
           },
           "error": {
-            "anyOf": [{"type": "string"}, {"type": "object"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Error"
           },
           "approval_request_id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Approval Request Id"
           }
@@ -8762,12 +9221,21 @@
           "type": {
             "const": "mcp_approval_request",
             "default": "mcp_approval_request",
-            "enum": ["mcp_approval_request"],
+            "enum": [
+              "mcp_approval_request"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
@@ -8796,7 +9264,9 @@
           "type": {
             "const": "mcp_approval_response",
             "default": "mcp_approval_response",
-            "enum": ["mcp_approval_response"],
+            "enum": [
+              "mcp_approval_response"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8809,7 +9279,10 @@
             "title": "Approve"
           }
         },
-        "required": ["approval_request_id", "approve"],
+        "required": [
+          "approval_request_id",
+          "approve"
+        ],
         "title": "McpApprovalResponseContent",
         "type": "object"
       },
@@ -8819,7 +9292,9 @@
           "type": {
             "const": "bash_code_execution_tool_result",
             "default": "bash_code_execution_tool_result",
-            "enum": ["bash_code_execution_tool_result"],
+            "enum": [
+              "bash_code_execution_tool_result"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8833,7 +9308,9 @@
             "title": "Content"
           }
         },
-        "required": ["tool_use_id"],
+        "required": [
+          "tool_use_id"
+        ],
         "title": "BashCodeExecutionToolResultContent",
         "type": "object"
       },
@@ -8843,7 +9320,9 @@
           "type": {
             "const": "text_editor_code_execution_tool_result",
             "default": "text_editor_code_execution_tool_result",
-            "enum": ["text_editor_code_execution_tool_result"],
+            "enum": [
+              "text_editor_code_execution_tool_result"
+            ],
             "title": "Type",
             "type": "string"
           },
@@ -8857,7 +9336,9 @@
             "title": "Content"
           }
         },
-        "required": ["tool_use_id"],
+        "required": [
+          "tool_use_id"
+        ],
         "title": "TextEditorCodeExecutionToolResultContent",
         "type": "object"
       },
@@ -8867,17 +9348,33 @@
           "type": {
             "const": "shell_call",
             "default": "shell_call",
-            "enum": ["shell_call"],
+            "enum": [
+              "shell_call"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
           "call_id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Call Id"
           },
@@ -8887,7 +9384,14 @@
             "title": "Action"
           },
           "status": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Status"
           }
@@ -8901,28 +9405,53 @@
           "type": {
             "const": "shell_call_output",
             "default": "shell_call_output",
-            "enum": ["shell_call_output"],
+            "enum": [
+              "shell_call_output"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
           "call_id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Call Id"
           },
           "output": {
-            "items": {"type": "object"},
+            "items": {
+              "type": "object"
+            },
             "type": "array",
             "default": [],
             "title": "Output"
           },
           "status": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Status"
           }
@@ -8936,17 +9465,33 @@
           "type": {
             "const": "apply_patch_call",
             "default": "apply_patch_call",
-            "enum": ["apply_patch_call"],
+            "enum": [
+              "apply_patch_call"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
           "call_id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Call Id"
           },
@@ -8956,7 +9501,14 @@
             "title": "Operation"
           },
           "status": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Status"
           }
@@ -8970,27 +9522,57 @@
           "type": {
             "const": "apply_patch_call_output",
             "default": "apply_patch_call_output",
-            "enum": ["apply_patch_call_output"],
+            "enum": [
+              "apply_patch_call_output"
+            ],
             "title": "Type",
             "type": "string"
           },
           "id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Id"
           },
           "call_id": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Call Id"
           },
           "output": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Output"
           },
           "status": {
-            "anyOf": [{"type": "string"}, {"type": "null"}],
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
             "default": null,
             "title": "Status"
           }
@@ -9040,7 +9622,14 @@
             "description": "Provider-specific tool configuration. Structure varies by provider and tool type."
           }
         },
-        "required": ["id", "name", "description", "provider", "type", "config"],
+        "required": [
+          "id",
+          "name",
+          "description",
+          "provider",
+          "type",
+          "config"
+        ],
         "title": "BuiltInTool",
         "type": "object"
       },
@@ -9091,26 +9680,66 @@
                 }
               },
               "oneOf": [
-                {"$ref": "#/components/schemas/TextContent"},
-                {"$ref": "#/components/schemas/ThinkingContent"},
-                {"$ref": "#/components/schemas/CodeContent"},
-                {"$ref": "#/components/schemas/ImageContent"},
-                {"$ref": "#/components/schemas/MediaContent"},
-                {"$ref": "#/components/schemas/MediaVariable"},
-                {"$ref": "#/components/schemas/OutputMediaContent"},
-                {"$ref": "#/components/schemas/ServerToolUseContent"},
-                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                {"$ref": "#/components/schemas/McpListToolsContent"},
-                {"$ref": "#/components/schemas/McpCallContent"},
-                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/ShellCallContent"},
-                {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                },
+                {
+                  "$ref": "#/components/schemas/OutputMediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ServerToolUseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/WebSearchToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeExecutionResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpListToolsContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalRequestContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalResponseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallOutputContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                }
               ]
             },
             "type": "array",
@@ -9186,26 +9815,66 @@
                 }
               },
               "oneOf": [
-                {"$ref": "#/components/schemas/TextContent"},
-                {"$ref": "#/components/schemas/ThinkingContent"},
-                {"$ref": "#/components/schemas/CodeContent"},
-                {"$ref": "#/components/schemas/ImageContent"},
-                {"$ref": "#/components/schemas/MediaContent"},
-                {"$ref": "#/components/schemas/MediaVariable"},
-                {"$ref": "#/components/schemas/OutputMediaContent"},
-                {"$ref": "#/components/schemas/ServerToolUseContent"},
-                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                {"$ref": "#/components/schemas/McpListToolsContent"},
-                {"$ref": "#/components/schemas/McpCallContent"},
-                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/ShellCallContent"},
-                {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                },
+                {
+                  "$ref": "#/components/schemas/OutputMediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ServerToolUseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/WebSearchToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeExecutionResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpListToolsContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalRequestContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalResponseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallOutputContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                }
               ]
             },
             "type": "array",
@@ -9283,26 +9952,66 @@
                     }
                   },
                   "oneOf": [
-                    {"$ref": "#/components/schemas/TextContent"},
-                    {"$ref": "#/components/schemas/ThinkingContent"},
-                    {"$ref": "#/components/schemas/CodeContent"},
-                    {"$ref": "#/components/schemas/ImageContent"},
-                    {"$ref": "#/components/schemas/MediaContent"},
-                    {"$ref": "#/components/schemas/MediaVariable"},
-                    {"$ref": "#/components/schemas/OutputMediaContent"},
-                    {"$ref": "#/components/schemas/ServerToolUseContent"},
-                    {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                    {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                    {"$ref": "#/components/schemas/McpListToolsContent"},
-                    {"$ref": "#/components/schemas/McpCallContent"},
-                    {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                    {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                    {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                    {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                    {"$ref": "#/components/schemas/ShellCallContent"},
-                    {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                    {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                    {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                    {
+                      "$ref": "#/components/schemas/TextContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ThinkingContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CodeContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ImageContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MediaContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MediaVariable"
+                    },
+                    {
+                      "$ref": "#/components/schemas/OutputMediaContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ServerToolUseContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WebSearchToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CodeExecutionResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpListToolsContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpApprovalRequestContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpApprovalResponseContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ShellCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ShellCallOutputContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApplyPatchCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                    }
                   ]
                 },
                 "type": "array"
@@ -9409,26 +10118,66 @@
                     }
                   },
                   "oneOf": [
-                    {"$ref": "#/components/schemas/TextContent"},
-                    {"$ref": "#/components/schemas/ThinkingContent"},
-                    {"$ref": "#/components/schemas/CodeContent"},
-                    {"$ref": "#/components/schemas/ImageContent"},
-                    {"$ref": "#/components/schemas/MediaContent"},
-                    {"$ref": "#/components/schemas/MediaVariable"},
-                    {"$ref": "#/components/schemas/OutputMediaContent"},
-                    {"$ref": "#/components/schemas/ServerToolUseContent"},
-                    {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                    {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                    {"$ref": "#/components/schemas/McpListToolsContent"},
-                    {"$ref": "#/components/schemas/McpCallContent"},
-                    {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                    {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                    {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                    {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                    {"$ref": "#/components/schemas/ShellCallContent"},
-                    {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                    {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                    {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                    {
+                      "$ref": "#/components/schemas/TextContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ThinkingContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CodeContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ImageContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MediaContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MediaVariable"
+                    },
+                    {
+                      "$ref": "#/components/schemas/OutputMediaContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ServerToolUseContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WebSearchToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CodeExecutionResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpListToolsContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpApprovalRequestContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpApprovalResponseContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ShellCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ShellCallOutputContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApplyPatchCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                    }
                   ]
                 },
                 "type": "array"
@@ -9502,26 +10251,66 @@
                 }
               },
               "oneOf": [
-                {"$ref": "#/components/schemas/TextContent"},
-                {"$ref": "#/components/schemas/ThinkingContent"},
-                {"$ref": "#/components/schemas/CodeContent"},
-                {"$ref": "#/components/schemas/ImageContent"},
-                {"$ref": "#/components/schemas/MediaContent"},
-                {"$ref": "#/components/schemas/MediaVariable"},
-                {"$ref": "#/components/schemas/OutputMediaContent"},
-                {"$ref": "#/components/schemas/ServerToolUseContent"},
-                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                {"$ref": "#/components/schemas/McpListToolsContent"},
-                {"$ref": "#/components/schemas/McpCallContent"},
-                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/ShellCallContent"},
-                {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                },
+                {
+                  "$ref": "#/components/schemas/OutputMediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ServerToolUseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/WebSearchToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeExecutionResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpListToolsContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalRequestContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalResponseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallOutputContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                }
               ]
             },
             "type": "array",
@@ -10422,26 +11211,66 @@
                 }
               },
               "oneOf": [
-                {"$ref": "#/components/schemas/TextContent"},
-                {"$ref": "#/components/schemas/ThinkingContent"},
-                {"$ref": "#/components/schemas/CodeContent"},
-                {"$ref": "#/components/schemas/ImageContent"},
-                {"$ref": "#/components/schemas/MediaContent"},
-                {"$ref": "#/components/schemas/MediaVariable"},
-                {"$ref": "#/components/schemas/OutputMediaContent"},
-                {"$ref": "#/components/schemas/ServerToolUseContent"},
-                {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                {"$ref": "#/components/schemas/McpListToolsContent"},
-                {"$ref": "#/components/schemas/McpCallContent"},
-                {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                {"$ref": "#/components/schemas/ShellCallContent"},
-                {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                {
+                  "$ref": "#/components/schemas/TextContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ThinkingContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ImageContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/MediaVariable"
+                },
+                {
+                  "$ref": "#/components/schemas/OutputMediaContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ServerToolUseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/WebSearchToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/CodeExecutionResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpListToolsContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalRequestContent"
+                },
+                {
+                  "$ref": "#/components/schemas/McpApprovalResponseContent"
+                },
+                {
+                  "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ShellCallOutputContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallContent"
+                },
+                {
+                  "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                }
               ]
             },
             "type": "array",
@@ -10512,8 +11341,12 @@
           }
         },
         "oneOf": [
-          {"$ref": "#/components/schemas/FunctionTool"},
-          {"$ref": "#/components/schemas/BuiltInTool"}
+          {
+            "$ref": "#/components/schemas/FunctionTool"
+          },
+          {
+            "$ref": "#/components/schemas/BuiltInTool"
+          }
         ],
         "title": "Tool"
       },
@@ -10634,26 +11467,66 @@
                     }
                   },
                   "oneOf": [
-                    {"$ref": "#/components/schemas/TextContent"},
-                    {"$ref": "#/components/schemas/ThinkingContent"},
-                    {"$ref": "#/components/schemas/CodeContent"},
-                    {"$ref": "#/components/schemas/ImageContent"},
-                    {"$ref": "#/components/schemas/MediaContent"},
-                    {"$ref": "#/components/schemas/MediaVariable"},
-                    {"$ref": "#/components/schemas/OutputMediaContent"},
-                    {"$ref": "#/components/schemas/ServerToolUseContent"},
-                    {"$ref": "#/components/schemas/WebSearchToolResultContent"},
-                    {"$ref": "#/components/schemas/CodeExecutionResultContent"},
-                    {"$ref": "#/components/schemas/McpListToolsContent"},
-                    {"$ref": "#/components/schemas/McpCallContent"},
-                    {"$ref": "#/components/schemas/McpApprovalRequestContent"},
-                    {"$ref": "#/components/schemas/McpApprovalResponseContent"},
-                    {"$ref": "#/components/schemas/BashCodeExecutionToolResultContent"},
-                    {"$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"},
-                    {"$ref": "#/components/schemas/ShellCallContent"},
-                    {"$ref": "#/components/schemas/ShellCallOutputContent"},
-                    {"$ref": "#/components/schemas/ApplyPatchCallContent"},
-                    {"$ref": "#/components/schemas/ApplyPatchCallOutputContent"}
+                    {
+                      "$ref": "#/components/schemas/TextContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ThinkingContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CodeContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ImageContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MediaContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/MediaVariable"
+                    },
+                    {
+                      "$ref": "#/components/schemas/OutputMediaContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ServerToolUseContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/WebSearchToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/CodeExecutionResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpListToolsContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpApprovalRequestContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/McpApprovalResponseContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/BashCodeExecutionToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/TextEditorCodeExecutionToolResultContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ShellCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ShellCallOutputContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApplyPatchCallContent"
+                    },
+                    {
+                      "$ref": "#/components/schemas/ApplyPatchCallOutputContent"
+                    }
                   ]
                 },
                 "type": "array"
@@ -11597,7 +12470,10 @@
           "type": {
             "type": "string",
             "nullable": true,
-            "enum": ["chat", "completion"],
+            "enum": [
+              "chat",
+              "completion"
+            ],
             "description": "The prompt template type."
           },
           "latest_version_number": {
@@ -11796,7 +12672,12 @@
         "type": "object",
         "title": "Span",
         "description": "A single OTLP span. See the [OTLP Span spec](https://opentelemetry.io/docs/specs/otel/trace/api/#span) for full details.",
-        "required": ["traceId", "spanId", "name", "startTimeUnixNano"],
+        "required": [
+          "traceId",
+          "spanId",
+          "name",
+          "startTimeUnixNano"
+        ],
         "properties": {
           "traceId": {
             "type": "string",
@@ -11821,7 +12702,14 @@
           "kind": {
             "type": "integer",
             "description": "Span kind: 0=UNSPECIFIED, 1=INTERNAL, 2=SERVER, 3=CLIENT, 4=PRODUCER, 5=CONSUMER.",
-            "enum": [0, 1, 2, 3, 4, 5]
+            "enum": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5
+            ]
           },
           "startTimeUnixNano": {
             "type": "string",
@@ -11845,7 +12733,11 @@
               "code": {
                 "type": "integer",
                 "description": "Status code: 0=UNSET, 1=OK, 2=ERROR.",
-                "enum": [0, 1, 2]
+                "enum": [
+                  0,
+                  1,
+                  2
+                ]
               },
               "message": {
                 "type": "string",
@@ -11901,7 +12793,10 @@
         "type": "object",
         "title": "KeyValue",
         "description": "An OTLP attribute key-value pair.",
-        "required": ["key", "value"],
+        "required": [
+          "key",
+          "value"
+        ],
         "properties": {
           "key": {
             "type": "string"
@@ -11943,7 +12838,10 @@
         "description": "Response to an OTLP trace export request.",
         "properties": {
           "partialSuccess": {
-            "type": ["object", "null"],
+            "type": [
+              "object",
+              "null"
+            ],
             "description": "Present only when some spans were rejected. Null when all spans were accepted.",
             "properties": {
               "rejectedSpans": {
@@ -11989,13 +12887,23 @@
           "sort_by": {
             "type": "string",
             "nullable": true,
-            "enum": ["request_start_time", "input_tokens", "output_tokens", "cost", "latency_ms", "status"],
+            "enum": [
+              "request_start_time",
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "status"
+            ],
             "description": "Field to sort results by."
           },
           "sort_order": {
             "type": "string",
             "nullable": true,
-            "enum": ["asc", "desc"],
+            "enum": [
+              "asc",
+              "desc"
+            ],
             "description": "Sort direction. Must be provided together with sort_by."
           },
           "include_prompt_name": {
@@ -12009,42 +12917,92 @@
         "type": "object",
         "title": "StructuredFilter",
         "description": "A single filter condition on a request log field.",
-        "required": ["field", "operator"],
+        "required": [
+          "field",
+          "operator"
+        ],
         "properties": {
           "field": {
             "type": "string",
             "description": "The request log field to filter on.",
             "enum": [
-              "pl_id", "prompt_id", "engine", "provider_type",
-              "input_text", "output_text", "prompt_version_number",
-              "input_tokens", "output_tokens", "cost", "latency_ms",
-              "request_start_time", "request_end_time", "status",
-              "is_json", "is_tool_call", "is_plain_text",
-              "tags", "metadata_keys", "metadata", "tool_names",
-              "output", "output_keys", "input_variables", "input_variable_keys"
+              "pl_id",
+              "prompt_id",
+              "engine",
+              "provider_type",
+              "input_text",
+              "output_text",
+              "prompt_version_number",
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "request_start_time",
+              "request_end_time",
+              "status",
+              "is_json",
+              "is_tool_call",
+              "is_plain_text",
+              "tags",
+              "metadata_keys",
+              "metadata",
+              "tool_names",
+              "output",
+              "output_keys",
+              "input_variables",
+              "input_variable_keys"
             ]
           },
           "operator": {
             "type": "string",
             "description": "The comparison operator.",
             "enum": [
-              "is", "is_not", "in", "not_in",
-              "contains", "not_contains", "starts_with", "ends_with",
-              "eq", "neq", "gt", "gte", "lt", "lte", "between",
-              "before", "after",
-              "is_true", "is_false",
-              "is_empty", "is_not_empty", "is_null", "is_not_null",
-              "key_equals", "key_not_equals", "key_contains"
+              "is",
+              "is_not",
+              "in",
+              "not_in",
+              "contains",
+              "not_contains",
+              "starts_with",
+              "ends_with",
+              "eq",
+              "neq",
+              "gt",
+              "gte",
+              "lt",
+              "lte",
+              "between",
+              "before",
+              "after",
+              "is_true",
+              "is_false",
+              "is_empty",
+              "is_not_empty",
+              "is_null",
+              "is_not_null",
+              "key_equals",
+              "key_not_equals",
+              "key_contains"
             ]
           },
           "value": {
             "description": "The value to compare against. Type depends on the field and operator.",
             "oneOf": [
-              { "type": "string" },
-              { "type": "number" },
-              { "type": "boolean" },
-              { "type": "array" },
-              { "type": "null" }
+              {
+                "type": "string"
+              },
+              {
+                "type": "number"
+              },
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
             ]
           },
           "nested_key": {
@@ -12058,11 +13016,16 @@
         "type": "object",
         "title": "StructuredFilterGroup",
         "description": "A group of filters combined with AND or OR logic. Can be nested recursively.",
-        "required": ["filters"],
+        "required": [
+          "filters"
+        ],
         "properties": {
           "logic": {
             "type": "string",
-            "enum": ["AND", "OR"],
+            "enum": [
+              "AND",
+              "OR"
+            ],
             "default": "AND",
             "description": "How to combine the filters in this group."
           },
@@ -12071,8 +13034,12 @@
             "description": "List of filters or nested filter groups.",
             "items": {
               "oneOf": [
-                { "$ref": "#/components/schemas/StructuredFilter" },
-                { "$ref": "#/components/schemas/StructuredFilterGroup" }
+                {
+                  "$ref": "#/components/schemas/StructuredFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/StructuredFilterGroup"
+                }
               ]
             }
           }

@@ -1,0 +1,61 @@
+---
+title: "Using Tools in Prompts"
+icon: "link"
+---
+
+Registry tools can be added to any prompt in the Playground. Instead of defining tool schemas inline, you reference them from the registry — keeping prompts clean and tool definitions centralized.
+
+## Adding a Registry Tool
+
+1. Open a prompt in the **Playground**
+2. Click **+ Add Tool** → **From Registry**
+3. Browse or search for the tool you want
+4. Select a **version** or **release label** (e.g., "production")
+5. The tool is added as a reference
+
+The tool appears in your functions list with the tool name and label badge (if you selected one).
+
+<Frame>
+  <img src="/images/tool-registry/registry-tool-reference.png" alt="Registry tool reference in prompt" />
+</Frame>
+
+<Tip>
+The LLM never sees registry references. At render time, they're transparently replaced with the resolved function definitions.
+</Tip>
+
+## What Gets Stored
+
+Your prompt template doesn't store the full tool definition. It stores a lightweight reference:
+
+```json
+{
+  "type": "registry",
+  "tool_registry_id": 5,
+  "label": "production"
+}
+```
+
+When the prompt is fetched via the API, this reference is replaced with the actual function definition. This means:
+
+- Updating the tool in the registry updates **all prompts** using it
+- Moving a label to a new version takes effect **immediately**
+- No prompt edits or redeployments needed
+
+## Running in the Playground
+
+Registry tools work seamlessly in the Playground. When you click **Run**, the tool definitions are resolved from the registry and sent to the LLM. The LLM sees standard function definitions — it has no concept of the registry.
+
+## Deleting a Tool
+
+When you delete a tool from the registry:
+- A warning dialog shows all affected prompts
+- The tool reference is removed from all prompt templates
+- The tool is soft-deleted
+
+<Warning>
+Deleting a tool removes it from all prompts that reference it. Check the References tab first to understand the impact.
+</Warning>
+
+## API
+
+See the [API Reference](/reference/tool-registry-list) for the full list of endpoints, or check the [Overview](/features/tool-registry/overview) page for common curl examples.

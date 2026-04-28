@@ -43,6 +43,15 @@
             ]
           },
           {
+            "group": "Tool Registry",
+            "pages": [
+              "features/tool-registry/overview",
+              "features/tool-registry/using-in-prompts",
+              "features/tool-registry/save-inline-to-registry"
+            ],
+            "icon": "wrench"
+          },
+          {
             "group": "Datasets",
             "icon": "database",
             "pages": [
@@ -268,6 +277,14 @@
             ]
           },
           {
+            "group": "Tool Registry",
+            "pages": [
+              "reference/tool-registry-list",
+              "reference/tool-registry-get",
+              "reference/tool-registry-create"
+            ]
+          },
+          {
             "group": "Unified Registry",
             "pages": [
               "reference/create-folder",
@@ -289,7 +306,10 @@
     ]
   },
   "contextual": {
-    "options": ["copy", "view"]
+    "options": [
+      "copy",
+      "view"
+    ]
   },
   "logo": {
     "light": "/logo/logo.png",
