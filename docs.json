@@ -44,6 +44,7 @@
           },
           {
             "group": "Tool Registry",
+            "tag": "New",
             "pages": [
               "features/tool-registry/overview",
               "features/tool-registry/using-in-prompts",
@@ -53,6 +54,7 @@
           },
           {
             "group": "Skill Collections",
+            "tag": "New",
             "icon": "book-sparkles",
             "pages": [
               "features/skill-collections/overview",
