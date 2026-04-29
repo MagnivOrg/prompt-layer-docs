@@ -4,6 +4,44 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## April 29, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Multi-Select Dataset Creation from Request History**
+Enhanced dataset creation workflow now supports selecting multiple requests at once when adding data from request history.
+- Create datasets or add rows to existing datasets directly from selected request logs
+- Choose between different filter modes for more flexible data selection
+- Streamlined bulk data import process
+
+**Binary File Support in Skills**
+Skills now support binary files including images, PDFs, and other non-text formats.
+- Upload and reference binary files directly in skill collections
+- Preview binary file contents in the skill viewer
+- Improved file handling for diverse skill use cases
+
+**Tool Registry Public API**
+New public API endpoint allows programmatic versioning of registry tools.
+- Update tool versions via API for CI/CD integration
+- Automate tool deployment workflows
+- Manage tool lifecycle programmatically
+
+#### Improvements
+
+- Improved JSON formatting in playground outputs for better readability
+- Fixed variable detection for registry tools when using Jinja2 templates in playground
+- Enhanced dataset creation API to preserve filter parameters when creating versions from request history
+- Improved skill collection version diff viewer with better file preview and comparison
+- Better handling of dataset column creation to prevent duplicate names
+- Fixed AI assistant buttons across dashboard
+- Resolved naming issues when creating new registry tools
+- Enhanced folder import for skill collections to handle binary files correctly
+
+---
+
+
 ## April 26, 2026
 
 ### Deployment 1
