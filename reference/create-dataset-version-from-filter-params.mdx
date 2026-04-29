@@ -3,46 +3,71 @@ title: "Create Dataset Version from Request History"
 openapi: "POST /api/public/v2/dataset-versions/from-filter-params"
 ---
 
-Create a new dataset version by filtering existing request logs. The dataset is populated asynchronously based on the provided filter parameters.
+Create a new dataset version from existing request logs. The dataset is populated asynchronously based on the body you send. There are two input modes:
+
+1. **Explicit ids** — supply `request_log_ids` to add a fixed set of requests by id.
+2. **Structured filter group** — supply `filter_group` (optionally with `q`, `sort_by`, `sort_order`) to populate the dataset from a structured search across your request history.
+
+If both are present, `request_log_ids` wins.
 
 ### Authentication
 
 This endpoint requires API key authentication only.
 
-### Asynchronous Processing
+### Asynchronous processing
 
-This endpoint initiates an asynchronous job to process the request logs based on the filter parameters. The actual dataset version creation happens in the background. A draft dataset (version_number = -1) is created immediately.
+The endpoint always queues a background job to populate the dataset. A draft dataset (`version_number = -1`) is created immediately; the job emails the user and fires the `dataset_version_created_from_filter_params` webhook on completion.
+
+The job is capped at **50,000** request logs per run. `request_log_ids` arrays larger than 50,000 are rejected at validation time.
 
 ### Webhooks
 
 The following webhook is triggered when the process completes:
 
-- `dataset_version_created_from_filter_params` - Sent when the dataset version is successfully created, includes:
+- `dataset_version_created_from_filter_params` — sent when the dataset version is successfully created. Payload:
   - `dataset_id`: ID of the created dataset
   - `rows_added`: Number of rows added to the dataset
   - `dataset_version_number`: Final version number assigned
 
-### Notes
+### Modes
 
-- If an existing draft dataset exists for the dataset group, it will be updated with new filter params
-- If no matching request logs are found, an empty dataset version is created
-- Failed drafts are automatically cleaned up
-
-### Filtering by metadata
-
-Metadata filters are provided as a list of `{key, value}` pairs under either `metadata_and` (all must match) or `metadata_or` (any must match). Values are compared as strings.
+#### Explicit ids
 
 ```json
 {
-  "dataset_group_id": 20123,
-  "prompt_templates_include": [{ "name": "generate-summary" }],
-  "metadata_and": [
-    { "key": "app_name", "value": "local" }
-  ],
-  "start_time": "2026-04-22T17:00:00Z",
-  "end_time": "2026-04-23T17:00:00Z",
-  "limit": 25
+  "dataset_group_id": 123,
+  "request_log_ids": [1001, 1002, 1003]
 }
 ```
 
-Unknown fields in the request body are ignored silently, so a typo such as `"metadata": { "app_name": "local" }` will not produce an error — it simply will not filter. Use `metadata_and` / `metadata_or` exactly as shown above.
+All ids must belong to the same workspace as the dataset group; otherwise the call returns `400`. Datasets created in this mode are **static snapshots** — `filter_params` is left null on the dataset, and they cannot be refreshed via the run-report `refresh_dataset` flow.
+
+#### Structured filter group
+
+The `filter_group` payload uses the same shape as [`POST /api/public/v2/requests/search`](/reference/search-request-logs), so anything you can express in the request-log search you can use here.
+
+```json
+{
+  "dataset_group_id": 123,
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "request_start_time", "operator": "between", "value": ["2026-04-01T00:00:00Z", "2026-04-30T23:59:59Z"] },
+      { "field": "tags", "operator": "in", "value": ["staging"] },
+      { "field": "metadata", "operator": "eq", "nested_key": "app_name", "value": "checkout" }
+    ]
+  },
+  "q": "timeout",
+  "sort_by": "request_start_time",
+  "sort_order": "desc"
+}
+```
+
+The full `filter_group` payload is persisted to the dataset, so the run-report `refresh_dataset` flow can replay the same query later.
+
+### Notes
+
+- If a draft dataset already exists for the dataset group, it is reused; the new payload overwrites its `filter_params`.
+- If no matching request logs are found, an empty dataset version is created.
+- Failed drafts are automatically cleaned up.
+- Only fields documented above are accepted in the request body. Sending an unknown field returns a 400 validation error.
