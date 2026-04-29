@@ -1,8 +1,8 @@
 # PromptLayer Docs
 
-PromptLayer is an AI engineering workbench for teams building with prompts, agents, and LLM workflows. It helps you version prompts, evaluate changes, manage datasets, inspect traces, and monitor production behavior across providers.
+[PromptLayer](https://www.promptlayer.com/) is an AI engineering workbench for teams building with prompts, agents, and LLM workflows.
 
-This repository contains the PromptLayer documentation site. The site is built with [Mintlify](https://mintlify.com), a documentation framework for MDX content, navigation, API references, and local previews. Global site configuration lives in `docs.json`.
+This repository contains the PromptLayer documentation site. The site is built with [Mintlify](https://mintlify.com).
 
 ## Quick Start
 
@@ -18,8 +18,6 @@ Run the docs locally from this directory:
 mint dev
 ```
 
-The local preview runs at `http://localhost:3000`.
-
 You can also run the preview without a global install:
 
 ```bash
@@ -34,7 +32,7 @@ mint validate
 
 ## Contributing
 
-Contributions are welcome. If you see an update, typo, missing explanation, unclear example, or you are working on something others would find helpful, please open a pull request.
+Contributions are welcome! If you see an update, typo, missing explanation, unclear example, or you are working on something others would find helpful, please open a pull request.
 
 Good contributions include:
 
