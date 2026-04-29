@@ -302,7 +302,8 @@
       {
         "group": "Webhooks",
         "pages": [
-          "features/prompt-registry/webhooks"
+          "features/prompt-registry/webhooks",
+          "features/prompt-registry/webhook-events"
         ]
       }
     ]
