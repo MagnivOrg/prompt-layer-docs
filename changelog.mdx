@@ -13,6 +13,32 @@ General performance and stability improvements
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Custom Provider Authentication Schemes**
+Custom providers now support flexible authentication methods beyond the default bearer token, enabling seamless integration with enterprise API gateways and non-OpenAI-compatible endpoints.
+- Choose between `Bearer`, `X-API-Key`, or fully custom header authentication when configuring a custom provider
+- Configure custom authentication headers for providers requiring proprietary authentication schemes
+- Custom authentication settings are fully supported in both the dashboard and API
+
+**Request Logs in Prompt Templates and Datasets**
+View and analyze request logs directly within prompt template and dataset views for faster debugging and iteration.
+- Access request history filtered by prompt template or dataset from the analytics tab
+- Add requests to datasets directly from prompt template analytics views
+
+#### Improvements
+
+- Dataset creation failure webhooks now include the dataset ID for easier error tracking
+- Added copy button to JSON cards in trace span details for faster data extraction
+- Request logs search now supports filtering by prompt template and dataset
+- Improved date range picker UX in request logs with better visual feedback
+- Tool registry editor maintains proper scrolling on short viewports
+
+---
+
 ## April 29, 2026
 
 ### Deployment 1
