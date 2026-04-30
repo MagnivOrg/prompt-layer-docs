@@ -2,28 +2,19 @@
 title: "JavaScript"
 ---
 
-To get started, create an account by clicking “_Log in_” on [PromptLayer](https://promptlayer.com/). Once logged in, click the button to create an API key and save this in a secure location ([Guide to Using Env Vars](https://nodejs.org/en/learn/command-line/how-to-read-environment-variables-from-nodejs)).
+<Card
+  title="JavaScript SDK"
+  icon="github"
+  href="https://github.com/MagnivOrg/prompt-layer-js"
+>
+  Official JavaScript/TypeScript SDK for interacting with the PromptLayer API from server-side runtimes.
+</Card>
 
-Once you have that all set up, install PromptLayer using `npm`.
+## Installation
 
 ```bash
 npm install promptlayer
 ```
-
-Set up a PromptLayer client in your JavaScript file.
-
-```js
-import { PromptLayer } from "promptlayer";
-const promptLayerClient = new PromptLayer();
-```
-
-Optionally, you can specify the API key and base URL in the client.
-
-```js
-const promptLayerClient = new PromptLayer({ apiKey: "pl_****", baseURL: "https://api.promptlayer.com" });
-```
-
-<Warning>PromptLayer's JavaScript library is not compatible with client-side (browser) environments. It is designed for use exclusively in server-side runtimes such as Node.js, Bun, or Deno.</Warning>
 
 ## Using the `run` Method (Recommended)
 
@@ -31,7 +22,10 @@ The easiest way to use PromptLayer is with the `run()` method. It fetches a prom
 
 ```js
 import { PromptLayer } from "promptlayer";
-const promptLayerClient = new PromptLayer();
+
+const promptLayerClient = new PromptLayer({
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+});
 
 const response = await promptLayerClient.run({
   promptName: "my-prompt",
@@ -49,6 +43,10 @@ console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].cont
 </Info>
 
 The `run()` method works with any provider configured in your prompt template — OpenAI, Anthropic, Google, and more. See the [Run documentation](/running-requests/promptlayer-run) for full details.
+
+After making your first few requests, you should be able to see them in the PromptLayer dashboard!
+
+<img src="/images/prompt-in-dashboard.png" />
 
 ## SDK Cache
 
