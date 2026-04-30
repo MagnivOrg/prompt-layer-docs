@@ -1,66 +1,13 @@
 ---
-title: "Webhooks"
+title: "Introduction"
+description: "Use webhooks to receive notifications about prompt, dataset, evaluation, workflow, and skill collection events in your workspace."
 ---
 
-Webhooks can be set up to receive notifications about changes to prompt templates. This functionality is particularly useful for storing prompts in cache, allowing for quicker retrieval without slowing down releases.
+<a id="webhooks"></a>
 
-### Event Payload Format
+PromptLayer webhooks let your systems react to workspace changes so you can keep prompt caches fresh, trigger CI/CD or GitOps workflows, sync external systems, and monitor asynchronous jobs without polling.
 
-When an event occurs, we send a POST request with a payload in this structure:
-
-```json
-{
-  "event_type": "string",
-  "details": "object",
-  "user_id": "number",
-  "user_name": "string or null",
-  "user_email": "string or null",
-  "workspace_id": "number",
-  "timestamp": "ISO 8601 format timestamp",
-}
-```
-
-### Supported Event Types
-We notify you for these events:
-
-| Event Type                           | Description                                                     | Details                                                                 |
-|--------------------------------------|-----------------------------------------------------------------|-------------------------------------------------------------------------|
-| `prompt_template_version_created`    | When a new version of a prompt template is created.             | <ul><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_id` (number)</li></ul> |
-| `prompt_template_name_changed`       | When a prompt template's name is changed.                       | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`old_prompt_template_name` (string)</li></ul> |
-| `prompt_template_deleted`            | When a prompt template is deleted.                              | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li></ul> |
-| `prompt_template_label_created`      | When a new release label for a prompt template is created.      | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
-| `prompt_template_label_deleted`      | When a release label for a prompt template is deleted.          | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
-| `prompt_template_label_moved`        | When a release label is moved between prompt template versions. | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li><li>`old_prompt_template_version_number` (number)</li><li>`prompt_template_label` (string)</li></ul> |
-| `prompt_template_label_change_requested` | When a change to a protected release label is requested and requires approval. | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_label` (string)</li><li>`change_type` (string: "move" or "deletion")</li></ul> |
-| `prompt_template_label_change_approved` | When a pending change to a protected release label is approved. | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_label` (string)</li><li>`change_type` (string: "move" or "deletion")</li></ul> |
-| `prompt_template_label_change_denied` | When a pending change to a protected release label is denied. | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_label` (string)</li><li>`change_type` (string: "move" or "deletion")</li></ul> |
-| `prompt_template_updated`            | When a snippet imported in a prompt template is updated.        | <ul><li>`prompt_template_id` (number)</li><li>`prompt_template_name` (string)</li><li>`prompt_template_version_number` (number)</li></ul> |
-| `agent_run_finished`                 | When an agent (workflow) run is completed. <br/><br/> Note: This event may fire multiple times for the same execution and is not triggered for runs from the dashboard, only when called via SDK or API. | <ul><li>`agent_name` (string)</li><li>`agent_id` (number)</li><li>`agent_execution_id` (number)</li></ul> |
-| `report_finished`                    | When a evaluation report is completed. | <ul><li>`report_id` (number)</li><li>`report_name` (string)</li></ul> |
-| `dataset_version_created_by_file`    | When a dataset version is successfully created from a file upload. | <ul><li>`dataset_id` (number)</li><li>`dataset_version_number` (number)</li></ul> |
-| `dataset_version_created_by_file_failed` | When dataset file processing fails. | <ul><li>`error_message` (string)</li></ul> |
-| `dataset_version_created_from_filter_params` | When a dataset version is created from filter parameters. | <ul><li>`dataset_id` (number)</li><li>`rows_added` (number)</li><li>`dataset_version_number` (number)</li></ul> |
-| `skill_collection_files_changed`     | When a Skill Collection is created, a new version is saved, a collection is deleted, or a version is restored. | <ul><li>`skill_collection_id` (string)</li><li>`source` (string: `collection_created`, `version_save`, `collection_deleted`, or `version_restored`)</li><li>`affected_paths` (array of collection-relative paths)</li><li>`version_number` (number, optional)</li></ul> |
-
-### Example Payload
-
-```json
-{
-  "event_type":"prompt_template_label_moved",
-  "details":{
-    "prompt_template_id":12,
-    "prompt_template_name":"Hello",
-    "prompt_template_version_number":9,
-    "old_prompt_template_version_number":8,
-    "prompt_template_label":"prod"
-  },
-  "user_id":1,
-  "user_name":"John Doe",
-  "user_email":"john.doe@example.com",
-  "workspace_id":1,
-  "timestamp":"2023-12-01T22:05:57.924833"
-}
-```
+For event names and payload details, see [Events](/features/prompt-registry/webhook-events).
 
 ### Configuring a Webhook
 

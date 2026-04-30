@@ -1,0 +1,273 @@
+---
+title: "Events"
+---
+
+Webhook events include a common payload envelope and an event-specific `details` object.
+
+### Event Payload Format
+
+When an event occurs, we send a POST request with a payload in this structure:
+
+```json
+{
+  "event_type": "string",
+  "details": "object",
+  "user_id": "number",
+  "user_name": "string or null",
+  "user_email": "string or null",
+  "workspace_id": "number",
+  "timestamp": "ISO 8601 format timestamp",
+}
+```
+
+### Supported Event Types
+We notify you for these events:
+
+- [`prompt_template_version_created`](#prompt_template_version_created)
+- [`prompt_template_name_changed`](#prompt_template_name_changed)
+- [`prompt_template_deleted`](#prompt_template_deleted)
+- [`prompt_template_label_created`](#prompt_template_label_created)
+- [`prompt_template_label_deleted`](#prompt_template_label_deleted)
+- [`prompt_template_label_moved`](#prompt_template_label_moved)
+- [`prompt_template_label_change_requested`](#prompt_template_label_change_requested)
+- [`prompt_template_label_change_approved`](#prompt_template_label_change_approved)
+- [`prompt_template_label_change_denied`](#prompt_template_label_change_denied)
+- [`prompt_template_updated`](#prompt_template_updated)
+- [`agent_run_finished`](#agent_run_finished)
+- [`report_finished`](#report_finished)
+- [`dataset_version_created_by_file`](#dataset_version_created_by_file)
+- [`dataset_version_created_by_file_failed`](#dataset_version_created_by_file_failed)
+- [`dataset_version_created_from_filter_params`](#dataset_version_created_from_filter_params)
+- [`skill_collection_files_changed`](#skill_collection_files_changed)
+
+#### prompt_template_version_created
+
+When a new version of a prompt template is created.
+
+```json
+{
+  "details": {
+    "prompt_template_name": "support-reply",
+    "prompt_template_version_number": 2,
+    "prompt_template_id": 123
+  }
+}
+```
+
+#### prompt_template_name_changed
+
+When a prompt template's name is changed.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply-v2",
+    "old_prompt_template_name": "support-reply"
+  }
+}
+```
+
+#### prompt_template_deleted
+
+When a prompt template is deleted.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply"
+  }
+}
+```
+
+#### prompt_template_label_created
+
+When a new release label for a prompt template is created.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_version_number": 2,
+    "prompt_template_label": "production"
+  }
+}
+```
+
+#### prompt_template_label_deleted
+
+When a release label for a prompt template is deleted.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_version_number": 2,
+    "prompt_template_label": "production"
+  }
+}
+```
+
+#### prompt_template_label_moved
+
+When a release label is moved between prompt template versions.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_version_number": 3,
+    "old_prompt_template_version_number": 2,
+    "prompt_template_label": "production"
+  }
+}
+```
+
+#### prompt_template_label_change_requested
+
+When a change to a protected release label is requested and requires approval.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_label": "production",
+    "change_type": "move"
+  }
+}
+```
+
+#### prompt_template_label_change_approved
+
+When a pending change to a protected release label is approved.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_label": "production",
+    "change_type": "move"
+  }
+}
+```
+
+#### prompt_template_label_change_denied
+
+When a pending change to a protected release label is denied.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_label": "production",
+    "change_type": "move"
+  }
+}
+```
+
+#### prompt_template_updated
+
+When a snippet imported in a prompt template is updated.
+
+```json
+{
+  "details": {
+    "prompt_template_id": 123,
+    "prompt_template_name": "support-reply",
+    "prompt_template_version_number": 2
+  }
+}
+```
+
+#### agent_run_finished
+
+When an agent (workflow) run is completed.
+
+Note: This event may fire multiple times for the same execution and is not triggered for runs from the dashboard, only when called via SDK or API.
+
+```json
+{
+  "details": {
+    "agent_name": "Customer Support Agent",
+    "agent_id": 456,
+    "agent_execution_id": 789
+  }
+}
+```
+
+#### report_finished
+
+When a evaluation report is completed.
+
+```json
+{
+  "details": {
+    "report_id": 234,
+    "report_name": "Support Reply Evaluation"
+  }
+}
+```
+
+#### dataset_version_created_by_file
+
+When a dataset version is successfully created from a file upload.
+
+```json
+{
+  "details": {
+    "dataset_id": 345,
+    "dataset_version_number": 4
+  }
+}
+```
+
+#### dataset_version_created_by_file_failed
+
+When dataset file processing fails.
+
+```json
+{
+  "details": {
+    "error_message": "Failed to process dataset file"
+  }
+}
+```
+
+#### dataset_version_created_from_filter_params
+
+When a dataset version is created from filter parameters.
+
+```json
+{
+  "details": {
+    "dataset_id": 345,
+    "rows_added": 100,
+    "dataset_version_number": 4
+  }
+}
+```
+
+#### skill_collection_files_changed
+
+When a Skill Collection is created, a new version is saved, a collection is deleted, or a version is restored.
+
+```json
+{
+  "details": {
+    "skill_collection_id": "support-skills",
+    "source": "version_save",
+    "affected_paths": [
+      "skills/refund-policy.md",
+      "skills/escalation.md"
+    ],
+    "version_number": 3
+  }
+}
+```
