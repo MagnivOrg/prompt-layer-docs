@@ -1,34 +1,44 @@
-# Mintlify Starter Kit
+# PromptLayer Docs
 
-Click on `Use this template` to copy the Mintlify starter kit. The starter kit contains examples including
+[PromptLayer](https://www.promptlayer.com/) is an AI engineering workbench for teams building with prompts, agents, and LLM workflows.
 
-- Guide pages
-- Navigation
-- Customizations
-- API Reference pages
-- Use of popular components
+This repository contains the PromptLayer documentation site. The site is built with [Mintlify](https://mintlify.com).
 
-### 👩‍💻 Development
+## Quick Start
 
-Install the [Mintlify CLI](https://www.npmjs.com/package/mintlify) to preview the documentation changes locally. To install, use the following command
+Install the Mintlify CLI:
 
-```
-npm i -g mintlify
+```bash
+npm i -g mint
 ```
 
-Run the following command at the root of your documentation (where mint.json is)
+Run the docs locally from this directory:
 
+```bash
+mint dev
 ```
-mintlify dev
+
+You can also run the preview without a global install:
+
+```bash
+npx mint dev
 ```
 
-### 😎 Publishing Changes
+Before opening a pull request, validate the docs build:
 
-Changes will be deployed to production automatically after pushing to the default branch.
+```bash
+mint validate
+```
 
-You can also preview changes using PRs, which generates a preview link of the docs.
+## Contributing
 
-#### Troubleshooting
+Contributions are welcome! If you see an update, typo, missing explanation, unclear example, or you are working on something others would find helpful, please open a pull request.
 
-- Mintlify dev isn't running - Run `mintlify install` it'll re-install dependencies.
-- Page loads as a 404 - Make sure you are running in a folder with `mint.json`
+Good contributions include:
+
+- Improving quickstarts, guides, and examples
+- Adding screenshots or clarifying product flows
+- Updating SDK, API, or provider details
+- Fixing broken links, outdated screenshots, or confusing wording
+
+Keep changes focused, test the site locally when possible, and include enough context in the pull request for reviewers to understand the update.
