@@ -362,7 +362,7 @@
     },
     {
       "source": "/running-requests/promptlayer-run-agent",
-      "destination": "/running-requests/promptlayer-run-workflow"
+      "destination": "/sdks/python#running-workflows"
     }
   ]
 }
