@@ -42,11 +42,202 @@ console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].cont
   made locally from your machine, PromptLayer just logs the request.
 </Info>
 
-The `run()` method works with any provider configured in your prompt template — OpenAI, Anthropic, Google, and more. See the [Run documentation](/running-requests/promptlayer-run) for full details.
+The `run()` method works with any provider configured in your prompt template — OpenAI, Anthropic, Google, and more. See the [Run documentation](/sdks/javascript#using-the-run-method-recommended) for full details.
 
 After making your first few requests, you should be able to see them in the PromptLayer dashboard!
 
 <img src="/images/prompt-in-dashboard.png" />
+
+### Basic Usage
+
+<Note>
+For any LLM provider you plan to use, you must set its corresponding API key as an environment variable (for example, `OPENAI_API_KEY`, `ANTHROPIC_API_KEY`, `GOOGLE_API_KEY` etc.). The PromptLayer client does not support passing these keys directly in code. If the relevant environment variables are not set, any requests to those LLM providers will fail.
+</Note>
+
+<Accordion title="Provider-Specific Configuration">
+
+#### Using Gemini models through Vertex AI
+
+**JavaScript SDK**: Set these environment variables:
+- `VERTEX_AI_PROJECT_ID="<google_cloud_project_id>"`
+- `VERTEX_AI_PROJECT_LOCATION="region"`
+- `GOOGLE_APPLICATION_CREDENTIALS="path/to/google_service_account_file.json"`
+
+#### Using Claude models through Vertex AI
+
+**JavaScript SDK**: Set these environment variables:
+- `GOOGLE_APPLICATION_CREDENTIALS="path/to/google_service_account_file.json"`
+- `CLOUD_ML_REGION="region"`
+
+</Accordion>
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+
+const pl = new PromptLayer({ apiKey: "your_api_key" });
+
+const response = await pl.run({
+  promptName: "your-prompt-name",
+  inputVariables: { variableName: "value" }
+});
+
+console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].content.slice(-1)[0].text);
+```
+
+### Parameters
+
+- `prompt_name` / `promptName` (str, required): The name of the prompt to run.
+- `prompt_version` / `promptVersion` (int, optional): Specific version of the prompt to use.
+- `prompt_release_label` / `promptReleaseLabel` (str, optional): Release label of the prompt (e.g., "prod", "staging").
+- `input_variables` / `inputVariables` (Dict[str, Any], optional): Variables to be inserted into the prompt template.
+- `tags` (List[str], optional): Tags to associate with this run.
+- `metadata` (Dict[str, str], optional): Additional metadata for the run.
+- `model_parameter_overrides` / `modelParameterOverrides` (Union[Dict[str, Any], None], optional): Model-specific parameter overrides.
+- `stream` (bool, default=False): Whether to stream the response.
+- `provider` (str, optional): The LLM provider to use (e.g., "openai", "anthropic", "google"). This is useful if you want to override the provider specified in the prompt template.
+- `model` (str, optional): The model to use (e.g., "gpt-4o", "claude-3-7-sonnet-latest", "gemini-2.5-flash"). This is useful if you want to override the model specified in the prompt template.
+
+### Return Value
+
+The method returns a dictionary (Python) or object (JavaScript) with the following keys:
+
+- `request_id`: Unique identifier for the request.
+- `raw_response`: The raw response from the LLM provider.
+- `prompt_blueprint`: The prompt blueprint used for the request.
+
+### Advanced Usage
+
+#### Streaming
+
+To stream the response:
+
+```js JavaScript
+const stream = await pl.run({
+  promptName: "your-prompt",
+  stream: true
+});
+
+for await (const chunk of stream) {
+  // Access raw streaming response
+  console.log(chunk.raw_response);
+
+  // Access progressively built prompt blueprint
+  if (chunk.prompt_blueprint) {
+    const currentResponse = chunk.prompt_blueprint.prompt_template.messages.slice(-1)[0];
+    if (currentResponse.content) {
+      console.log("Current response:", currentResponse.content);
+    }
+  }
+}
+```
+
+When streaming is enabled, each chunk includes both the raw streaming response and the progressively built `prompt_blueprint`, allowing you to track how the response is constructed in real-time. The `request_id` is only included in the final chunk.
+
+#### Using Different Versions or Release Labels
+
+```js JavaScript
+const response = await pl.run({
+  promptName: "your-prompt",
+  promptVersion: 2,  // or
+  promptReleaseLabel: "staging"
+});
+```
+
+#### Adding Tags and Metadata
+
+```js JavaScript
+const response = await pl.run({
+  promptName: "your-prompt",
+  tags: ["test", "experiment"],
+  metadata: { userId: "12345" }
+});
+```
+
+
+#### Overriding Model Parameters
+
+You can also override `provider` and `model` at runtime to choose a different LLM provider or model. This is useful if you want to use a different provider than the one specified in the prompt template. PromptLayer will automatically return the correct `llm_kwargs` for the specified provider and model with default values for the parameters corresponding to the `provider` and `model`.
+
+<Warning>
+**Provider-Specific Schema Notice**
+
+The `llm_kwargs` and `raw_response` objects have provider-specific structures that may change as LLM providers update their APIs. PromptLayer passes through the native format required by each provider.
+
+For stable, provider-agnostic prompt data, use `prompt_blueprint.prompt_template` instead of relying on the structure of provider-specific objects.
+</Warning>
+
+```js JavaScript
+const response = await pl.run({
+  promptName: "your-prompt",
+  provider: "openai",  // or "anthropic", "google", etc.
+  model: "gpt-4"  // or "claude-2", "gemini-1.5-pro", etc.
+});
+```
+
+<Tip>
+  Make sure to set both `model` and `provider` in order to run the request against correct LLM provider with correct parameters.
+</Tip>
+
+## Running Workflows
+
+Use `runWorkflow()` to execute a PromptLayer Workflow from the JavaScript SDK. Workflows are multi-step pipelines that can combine prompt, tool, code, and conditional nodes.
+
+```js JavaScript
+import { PromptLayer } from "promptlayer";
+
+const pl = new PromptLayer({ apiKey: "your_api_key" });
+
+const response = await pl.runWorkflow({
+  workflowName: "Data Analysis Workflow",
+  inputVariables: { dataset_url: "https://example.com/data.csv" }
+});
+
+console.log(response);
+```
+
+### Workflow Parameters
+
+- `workflowName` (string, required): The Workflow name to run.
+- `inputVariables` (object, optional): Variables to pass into the Workflow.
+- `metadata` (object, optional): Metadata to attach to the Workflow run.
+- `workflowLabelName` (string, optional): Label name for the Workflow version, such as `"production"`.
+- `workflowVersion` (number, optional): Specific Workflow version number to run.
+- `returnAllOutputs` (boolean, default=false): Whether to return outputs for every Workflow node.
+
+### Workflow Return Value
+
+By default, `runWorkflow()` returns the final output node's value. When `returnAllOutputs` is `true`, it returns an object keyed by node name, including each node's status, value, errors, and whether the node is an output node.
+
+```js JavaScript
+const response = await pl.runWorkflow({
+  workflowName: "Data Analysis Workflow",
+  inputVariables: { dataset_url: "https://example.com/data.csv" },
+  metadata: { user_id: "12345" },
+  workflowLabelName: "production",
+  returnAllOutputs: true
+});
+```
+
+Example response with `returnAllOutputs: true`:
+
+```json
+{
+  "Load Dataset": {
+    "status": "SUCCESS",
+    "value": "Loaded 100 rows",
+    "error_message": null,
+    "raw_error_message": null,
+    "is_output_node": false
+  },
+  "Summarize Dataset": {
+    "status": "SUCCESS",
+    "value": "The dataset contains customer feedback grouped by region.",
+    "error_message": null,
+    "raw_error_message": null,
+    "is_output_node": true
+  }
+}
+```
 
 ## SDK Cache
 

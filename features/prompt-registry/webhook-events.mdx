@@ -230,11 +230,12 @@ When a dataset version is successfully created from a file upload.
 
 #### dataset_version_created_by_file_failed
 
-When dataset file processing fails.
+When file processing fails for a draft dataset.
 
 ```json
 {
   "details": {
+    "dataset_id": 345,
     "error_message": "Failed to process dataset file"
   }
 }

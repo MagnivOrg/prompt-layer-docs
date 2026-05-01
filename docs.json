@@ -163,14 +163,6 @@
             "pages": [
               "why-promptlayer/multi-turn-chat",
               "why-promptlayer/fine-tuning",
-              {
-                "group": "Running Requests",
-                "icon": "circle-play",
-                "pages": [
-                  "running-requests/promptlayer-run",
-                  "running-requests/promptlayer-run-workflow"
-                ]
-              },
               "features/prompt-registry/zero-downtime-releases",
               "running-requests/prompt-blueprints"
             ]
@@ -370,7 +362,7 @@
     },
     {
       "source": "/running-requests/promptlayer-run-agent",
-      "destination": "/running-requests/promptlayer-run-workflow"
+      "destination": "/sdks/python#running-workflows"
     }
   ]
 }

@@ -17,7 +17,7 @@ The stateless approach particularly shines when it comes to systematic evaluatio
 
 ## Implementation Pattern
 
-Here's the core pattern for implementing stateless multi-turn chat using [`promptlayer_client.run()`](/running-requests/promptlayer-run):
+Here's the core pattern for implementing stateless multi-turn chat using [`promptlayer_client.run()`](/sdks/python#using-the-run-method-recommended):
 
 ### Basic Conversation (No Tools)
 
@@ -192,7 +192,7 @@ def run_conversation_with_tools(user_question):
 </Accordion>
 
 <Note>
-You can also implement this pattern using workflows for more complex pipelines with multiple nodes and conditional logic. See [Running Workflows](/running-requests/promptlayer-run-workflow) for details on using `promptlayer_client.run_workflow()`.
+You can also implement this pattern using workflows for more complex pipelines with multiple nodes and conditional logic. See [Running Workflows](/sdks/python#running-workflows) for details on using `promptlayer_client.run_workflow()`.
 </Note>
 
 ## Designing Your Stateless Prompt
