@@ -72,13 +72,13 @@ For clients that support stdio transport (e.g. Claude Desktop, Cursor), you can 
 
 ## Available Tools
 
-The MCP server exposes 64 tools covering all major PromptLayer features:
+The MCP server exposes 60 tools covering all major PromptLayer features:
 
 | Category | Tools |
 |---|---|
 | **Prompt Templates** | `get-prompt-template`, `get-prompt-template-raw`, `list-prompt-templates`, `publish-prompt-template`, `patch-prompt-template-version`, `list-prompt-template-labels`, `create-prompt-label`, `move-prompt-label`, `delete-prompt-label`, `get-snippet-usage` |
 | **Request Logs** | `get-request`, `search-request-logs`, `get-trace`, `get-request-search-suggestions`, `get-request-analytics` |
-| **Tracking** | `log-request`, `create-spans-bulk`, `track-prompt`, `track-score`, `track-metadata`, `track-group` |
+| **Tracking** | `log-request`, `create-spans-bulk` |
 | **Datasets** | `list-datasets`, `get-dataset-rows`, `create-dataset-group`, `create-dataset-version-from-file`, `create-dataset-version-from-filter-params`, `create-draft-dataset-version`, `add-request-log-to-dataset`, `save-draft-dataset-version` |
 | **Evaluations** | `list-evaluations`, `get-evaluation-rows`, `create-report`, `run-report`, `get-report`, `get-report-score`, `add-report-column`, `edit-report-column`, `delete-report-column`, `update-report-score-card`, `rename-report`, `delete-report`, `delete-reports-by-name` |
 | **Agents** | `list-workflows`, `get-workflow`, `get-workflow-labels`, `create-workflow`, `patch-workflow`, `run-workflow`, `get-workflow-version-execution-results` |

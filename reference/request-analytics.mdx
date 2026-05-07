@@ -12,13 +12,13 @@ This endpoint requires API key authentication via the `X-API-KEY` header.
 
 ## Request body
 
-Same shape as `search-request-logs`:
+The body is `RequestLogQuery` — the canonical query payload also used by [Search Request Logs](/reference/search-request-logs) (search additionally accepts `page`, `per_page`, and `include_prompt_name`).
 
 | Field | Type | Description |
 |-------|------|-------------|
 | `filter_group` | object | Structured AND/OR filter group. Same fields and operators as [Search Request Logs](/reference/search-request-logs#filters). |
 | `q` | string | Free-text query applied alongside `filter_group`. |
-| `sort_by` | string | Sort field (rarely affects analytics output but accepted for parity with search). |
+| `sort_by` | string | Sort field. Does not affect aggregated output. |
 | `sort_order` | `asc` \| `desc` | Sort direction. |
 
 ## Response

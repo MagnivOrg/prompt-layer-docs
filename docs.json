@@ -214,7 +214,6 @@
               "reference/track-prompt",
               "reference/track-score",
               "reference/track-metadata",
-              "reference/track-group",
               "reference/spans-bulk",
               "reference/otlp-ingest-traces"
             ]
