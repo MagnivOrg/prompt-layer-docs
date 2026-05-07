@@ -199,7 +199,11 @@
               "reference/prompt-labels-create",
               "reference/prompt-labels-patch",
               "reference/prompt-labels-delete",
-              "reference/get-snippet-usage"
+              "reference/get-snippet-usage",
+              "reference/external-ids-prompt-templates-upsert",
+              "reference/external-ids-prompt-templates-attach",
+              "reference/external-ids-prompt-templates-list",
+              "reference/external-ids-prompt-templates-delete"
             ]
           },
           {
@@ -227,7 +231,10 @@
               "reference/create-dataset-version-from-filter-params",
               "reference/create-draft-dataset-version",
               "reference/add-request-log-to-dataset",
-              "reference/save-draft-dataset-version"
+              "reference/save-draft-dataset-version",
+              "reference/external-ids-dataset-groups-attach",
+              "reference/external-ids-dataset-groups-list",
+              "reference/external-ids-dataset-groups-delete"
             ]
           },
           {
@@ -245,7 +252,10 @@
               "reference/update-report-score-card",
               "reference/rename-report",
               "reference/delete-report",
-              "reference/delete-reports-by-name"
+              "reference/delete-reports-by-name",
+              "reference/external-ids-reports-attach",
+              "reference/external-ids-reports-list",
+              "reference/external-ids-reports-delete"
             ]
           },
           {
@@ -257,7 +267,10 @@
               "reference/create-workflow",
               "reference/patch-workflow",
               "reference/run-workflow",
-              "reference/workflow-version-execution-results"
+              "reference/workflow-version-execution-results",
+              "reference/external-ids-workflows-attach",
+              "reference/external-ids-workflows-list",
+              "reference/external-ids-workflows-delete"
             ]
           },
           {
@@ -267,7 +280,10 @@
               "reference/create-skill-collection",
               "reference/get-skill-collection",
               "reference/update-skill-collection",
-              "reference/save-skill-collection-version"
+              "reference/save-skill-collection-version",
+              "reference/external-ids-skill-collections-attach",
+              "reference/external-ids-skill-collections-list",
+              "reference/external-ids-skill-collections-delete"
             ]
           },
           {
@@ -275,7 +291,10 @@
             "pages": [
               "reference/tool-registry-list",
               "reference/tool-registry-get",
-              "reference/tool-registry-create"
+              "reference/tool-registry-create",
+              "reference/external-ids-tool-registry-attach",
+              "reference/external-ids-tool-registry-list",
+              "reference/external-ids-tool-registry-delete"
             ]
           },
           {
@@ -286,9 +305,13 @@
               "reference/list-folder-entities",
               "reference/move-folder-entities",
               "reference/delete-folder-entities",
-              "reference/resolve-folder-id"
+              "reference/resolve-folder-id",
+              "reference/external-ids-folders-attach",
+              "reference/external-ids-folders-list",
+              "reference/external-ids-folders-delete"
             ]
-          }
+          },
+          "reference/external-ids-overview"
         ]
       },
       {

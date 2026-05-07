@@ -1,0 +1,8 @@
+---
+title: "Attach Skill Collection External ID"
+openapi: "POST /api/public/v2/skill-collections/{skill_collection_id}/external-ids"
+---
+
+Attach a `{source, external_id}` mapping to an existing skill collection.
+
+Attaching the same mapping to the same skill collection is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).

@@ -1,0 +1,8 @@
+---
+title: "Attach Workflow External ID"
+openapi: "POST /workflows/{workflow_id}/external-ids"
+---
+
+Attach a `{source, external_id}` mapping to an existing workflow.
+
+Attaching the same mapping to the same workflow is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).

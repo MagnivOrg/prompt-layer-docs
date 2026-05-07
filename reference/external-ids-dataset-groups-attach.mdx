@@ -1,0 +1,8 @@
+---
+title: "Attach Dataset Group External ID"
+openapi: "POST /api/public/v2/dataset-groups/{dataset_group_id}/external-ids"
+---
+
+Attach a `{source, external_id}` mapping to an existing dataset group.
+
+Attaching the same mapping to the same dataset group is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).
