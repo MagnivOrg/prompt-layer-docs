@@ -1,0 +1,8 @@
+---
+title: "Attach Prompt Template External ID"
+openapi: "POST /prompt-templates/{prompt_template_id}/external-ids"
+---
+
+Attach a `{source, external_id}` mapping to an existing prompt template.
+
+Attaching the same mapping to the same prompt template is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).

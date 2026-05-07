@@ -1,0 +1,31 @@
+---
+title: "External IDs"
+description: "Attach identifiers from your own systems to PromptLayer resources so your integrations can easily find and sync resources."
+---
+
+```json
+{
+  "source": "acme_cms",
+  "external_id": "prompt_template_123"
+}
+```
+
+## Common tasks
+
+| Task | Example |
+|---|---|
+| Set when creating an entity | [`POST /rest/prompt-templates`](/reference/templates-publish#body-external-ids) include `external_ids` in the payload body. |
+| Set on an existing resource | [`POST /prompt-templates/{prompt_template_id}/external-ids`](/reference/external-ids-prompt-templates-attach) |
+| Get an entity by external ID | [`GET /prompt-templates?external_source=...&external_id=...`](/reference/list-prompt-templates#query-external-source) (prompt templates only) |
+| Get external IDs for an entity | [`GET /prompt-templates/{prompt_template_id}/external-ids`](/reference/external-ids-prompt-templates-list) |
+| Delete an external ID from an entity | [`DELETE /prompt-templates/{prompt_template_id}/external-ids/{source}/{external_id}`](/reference/external-ids-prompt-templates-delete) |
+
+## Supported resources
+
+- [Prompt templates](/reference/templates-publish#body-external-ids)
+- [Folders](/reference/create-folder#body-external-ids)
+- [Workflows](/reference/create-workflow#body-external-ids)
+- [Datasets](/reference/create-dataset-group#body-external-ids)
+- [Evaluations](/reference/create-reports#body-external-ids)
+- [Tools](/reference/tool-registry-create#body-external-ids)
+- [Skill collections](/reference/create-skill-collection#body-external-ids)

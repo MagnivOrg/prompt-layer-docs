@@ -1,0 +1,8 @@
+---
+title: "Upsert Prompt Template by External ID"
+openapi: "PUT /prompt-templates/by-external-id/{source}/{external_id}"
+---
+
+Publish a prompt template by a customer-defined external ID. If the mapping already exists, PromptLayer creates a new version on the mapped prompt template. If the mapping does not exist, PromptLayer creates or updates the prompt template from the request body and attaches the mapping.
+
+This is the only external ID endpoint that uses `PUT`. See [External IDs](/reference/external-ids-overview) for mapping rules and conflict behavior.

@@ -1,0 +1,8 @@
+---
+title: "Attach Folder External ID"
+openapi: "POST /api/public/v2/folders/{folder_id}/external-ids"
+---
+
+Attach a `{source, external_id}` mapping to an existing folder.
+
+Attaching the same mapping to the same folder is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).
