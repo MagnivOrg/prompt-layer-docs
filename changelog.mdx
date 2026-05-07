@@ -4,6 +4,38 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## May 07, 2026
+
+### Deployment 1
+
+#### New Features
+
+**LangChain Trace Support**
+PromptLayer now automatically captures and displays traces from LangChain applications, providing end-to-end visibility into multi-step LLM workflows.
+- View nested spans for chains, agents, and tool calls in the trace detail view
+- Automatically extracts input/output for each LangChain component
+- Compatible with LangChain's OpenTelemetry instrumentation
+
+**Analytics Page Enhancements**
+The Analytics dashboard now includes expanded insights to help you understand model usage patterns and performance.
+- Provider and prompt template cost breakdowns show where spend is concentrated
+- Tag-based analytics let you track requests by custom labels
+- Tool latency metrics identify slow function calls
+- Metadata and output key frequency analysis
+- Enhanced time-series charts with cached token and thinking token visibility
+
+#### Improvements
+
+- Prompt template editor now opens by default when creating a new tool
+- Bulk delete tools in the registry using Mod+Backspace keyboard shortcut
+- Error messages now clearly indicate whether failures originated from PromptLayer or the upstream AI provider
+- Improved metadata rendering in the commit dialog for prompt template version comparisons
+- Request analytics API now includes prompt template names instead of IDs only
+- Heatmap on Analytics page displays hourly request activity patterns
+
+---
+
+
 ## May 06, 2026
 
 ### Deployment 1
