@@ -11604,6 +11604,7 @@
                   "PROVIDER_TIMEOUT",
                   "PROVIDER_QUOTA_LIMIT",
                   "PROVIDER_RATE_LIMIT",
+                  "PROVIDER_PARTIAL_RESPONSE",
                   "PROVIDER_AUTH_ERROR",
                   "PROVIDER_ERROR",
                   "TEMPLATE_RENDER_ERROR",
@@ -11617,7 +11618,7 @@
             ],
             "default": null,
             "title": "Error Type",
-            "description": "Categorized error type.\n\n| Value | Description | Allowed Statuses |\n|-------|-------------|------------------|\n| `PROVIDER_RATE_LIMIT` | Rate limit hit on provider API | WARNING, ERROR |\n| `PROVIDER_QUOTA_LIMIT` | Account quota or spending limit exceeded | WARNING, ERROR |\n| `VARIABLE_MISSING_OR_EMPTY` | Required template variable was missing or empty | WARNING |\n| `PROVIDER_TIMEOUT` | Request timed out | ERROR |\n| `PROVIDER_AUTH_ERROR` | Authentication failed with provider | ERROR |\n| `PROVIDER_ERROR` | General provider-side error | ERROR |\n| `TEMPLATE_RENDER_ERROR` | Failed to render prompt template | ERROR |\n| `UNKNOWN_ERROR` | Uncategorized error | WARNING, ERROR |"
+            "description": "Categorized error type.\n\n| Value | Description | Allowed Statuses |\n|-------|-------------|------------------|\n| `PROVIDER_RATE_LIMIT` | Rate limit hit on provider API | WARNING, ERROR |\n| `PROVIDER_QUOTA_LIMIT` | Account quota or spending limit exceeded | WARNING, ERROR |\n| `PROVIDER_PARTIAL_RESPONSE` | Provider returned a successful response, but the saved output may be incomplete, filtered, blocked, malformed, or otherwise partial | WARNING |\n| `VARIABLE_MISSING_OR_EMPTY` | Required template variable was missing or empty | WARNING |\n| `PROVIDER_TIMEOUT` | Request timed out | ERROR |\n| `PROVIDER_AUTH_ERROR` | Authentication failed with provider | ERROR |\n| `PROVIDER_ERROR` | General provider-side error | ERROR |\n| `TEMPLATE_RENDER_ERROR` | Failed to render prompt template | ERROR |\n| `UNKNOWN_ERROR` | Uncategorized error | WARNING, ERROR |"
           },
           "error_message": {
             "anyOf": [
