@@ -55,6 +55,32 @@ View request volume trends for specific prompt templates over time in the Analyt
 
 ---
 
+
+### Deployment 3
+
+#### New Features
+
+**External IDs for Entity Management**
+All major entities (prompt templates, workflows, tools, datasets, reports, A/B tests, folders) now support external IDs for seamless integration with external systems.
+- Attach custom identifiers from your own systems to PromptLayer entities via API
+- Query entities by external ID for simplified synchronization workflows
+- Inline attachment during entity creation for atomic operations
+
+**Analytics Latency Heatmap**
+New heatmap visualization on the analytics page shows latency distribution across custom dimensions.
+- Identify performance patterns by provider, model, or custom metadata
+- Interactive drill-down to isolate high-latency request clusters
+
+#### Improvements
+
+- API key display now shows last 4 characters for easier identification without exposing full credentials
+- Dataset group creation supports inline external ID attachment
+- Prompt template list endpoint returns external IDs when present
+- Report creation validates column configuration before committing entity
+- Folder external ID management available via public API
+
+---
+
 ## May 06, 2026
 
 ### Deployment 1
