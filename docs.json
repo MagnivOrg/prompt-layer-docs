@@ -209,6 +209,7 @@
               "reference/get-trace",
               "reference/search-request-logs",
               "reference/search-request-suggestions",
+              "reference/request-analytics",
               "reference/log-request",
               "reference/track-prompt",
               "reference/track-score",

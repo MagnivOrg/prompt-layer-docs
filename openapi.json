@@ -5880,6 +5880,79 @@
         }
       }
     },
+    "/api/public/v2/requests/analytics": {
+      "post": {
+        "summary": "Request Analytics",
+        "operationId": "getRequestAnalytics",
+        "tags": [
+          "tracking"
+        ],
+        "description": "Aggregate analytics across request logs — totals, time-series breakdowns, latency percentiles, and model/prompt/provider/tag breakdowns. Body is the same `RequestLogQuery` shape as `POST /api/public/v2/requests/search` but returns aggregated values instead of paginated rows.",
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "API key for authentication."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestLogQuery"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Aggregated analytics for the matching request logs.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestAnalyticsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid filter or unsupported analytics filter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication failed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Invalid workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/public/v2/skill-collections": {
       "get": {
         "summary": "List Skill Collections",
@@ -12714,10 +12787,10 @@
           }
         }
       },
-      "SearchRequestLogsRequest": {
+      "RequestLogQuery": {
         "type": "object",
-        "title": "SearchRequestLogsRequest",
-        "description": "Search and filter request logs with structured filters, free-text search, sorting, and pagination.",
+        "title": "RequestLogQuery",
+        "description": "Canonical request-log query payload — the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
         "properties": {
           "filter_group": {
             "nullable": true,
@@ -12728,19 +12801,6 @@
             "type": "string",
             "nullable": true,
             "description": "Free-text search query. Searches across the prompt input and LLM output text using fuzzy prefix matching."
-          },
-          "page": {
-            "type": "integer",
-            "minimum": 1,
-            "nullable": true,
-            "description": "Page number for pagination. Defaults to 1."
-          },
-          "per_page": {
-            "type": "integer",
-            "minimum": 1,
-            "maximum": 25,
-            "nullable": true,
-            "description": "Number of results per page. Defaults to 10, maximum 25."
           },
           "sort_by": {
             "type": "string",
@@ -12753,7 +12813,7 @@
               "latency_ms",
               "status"
             ],
-            "description": "Field to sort results by."
+            "description": "Field to sort results by. Does not affect aggregated output for `/requests/analytics`."
           },
           "sort_order": {
             "type": "string",
@@ -12763,13 +12823,455 @@
               "desc"
             ],
             "description": "Sort direction. Must be provided together with sort_by."
-          },
-          "include_prompt_name": {
-            "type": "boolean",
-            "nullable": true,
-            "description": "When true, includes the prompt template name in each result item. Defaults to false."
           }
         }
+      },
+      "RequestAnalyticsLatencyByDay": {
+        "type": "object",
+        "description": "Per-bucket latency percentiles in seconds. Keys are bucket dates (e.g. `2025-03-15`); values are seconds.",
+        "properties": {
+          "average_latency": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "p50_latency": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "p90_latency": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "p95_latency": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          }
+        }
+      },
+      "RequestAnalyticsDimensionLatency": {
+        "type": "object",
+        "description": "Per-dimension (model / prompt template / provider) latency series. Each percentile is a list of `[date, seconds]` pairs.",
+        "properties": {
+          "average_latency": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "p50_latency": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "p90_latency": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "p95_latency": {
+            "type": "array",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          }
+        }
+      },
+      "RequestAnalyticsStat": {
+        "type": "object",
+        "description": "One time-series bucket.",
+        "properties": {
+          "date": {
+            "type": "string",
+            "description": "ISO bucket key (e.g. `2025-03-15`)."
+          },
+          "dateLabel": {
+            "type": "string",
+            "description": "Human-readable bucket label."
+          },
+          "requests": {
+            "type": "integer"
+          },
+          "tokens": {
+            "type": "integer"
+          },
+          "inputTokens": {
+            "type": "integer"
+          },
+          "outputTokens": {
+            "type": "integer"
+          },
+          "cost": {
+            "type": "number"
+          },
+          "latency": {
+            "type": "number",
+            "description": "Average latency in seconds."
+          },
+          "cachedTokens": {
+            "type": "integer"
+          },
+          "thinkingTokens": {
+            "type": "integer"
+          },
+          "traceShare": {
+            "type": "number",
+            "description": "Fraction of requests in the bucket that have a trace."
+          },
+          "statusCounts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "outputShapeCounts": {
+            "type": "object",
+            "properties": {
+              "json": {
+                "type": "integer"
+              },
+              "toolCall": {
+                "type": "integer"
+              },
+              "plainText": {
+                "type": "integer"
+              }
+            }
+          },
+          "avgTurnCount": {
+            "type": "number"
+          },
+          "avgToolCallCount": {
+            "type": "number"
+          },
+          "toolCallCountP95": {
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "RequestAnalyticsBreakdownEntry": {
+        "type": "object",
+        "description": "Aggregated breakdown row (provider / prompt / tag).",
+        "properties": {
+          "provider": {
+            "type": "string",
+            "description": "Set on provider breakdown rows."
+          },
+          "promptId": {
+            "type": "string",
+            "description": "Set on prompt breakdown rows."
+          },
+          "tag": {
+            "type": "string",
+            "description": "Set on tag breakdown rows."
+          },
+          "requests": {
+            "type": "integer"
+          },
+          "cost": {
+            "type": "number"
+          },
+          "tokens": {
+            "type": "integer"
+          },
+          "inputTokens": {
+            "type": "integer"
+          },
+          "outputTokens": {
+            "type": "integer"
+          }
+        }
+      },
+      "RequestAnalyticsToolLatency": {
+        "type": "object",
+        "description": "Per-tool latency stats.",
+        "properties": {
+          "toolName": {
+            "type": "string"
+          },
+          "requests": {
+            "type": "integer"
+          },
+          "avgLatencySeconds": {
+            "type": "number",
+            "nullable": true
+          },
+          "minLatencySeconds": {
+            "type": "number",
+            "nullable": true
+          },
+          "maxLatencySeconds": {
+            "type": "number",
+            "nullable": true
+          }
+        }
+      },
+      "RequestAnalyticsResponse": {
+        "type": "object",
+        "title": "RequestAnalyticsResponse",
+        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds → minutes → hours → days).",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "chartInterval": {
+            "type": "object",
+            "description": "Bucket-interval metadata describing how the time-series was bucketed.",
+            "properties": {
+              "interval": {
+                "type": "string"
+              },
+              "bucketSizeMs": {
+                "type": "integer"
+              },
+              "bucketMinutes": {
+                "type": "integer",
+                "nullable": true
+              }
+            }
+          },
+          "averageLatency": {
+            "type": "number",
+            "description": "Overall average latency across all matching requests, in seconds."
+          },
+          "totalCost": {
+            "type": "number"
+          },
+          "totalTokens": {
+            "type": "integer"
+          },
+          "totalRequests": {
+            "type": "integer"
+          },
+          "totalCachedTokens": {
+            "type": "integer"
+          },
+          "totalThinkingTokens": {
+            "type": "integer"
+          },
+          "cacheTokenRatio": {
+            "type": "number",
+            "nullable": true,
+            "description": "`totalCachedTokens / total_input_tokens`, or null when there are no input tokens."
+          },
+          "stats": {
+            "type": "array",
+            "description": "Per-bucket time-series.",
+            "items": {
+              "$ref": "#/components/schemas/RequestAnalyticsStat"
+            }
+          },
+          "mostUsedModels": {
+            "type": "array",
+            "description": "List of `[modelName, requestCount]` pairs ordered by usage.",
+            "items": {
+              "type": "array",
+              "items": {}
+            }
+          },
+          "modelRequestsByDay": {
+            "type": "object",
+            "description": "Map of model name → list of `[date, requestCount]` pairs.",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {}
+              }
+            }
+          },
+          "mostUsedPromptTemplates": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "promptId": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": "integer"
+                },
+                "promptName": {
+                  "type": "string",
+                  "nullable": true
+                }
+              }
+            }
+          },
+          "promptTemplateRequestsByDay": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {}
+              }
+            }
+          },
+          "providerRequestsByDay": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "array",
+                "items": {}
+              }
+            }
+          },
+          "latency": {
+            "$ref": "#/components/schemas/RequestAnalyticsLatencyByDay"
+          },
+          "latencyByModelByDay": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RequestAnalyticsDimensionLatency"
+            }
+          },
+          "latencyByPromptTemplateByDay": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RequestAnalyticsDimensionLatency"
+            }
+          },
+          "latencyByProviderByDay": {
+            "type": "object",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/RequestAnalyticsDimensionLatency"
+            }
+          },
+          "errorTypes": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "errorType": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "providerBreakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestAnalyticsBreakdownEntry"
+            }
+          },
+          "promptBreakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestAnalyticsBreakdownEntry"
+            }
+          },
+          "tagsBreakdown": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestAnalyticsBreakdownEntry"
+            }
+          },
+          "metadataKeysTop": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "outputKeysTop": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": "integer"
+                }
+              }
+            }
+          },
+          "toolsLatency": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/RequestAnalyticsToolLatency"
+            }
+          },
+          "toolsUsageBars": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "name": {
+                  "type": "string"
+                },
+                "requests": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "SearchRequestLogsRequest": {
+        "title": "SearchRequestLogsRequest",
+        "description": "Search and filter request logs with structured filters, free-text search, sorting, and pagination. Extends `RequestLogQuery` with pagination and `include_prompt_name`.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestLogQuery"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "page": {
+                "type": "integer",
+                "minimum": 1,
+                "nullable": true,
+                "description": "Page number for pagination. Defaults to 1."
+              },
+              "per_page": {
+                "type": "integer",
+                "minimum": 1,
+                "maximum": 25,
+                "nullable": true,
+                "description": "Number of results per page. Defaults to 10, maximum 25."
+              },
+              "include_prompt_name": {
+                "type": "boolean",
+                "nullable": true,
+                "description": "When true, includes the prompt template name in each result item. Defaults to false."
+              }
+            }
+          }
+        ]
       },
       "StructuredFilter": {
         "type": "object",

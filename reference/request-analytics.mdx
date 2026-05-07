@@ -1,0 +1,77 @@
+---
+title: "Request Analytics"
+openapi: "POST /api/public/v2/requests/analytics"
+description: "Aggregate analytics across request logs — totals, time-series breakdowns, latency percentiles, and model/prompt breakdowns."
+---
+
+Get aggregated analytics for your request logs using the same filter syntax as [Search Request Logs](/reference/search-request-logs). The response is a set of pre-computed aggregations (not paginated rows), making it easy to power dashboards, alerts, or ad-hoc spend/latency questions.
+
+### Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header.
+
+## Request body
+
+The body is `RequestLogQuery` — the canonical query payload also used by [Search Request Logs](/reference/search-request-logs) (search additionally accepts `page`, `per_page`, and `include_prompt_name`).
+
+| Field | Type | Description |
+|-------|------|-------------|
+| `filter_group` | object | Structured AND/OR filter group. Same fields and operators as [Search Request Logs](/reference/search-request-logs#filters). |
+| `q` | string | Free-text query applied alongside `filter_group`. |
+| `sort_by` | string | Sort field. Does not affect aggregated output. |
+| `sort_order` | `asc` \| `desc` | Sort direction. |
+
+## Response
+
+The response is an aggregated payload, not a paginated list. The exact shape includes:
+
+- **Totals**: `totalRequests`, `totalTokens`, `totalCost`, `averageLatency`, plus cache and thinking-token counts.
+- **Time series (`stats`)**: per-bucket entries with `requests`, `tokens`, `inputTokens`, `outputTokens`, `cost`, `latency`, `cachedTokens`, `thinkingTokens`, `traceShare`, `statusCounts`, `outputShapeCounts` (json / toolCall / plainText), `avgTurnCount`, `avgToolCallCount`, and `toolCallCountP95`.
+- **Latency percentiles (`latency`)**: `average_latency`, `p50_latency`, `p90_latency`, `p95_latency` keyed by bucket date.
+- **Model breakdowns**: `mostUsedModels`, `modelRequestsByDay`, `latencyByModelByDay`.
+- **Prompt template breakdowns**: `mostUsedPromptTemplates`, `promptTemplateRequestsByDay`, `latencyByPromptTemplateByDay`.
+- **Time-series interval metadata**: `chartInterval` describing the bucket size used for the time series.
+
+Bucket size is selected automatically based on the filter time range (seconds → minutes → hours → days).
+
+## Example: spend on GPT-4o this week
+
+```bash
+curl -X POST https://api.promptlayer.com/api/public/v2/requests/analytics \
+  -H "X-API-KEY: your_api_key" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "filter_group": {
+      "logic": "AND",
+      "filters": [
+        { "field": "engine", "operator": "is", "value": "gpt-4o" },
+        {
+          "field": "request_start_time",
+          "operator": "between",
+          "value": ["2025-03-08T00:00:00Z", "2025-03-15T00:00:00Z"]
+        }
+      ]
+    }
+  }'
+```
+
+## Example: p90 latency for production traffic
+
+```json
+{
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      { "field": "tags", "operator": "contains", "value": "production" }
+    ]
+  }
+}
+```
+
+Read the `latency.p90_latency` map from the response (per-bucket p90 latency in seconds).
+
+### Related
+
+- [Search Request Logs](/reference/search-request-logs) — paginated rows instead of aggregations.
+- [Search Suggestions](/reference/search-request-suggestions) — autocomplete for filter values.
+- [Analytics page](/why-promptlayer/analytics) — dashboard view powered by this same data.
