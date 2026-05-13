@@ -22,7 +22,7 @@ Please read the [LiteLLM documentation page](https://docs.litellm.ai/docs/observ
 PromptLayer supports [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) in two setup modes:
 
 - **CLI:** install the PromptLayer Claude plugin directly into Claude Code.
-- **SDK:** use the PromptLayer JavaScript or Python helper to inject the same tracing plugin and environment variables into `ClaudeAgentOptions`.
+- **SDK:** use the PromptLayer JavaScript or Python helper to inject the same tracing plugin and environment variables into your Claude SDK options.
 
 The underlying tracing is the same in both cases. If you're using the SDK, you do not need to manually install the plugin or discover the plugin path yourself.
 
@@ -66,23 +66,24 @@ pip install "promptlayer[claude-agents]"
 ```
 </CodeGroup>
 
-2. Generate PromptLayer Claude config and pass it into `ClaudeAgentOptions`
+2. Generate PromptLayer Claude config and pass it into your Claude SDK options
 
 <CodeGroup>
 ```ts JavaScript
-import { ClaudeAgentOptions } from "@anthropic-ai/claude-agent-sdk";
+import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import { getClaudeConfig } from "promptlayer/claude-agents";
 
 const plClaudeConfig = getClaudeConfig();
 
-const options = new ClaudeAgentOptions({
+const options: Options = {
   model: "sonnet",
   cwd: process.cwd(),
   plugins: [plClaudeConfig.plugin],
   env: {
+    ...process.env,
     ...plClaudeConfig.env,
   },
-});
+};
 ```
 
 ```python Python
