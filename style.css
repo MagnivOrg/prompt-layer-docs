@@ -61,14 +61,12 @@
   padding: 0.875rem 1.25rem;
   text-decoration: none;
   transition:
-    background-color 160ms ease,
-    transform 160ms ease,
-    box-shadow 160ms ease;
+    background-color 80ms ease-out,
+    box-shadow 80ms ease-out;
 }
 
 .promptlayer-quickstart-button:hover {
   background: rgb(239, 198, 82);
-  transform: translateY(-1px);
 }
 
 .promptlayer-feature-grid,
@@ -86,13 +84,10 @@
   background: rgba(255, 255, 255, 0.92);
   text-decoration: none;
   color: inherit;
-  transform: translateY(0);
-  will-change: transform;
   transition:
-    background-color 220ms ease,
-    border-color 220ms ease,
-    box-shadow 260ms ease,
-    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+    background-color 120ms ease,
+    border-color 120ms ease,
+    box-shadow 80ms ease-out;
 }
 
 .promptlayer-feature-card {
@@ -108,18 +103,11 @@
 }
 
 .promptlayer-card-interactive:hover {
-  border-color: rgba(15, 23, 42, 0.14);
+  border-color: rgba(15, 23, 42, 0.16);
   background: rgba(255, 255, 255, 0.97);
-  transform: translateY(-3px);
   box-shadow:
-    0 14px 28px -16px rgba(15, 23, 42, 0.22),
-    0 6px 14px -10px rgba(15, 23, 42, 0.14),
-    0 0 0 1px rgba(15, 23, 42, 0.04);
-}
-
-.promptlayer-card-interactive:active {
-  transform: translateY(-1px);
-  transition-duration: 120ms;
+    0 5px 12px -10px rgba(15, 23, 42, 0.16),
+    0 1px 2px rgba(15, 23, 42, 0.06);
 }
 
 .promptlayer-card-interactive:focus-visible {
@@ -142,11 +130,6 @@
   box-shadow:
     0 1px 2px rgba(67, 44, 16, 0.05),
     inset 0 0 0 1px rgba(67, 44, 16, 0.04);
-  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.promptlayer-card-interactive:hover .promptlayer-feature-badge {
-  transform: translateY(-2px) scale(1.04);
 }
 
 .promptlayer-feature-icon {
@@ -154,11 +137,6 @@
   width: auto;
   height: 2.5rem;
   max-width: 2.5rem;
-  transition: transform 380ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.promptlayer-card-interactive:hover .promptlayer-feature-icon {
-  transform: scale(1.08) rotate(-3deg);
 }
 
 .promptlayer-feature-title,
@@ -182,11 +160,6 @@
   display: inline-flex;
   margin-bottom: 1rem;
   color: #0f172a;
-  transition: transform 320ms cubic-bezier(0.2, 0.8, 0.2, 1);
-}
-
-.promptlayer-card-interactive:hover .promptlayer-info-icon {
-  transform: translateY(-2px) scale(1.08);
 }
 
 .promptlayer-heroicon {
@@ -202,14 +175,11 @@
   opacity: 0.55;
   font-size: 0.95rem;
   line-height: 1;
-  transition:
-    opacity 220ms ease-out,
-    transform 260ms cubic-bezier(0.2, 0.8, 0.2, 1);
+  transition: opacity 220ms ease-out;
 }
 
 .promptlayer-card-interactive:hover .promptlayer-card-arrow {
   opacity: 1;
-  transform: translate(2px, -2px);
 }
 
 .promptlayer-section {
@@ -286,8 +256,8 @@ html.dark .promptlayer-card-interactive:hover {
   border-color: rgba(212, 212, 216, 0.24);
   background: linear-gradient(180deg, rgba(44, 46, 52, 0.98) 0%, rgba(30, 32, 38, 0.99) 100%);
   box-shadow:
-    0 12px 28px -14px rgba(2, 6, 23, 0.9),
-    0 0 0 1px rgba(255, 255, 255, 0.05);
+    0 5px 12px -10px rgba(2, 6, 23, 0.72),
+    0 0 0 1px rgba(255, 255, 255, 0.035);
 }
 
 html.dark .promptlayer-feature-badge {
@@ -322,8 +292,8 @@ html.dark .promptlayer-quickstart-button {
 html.dark .promptlayer-quickstart-button:hover {
   background: rgb(248, 214, 117);
   box-shadow:
-    0 14px 28px -18px rgba(245, 207, 99, 0.82),
-    0 0 0 1px rgba(255, 255, 255, 0.06);
+    0 10px 20px -16px rgba(245, 207, 99, 0.62),
+    0 0 0 1px rgba(255, 255, 255, 0.05);
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -335,16 +305,5 @@ html.dark .promptlayer-quickstart-button:hover {
   .promptlayer-card-arrow,
   .promptlayer-quickstart-button {
     transition: none;
-  }
-
-  .promptlayer-card-interactive:hover {
-    transform: none;
-  }
-
-  .promptlayer-card-interactive:hover .promptlayer-feature-badge,
-  .promptlayer-card-interactive:hover .promptlayer-feature-icon,
-  .promptlayer-card-interactive:hover .promptlayer-info-icon,
-  .promptlayer-card-interactive:hover .promptlayer-card-arrow {
-    transform: none;
   }
 }
