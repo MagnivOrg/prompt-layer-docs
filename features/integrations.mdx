@@ -22,7 +22,7 @@ Please read the [LiteLLM documentation page](https://docs.litellm.ai/docs/observ
 PromptLayer supports [Claude Code](https://docs.anthropic.com/en/docs/claude-code/overview) in two setup modes:
 
 - **CLI:** install the PromptLayer Claude plugin directly into Claude Code.
-- **SDK:** use the PromptLayer JavaScript or Python helper to inject the same tracing plugin and environment variables into `ClaudeAgentOptions`.
+- **SDK:** use the PromptLayer JavaScript or Python helper to inject the same tracing plugin and environment variables into your Claude SDK options.
 
 The underlying tracing is the same in both cases. If you're using the SDK, you do not need to manually install the plugin or discover the plugin path yourself.
 
@@ -66,23 +66,24 @@ pip install "promptlayer[claude-agents]"
 ```
 </CodeGroup>
 
-2. Generate PromptLayer Claude config and pass it into `ClaudeAgentOptions`
+2. Generate PromptLayer Claude config and pass it into your Claude SDK options
 
 <CodeGroup>
 ```ts JavaScript
-import { ClaudeAgentOptions } from "@anthropic-ai/claude-agent-sdk";
+import type { Options } from "@anthropic-ai/claude-agent-sdk";
 import { getClaudeConfig } from "promptlayer/claude-agents";
 
 const plClaudeConfig = getClaudeConfig();
 
-const options = new ClaudeAgentOptions({
+const options: Options = {
   model: "sonnet",
   cwd: process.cwd(),
   plugins: [plClaudeConfig.plugin],
   env: {
+    ...process.env,
     ...plClaudeConfig.env,
   },
-});
+};
 ```
 
 ```python Python
@@ -156,6 +157,134 @@ experimental_telemetry: {
 For best results, set `promptlayer.telemetry.source` to `vercel-ai-sdk` so PromptLayer can parse the traces correctly.
 
 Once configured, PromptLayer will capture LLM calls, inputs and outputs, token usage, tool traces, workflow spans, and model metadata.
+
+## Pydantic AI
+
+PromptLayer supports ingesting [Pydantic AI](https://ai.pydantic.dev/) traces through OpenTelemetry. Pydantic AI's instrumentation emits GenAI semantic convention attributes, so PromptLayer can convert model calls, tool calls, agent spans, and embeddings into traces and request logs.
+
+To set up:
+
+1. Install Pydantic AI, Logfire, and the OTLP HTTP exporter
+
+```bash
+pip install "pydantic-ai-slim[logfire,openai,web]" \
+  logfire \
+  opentelemetry-exporter-otlp-proto-http
+```
+
+2. Configure OTLP export to PromptLayer before creating your agent
+
+```python
+import os
+
+import logfire
+
+os.environ.setdefault("OTEL_EXPORTER_OTLP_TRACES_ENDPOINT", "https://api.promptlayer.com/v1/traces")
+os.environ.setdefault("OTEL_EXPORTER_OTLP_HEADERS", f"X-API-KEY={os.environ['PROMPTLAYER_API_KEY']}")
+os.environ.setdefault("OTEL_SERVICE_NAME", "pydantic-ai-app")
+
+logfire.configure(send_to_logfire=False)
+logfire.instrument_pydantic_ai()
+```
+
+3. Run your Pydantic AI agent normally
+
+```python
+from pydantic_ai import Agent
+
+agent = Agent("openai:gpt-5.2")
+result = agent.run_sync("Write one sentence about OpenTelemetry.")
+print(result.output)
+```
+
+If you also want to send traces to Logfire, set `send_to_logfire=True` and authenticate with Logfire. For provider-level request debugging, you can add `logfire.instrument_httpx(capture_all=True)`, but only enable it when you intentionally want to capture raw HTTP request and response bodies.
+
+Once configured, PromptLayer will capture Pydantic AI agent runs, LLM calls, tool calls, embeddings, prompts, completions, token usage, and model metadata.
+
+## LangChain / LangSmith
+
+PromptLayer supports ingesting [LangChain](https://js.langchain.com/) traces through [LangSmith's OpenTelemetry bridge](https://docs.langchain.com/langsmith/trace-with-opentelemetry). For new JavaScript applications where you can choose the framework, use the [Vercel AI SDK](#vercel-ai-sdk) integration because its OpenTelemetry spans map more directly into PromptLayer. This is also aligned with LangChain / LangSmith's JavaScript observability path: their docs provide a first-party [Vercel AI SDK tracing guide](https://docs.langchain.com/langsmith/trace-with-vercel-ai-sdk). Use this LangChain / LangSmith path when you already have a LangChain application.
+
+LangChain's native spans can be sparse or framework-shaped rather than LLM-call-shaped. For best PromptLayer results, add manual child spans around important route, LLM, and tool boundaries and include GenAI attributes such as `gen_ai.operation.name`, `gen_ai.system`, `gen_ai.request.model`, `gen_ai.prompt`, and `gen_ai.completion`.
+
+To set up:
+
+1. Install LangChain, LangSmith, and OpenTelemetry packages
+
+```bash
+npm install @langchain/core @langchain/openai langsmith \
+  @opentelemetry/api \
+  @opentelemetry/context-async-hooks \
+  @opentelemetry/exporter-trace-otlp-proto \
+  @opentelemetry/sdk-trace-base
+```
+
+2. Enable LangSmith's OTEL tracing mode and configure PromptLayer as the OTLP destination
+
+```bash
+LANGSMITH_TRACING=true
+LANGSMITH_TRACING_MODE=otel
+LANGCHAIN_CALLBACKS_BACKGROUND=false
+OTEL_EXPORTER_OTLP_ENDPOINT=https://api.promptlayer.com/v1/traces
+OTEL_EXPORTER_OTLP_HEADERS=X-API-KEY=<PROMPTLAYER_API_KEY>
+```
+
+3. Register an OpenTelemetry provider for the Node.js runtime
+
+```ts
+import { context, trace } from "@opentelemetry/api";
+import { AsyncLocalStorageContextManager } from "@opentelemetry/context-async-hooks";
+import { OTLPTraceExporter } from "@opentelemetry/exporter-trace-otlp-proto";
+import { BasicTracerProvider, BatchSpanProcessor } from "@opentelemetry/sdk-trace-base";
+import { initializeOTEL } from "langsmith/experimental/otel/setup";
+
+const headers = {
+  "X-API-KEY": process.env.OTEL_EXPORTER_OTLP_HEADERS?.replace("X-API-KEY=", "") ?? "",
+};
+
+const exporter = new OTLPTraceExporter({
+  url: process.env.OTEL_EXPORTER_OTLP_ENDPOINT,
+  headers,
+});
+const provider = new BasicTracerProvider({
+  spanProcessors: [new BatchSpanProcessor(exporter)],
+});
+const contextManager = new AsyncLocalStorageContextManager();
+
+contextManager.enable();
+context.setGlobalContextManager(contextManager);
+trace.setGlobalTracerProvider(provider);
+
+initializeOTEL({
+  globalTracerProvider: provider,
+  globalContextManager: contextManager,
+  skipGlobalContextManagerSetup: true,
+});
+```
+
+4. Add manual spans for LLM and tool boundaries when you need request logs to be complete
+
+```ts
+import { trace } from "@opentelemetry/api";
+
+await trace.getTracer("langchain-app").startActiveSpan("myapp.llm.call", async (span) => {
+  try {
+    span.setAttribute("langsmith.span.kind", "llm");
+    span.setAttribute("gen_ai.operation.name", "chat");
+    span.setAttribute("gen_ai.system", "openai");
+    span.setAttribute("gen_ai.request.model", "gpt-4o-mini");
+    span.setAttribute("gen_ai.prompt", JSON.stringify(messages));
+
+    const result = await llm.invoke(messages);
+
+    span.setAttribute("gen_ai.completion", String(result.content));
+  } finally {
+    span.end();
+  }
+});
+```
+
+Once configured, PromptLayer will capture LangChain and LangSmith spans. Manual GenAI attributes make LLM calls, tool calls, inputs, and outputs easier for PromptLayer to render as request logs.
 
 ## OpenAI Agents SDK
 
