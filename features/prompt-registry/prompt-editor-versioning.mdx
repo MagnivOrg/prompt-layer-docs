@@ -1,0 +1,101 @@
+---
+title: "Editor and Versioning"
+description: "Create prompts, edit messages, test changes, and review version history in the Prompt Registry."
+icon: "pen-line"
+---
+
+Prompt templates are the core artifact in Prompt Registry. Each template stores the messages, input variables, model settings, and version history your application uses at runtime.
+
+Use the prompt editor when you want to update prompt behavior without changing application code.
+
+## Create a prompt
+
+From the PromptLayer dashboard, click **New** -> **Prompt**.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/prompt-creation-access.png"
+    alt="Creating a new prompt"
+  />
+</Frame>
+
+A prompt usually starts with a **System** message and a **User** message.
+
+<Accordion title="System, user, and assistant messages">
+  **System messages** define the model's behavior, tone, output format, and guardrails.
+
+  **User messages** contain the request that changes each time the prompt runs. This is where input variables usually appear.
+
+  **Assistant messages** can show example responses, which helps the model follow an expected format.
+</Accordion>
+
+Input variables such as `{{customer_name}}` or `{{question}}` are placeholders that your application fills in at runtime. Learn more in [Template Variables](/features/prompt-registry/template-variables).
+
+<Frame>
+  <img
+    src="/new-quickstart-images/variables-explained.png"
+    alt="Input variables in prompt"
+  />
+</Frame>
+
+## Test in Playground
+
+Use Playground to test a prompt before saving or releasing it. Define values for each input variable, run the prompt, and inspect the generated response.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/running-in-playground.gif"
+    alt="Running a prompt in the playground"
+  />
+</Frame>
+
+When the result looks right, save the template.
+
+## Edit prompts with AI
+
+Click the magic wand icon to open the AI prompt writer. It can rewrite or improve prompts based on your instructions, such as adding a new output requirement or tightening formatting rules.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/ai-prompt-writer-zoomed.png"
+    alt="AI prompt writer"
+  />
+</Frame>
+
+## Save versions
+
+Each save creates a new version. Before saving, PromptLayer shows a diff of exactly what changed so you can review additions and deletions.
+
+Add a commit message that explains why the prompt changed, then save the new version.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/bakers-tip.png"
+    alt="Saving with diff view"
+  />
+</Frame>
+
+Your version history appears beside the editor. Select any previous version to inspect it.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/prompt-versioning-display.png"
+    alt="Version history"
+  />
+</Frame>
+
+Hover over a version and click **View Diff** to compare versions side by side.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/prompt-diffing-display.png"
+    alt="Comparing versions with diff"
+  />
+</Frame>
+
+## Next steps
+
+- [Release Labels](/features/prompt-registry/release-labels) - Choose which prompt version production code should use
+- [Dynamic Release Labels](/features/prompt-registry/dynamic-release-labels) - Split traffic across versions
+- [Playground](/why-promptlayer/playground) - Test and replay prompt requests
+- [Evaluations](/features/evaluations/overview) - Score prompt changes before release

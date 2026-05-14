@@ -1,0 +1,38 @@
+---
+title: "Run Batch Jobs"
+description: "Use evaluations as spreadsheet-style batch runs for labeling, research, generation, and enrichment."
+icon: "table"
+---
+
+Evaluations are not only for testing prompts. You can also use them as batch jobs where each row is an input and each column is an AI-powered computation.
+
+## Common use cases
+
+- **Data labeling**: Run a prompt over production examples to create labeled datasets
+- **Research**: Process a list of companies, people, or documents
+- **Content generation**: Generate summaries, replies, emails, or descriptions in bulk
+- **Data enrichment**: Add company, location, category, or other attributes to a list
+
+## Create the dataset
+
+Upload a CSV, create rows manually, or build a dataset from request history. Each row should contain the fields your prompt needs as input variables.
+
+Learn more in [Datasets](/features/evaluations/datasets-overview).
+
+## Add prompt columns
+
+Create an evaluation and add one or more **Prompt Template** columns. Map dataset columns to the prompt input variables.
+
+You can chain columns together when later prompts depend on earlier outputs.
+
+## Run and export
+
+Run the full batch, review the results, and export the completed dataset when you are done.
+
+You do not need permanent evaluation infrastructure for this workflow. Create a dataset, add prompt columns, run the batch, export the results, and move on.
+
+## Next steps
+
+- [Evaluation pipelines](/features/evaluations/building-pipelines)
+- [Dataset from CSV](/features/evaluations/datasets-create-from-file)
+- [Dataset from request history](/features/evaluations/datasets-create-from-history)
