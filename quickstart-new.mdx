@@ -1,24 +1,14 @@
 ---
 title: "Quickstart new"
-description: "Create, run, and evaluate your first PromptLayer prompt."
+description: "Create, run, and evaluate your first prompt."
 icon: "rocket"
 ---
 
-PromptLayer helps you manage prompts outside your code, run them with your LLM provider, and evaluate changes before they reach production. In this quickstart, you will create a cake recipe prompt, run it in the dashboard and from code, then build an evaluation for it.
+PromptLayer helps you manage prompts outside your code and evaluate changes before they reach production. In this quickstart, you will create a prompt, run it in the dashboard and from code, then build an evaluation for it.
 
 ## Prerequisites
 
-Before you start, make sure you have:
-
-- A [PromptLayer account](https://dashboard.promptlayer.com/create-account)
-- A PromptLayer API key from your workspace
-- A provider API key for the model you plan to use, such as `OPENAI_API_KEY`
-- Python or JavaScript installed locally
-
-<Info>
-  PromptLayer runs LLM requests from your environment. Your provider API keys are
-  not sent to PromptLayer servers.
-</Info>
+Before you start, make sure you have a [PromptLayer account](https://dashboard.promptlayer.com/create-account).
 
 ## Create a prompt
 
@@ -85,6 +75,11 @@ To test the prompt in the playground:
 When the response looks right, click **Save Template**.
 
 ### Run from code
+
+To run the prompt from code, make sure you have:
+
+- A PromptLayer API key from your workspace
+- A provider API key for the model you plan to use, such as `OPENAI_API_KEY`
 
 Set your API keys as environment variables before running the example.
 
@@ -224,18 +219,6 @@ Run the evaluation to see scores across all test cases. Learn more about [evalua
   Workflow nodes work the same way in eval pipelines.
 </Accordion>
 
-### Compare models
-
-To compare how your prompt performs across GPT, Claude, and Gemini, create a new evaluation for model comparison.
-
-Add multiple **Prompt Template** columns, each configured with a different model override. The pipeline runs your prompt on each model and shows results side by side.
-
-<Frame>
-  <img src="/new-quickstart-images/model-comparison.png" alt="Comparing models" />
-</Frame>
-
-This helps you find the best price and performance balance for your use case. PromptLayer supports major providers, plus any OpenAI-compatible API via [custom base URLs](/features/custom-providers).
-
 ### CI/CD evaluations
 
 Attach an evaluation pipeline to run automatically every time you save a new prompt version, similar to GitHub Actions running tests on each commit.
@@ -252,7 +235,8 @@ Learn more about [continuous integration](/features/evaluations/continuous-integ
 
 ## Next steps
 
-- [Prompt editor and versioning](/features/prompt-registry/prompt-editor-versioning) - Edit prompts, review diffs, and track versions
+- [Editor and Versioning](/features/prompt-registry/prompt-editor-versioning) - Edit prompts, review diffs, and track versions
+- [Compare Models](/onboarding-guides/compare-models) - Compare prompt outputs across providers and models
 - [Backtest prompt changes](/onboarding-guides/backtesting-prompt-changes) - Test new versions against historical requests
 - [Evaluations](/features/evaluations/overview) - Learn how evaluation pipelines work
 - [Python SDK](/sdks/python) - Use PromptLayer from Python
