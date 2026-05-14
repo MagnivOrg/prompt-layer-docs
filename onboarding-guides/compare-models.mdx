@@ -1,0 +1,47 @@
+---
+title: "Compare Models"
+description: "Compare prompt outputs across providers and models with an evaluation pipeline."
+icon: "scale-balanced"
+---
+
+Use model comparison when you want to test the same prompt across GPT, Claude, Gemini, or another provider before choosing a production model.
+
+## Before you start
+
+You need:
+
+- A saved prompt template
+- A dataset with the input variables your prompt expects
+- Provider API keys configured for the models you want to compare
+
+## Create a comparison evaluation
+
+Create a new evaluation and select your dataset.
+
+Add multiple **Prompt Template** columns. Configure each column with the same prompt template, then set a different provider or model override for each column.
+
+<Frame>
+  <img src="/new-quickstart-images/model-comparison.png" alt="Comparing models" />
+</Frame>
+
+Run the evaluation. Each row shows the prompt output from every model side by side.
+
+## Score the outputs
+
+Add an **LLM-as-judge**, human grading, equality comparison, or code evaluator column to score the model outputs against your criteria.
+
+For example, you can score whether each output:
+
+- Follows the requested format
+- Answers the user correctly
+- Avoids hallucinated details
+- Meets latency or cost expectations for the use case
+
+Use the results to choose the best price, latency, and quality balance.
+
+## Next steps
+
+- [Evaluation pipelines](/features/evaluations/building-pipelines)
+- [Evaluation types](/features/evaluations/eval-types)
+- [Supported providers](/features/supported-providers)
+- [Custom providers](/features/custom-providers)

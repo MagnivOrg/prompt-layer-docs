@@ -7,7 +7,7 @@ icon: "book"
 
 Inspired by the flexibility of tools like Excel, we offer a visual pipeline builder that allows users to construct complex evaluation batches tailored to their specific requirements. Whether you're scoring prompts, running bulk jobs, or conducting regression testing, the Evaluations page provides the tools needed to assess prompt quality effectively. Made for both engineers and subject-matter experts.
 
-## Common Tasks
+## Common tasks
 
 - **Scoring Prompts**: Utilize golden datasets for comparing prompt outputs with ground truths and incorporate human or AI evaluators for quality assessment.
 - **One-off Bulk Jobs**: Ideal for prompt experimentation and iteration.
@@ -15,12 +15,34 @@ Inspired by the flexibility of tools like Excel, we offer a visual pipeline buil
 - **Regression Testing**: Build evaluation pipelines and datasets to prevent edge-case regression on prompt template updates.
 - **Continuous Integration**: Connect evaluation pipelines to prompt templates to automatically run an eval with each new version (and catologue the results). Think of it like a Github action.
 
-## Examples Use-Cases
+## How evaluations fit together
+
+1. Create or select a dataset with the inputs you want to test.
+2. Add one or more **Prompt Template** columns to generate outputs.
+3. Add scoring columns such as LLM-as-judge, human grading, equality comparison, cosine similarity, or code evaluators.
+4. Run the evaluation and review the scorecard, row-level outputs, and diffs.
+5. Attach the evaluation to a prompt template when you want it to run automatically on new versions.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/eval-example.png"
+    alt="Evaluation pipeline"
+  />
+</Frame>
+
+## Example use cases
 
 - **Chatbot Enhancements**: Improve chatbot interactions by evaluating responses to user requests against semantic criteria.
 - **RAG System Testing**: Build a RAG pipeline and validate responses against a golden dataset.
 - **SQL Bot Optimization**: Test Natural Language to SQL generation prompts by _actually_ running generated queries against a database (using the API Endpoint step), followed by an evaluation of the results' accuracy.
 - **Improving Summaries**: Combine AI evaluating prompts and human graders to help improve prompts without a ground truth.
+
+## Related guides
+
+- [Compare Models](/onboarding-guides/compare-models)
+- [Backtest Prompt Changes](/onboarding-guides/backtesting-prompt-changes)
+- [Run Batch Jobs](/onboarding-guides/batch-runs)
+- [Continuous Integration](/features/evaluations/continuous-integration)
 
 ## Additional Resources
 

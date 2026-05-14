@@ -7,6 +7,12 @@ Use request history when you want to build datasets from real production or stag
 
 Creating a dataset from history is straightforward using the Dataset dialog. PromptLayer can build a dataset from your request history, including metadata, input variable context, tags, and the request response. This is especially useful when you want to evaluate a new prompt version against real historical examples.
 
+Go to **Datasets** and click **Add from Request History**. This opens a request log browser where you can filter and select requests.
+
+<Frame>
+  <img src="/new-quickstart-images/add-from-request-history.png" alt="Adding from request history" />
+</Frame>
+
 When creating a dataset from history, you can narrow what gets included by filtering on:
 
 - Time range
@@ -15,6 +21,8 @@ When creating a dataset from history, you can narrow what gets included by filte
 - Search query
 - Scores
 - Tags
+
+After you save the dataset, use it in an evaluation pipeline to backtest a new prompt version against real historical inputs. See [Backtest Prompt Changes](/onboarding-guides/backtesting-prompt-changes).
 
 ## Related REST APIs
 
