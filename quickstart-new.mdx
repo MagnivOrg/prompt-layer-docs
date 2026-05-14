@@ -1,0 +1,260 @@
+---
+title: "Quickstart new"
+description: "Create, run, and evaluate your first PromptLayer prompt."
+icon: "rocket"
+---
+
+PromptLayer helps you manage prompts outside your code, run them with your LLM provider, and evaluate changes before they reach production. In this quickstart, you will create a cake recipe prompt, run it in the dashboard and from code, then build an evaluation for it.
+
+## Prerequisites
+
+Before you start, make sure you have:
+
+- A [PromptLayer account](https://dashboard.promptlayer.com/create-account)
+- A PromptLayer API key from your workspace
+- A provider API key for the model you plan to use, such as `OPENAI_API_KEY`
+- Python or JavaScript installed locally
+
+<Info>
+  PromptLayer runs LLM requests from your environment. Your provider API keys are
+  not sent to PromptLayer servers.
+</Info>
+
+## Create a prompt
+
+From the PromptLayer dashboard, click **New** -> **Prompt**.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/prompt-creation-access.png"
+    alt="Creating a new prompt"
+  />
+</Frame>
+
+Name the prompt `cake-recipe`, then replace the default messages with the following content.
+
+```markdown System
+You are a Michelin-star pastry chef. Generate cake recipes with:
+
+**Overview**: One paragraph about the cake
+**Ingredients**: Bullet points with metric and US measurements
+**Instructions**: Numbered steps with temperatures and timing
+**Variations**: Optional frostings or substitutions
+```
+
+```markdown User
+Create a recipe for {{cake_type}} that serves {{serving_size}} people.
+```
+
+`{{cake_type}}` and `{{serving_size}}` are [input variables](/features/prompt-registry/template-variables). PromptLayer fills them in each time you run the prompt.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/variables-explained.png"
+    alt="Input variables in prompt"
+  />
+</Frame>
+
+### Write prompts with AI
+
+Click the magic wand icon to open the AI prompt writer. It can help rewrite or improve your prompts based on your instructions. Try asking it to add allergy warnings to the recipe generator.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/ai-prompt-writer-zoomed.png"
+    alt="AI prompt writer"
+  />
+</Frame>
+
+### Run your prompt
+
+To test the prompt in the playground:
+
+1. Click **Define input variables** in the right panel.
+2. Set `cake_type` to `Chocolate Cake`.
+3. Set `serving_size` to `8`.
+4. Click **Run**.
+
+<Frame>
+  <img
+    src="/new-quickstart-images/running-in-playground.gif"
+    alt="Running a prompt in the playground"
+  />
+</Frame>
+
+When the response looks right, click **Save Template**.
+
+### Run from code
+
+Set your API keys as environment variables before running the example.
+
+```bash
+export PROMPTLAYER_API_KEY="pl_your_promptlayer_api_key"
+export OPENAI_API_KEY="sk_your_provider_api_key"
+```
+
+Install the PromptLayer SDK for your runtime.
+
+<CodeGroup>
+
+```bash Python
+pip install promptlayer
+```
+
+```bash JavaScript
+npm install promptlayer
+```
+
+</CodeGroup>
+
+Run the saved prompt with the same input variables.
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+
+client = PromptLayer()
+
+response = client.run(
+    prompt_name="cake-recipe",
+    input_variables={
+        "cake_type": "Chocolate Cake",
+        "serving_size": "8"
+    },
+    tags=["quickstart"],
+    metadata={"source": "quickstart"}
+)
+
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+```
+
+```javascript JavaScript
+import { PromptLayer } from "promptlayer";
+
+const client = new PromptLayer({
+  apiKey: process.env.PROMPTLAYER_API_KEY,
+});
+
+const response = await client.run({
+  promptName: "cake-recipe",
+  inputVariables: {
+    cake_type: "Chocolate Cake",
+    serving_size: "8",
+  },
+  tags: ["quickstart"],
+  metadata: { source: "quickstart" },
+});
+
+console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].content);
+```
+
+</CodeGroup>
+
+Open **Logs** in PromptLayer and search for `cake-recipe` or filter by the `quickstart` tag. The log should show the input variables, generated output, model, latency, tags, and metadata.
+
+<Frame>
+  <img src="/new-quickstart-images/request-log.png" alt="Log from SDK run" />
+</Frame>
+
+## Evaluate a prompt
+
+Before deploying a prompt, you want to know if it is actually good. PromptLayer lets you build evaluation pipelines that score your prompt's outputs automatically.
+
+### Create a dataset
+
+Evaluations run against a dataset: a collection of test cases with inputs and expected outputs. Create one for the cake recipe prompt.
+
+Click **New** -> **Dataset** and name it `cake-recipes-test`.
+
+<Frame>
+  <img src="/new-quickstart-images/creating-dataset.png" alt="Creating a dataset" />
+</Frame>
+
+Add a few test cases. Each row needs the input variables your prompt expects, `cake_type` and `serving_size`, plus an optional expected output to compare against.
+
+<Accordion title="Sample CSV for cake recipe dataset">
+```csv
+cake_type,serving_size,expected_output
+Chocolate Cake,8,"Should include cocoa or chocolate, have clear measurements"
+Vanilla Birthday Cake,12,"Should be festive, mention frosting options"
+Gluten-Free Lemon Cake,6,"Must not include wheat flour, should use alternatives"
+Vegan Carrot Cake,10,"No eggs or dairy, should suggest substitutes"
+```
+
+<a href="/onboarding-guides/example-dataset/cake-recipes.csv" download>Download this CSV</a> or add rows manually in the UI.
+</Accordion>
+
+Learn more about [datasets](/features/evaluations/datasets-overview).
+
+### Create an eval pipeline
+
+Now build a pipeline that runs your prompt against each test case and scores the results.
+
+Click **New** -> **Evaluation** and select your dataset.
+
+First, add a **Prompt Template** column. This runs your prompt against each row in the dataset, using the column values as input variables. The output appears in a new column.
+
+Next, add an **LLM-as-judge** scoring column. This uses AI to score each output against criteria you define. For the recipe prompt, check whether:
+
+- The recipe includes the required sections: Overview, Ingredients, Instructions, and Variations
+- Measurements are provided in both metric and US units
+- The serving size is correct
+
+<Frame>
+  <img src="/new-quickstart-images/llm_assertion_config.png" alt="LLM as judge" />
+</Frame>
+
+You can also add an **Equality Comparison** column to compare the prompt output against the `expected_output` column in your dataset.
+
+<Frame>
+  <img src="/new-quickstart-images/eval-pipeline.png" alt="Eval pipeline setup" />
+</Frame>
+
+Run the evaluation to see scores across all test cases. Learn more about [evaluations](/features/evaluations/overview).
+
+<Accordion title="Other evaluation types">
+  Beyond LLM-as-judge, PromptLayer supports:
+
+  - **Human grading**: Collect scores from domain experts
+  - **Equality Comparison**: Compare outputs to expected results
+  - **Cosine similarity**: Measure semantic similarity between outputs
+  - **Code evaluators**: Write custom Python scoring functions
+
+  Workflow nodes work the same way in eval pipelines.
+</Accordion>
+
+### Compare models
+
+To compare how your prompt performs across GPT, Claude, and Gemini, create a new evaluation for model comparison.
+
+Add multiple **Prompt Template** columns, each configured with a different model override. The pipeline runs your prompt on each model and shows results side by side.
+
+<Frame>
+  <img src="/new-quickstart-images/model-comparison.png" alt="Comparing models" />
+</Frame>
+
+This helps you find the best price and performance balance for your use case. PromptLayer supports major providers, plus any OpenAI-compatible API via [custom base URLs](/features/custom-providers).
+
+### CI/CD evaluations
+
+Attach an evaluation pipeline to run automatically every time you save a new prompt version, similar to GitHub Actions running tests on each commit.
+
+When saving a prompt, the commit dialog lets you select an evaluation pipeline. Choose one and click **Next**.
+
+From then on, each new version you create will run through the eval and show its score in the version history. This makes it easier to spot regressions before they reach production.
+
+<Frame>
+  <img src="/new-quickstart-images/ci-cd-scores.png" alt="Eval scores by version" />
+</Frame>
+
+Learn more about [continuous integration](/features/evaluations/continuous-integration).
+
+## Next steps
+
+- [Quickstart](/quickstart) - Tour prompt versioning, release labels, workflows, logs, and traces
+- [Quickstart - Pt 2](/quickstart-part-two) - Build backtests and explore more evaluation workflows
+- [Evaluations](/features/evaluations/overview) - Learn how evaluation pipelines work
+- [Python SDK](/sdks/python) - Use PromptLayer from Python
+- [JavaScript SDK](/sdks/javascript) - Use PromptLayer from JavaScript or TypeScript
+- [Deployment strategies](/onboarding-guides/deployment-strategies) - Choose a production integration pattern

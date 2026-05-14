@@ -16,6 +16,7 @@
       {
         "group": "Get Started",
         "pages": [
+          "quickstart-new",
           "quickstart",
           "quickstart-part-two",
           "tutorial-videos"
