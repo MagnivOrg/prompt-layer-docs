@@ -16,7 +16,7 @@
       {
         "group": "Get Started",
         "pages": [
-          "quickstart-new",
+          "quickstart",
           "tutorial-videos"
         ]
       },
@@ -382,12 +382,8 @@
           "destination": "/overview"
         },
         {
-          "source": "/quickstart",
-          "destination": "/quickstart-new"
-        },
-        {
           "source": "/quickstart-part-two",
-          "destination": "/quickstart-new"
+          "destination": "/quickstart"
         },
         {
           "source": "/languages/python",
