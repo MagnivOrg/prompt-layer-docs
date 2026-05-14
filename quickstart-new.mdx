@@ -1,5 +1,5 @@
 ---
-title: "Quickstart new"
+title: "Quickstart"
 description: "Create, run, and evaluate your first prompt."
 icon: "rocket"
 ---
@@ -74,6 +74,14 @@ To test the prompt in the playground:
 
 When the response looks right, click **Save Template**.
 
+### View logs
+
+Open **Logs** in PromptLayer and search for `cake-recipe`. The log should show the input variables, generated output, model, and latency.
+
+<Frame>
+  <img src="/new-quickstart-images/request-log.png" alt="Log from prompt run" />
+</Frame>
+
 ### Run from code
 
 To run the prompt from code, make sure you have:
@@ -145,12 +153,6 @@ console.log(response.prompt_blueprint.prompt_template.messages.slice(-1)[0].cont
 ```
 
 </CodeGroup>
-
-Open **Logs** in PromptLayer and search for `cake-recipe` or filter by the `quickstart` tag. The log should show the input variables, generated output, model, latency, tags, and metadata.
-
-<Frame>
-  <img src="/new-quickstart-images/request-log.png" alt="Log from SDK run" />
-</Frame>
 
 ## Evaluate a prompt
 
@@ -233,12 +235,8 @@ From then on, each new version you create will run through the eval and show its
 
 Learn more about [continuous integration](/features/evaluations/continuous-integration).
 
-## Next steps
+## Learn more
 
-- [Editor and Versioning](/features/prompt-registry/prompt-editor-versioning) - Edit prompts, review diffs, and track versions
-- [Compare Models](/onboarding-guides/compare-models) - Compare prompt outputs across providers and models
-- [Backtest prompt changes](/onboarding-guides/backtesting-prompt-changes) - Test new versions against historical requests
+- [Release Labels](/features/prompt-registry/release-labels) - Deploy the right prompt version without code changes
 - [Evaluations](/features/evaluations/overview) - Learn how evaluation pipelines work
-- [Python SDK](/sdks/python) - Use PromptLayer from Python
-- [JavaScript SDK](/sdks/javascript) - Use PromptLayer from JavaScript or TypeScript
 - [Deployment strategies](/onboarding-guides/deployment-strategies) - Choose a production integration pattern

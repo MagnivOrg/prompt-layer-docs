@@ -158,7 +158,7 @@
             ]
           },
           {
-            "group": "Prompt Quality",
+            "group": "Eval Strategies",
             "icon": "vial-circle-check",
             "pages": [
               "onboarding-guides/compare-models",
