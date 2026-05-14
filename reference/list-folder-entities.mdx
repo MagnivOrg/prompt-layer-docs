@@ -3,7 +3,7 @@ title: "List Folder Entities"
 openapi: "GET /api/public/v2/folders/entities"
 ---
 
-Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets.
+Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, input variable sets, skill collections, and tools.
 
 This endpoint is the primary way to browse the unified registry programmatically — equivalent to viewing the registry page in the PromptLayer dashboard.
 
@@ -32,7 +32,43 @@ This endpoint is the primary way to browse the unified registry programmatically
 </ParamField>
 
 <ParamField query="tags" type="string[]">
-  Filter entities by tags. Only entities that contain all specified tags are returned. Applies to prompts, workflows, datasets, and evaluations. Folders, AB tests, and input variable sets are excluded when this filter is active.
+  Filter entities by tags. Only entities that contain all specified tags are returned. Applies to prompts, workflows, datasets, and evaluations. Folders, AB tests, input variable sets, skill collections, and tools are excluded when this filter is active.
+</ParamField>
+
+<ParamField query="created_by_email" type="string">
+  Filter entities by creator email. This applies across all supported entity types, but older folders, AB tests, and input variable sets created before creator tracking was added do not have a recorded creator and are excluded from this filter.
+</ParamField>
+
+<ParamField query="created_after" type="datetime">
+  Return only entities created at or after this timestamp.
+</ParamField>
+
+<ParamField query="created_before" type="datetime">
+  Return only entities created at or before this timestamp.
+</ParamField>
+
+<ParamField query="updated_after" type="datetime">
+  Return only entities updated at or after this timestamp.
+</ParamField>
+
+<ParamField query="updated_before" type="datetime">
+  Return only entities updated at or before this timestamp.
+</ParamField>
+
+<ParamField query="external_source" type="string">
+  Resolve a single entity by external ID. Must be provided together with `external_id`.
+</ParamField>
+
+<ParamField query="external_id" type="string">
+  Resolve a single entity by external ID. Must be provided together with `external_source`.
+</ParamField>
+
+<ParamField query="sort_by" type="string">
+  Sort results by `created_at`, `updated_at`, `name`, or `id`.
+</ParamField>
+
+<ParamField query="sort_order" type="string" default="desc">
+  Sort direction for `sort_by`. Use `asc` or `desc`.
 </ParamField>
 
 ### Search
@@ -61,7 +97,7 @@ Returns an object with a single `entities` array. Each entity has the following 
   <Expandable title="Entity object">
     <ResponseField name="id" type="integer">Unique entity identifier.</ResponseField>
     <ResponseField name="name" type="string">Display name of the entity.</ResponseField>
-    <ResponseField name="type" type="string">One of: `FOLDER`, `PROMPT`, `SNIPPET`, `WORKFLOW`, `DATASET`, `REPORT`, `AB_TEST`, `INPUT_VARIABLE_SET`.</ResponseField>
+    <ResponseField name="type" type="string">One of: `FOLDER`, `PROMPT`, `SNIPPET`, `WORKFLOW`, `DATASET`, `REPORT`, `AB_TEST`, `INPUT_VARIABLE_SET`, `SKILL_COLLECTION`, `TOOL`.</ResponseField>
     <ResponseField name="created_at" type="string | null">ISO 8601 creation timestamp.</ResponseField>
     <ResponseField name="updated_at" type="string | null">ISO 8601 last-updated timestamp.</ResponseField>
     <ResponseField name="folder_id" type="integer | null">ID of the parent folder, or `null` if at the workspace root.</ResponseField>
@@ -81,13 +117,15 @@ When `include_metadata=true`, the `metadata` field contains type-specific inform
 | **PROMPT** / **SNIPPET** | `type` (`"chat"` or `"completion"` or `null`), `latest_version_number` |
 | **WORKFLOW** | `latest_version_number` |
 | **DATASET** | `isDraft` (boolean — `true` if only draft versions exist), `latest_version_number` |
-| **FOLDER**, **REPORT**, **AB_TEST**, **INPUT_VARIABLE_SET** | Empty object `{}` |
+| **FOLDER**, **REPORT**, **AB_TEST**, **INPUT_VARIABLE_SET**, **SKILL_COLLECTION** | Empty object `{}` |
+| **TOOL** | `prompt_count`, `latest_version_number` |
 
 ## Sorting Behavior
 
 - **Semantic search**: Results are sorted by relevance (distance ascending).
 - **Text search**: Prompts and snippets with a name match are prioritized above content-only matches.
-- **No search**: Results are returned in default database order.
+- **Explicit sort**: Use `sort_by` with `sort_order`.
+- **No search or sort**: Results are returned in default database order.
 
 ## Examples
 
@@ -130,6 +168,13 @@ curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?search_q
 
 ```bash
 curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?tags=production&tags=v2&flatten=true" \
+  -H "X-API-KEY: your_api_key"
+```
+
+### Resolve an entity by external ID
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?external_source=acme&external_id=tool_123" \
   -H "X-API-KEY: your_api_key"
 ```
 

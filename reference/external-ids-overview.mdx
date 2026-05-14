@@ -16,7 +16,7 @@ description: "Attach identifiers from your own systems to PromptLayer resources 
 |---|---|
 | Set when creating an entity | [`POST /rest/prompt-templates`](/reference/templates-publish#body-external-ids) include `external_ids` in the payload body. |
 | Set on an existing resource | [`POST /prompt-templates/{prompt_template_id}/external-ids`](/reference/external-ids-prompt-templates-attach) |
-| Get an entity by external ID | [`GET /prompt-templates?external_source=...&external_id=...`](/reference/list-prompt-templates#query-external-source) (prompt templates only) |
+| Get an entity by external ID | [`GET /prompt-templates?external_source=...&external_id=...`](/reference/list-prompt-templates), [`GET /api/public/v2/folders?external_source=...&external_id=...`](/reference/list-folders), [`GET /api/public/v2/ab-tests?external_source=...&external_id=...`](/reference/list-ab-tests), [`GET /api/public/v2/input-variable-sets?external_source=...&external_id=...`](/reference/list-input-variable-sets), or [`GET /api/public/v2/folders/entities?external_source=...&external_id=...`](/reference/list-folder-entities) |
 | Get external IDs for an entity | [`GET /prompt-templates/{prompt_template_id}/external-ids`](/reference/external-ids-prompt-templates-list) |
 | Delete an external ID from an entity | [`DELETE /prompt-templates/{prompt_template_id}/external-ids/{source}/{external_id}`](/reference/external-ids-prompt-templates-delete) |
 

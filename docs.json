@@ -303,7 +303,10 @@
             "pages": [
               "reference/create-folder",
               "reference/update-folder",
+              "reference/list-folders",
               "reference/list-folder-entities",
+              "reference/list-ab-tests",
+              "reference/list-input-variable-sets",
               "reference/move-folder-entities",
               "reference/delete-folder-entities",
               "reference/resolve-folder-id",

@@ -1,0 +1,54 @@
+---
+title: "List Folders"
+---
+
+Get a paginated list of folders in a workspace.
+
+Use this endpoint when you want folders only, rather than the mixed-entity response returned by [List Folder Entities](/reference/list-folder-entities).
+
+## Endpoint
+
+`GET /api/public/v2/folders`
+
+## Authentication
+
+This endpoint requires API key authentication via the `X-API-KEY` header.
+
+## Query Parameters
+
+### Required
+
+- `workspace_id`: Workspace to query when your API key can access more than one workspace.
+
+### Filtering
+
+- `name`: Case-insensitive partial match on the folder name.
+- `created_by_email`: Return only folders created by the matching user email.
+- `created_after` / `created_before`: Filter by creation timestamp.
+- `updated_after` / `updated_before`: Filter by last update timestamp.
+- `external_source` and `external_id`: Resolve a specific folder by its external ID mapping. These parameters must be provided together.
+
+### Sorting
+
+- `sort_by`: One of `created_at`, `updated_at`, `name`, or `id`.
+- `sort_order`: `asc` or `desc`. Defaults to `desc`.
+
+## Response
+
+Returns:
+
+- `success`: Boolean success flag.
+- `folders`: Array of folder objects.
+
+Each folder includes its attached `external_ids` array.
+
+## Notes
+
+- `created_by_email` only matches folders created after the migration that added creator tracking. Older folders without a recorded creator are excluded from that filter.
+
+## Example
+
+```bash
+curl -X GET "https://api.promptlayer.com/api/public/v2/folders?workspace_id=123&name=prod&sort_by=name&sort_order=asc" \
+  -H "X-API-KEY: your_api_key"
+```
