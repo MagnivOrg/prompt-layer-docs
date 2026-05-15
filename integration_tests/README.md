@@ -32,6 +32,7 @@ API_KEYS = {
     "promptlayer": "pl_****",
     "exa": "****",
     "xai": "xai-****",
+    "concentrate": "****",
 }
 ```
 
@@ -41,6 +42,7 @@ API_KEYS = {
 
 - `test_exa_with_run.py` - Tests Exa integration via promptlayer.run()
 - `test_xai_with_run.py` - Tests xAI (Grok) integration via promptlayer.run()
+- `test_concentrate_with_run.py` - Tests Concentrate AI integration via promptlayer.run()
 
 ## Running Tests
 
@@ -48,6 +50,7 @@ API_KEYS = {
 # From repo root
 python integration_tests/test_exa_with_run.py
 python integration_tests/test_xai_with_run.py
+python integration_tests/test_concentrate_with_run.py
 ```
 
 ## Expected Output

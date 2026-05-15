@@ -1,0 +1,116 @@
+---
+title: "Concentrate AI"
+icon: "layer-group"
+---
+
+[Concentrate AI](https://concentrate.ai) provides access to a wide variety of models from major authors through a single unified API, including closed-source models like GPT-5.5, Claude Opus 4.7, and Gemini 3.1 Pro, alongside open-source options.
+
+## Setting Up Concentrate as a Custom Provider
+
+To use Concentrate models in PromptLayer:
+
+1. **Get a Concentrate API Key**: Sign up at [Concentrate AI](https://concentrate.ai) and obtain your API key from their dashboard
+2. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
+3. Click **Create Custom Provider**
+4. Configure the provider with the following details:
+   - **Name**: Concentrate
+   - **Client**: OpenAI (Concentrate uses OpenAI-compatible endpoints)
+   - **Base URL**: `https://api.concentrate.ai/v1`
+   - **API Key**: Your Concentrate API key
+
+<Note>
+Concentrate exposes an OpenAI-compatible `/v1/responses` endpoint, which is why we select OpenAI as the client type.
+</Note>
+
+## Creating Custom Models (Recommended)
+
+For easier model selection in the Playground and Prompt Registry, you can save specific Concentrate models:
+
+1. Navigate to the **Custom Providers and Models** page
+2. Find the **Concentrate** row and click the three-dot menu on that row
+3. Click **Add model**
+4. Enter the model details:
+   - **Model Name**: Paste the model slug copied from [Concentrate's models page](https://concentrate.ai/models) (e.g., `gpt-5.5`, `claude-opus-4-7`, `anthropic/claude-opus-4-7`)
+   - **Display Name**: A friendly name like "GPT 5.5" or "Claude Opus 4.7"
+5. Optionally, customize parameters on the next page
+6. Repeat for each model you want to use
+
+The full list of available models can be found on [Concentrate's Model Fortress page](https://concentrate.ai/models).
+
+## Available Models
+
+Concentrate provides access to a vast catalog of models. You can use canonical names for automatic routing, or provider-prefixed names to pin a specific provider. Example models include:
+
+- **`gpt-5.5`**: OpenAI's GPT-5.5 model
+- **`claude-opus-4-7`**: Anthropic's Claude Opus 4.7 model
+- **`gemini-3-1-pro-preview`**: Google's Gemini 3.1 Pro Preview model
+- **`anthropic/claude-opus-4-7`**: Claude Opus 4.7 pinned specifically to the Anthropic provider
+- **`auto`**: Let Concentrate automatically route to the best model based on cost, performance, or latency
+
+For the complete and up-to-date list of available models, visit [Concentrate's Model Fortress page](https://concentrate.ai/models).
+
+## Using Concentrate in PromptLayer
+
+### In the Playground
+
+After setup, you can use Concentrate models in the PromptLayer Playground:
+
+1. Open the Playground
+2. At the bottom of the screen (next to the tools and output controls), open the provider menu and select **Concentrate** as the LLM provider
+3. Pick any model you've added to the Concentrate provider
+4. Select the **Responses API** as the request format
+5. Start querying with your prompts
+
+<Tip>
+We recommend using the **Responses API** over Chat Completions whenever applicable — it provides better support for multi-turn interactions, tool use, and modern features. Fall back to Chat Completions only if a specific model or feature requires it.
+</Tip>
+
+### In the Prompt Registry
+
+Concentrate models work seamlessly with PromptLayer's Prompt Registry:
+
+- Select Concentrate models when creating or editing prompt templates
+- Use templates with Concentrate models in evaluations
+- Track and analyze Concentrate API usage alongside other providers
+
+### Key Benefits
+
+Concentrate provides:
+
+- **Unified API**: One OpenAI-compatible endpoint across every major provider
+- **Automatic failover**: Requests retry across backup providers when one is unavailable
+- **Spend management**: Budget limits per API key, project, or org, with anomaly alerts
+- **PII redaction and zero data retention**: Configurable per API key for sensitive workloads
+- **Unified audit logs**: Consistent usage logs and analytics across every provider in one dashboard
+
+## SDK Usage
+
+Once you've set up your Concentrate custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
+
+# Run a prompt template that uses your Concentrate custom provider
+response = promptlayer.run(
+    prompt_name="your-concentrate-prompt",
+    input_variables={"query": "your input"}
+)
+
+# Access the response
+print(response["raw_response"].output_text)
+
+# The request is automatically logged with request_id
+print(f"Request ID: {response['request_id']}")
+```
+
+<Info>
+Using [`promptlayer.run()`](/sdks/python#using-the-run-method-recommended) ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
+</Info>
+
+## Related Documentation
+
+- [Custom Providers](/features/custom-providers)
+- [Supported Providers](/features/supported-providers)
+- [Concentrate AI Documentation](https://concentrate.ai/docs)
