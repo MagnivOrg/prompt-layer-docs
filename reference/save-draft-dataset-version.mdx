@@ -5,10 +5,6 @@ openapi: "POST /api/public/v2/dataset-versions/save-draft"
 
 Publish a draft dataset version by assigning it a real version number. The save is processed asynchronously in the background.
 
-### Authentication
-
-This endpoint requires API key authentication only.
-
 ### Asynchronous Processing
 
 This endpoint queues a background job to finalize the draft. The draft's version number is updated from -1 to the next sequential version number. Returns 202 immediately.

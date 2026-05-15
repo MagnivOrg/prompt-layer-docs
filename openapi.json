@@ -15,15 +15,6 @@
         "operationId": "get_prompt_template_raw",
         "parameters": [
           {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
-          {
             "name": "identifier",
             "in": "path",
             "required": true,
@@ -88,6 +79,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Prompt template not found",
             "content": {
@@ -117,15 +111,6 @@
         "summary": "Get Prompt Template by ID",
         "operationId": "get_prompt_templates__prompt_identifier__post",
         "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
           {
             "name": "identifier",
             "in": "path",
@@ -165,6 +150,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "422": {
             "description": "Validation Error",
             "content": {
@@ -188,15 +176,6 @@
         "operationId": "get_prompt_templates_labels_prompt_identifier__post",
         "parameters": [
           {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
-          {
             "name": "identifier",
             "in": "path",
             "required": true,
@@ -218,8 +197,14 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -240,15 +225,6 @@
             "schema": {
               "type": "integer",
               "title": "prompt_id"
-            }
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
             }
           }
         ],
@@ -309,6 +285,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -329,15 +311,6 @@
             "schema": {
               "type": "integer",
               "title": "prompt_label_id"
-            }
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
             }
           }
         ],
@@ -394,6 +367,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       },
@@ -413,15 +392,6 @@
               "type": "integer",
               "title": "prompt_label_id"
             }
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
           }
         ],
         "responses": {
@@ -434,6 +404,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -446,17 +422,6 @@
         ],
         "summary": "Publish Prompt Template",
         "operationId": "publish_prompt_template_rest_prompt_templates_post",
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -477,6 +442,9 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
           },
           "409": {
             "description": "External ID conflict",
@@ -519,15 +487,6 @@
               "type": "string",
               "title": "Identifier",
               "description": "The prompt template name or ID."
-            }
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
             }
           }
         ],
@@ -581,6 +540,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -591,17 +553,6 @@
         "operationId": "trackMetadata",
         "tags": [
           "metadata"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API Key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -656,6 +607,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -666,17 +620,6 @@
         "operationId": "trackGroup",
         "tags": [
           "group"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API Key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -730,6 +673,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -740,17 +686,6 @@
         "operationId": "trackPrompt",
         "tags": [
           "prompt"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API Key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -825,6 +760,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -835,17 +773,6 @@
         "operationId": "trackScore",
         "tags": [
           "score"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API Key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -906,6 +833,9 @@
           },
           "401": {
             "description": "Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -926,15 +856,6 @@
               "type": "string"
             },
             "description": "Name of the report to archive."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key to authorize the operation."
           }
         ],
         "responses": {
@@ -965,6 +886,9 @@
           },
           "404": {
             "description": "Report not found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -976,17 +900,6 @@
         "operationId": "createEvaluationPipeline",
         "tags": [
           "reports"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -1208,6 +1121,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
           "403": {
             "description": "Forbidden - Access to dataset group not allowed or missing permissions",
             "content": {
@@ -1240,9 +1156,6 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication"
-          },
           "409": {
             "description": "External ID conflict",
             "content": {
@@ -1252,6 +1165,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -1263,17 +1179,6 @@
         "operationId": "addReportColumn",
         "tags": [
           "reports"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -1410,6 +1315,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
           "403": {
             "description": "Forbidden - Cannot overwrite dataset columns or missing permissions",
             "content": {
@@ -1450,8 +1358,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication"
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -1472,15 +1380,6 @@
               "type": "integer"
             },
             "description": "ID of the evaluation pipeline report to run."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key to authorize the operation."
           }
         ],
         "requestBody": {
@@ -1629,6 +1528,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -1649,15 +1551,6 @@
               "type": "integer"
             },
             "description": "ID of the report to retrieve."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key to authorize the operation."
           }
         ],
         "responses": {
@@ -1841,6 +1734,9 @@
           },
           "404": {
             "description": "Report not found or not accessible"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       },
@@ -1860,15 +1756,6 @@
               "type": "integer"
             },
             "description": "ID of the evaluation pipeline to archive."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
           }
         ],
         "responses": {
@@ -1895,6 +1782,9 @@
           },
           "404": {
             "description": "Report not found or not accessible"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -1915,15 +1805,6 @@
               "type": "integer"
             },
             "description": "ID of the report to get the score for."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key to authorize the operation."
           }
         ],
         "responses": {
@@ -2076,6 +1957,9 @@
           },
           "404": {
             "description": "Report not found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -2097,15 +1981,6 @@
               "type": "integer"
             },
             "description": "ID of the evaluation pipeline to rename."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
           }
         ],
         "requestBody": {
@@ -2162,6 +2037,9 @@
           },
           "404": {
             "description": "Report not found or not accessible"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -2183,15 +2061,6 @@
               "type": "integer"
             },
             "description": "ID of the report column to edit."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
           }
         ],
         "requestBody": {
@@ -2294,6 +2163,9 @@
           },
           "404": {
             "description": "Report column not found or not accessible"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       },
@@ -2313,15 +2185,6 @@
               "type": "integer"
             },
             "description": "ID of the report column to delete."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
           }
         ],
         "responses": {
@@ -2336,6 +2199,9 @@
           },
           "404": {
             "description": "Report column not found, or column is a DATASET column"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -2348,15 +2214,6 @@
           "datasets"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "dataset_group_id",
             "in": "query",
@@ -2463,6 +2320,102 @@
               "default": 10
             },
             "description": "Number of items per page"
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -2520,6 +2473,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -2532,15 +2491,6 @@
           "tracking"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication."
-          },
           {
             "name": "request_id",
             "in": "path",
@@ -2670,6 +2620,9 @@
               }
             }
           },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -2691,15 +2644,6 @@
           "tracking"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication."
-          },
           {
             "name": "trace_id",
             "in": "path",
@@ -2836,6 +2780,9 @@
               }
             }
           },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
           "500": {
             "description": "Internal server error.",
             "content": {
@@ -2858,15 +2805,6 @@
         ],
         "description": "Retrieve paginated rows from a dataset. Each row is an array of cells matching the order of the `columns` array. All cells have `{\"type\": \"dataset\", \"value\": ...}`.",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "dataset_id",
             "in": "path",
@@ -3002,6 +2940,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Dataset not found",
             "content": {
@@ -3011,6 +2952,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3024,15 +2968,6 @@
         ],
         "description": "Retrieve paginated evaluation results with dataset input variables and evaluation cell outcomes. Each row is an array of cells matching the order of the `columns` array. Dataset input cells have `{\"type\": \"dataset\", \"value\": ...}`. Eval result cells have `{\"type\": \"eval\", \"status\": ..., \"value\": ...}`.",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "evaluation_id",
             "in": "path",
@@ -3172,6 +3107,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Evaluation not found",
             "content": {
@@ -3181,6 +3119,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3193,15 +3134,6 @@
           "evaluations"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "workspace_id",
             "in": "query",
@@ -3268,6 +3200,102 @@
               "default": 10
             },
             "description": "Number of items per page"
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -3325,6 +3353,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3335,17 +3369,6 @@
         "operationId": "createDatasetGroup",
         "tags": [
           "datasets"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -3434,6 +3457,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "409": {
             "description": "External ID conflict",
             "content": {
@@ -3443,6 +3469,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3453,17 +3482,6 @@
         "operationId": "createDatasetVersionFromFile",
         "tags": [
           "datasets"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication. This endpoint supports API key authentication only."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -3536,6 +3554,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Access denied to this dataset group",
             "content": {
@@ -3556,6 +3577,9 @@
               }
             }
           },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
           "500": {
             "description": "Failed to upload file or create dataset version",
             "content": {
@@ -3575,17 +3599,6 @@
         "operationId": "createDatasetVersionFromFilterParams",
         "tags": [
           "datasets"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication. This endpoint supports API key authentication only."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -3719,6 +3732,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Access denied to this dataset group",
             "content": {
@@ -3738,6 +3754,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3748,17 +3767,6 @@
         "operationId": "createDraftDatasetVersion",
         "tags": [
           "datasets"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication. This endpoint supports API key authentication only."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -3840,6 +3848,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Access denied to this dataset group",
             "content": {
@@ -3869,6 +3880,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3879,17 +3893,6 @@
         "operationId": "addRequestLogToDatasetVersion",
         "tags": [
           "datasets"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication. This endpoint supports API key authentication only."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -3955,6 +3958,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Access denied to this dataset group",
             "content": {
@@ -3974,6 +3980,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -3984,17 +3993,6 @@
         "operationId": "saveDraftDatasetVersion",
         "tags": [
           "datasets"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication. This endpoint supports API key authentication only."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -4044,6 +4042,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Access denied to this dataset group",
             "content": {
@@ -4063,6 +4064,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -4075,15 +4079,6 @@
         "summary": "Get All",
         "operationId": "get_all_prompt_templates__get",
         "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
           {
             "in": "query",
             "name": "page",
@@ -4156,19 +4151,106 @@
             "in": "query",
             "name": "external_source",
             "schema": {
-              "type": "string",
-              "title": "External Source"
+              "type": "string"
             },
-            "description": "External ID source to filter by. Must be provided with external_id."
+            "description": "External ID source to filter by. Must be provided with external_id.",
+            "required": false
           },
           {
             "in": "query",
             "name": "external_id",
             "schema": {
-              "type": "string",
-              "title": "External Id"
+              "type": "string"
             },
-            "description": "External ID value to filter by. Must be provided with external_source."
+            "description": "External ID value to filter by. Must be provided with external_source.",
+            "required": false
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
+          },
+          {
+            "name": "is_snippet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When true, return snippets only. When false, exclude snippets. When omitted, return both prompts and snippets."
           }
         ],
         "responses": {
@@ -4181,6 +4263,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -4192,18 +4280,6 @@
         ],
         "summary": "Log Request",
         "operationId": "logRequest",
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "description": "API key to authorize the operation."
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -4242,6 +4318,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -4251,6 +4330,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -4282,15 +4364,6 @@
               "default": false
             },
             "description": "When set to true, the response includes all output nodes' results. If omitted or set to false, only the main output is returned."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
           }
         ],
         "responses": {
@@ -4391,6 +4464,9 @@
           },
           "404": {
             "description": "Not Found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         },
         "security": [
@@ -4406,17 +4482,6 @@
         "operationId": "createWorkflow",
         "tags": [
           "workflow"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -4478,6 +4543,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -4498,15 +4566,6 @@
               "type": "string"
             },
             "description": "The ID or name of the workflow to update."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
           }
         ],
         "requestBody": {
@@ -4559,6 +4618,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -4571,15 +4633,6 @@
           "workflow"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
-          },
           {
             "name": "page",
             "in": "query",
@@ -4602,6 +4655,102 @@
               "default": 30
             },
             "description": "Number of items per page."
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -4649,6 +4798,13 @@
                               "type": "string"
                             },
                             "description": "Array of release label names associated with the workflow"
+                          },
+                          "external_ids": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/ExternalId"
+                            },
+                            "description": "External ID mappings attached to this workflow."
                           }
                         },
                         "required": [
@@ -4755,6 +4911,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -4767,15 +4926,6 @@
           "workflow"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
-          },
           {
             "name": "workflow_id_or_name",
             "in": "path",
@@ -4958,6 +5108,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Agent or version not found"
           },
@@ -4976,15 +5129,6 @@
           "release-labels"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
-          },
           {
             "name": "workflow_id_or_name",
             "in": "path",
@@ -5046,8 +5190,14 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Agent not found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -5068,15 +5218,6 @@
               "type": "string"
             },
             "description": "The name of the workflow to execute."
-          },
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your API key for authentication."
           }
         ],
         "requestBody": {
@@ -5110,6 +5251,16 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
           "404": {
             "description": "Not Found",
             "content": {
@@ -5120,15 +5271,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -5140,18 +5284,6 @@
         ],
         "summary": "Create Spans Bulk",
         "operationId": "createSpansBulk",
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "description": "API key to authorize the operation."
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -5183,6 +5315,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Forbidden",
             "content": {
@@ -5192,6 +5327,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           },
           "500": {
             "description": "Internal Server Error",
@@ -5214,17 +5352,6 @@
         "summary": "Create Folder",
         "description": "Creates a new folder in the workspace. Folders can be nested within other folders by providing a parent_id. The folder name must be unique within its parent folder (or at the root level if no parent is specified).",
         "operationId": "create_folder_api_public_v2_folders_post",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -5293,6 +5420,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -5306,15 +5436,6 @@
         "description": "Renames an existing folder. The new name must be unique within the folder's parent (or at root level). The folder must belong to a workspace accessible by the authenticated user.",
         "operationId": "update_folder_api_public_v2_folders_patch",
         "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
           {
             "name": "folder_id",
             "in": "path",
@@ -5376,6 +5497,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -5389,15 +5513,6 @@
         "description": "Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Supports filtering by entity type, searching by name, flattening the folder hierarchy, and optionally including entity metadata.",
         "operationId": "list_folder_entities_api_public_v2_folders_entities_get",
         "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
           {
             "name": "workspace_id",
             "in": "query",
@@ -5489,6 +5604,154 @@
               "title": "Include Metadata",
               "description": "When true, includes type-specific metadata for each entity (e.g., prompt type, latest version number)."
             }
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
+          },
+          {
+            "name": "tags",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "oneOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "array",
+                  "items": {
+                    "type": "string"
+                  }
+                }
+              ]
+            },
+            "description": "Filter entities by tags. Applies to entity types that support tags."
+          },
+          {
+            "name": "semantic_search",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "Use semantic search instead of text matching. Requires search_query."
+          },
+          {
+            "name": "semantic_search_top_k",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 500
+            },
+            "description": "Maximum number of semantic search results to consider."
+          },
+          {
+            "name": "semantic_search_threshold",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "number",
+              "exclusiveMinimum": 0,
+              "maximum": 2
+            },
+            "description": "Maximum semantic search distance threshold."
           }
         ],
         "responses": {
@@ -5512,6 +5775,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Folder not found",
             "content": {
@@ -5521,6 +5787,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       },
@@ -5531,17 +5800,6 @@
         "summary": "Move Folder Entities",
         "description": "Moves one or more entities into a target folder, or to the workspace root if no folder_id is provided. Supports moving folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Requires appropriate edit permissions for each entity type.",
         "operationId": "move_folder_entities_api_public_v2_folders_entities_post",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -5592,6 +5850,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       },
@@ -5602,17 +5863,6 @@
         "summary": "Delete Folder Entities",
         "description": "Deletes one or more entities from the workspace. Supports deleting folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Use cascade=true to recursively delete all contents of a folder. Without cascade, deleting a non-empty folder returns an error. Entities are soft-deleted where applicable.",
         "operationId": "delete_folder_entities_api_public_v2_folders_entities_delete",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -5664,6 +5914,9 @@
               }
             }
           },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
           "500": {
             "description": "Internal server error during deletion",
             "content": {
@@ -5686,15 +5939,6 @@
         "description": "Resolves a folder's ID from its path. The path uses dot-separated folder names representing the hierarchy (e.g., \"My Folder.Subfolder\").",
         "operationId": "resolve_folder_id_api_public_v2_folders_resolve_id_get",
         "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
           {
             "name": "workspace_id",
             "in": "query",
@@ -5737,6 +5981,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "404": {
             "description": "Folder path not found",
             "content": {
@@ -5746,6 +5993,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -5760,15 +6010,6 @@
         "description": "Get all prompts that use a given snippet (prompt template). Returns a list of prompts and their version numbers that reference this snippet.",
         "operationId": "get_snippet_usage",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "identifier",
             "in": "path",
@@ -5801,11 +6042,17 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "403": {
             "description": "Access denied - Invalid workspace_id"
           },
           "404": {
             "description": "Prompt template not found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -5819,16 +6066,6 @@
         "description": "Ingest OpenTelemetry traces using the standard OTLP/HTTP protocol.\n\nThis endpoint accepts an `ExportTraceServiceRequest` as defined by the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/otel/protocol/otlp/#otlphttp). Spans carrying [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.\n\nSupported content types:\n- `application/x-protobuf` — binary protobuf encoding (recommended)\n- `application/json` — JSON encoding\n\nGzip `Content-Encoding` is supported for both formats.\n\nSpans can include `promptlayer.prompt.name` (or `promptlayer.prompt.id`) and `promptlayer.prompt.version` (or `promptlayer.prompt.label`) attributes to link the generated request log to an existing prompt template in your workspace.",
         "operationId": "ingestOtlpTraces",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "description": "API key to authorize the operation."
-          },
           {
             "name": "Content-Type",
             "in": "header",
@@ -5890,6 +6127,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "415": {
             "description": "Unsupported Content-Type",
             "content": {
@@ -5899,6 +6139,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           },
           "500": {
             "description": "Internal server error during ingestion",
@@ -5919,17 +6162,6 @@
         "operationId": "searchRequestLogs",
         "tags": [
           "tracking"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -5982,6 +6214,9 @@
               }
             }
           },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
           "429": {
             "description": "Rate limit exceeded (10 requests per minute)."
           }
@@ -5996,17 +6231,6 @@
           "tracking"
         ],
         "description": "Aggregate analytics across request logs — totals, time-series breakdowns, latency percentiles, and model/prompt/provider/tag breakdowns. Body is the same `RequestLogQuery` shape as `POST /api/public/v2/requests/search` but returns aggregated values instead of paginated rows.",
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication."
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -6057,6 +6281,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -6067,17 +6294,6 @@
         "operationId": "listSkillCollectionsPublic",
         "tags": [
           "skill-collections"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          }
         ],
         "responses": {
           "200": {
@@ -6109,25 +6325,115 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
+          }
+        ]
       },
       "post": {
         "summary": "Create Skill Collection",
         "operationId": "createSkillCollectionPublic",
         "tags": [
           "skill-collections"
-        ],
-        "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          }
         ],
         "requestBody": {
           "required": true,
@@ -6185,6 +6491,16 @@
               }
             }
           },
+          "409": {
+            "description": "External ID conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalIdErrorResponse"
+                }
+              }
+            }
+          },
           "415": {
             "description": "Unsupported content type.",
             "content": {
@@ -6195,15 +6511,8 @@
               }
             }
           },
-          "409": {
-            "description": "External ID conflict",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ExternalIdErrorResponse"
-                }
-              }
-            }
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -6216,15 +6525,6 @@
           "skill-collections"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "identifier",
             "in": "path",
@@ -6322,6 +6622,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       },
@@ -6332,15 +6635,6 @@
           "skill-collections"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "identifier",
             "in": "path",
@@ -6411,6 +6705,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -6423,15 +6720,6 @@
           "skill-collections"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "Your PromptLayer API key."
-          },
           {
             "name": "identifier",
             "in": "path",
@@ -6517,6 +6805,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -6529,15 +6820,6 @@
           "tracking"
         ],
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string"
-            },
-            "description": "API key for authentication."
-          },
           {
             "name": "field",
             "in": "query",
@@ -6641,6 +6923,9 @@
               }
             }
           },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
           "429": {
             "description": "Rate limit exceeded (10 requests per minute)."
           }
@@ -6655,17 +6940,6 @@
         "summary": "List Tool Registries",
         "description": "List all tools in the Tool Registry for the workspace.",
         "operationId": "list_tool_registries",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          }
-        ],
         "responses": {
           "200": {
             "description": "Successful Response",
@@ -6700,6 +6974,13 @@
                           },
                           "updated_at": {
                             "type": "string"
+                          },
+                          "external_ids": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/ExternalId"
+                            },
+                            "description": "External ID mappings attached to this tool."
                           }
                         }
                       }
@@ -6708,8 +6989,112 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
-        }
+        },
+        "parameters": [
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
+          }
+        ]
       },
       "post": {
         "tags": [
@@ -6718,17 +7103,6 @@
         "summary": "Create Tool Registry",
         "description": "Create a new tool in the Tool Registry with an initial version.",
         "operationId": "create_tool_registry",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          }
-        ],
         "requestBody": {
           "required": true,
           "content": {
@@ -6802,6 +7176,9 @@
               }
             }
           },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
           "409": {
             "description": "External ID conflict",
             "content": {
@@ -6811,6 +7188,9 @@
                 }
               }
             }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -6824,15 +7204,6 @@
         "description": "Get a tool from the Tool Registry by ID or name. Optionally resolve a specific version by label or version number.",
         "operationId": "get_tool_registry",
         "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
           {
             "name": "identifier",
             "in": "path",
@@ -6904,6 +7275,12 @@
                 }
               }
             }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -6918,15 +7295,6 @@
         "description": "Publish a prompt template by external ID. Existing mappings create a new version on the mapped prompt template. Missing mappings create or update a prompt template and attach the mapping.",
         "operationId": "upsert_prompt_template_by_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "source",
             "in": "path",
@@ -7045,15 +7413,6 @@
         "operationId": "attach_prompt_template_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "prompt_template_id",
             "in": "path",
             "required": true,
@@ -7144,15 +7503,6 @@
         "operationId": "list_prompt_template_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "prompt_template_id",
             "in": "path",
             "required": true,
@@ -7224,15 +7574,6 @@
         "summary": "Delete Prompt Template External ID",
         "operationId": "delete_prompt_template_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "prompt_template_id",
             "in": "path",
@@ -7330,15 +7671,6 @@
         "operationId": "attach_folder_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "folder_id",
             "in": "path",
             "required": true,
@@ -7429,15 +7761,6 @@
         "operationId": "list_folder_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "folder_id",
             "in": "path",
             "required": true,
@@ -7509,15 +7832,6 @@
         "summary": "Delete Folder External ID",
         "operationId": "delete_folder_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "folder_id",
             "in": "path",
@@ -7615,15 +7929,6 @@
         "operationId": "attach_workflow_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "workflow_id",
             "in": "path",
             "required": true,
@@ -7714,15 +8019,6 @@
         "operationId": "list_workflow_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "workflow_id",
             "in": "path",
             "required": true,
@@ -7794,15 +8090,6 @@
         "summary": "Delete Workflow External ID",
         "operationId": "delete_workflow_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "workflow_id",
             "in": "path",
@@ -7900,15 +8187,6 @@
         "operationId": "attach_dataset_group_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "dataset_group_id",
             "in": "path",
             "required": true,
@@ -7999,15 +8277,6 @@
         "operationId": "list_dataset_group_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "dataset_group_id",
             "in": "path",
             "required": true,
@@ -8079,15 +8348,6 @@
         "summary": "Delete Dataset Group External ID",
         "operationId": "delete_dataset_group_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "dataset_group_id",
             "in": "path",
@@ -8185,15 +8445,6 @@
         "operationId": "attach_report_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "report_id",
             "in": "path",
             "required": true,
@@ -8284,15 +8535,6 @@
         "operationId": "list_report_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "report_id",
             "in": "path",
             "required": true,
@@ -8364,15 +8606,6 @@
         "summary": "Delete Report External ID",
         "operationId": "delete_report_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "report_id",
             "in": "path",
@@ -8470,15 +8703,6 @@
         "operationId": "attach_tool_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "tool_id",
             "in": "path",
             "required": true,
@@ -8569,15 +8793,6 @@
         "operationId": "list_tool_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "tool_id",
             "in": "path",
             "required": true,
@@ -8649,15 +8864,6 @@
         "summary": "Delete Tool Registry External ID",
         "operationId": "delete_tool_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "tool_id",
             "in": "path",
@@ -8755,15 +8961,6 @@
         "operationId": "attach_skill_collection_id_external_id",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "skill_collection_id",
             "in": "path",
             "required": true,
@@ -8854,15 +9051,6 @@
         "operationId": "list_skill_collection_id_external_ids",
         "parameters": [
           {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
-          {
             "name": "skill_collection_id",
             "in": "path",
             "required": true,
@@ -8934,15 +9122,6 @@
         "summary": "Delete Skill Collection External ID",
         "operationId": "delete_skill_collection_id_external_id",
         "parameters": [
-          {
-            "name": "X-API-KEY",
-            "in": "header",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            }
-          },
           {
             "name": "skill_collection_id",
             "in": "path",
@@ -9027,6 +9206,124 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/reports/{report_id}/score-card": {
+      "patch": {
+        "summary": "Configure Custom Scoring",
+        "description": "Configure custom score calculation for an evaluation pipeline.",
+        "operationId": "updateReportScoreCard",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the evaluation pipeline to update."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "column_names": {
+                    "type": "array",
+                    "items": {
+                      "type": "string"
+                    },
+                    "description": "Column names to include in the score calculation."
+                  },
+                  "code": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional Python or JavaScript code for custom score calculation."
+                  },
+                  "code_language": {
+                    "type": "string",
+                    "enum": [
+                      "PYTHON",
+                      "JAVASCRIPT"
+                    ],
+                    "default": "PYTHON",
+                    "description": "Language used for custom scoring code."
+                  }
+                },
+                "required": [
+                  "column_names"
+                ]
+              },
+              "examples": {
+                "weighted_scoring": {
+                  "summary": "Weighted score card",
+                  "value": {
+                    "column_names": [
+                      "Accuracy Check",
+                      "Style Check"
+                    ],
+                    "code_language": "PYTHON",
+                    "code": "return {\"score\": 85.5}"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Score card updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "report": {
+                      "type": "object",
+                      "description": "Updated evaluation pipeline."
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "report"
+                  ]
+                },
+                "examples": {
+                  "success": {
+                    "value": {
+                      "success": true,
+                      "report": {
+                        "id": 456,
+                        "name": "My Evaluation Pipeline",
+                        "score_configuration": {
+                          "code_language": "PYTHON"
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -9215,6 +9512,13 @@
                 }
               }
             }
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this evaluation."
           }
         },
         "required": [
@@ -9710,16 +10014,17 @@
             "default": false,
             "description": "Indicates that the request failed."
           },
+          "message": {
+            "type": "string",
+            "description": "Human-readable error message."
+          },
           "error": {
             "type": "string",
-            "description": "Error message explaining why the request failed."
+            "description": "Machine-readable or fallback error message."
           }
         },
-        "required": [
-          "success",
-          "error"
-        ],
-        "description": "Error response format."
+        "additionalProperties": true,
+        "description": "Standard error response. Some legacy endpoints may return either message or error."
       },
       "SkillCollectionErrorResponse": {
         "type": "object",
@@ -9785,6 +10090,13 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this skill collection."
           }
         }
       },
@@ -10138,13 +10450,13 @@
         "properties": {
           "page": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Page",
             "default": 1
           },
           "per_page": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Per Page",
             "default": 30
           }
@@ -10347,7 +10659,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "exclusiveMinimum": 0.0
+                "exclusiveMinimum": 0
               },
               {
                 "type": "null"
@@ -13967,8 +14279,8 @@
             "type": "integer"
           },
           "price": {
-            "default": 0.0,
-            "minimum": 0.0,
+            "default": 0,
+            "minimum": 0,
             "title": "Price",
             "type": "number"
           },
@@ -14477,6 +14789,13 @@
           "dataset_group": {
             "$ref": "#/components/schemas/DatasetGroup",
             "description": "Associated dataset group information"
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this dataset group."
           }
         },
         "required": [
@@ -14748,6 +15067,13 @@
                 "type": "object"
               }
             ]
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this entity."
           }
         },
         "title": "FolderEntity"
@@ -16009,12 +16335,17 @@
             "title": "Version"
           },
           "external_ids": {
+            "type": "array",
             "items": {
               "$ref": "#/components/schemas/ExternalId"
             },
-            "type": "array",
-            "title": "External Ids",
-            "description": "External ID mappings attached to the prompt template."
+            "description": "External ID mappings attached to the prompt template.",
+            "title": "External Ids"
+          },
+          "is_snippet": {
+            "type": "boolean",
+            "title": "Is Snippet",
+            "description": "Whether this prompt template record is a snippet."
           }
         },
         "type": "object",
@@ -16026,6 +16357,60 @@
         ],
         "title": "ListPromptTemplateItem"
       }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Unauthorized - missing or invalid API key.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "ForbiddenError": {
+        "description": "Forbidden - API key does not have access to the requested resource.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation error - request parameters or body are invalid.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                },
+                {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "description": "Not found - requested resource does not exist or is not accessible.",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/ErrorResponse"
+            }
+          }
+        }
+      }
     }
-  }
+  },
+  "security": [
+    {
+      "ApiKeyAuth": []
+    }
+  ]
 }
