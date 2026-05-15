@@ -1,0 +1,116 @@
+---
+title: "MCP & Skills"
+description: "Use PromptLayer with AI tools."
+---
+
+PromptLayer provides a few ways to bring PromptLayer context and workspace access into AI coding tools and MCP-compatible clients. Use the skill when you want your coding agent to understand PromptLayer concepts and best practices. Use the MCP servers when you want an agent to search documentation or work with PromptLayer resources directly.
+
+## What is available
+
+| Tool | Use it for |
+| ---- | ---------- |
+| **PromptLayer skill** | Gives AI coding tools PromptLayer product context, SDK patterns, prompt management guidance, evaluation workflows, and observability best practices. |
+| **PromptLayer Docs MCP** | Lets agents search and read PromptLayer documentation from your docs site. |
+| **PromptLayer MCP** | Lets MCP-compatible clients interact with PromptLayer workspace resources such as prompts, request logs, datasets, evaluations, workflows, tools, and skill collections. |
+
+## Install and connect
+
+<Tip>
+  **Using a coding agent?**
+
+  Copy the following prompt to add the PromptLayer **skill** and **MCP servers** for better results when working with PromptLayer.
+</Tip>
+
+<Prompt
+  description="Install the PromptLayer skill and MCP servers."
+  icon="sparkles"
+  actions={["copy", "cursor"]}
+>
+Install the PromptLayer skill for context on project structure, SDKs, prompts, evaluations, observability, and PromptLayer best practices:
+
+npx skills add https://docs.promptlayer.com
+
+Add the PromptLayer Docs MCP server for documentation search:
+
+https://docs.promptlayer.com/mcp
+
+Add the PromptLayer MCP server for PromptLayer workspace access and content management:
+
+https://mcp.promptlayer.com/mcp
+</Prompt>
+
+Alternatively, you can install them manually using the information below.
+
+Install the PromptLayer skill:
+
+```bash
+npx skills add https://docs.promptlayer.com
+```
+
+Add the PromptLayer Docs MCP server:
+
+```text
+https://docs.promptlayer.com/mcp
+```
+
+Add the PromptLayer MCP server:
+
+```text
+https://mcp.promptlayer.com/mcp
+```
+
+## PromptLayer MCP
+
+Use the PromptLayer MCP server when you want an MCP-compatible client to work with PromptLayer workspace resources such as prompts, request logs, datasets, evaluations, workflows, tools, and skill collections.
+
+### Authorization header
+
+When you connect to the hosted MCP server, pass your PromptLayer API key in the `Authorization` header:
+
+```text
+Authorization: Bearer pl_your_key_here
+```
+
+### Available tools
+
+The PromptLayer MCP server exposes 60 tools covering all major PromptLayer features:
+
+| Category | Tools |
+| --- | --- |
+| **Prompt Templates** | `get-prompt-template`, `get-prompt-template-raw`, `list-prompt-templates`, `publish-prompt-template`, `patch-prompt-template-version`, `list-prompt-template-labels`, `create-prompt-label`, `move-prompt-label`, `delete-prompt-label`, `get-snippet-usage` |
+| **Request Logs** | `get-request`, `search-request-logs`, `get-trace`, `get-request-search-suggestions`, `get-request-analytics` |
+| **Tracking** | `log-request`, `create-spans-bulk` |
+| **Datasets** | `list-datasets`, `get-dataset-rows`, `create-dataset-group`, `create-dataset-version-from-file`, `create-dataset-version-from-filter-params`, `create-draft-dataset-version`, `add-request-log-to-dataset`, `save-draft-dataset-version` |
+| **Evaluations** | `list-evaluations`, `get-evaluation-rows`, `create-report`, `run-report`, `get-report`, `get-report-score`, `add-report-column`, `edit-report-column`, `delete-report-column`, `update-report-score-card`, `rename-report`, `delete-report`, `delete-reports-by-name` |
+| **Agents** | `list-workflows`, `get-workflow`, `get-workflow-labels`, `create-workflow`, `patch-workflow`, `run-workflow`, `get-workflow-version-execution-results` |
+| **Tool Registry** | `list-tool-registries`, `get-tool-registry`, `create-tool-registry`, `create-tool-version` |
+| **Skill Collections** | `list-skill-collections`, `create-skill-collection`, `get-skill-collection`, `update-skill-collection`, `save-skill-collection-version` |
+| **Folders** | `create-folder`, `edit-folder`, `get-folder-entities`, `move-folder-entities`, `delete-folder-entities`, `resolve-folder-id` |
+
+### Local server
+
+Install the server from npm: [@promptlayer/mcp-server](https://www.npmjs.com/package/@promptlayer/mcp-server)
+
+For clients that support stdio transport, such as Claude Desktop and Cursor, you can run the server locally via npx:
+
+```json
+{
+  "mcpServers": {
+    "promptlayer": {
+      "command": "npx",
+      "args": ["-y", "@promptlayer/mcp-server"],
+      "env": {
+        "PROMPTLAYER_API_KEY": "pl_your_key_here"
+      }
+    }
+  }
+}
+```
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="PromptLayer MCP source" icon="github" href="https://github.com/MagnivOrg/promptlayer-mcp">
+    Review the open-source MCP server implementation.
+  </Card>
+</CardGroup>

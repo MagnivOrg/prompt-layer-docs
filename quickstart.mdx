@@ -10,6 +10,30 @@ PromptLayer helps you manage prompts outside your code and evaluate changes befo
 
 Before you start, make sure you have a [PromptLayer account](https://dashboard.promptlayer.com/create-account).
 
+<Tip>
+  **Using a coding agent?**
+
+  Copy the following prompt to add the PromptLayer **skill** and **MCP servers** for better results when working with PromptLayer.
+</Tip>
+
+<Prompt
+  description="Install the PromptLayer skill and MCP servers."
+  icon="sparkles"
+  actions={["copy", "cursor"]}
+>
+Install the PromptLayer skill for context on project structure, SDKs, prompts, evaluations, observability, and PromptLayer best practices:
+
+npx skills add https://docs.promptlayer.com
+
+Add the PromptLayer Docs MCP server for documentation search:
+
+https://docs.promptlayer.com/mcp
+
+Add the PromptLayer MCP server for PromptLayer workspace access and content management:
+
+https://mcp.promptlayer.com/mcp
+</Prompt>
+
 ## Create a prompt
 
 From the PromptLayer dashboard, click **New** -> **Prompt**.
