@@ -336,7 +336,8 @@
   "contextual": {
     "options": [
       "copy",
-      "view"
+      "view",
+      "add-mcp"
     ]
   },
   "logo": {
