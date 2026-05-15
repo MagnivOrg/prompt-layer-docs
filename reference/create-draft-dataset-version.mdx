@@ -3,21 +3,17 @@ title: "Create Draft Dataset Version"
 openapi: "POST /api/public/v2/dataset-versions/create-draft"
 ---
 
-Create a new draft dataset version for a dataset group. A draft (version_number = -1) is a mutable staging area where you can add rows before publishing.
+Create a mutable draft dataset version for a dataset group. Drafts use `version_number = -1` until they are saved as a published version.
 
-### Workflow
+## Behavior Notes
 
-This endpoint is the first step in the dataset version creation workflow:
+- Only one draft can exist per dataset group at a time; creating another draft returns `409`.
+- Without `source_dataset_id`, PromptLayer creates an empty draft and returns `201`.
+- With `source_dataset_id`, rows are copied from the source dataset asynchronously and the endpoint returns `202`.
+- The source dataset must belong to the same dataset group.
 
-1. **Create draft** — Use this endpoint to create a draft
-2. **Add rows** — Use [Add Request Log](/reference/add-request-log-to-dataset) to add request logs as rows
-3. **Save** — Use [Save Draft](/reference/save-draft-dataset-version) to publish as a new version
+## Related
 
-### Source Dataset
-
-Optionally provide `source_dataset_id` to copy rows from an existing dataset version. The source dataset must belong to the same dataset group. When a source is provided, rows are copied asynchronously in the background (returns 202).
-
-### Notes
-
-- Only one draft can exist per dataset group at a time. Returns 409 if a draft already exists.
-- Without `source_dataset_id`, an empty draft is created (returns 201).
+- [Add Request Log to Dataset](/reference/add-request-log-to-dataset)
+- [Save Draft Dataset Version](/reference/save-draft-dataset-version)
+- [Create Dataset Version from File](/reference/create-dataset-version-from-file)

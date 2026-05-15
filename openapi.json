@@ -3171,58 +3171,46 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "dataset_group_id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "description": "ID of the dataset group where the new version will be created"
-                  },
-                  "file_name": {
-                    "type": "string",
-                    "minLength": 1,
-                    "maxLength": 255,
-                    "description": "Name of the file being uploaded (must end with .csv or .json)"
-                  },
-                  "file_content_base64": {
-                    "type": "string",
-                    "minLength": 1,
-                    "description": "Base64 encoded content of the file. Maximum file size: 100MB. Supported formats: CSV, JSON"
+                "$ref": "#/components/schemas/CreateDatasetVersionFromFileRequest"
+              },
+              "examples": {
+                "csvFile": {
+                  "summary": "Create from CSV file",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "file_name": "support-eval.csv",
+                    "file_content_base64": "cXVlc3Rpb24sZXhwZWN0ZWRfYW5zd2VyCldoYXQgaXMgUHJvbXB0TGF5ZXI/LEEgcHJvbXB0IG1hbmFnZW1lbnQgcGxhdGZvcm0="
                   }
                 },
-                "required": [
-                  "dataset_group_id",
-                  "file_name",
-                  "file_content_base64"
-                ]
+                "jsonFile": {
+                  "summary": "Create from JSON file",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "file_name": "support-eval.json",
+                    "file_content_base64": "W3sicXVlc3Rpb24iOiJXaGF0IGlzIFByb21wdExheWVyPyIsImV4cGVjdGVkX2Fuc3dlciI6IkEgcHJvbXB0IG1hbmFnZW1lbnQgcGxhdGZvcm0ifV0="
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Dataset version creation job queued",
+            "description": "Dataset version creation job queued.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "dataset_id": {
-                      "type": "integer",
-                      "description": "ID of the created draft dataset"
+                  "$ref": "#/components/schemas/CreateDatasetVersionFromFileResponse"
+                },
+                "examples": {
+                  "queued": {
+                    "summary": "File processing queued",
+                    "value": {
+                      "success": true,
+                      "message": "Dataset version creation job queued",
+                      "dataset_id": 456
                     }
-                  },
-                  "required": [
-                    "success",
-                    "message",
-                    "dataset_id"
-                  ]
+                  }
                 }
               }
             }
@@ -3241,24 +3229,10 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "403": {
-            "description": "Access denied to this dataset group",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/ForbiddenError"
           },
           "404": {
-            "description": "Dataset group not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFoundError"
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
@@ -3392,77 +3366,63 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "dataset_group_id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "description": "ID of the dataset group to create a draft version for"
-                  },
-                  "source_dataset_id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "description": "Optional. ID of an existing dataset version to copy rows from. Must belong to the same dataset group."
+                "$ref": "#/components/schemas/CreateDraftDatasetVersionRequest"
+              },
+              "examples": {
+                "emptyDraft": {
+                  "summary": "Create an empty draft",
+                  "value": {
+                    "dataset_group_id": 123
                   }
                 },
-                "required": [
-                  "dataset_group_id"
-                ]
+                "copyFromSource": {
+                  "summary": "Create a draft from an existing dataset version",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "source_dataset_id": 456
+                  }
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Empty draft created",
+            "description": "Empty draft created.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "draft_dataset_id": {
-                      "type": "integer",
-                      "description": "ID of the created draft dataset"
+                  "$ref": "#/components/schemas/DraftDatasetVersionResponse"
+                },
+                "examples": {
+                  "created": {
+                    "summary": "Empty draft created",
+                    "value": {
+                      "success": true,
+                      "message": "Draft dataset version created",
+                      "draft_dataset_id": 789
                     }
-                  },
-                  "required": [
-                    "success",
-                    "message",
-                    "draft_dataset_id"
-                  ]
+                  }
                 }
               }
             }
           },
           "202": {
-            "description": "Draft created, rows being copied from source dataset",
+            "description": "Draft created and source rows are being copied asynchronously.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "draft_dataset_id": {
-                      "type": "integer",
-                      "description": "ID of the created draft dataset"
+                  "$ref": "#/components/schemas/DraftDatasetVersionResponse"
+                },
+                "examples": {
+                  "copying": {
+                    "summary": "Rows copying from source dataset",
+                    "value": {
+                      "success": true,
+                      "message": "Draft created; rows are being copied from the source dataset",
+                      "draft_dataset_id": 789
                     }
-                  },
-                  "required": [
-                    "success",
-                    "message",
-                    "draft_dataset_id"
-                  ]
+                  }
                 }
               }
             }
@@ -3471,24 +3431,10 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "403": {
-            "description": "Access denied to this dataset group",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/ForbiddenError"
           },
           "404": {
-            "description": "Dataset group or source dataset not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFoundError"
           },
           "409": {
             "description": "A draft version already exists for this dataset group",
@@ -3518,51 +3464,37 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "dataset_group_id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "description": "ID of the dataset group containing the draft"
-                  },
-                  "request_log_id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "description": "ID of the request log to add as a dataset row"
+                "$ref": "#/components/schemas/AddRequestLogToDatasetRequest"
+              },
+              "examples": {
+                "addRequestLog": {
+                  "summary": "Add request log row",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "request_log_id": 98765
                   }
-                },
-                "required": [
-                  "dataset_group_id",
-                  "request_log_id"
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "201": {
-            "description": "Request log added to draft dataset",
+            "description": "Request log added to draft dataset.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "draft_dataset_id": {
-                      "type": "integer",
-                      "description": "ID of the draft dataset"
+                  "$ref": "#/components/schemas/DraftDatasetVersionResponse"
+                },
+                "examples": {
+                  "added": {
+                    "summary": "Request log added",
+                    "value": {
+                      "success": true,
+                      "message": "Request log added to draft dataset",
+                      "draft_dataset_id": 789
                     }
-                  },
-                  "required": [
-                    "success",
-                    "message",
-                    "draft_dataset_id"
-                  ]
+                  }
                 }
               }
             }
@@ -3581,24 +3513,10 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "403": {
-            "description": "Access denied to this dataset group",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/ForbiddenError"
           },
           "404": {
-            "description": "Dataset group, draft, or request log not found",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFoundError"
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
@@ -3618,45 +3536,36 @@
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "dataset_group_id": {
-                    "type": "integer",
-                    "minimum": 1,
-                    "description": "ID of the dataset group containing the draft to save"
+                "$ref": "#/components/schemas/SaveDraftDatasetVersionRequest"
+              },
+              "examples": {
+                "saveDraft": {
+                  "summary": "Publish draft dataset version",
+                  "value": {
+                    "dataset_group_id": 123
                   }
-                },
-                "required": [
-                  "dataset_group_id"
-                ]
+                }
               }
             }
           }
         },
         "responses": {
           "202": {
-            "description": "Dataset save job queued",
+            "description": "Dataset save job queued.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "draft_dataset_id": {
-                      "type": "integer",
-                      "description": "ID of the draft dataset being saved"
+                  "$ref": "#/components/schemas/DraftDatasetVersionResponse"
+                },
+                "examples": {
+                  "queued": {
+                    "summary": "Save queued",
+                    "value": {
+                      "success": true,
+                      "message": "Dataset save job queued",
+                      "draft_dataset_id": 789
                     }
-                  },
-                  "required": [
-                    "success",
-                    "message",
-                    "draft_dataset_id"
-                  ]
+                  }
                 }
               }
             }
@@ -3665,24 +3574,10 @@
             "$ref": "#/components/responses/UnauthorizedError"
           },
           "403": {
-            "description": "Access denied to this dataset group",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/ForbiddenError"
           },
           "404": {
-            "description": "Dataset group not found or no draft version exists",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/ErrorResponse"
-                }
-              }
-            }
+            "$ref": "#/components/responses/NotFoundError"
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
@@ -17829,6 +17724,135 @@
           "prompt_name": {
             "type": "string",
             "nullable": true
+          }
+        }
+      },
+      "CreateDatasetVersionFromFileRequest": {
+        "type": "object",
+        "title": "CreateDatasetVersionFromFileRequest",
+        "required": [
+          "dataset_group_id",
+          "file_name",
+          "file_content_base64"
+        ],
+        "properties": {
+          "dataset_group_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID of the dataset group where the new version will be created."
+          },
+          "file_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Name of the CSV or JSON file. Must end with .csv or .json."
+          },
+          "file_content_base64": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Base64-encoded file content. Maximum decoded file size is 100MB."
+          }
+        }
+      },
+      "CreateDatasetVersionFromFileResponse": {
+        "type": "object",
+        "title": "CreateDatasetVersionFromFileResponse",
+        "required": [
+          "success",
+          "message",
+          "dataset_id"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "dataset_id": {
+            "type": "integer",
+            "description": "ID of the draft dataset created for asynchronous processing."
+          }
+        }
+      },
+      "CreateDraftDatasetVersionRequest": {
+        "type": "object",
+        "title": "CreateDraftDatasetVersionRequest",
+        "required": [
+          "dataset_group_id"
+        ],
+        "properties": {
+          "dataset_group_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID of the dataset group to create a draft version for."
+          },
+          "source_dataset_id": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Optional existing dataset version to copy rows from. Must belong to the same dataset group."
+          }
+        }
+      },
+      "DraftDatasetVersionResponse": {
+        "type": "object",
+        "title": "DraftDatasetVersionResponse",
+        "required": [
+          "success",
+          "message",
+          "draft_dataset_id"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "message": {
+            "type": "string"
+          },
+          "draft_dataset_id": {
+            "type": "integer",
+            "description": "ID of the draft dataset."
+          }
+        }
+      },
+      "AddRequestLogToDatasetRequest": {
+        "type": "object",
+        "title": "AddRequestLogToDatasetRequest",
+        "required": [
+          "dataset_group_id",
+          "request_log_id"
+        ],
+        "properties": {
+          "dataset_group_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID of the dataset group containing the draft."
+          },
+          "request_log_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID of the request log to add as a dataset row."
+          }
+        }
+      },
+      "SaveDraftDatasetVersionRequest": {
+        "type": "object",
+        "title": "SaveDraftDatasetVersionRequest",
+        "required": [
+          "dataset_group_id"
+        ],
+        "properties": {
+          "dataset_group_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID of the dataset group containing the draft to save."
           }
         }
       }
