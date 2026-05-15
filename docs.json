@@ -180,16 +180,16 @@
         ]
       },
       {
+        "group": "AI Tools",
+        "pages": [
+          "agents/overview"
+        ]
+      },
+      {
         "group": "SDKs",
         "pages": [
           "sdks/python",
           "sdks/javascript"
-        ]
-      },
-      {
-        "group": "Agents",
-        "pages": [
-          "agents/mcp"
         ]
       },
       {
@@ -397,6 +397,10 @@
     {
       "source": "/why-promptlayer/agents",
       "destination": "/why-promptlayer/workflows"
+    },
+    {
+      "source": "/agents/mcp",
+      "destination": "/agents/overview"
     },
     {
       "source": "/running-requests/promptlayer-run-agent",
