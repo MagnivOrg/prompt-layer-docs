@@ -35,6 +35,46 @@ This endpoint is the primary way to browse the unified registry programmatically
   Filter entities by tags. Only entities that contain all specified tags are returned. Applies to prompts, workflows, datasets, and evaluations. Folders, AB tests, and input variable sets are excluded when this filter is active.
 </ParamField>
 
+### Common Filters
+
+<ParamField query="created_by_email" type="string">
+  Filter entities by the creator's email address. Folders, AB tests, and input variable sets only match records created after creator tracking was added for those entity types.
+</ParamField>
+
+<ParamField query="created_after" type="string">
+  Filter entities created at or after this ISO 8601 datetime.
+</ParamField>
+
+<ParamField query="created_before" type="string">
+  Filter entities created at or before this ISO 8601 datetime.
+</ParamField>
+
+<ParamField query="updated_after" type="string">
+  Filter entities updated at or after this ISO 8601 datetime.
+</ParamField>
+
+<ParamField query="updated_before" type="string">
+  Filter entities updated at or before this ISO 8601 datetime.
+</ParamField>
+
+<ParamField query="external_source" type="string">
+  External ID source to filter by. Must be provided together with `external_id`.
+</ParamField>
+
+<ParamField query="external_id" type="string">
+  External ID value to filter by. Must be provided together with `external_source`. If no mapping exists in the workspace, the endpoint returns an empty result set.
+</ParamField>
+
+### Sorting
+
+<ParamField query="sort_by" type="string">
+  Sort by `created_at`, `updated_at`, `name`, or `id`.
+</ParamField>
+
+<ParamField query="sort_order" type="string" default="desc">
+  Sort direction. Accepts `asc` or `desc`.
+</ParamField>
+
 ### Search
 
 <ParamField query="search_query" type="string">
@@ -69,6 +109,7 @@ Returns an object with a single `entities` array. Each entity has the following 
     <ResponseField name="metadata" type="object | null">Type-specific metadata (only present when `include_metadata=true`).</ResponseField>
     <ResponseField name="distance" type="number | null">Semantic search distance score (only present when using semantic search).</ResponseField>
     <ResponseField name="created_by_email" type="string | null">Email of the user who created the entity, if available.</ResponseField>
+    <ResponseField name="external_ids" type="ExternalId[]">External ID mappings attached to the entity.</ResponseField>
   </Expandable>
 </ResponseField>
 
@@ -87,6 +128,7 @@ When `include_metadata=true`, the `metadata` field contains type-specific inform
 
 - **Semantic search**: Results are sorted by relevance (distance ascending).
 - **Text search**: Prompts and snippets with a name match are prioritized above content-only matches.
+- **Explicit sort**: When `sort_by` is provided and semantic/text search ordering does not take precedence, results are sorted by the requested field and `sort_order`.
 - **No search**: Results are returned in default database order.
 
 ## Examples
@@ -148,7 +190,8 @@ curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?tags=pro
       "path": ["Prompts"],
       "metadata": null,
       "distance": null,
-      "created_by_email": null
+      "created_by_email": null,
+      "external_ids": []
     },
     {
       "id": 205,
@@ -163,7 +206,10 @@ curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?tags=pro
         "latest_version_number": 5
       },
       "distance": null,
-      "created_by_email": "alice@example.com"
+      "created_by_email": "alice@example.com",
+      "external_ids": [
+        { "source": "acme_cms", "external_id": "prompt_205" }
+      ]
     },
     {
       "id": 88,
@@ -177,7 +223,8 @@ curl -X GET "https://api.promptlayer.com/api/public/v2/folders/entities?tags=pro
         "latest_version_number": 3
       },
       "distance": null,
-      "created_by_email": "bob@example.com"
+      "created_by_email": "bob@example.com",
+      "external_ids": []
     }
   ]
 }

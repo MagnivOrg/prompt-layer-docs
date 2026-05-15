@@ -7,27 +7,6 @@ Get a paginated list of all prompt templates in your workspace. Results are orde
 
 Each returned prompt template includes the latest version by default. When filtering by `label`, the version associated with that label is returned instead.
 
-### Pagination
-
-- **page**: Page number to retrieve (default: `1`)
-- **per_page**: Number of results per page (default: `30`)
-
-### Filtering
-
-- **label**: Filter prompt templates by release label (e.g., `prod`, `dev`, `staging`). Returns the version associated with that label for each matching template.
-- **name**: Filter prompt templates by name (case-insensitive partial match)
-- **tags**: Filter prompt templates by one or more tags. Can be provided as a single string or a list of strings. Only templates whose tags contain all specified values are returned.
-- **external_source** and **external_id**: Filter to the prompt template mapped to a specific external ID. These parameters must be provided together. If no mapping exists in the workspace, the endpoint returns an empty page.
-
-Each returned prompt template includes an `external_ids` array with the mappings attached to that prompt template. See [External IDs](/reference/external-ids-overview).
-
-### Filtering by Status
-
-Use the `status` parameter to control which prompt templates are returned based on their deletion status:
-- `active` (default): Returns only active prompt templates
-- `deleted`: Returns only deleted/archived prompt templates
-- `all`: Returns both active and deleted prompt templates
-
 ### Authentication
 
 This endpoint requires API key authentication via the `X-API-KEY` header.
