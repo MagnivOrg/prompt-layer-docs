@@ -1208,6 +1208,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
           "403": {
             "description": "Forbidden - Access to dataset group not allowed or missing permissions",
             "content": {
@@ -1239,9 +1242,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication"
           },
           "409": {
             "description": "External ID conflict",
@@ -1410,6 +1410,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
           "403": {
             "description": "Forbidden - Cannot overwrite dataset columns or missing permissions",
             "content": {
@@ -1449,9 +1452,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication"
           }
         }
       }
@@ -2463,6 +2463,102 @@
               "default": 10
             },
             "description": "Number of items per page"
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -3268,6 +3364,102 @@
               "default": 10
             },
             "description": "Number of items per page"
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -4156,19 +4348,106 @@
             "in": "query",
             "name": "external_source",
             "schema": {
-              "type": "string",
-              "title": "External Source"
+              "type": "string"
             },
-            "description": "External ID source to filter by. Must be provided with external_id."
+            "description": "External ID source to filter by. Must be provided with external_id.",
+            "required": false
           },
           {
             "in": "query",
             "name": "external_id",
             "schema": {
-              "type": "string",
-              "title": "External Id"
+              "type": "string"
             },
-            "description": "External ID value to filter by. Must be provided with external_source."
+            "description": "External ID value to filter by. Must be provided with external_source.",
+            "required": false
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
+          },
+          {
+            "name": "is_snippet",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When true, return snippets only. When false, exclude snippets. When omitted, return both prompts and snippets."
           }
         ],
         "responses": {
@@ -4602,6 +4881,102 @@
               "default": 30
             },
             "description": "Number of items per page."
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -4649,6 +5024,13 @@
                               "type": "string"
                             },
                             "description": "Array of release label names associated with the workflow"
+                          },
+                          "external_ids": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/ExternalId"
+                            },
+                            "description": "External ID mappings attached to this workflow."
                           }
                         },
                         "required": [
@@ -5110,8 +5492,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -5120,8 +5502,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -5489,6 +5871,102 @@
               "title": "Include Metadata",
               "description": "When true, includes type-specific metadata for each entity (e.g., prompt type, latest version number)."
             }
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -6077,6 +6555,102 @@
               "type": "string"
             },
             "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -6185,22 +6759,22 @@
               }
             }
           },
-          "415": {
-            "description": "Unsupported content type.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
-                }
-              }
-            }
-          },
           "409": {
             "description": "External ID conflict",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExternalIdErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported content type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
                 }
               }
             }
@@ -6664,6 +7238,102 @@
             },
             "name": "X-API-KEY",
             "in": "header"
+          },
+          {
+            "name": "created_by_email",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter by the creator's email address."
+          },
+          {
+            "name": "created_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or after this timestamp."
+          },
+          {
+            "name": "created_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources created at or before this timestamp."
+          },
+          {
+            "name": "updated_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or after this timestamp."
+          },
+          {
+            "name": "updated_before",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "date-time"
+            },
+            "description": "Filter resources updated at or before this timestamp."
+          },
+          {
+            "name": "external_source",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID source to filter by. Must be provided with external_id."
+          },
+          {
+            "name": "external_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "External ID value to filter by. Must be provided with external_source."
+          },
+          {
+            "name": "sort_by",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at",
+                "updated_at",
+                "name",
+                "id"
+              ]
+            },
+            "description": "Sort field."
+          },
+          {
+            "name": "sort_order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
           }
         ],
         "responses": {
@@ -6700,6 +7370,13 @@
                           },
                           "updated_at": {
                             "type": "string"
+                          },
+                          "external_ids": {
+                            "type": "array",
+                            "items": {
+                              "$ref": "#/components/schemas/ExternalId"
+                            },
+                            "description": "External ID mappings attached to this tool."
                           }
                         }
                       }
@@ -9215,6 +9892,13 @@
                 }
               }
             }
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this evaluation."
           }
         },
         "required": [
@@ -9785,6 +10469,13 @@
           "updated_at": {
             "type": "string",
             "format": "date-time"
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this skill collection."
           }
         }
       },
@@ -10138,13 +10829,13 @@
         "properties": {
           "page": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Page",
             "default": 1
           },
           "per_page": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Per Page",
             "default": 30
           }
@@ -10347,7 +11038,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "exclusiveMinimum": 0.0
+                "exclusiveMinimum": 0
               },
               {
                 "type": "null"
@@ -13967,8 +14658,8 @@
             "type": "integer"
           },
           "price": {
-            "default": 0.0,
-            "minimum": 0.0,
+            "default": 0,
+            "minimum": 0,
             "title": "Price",
             "type": "number"
           },
@@ -14477,6 +15168,13 @@
           "dataset_group": {
             "$ref": "#/components/schemas/DatasetGroup",
             "description": "Associated dataset group information"
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this dataset group."
           }
         },
         "required": [
@@ -14748,6 +15446,13 @@
                 "type": "object"
               }
             ]
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/ExternalId"
+            },
+            "description": "External ID mappings attached to this entity."
           }
         },
         "title": "FolderEntity"
@@ -16009,12 +16714,17 @@
             "title": "Version"
           },
           "external_ids": {
+            "type": "array",
             "items": {
               "$ref": "#/components/schemas/ExternalId"
             },
-            "type": "array",
-            "title": "External Ids",
-            "description": "External ID mappings attached to the prompt template."
+            "description": "External ID mappings attached to the prompt template.",
+            "title": "External Ids"
+          },
+          "is_snippet": {
+            "type": "boolean",
+            "title": "Is Snippet",
+            "description": "Whether this prompt template record is a snippet."
           }
         },
         "type": "object",
