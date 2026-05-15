@@ -18,4 +18,8 @@ When `include_metadata=true`, the `metadata` field contains type-specific inform
 | **DATASET** | `isDraft` (boolean — `true` if only draft versions exist), `latest_version_number` |
 | **FOLDER**, **REPORT**, **AB_TEST**, **INPUT_VARIABLE_SET** | Empty object `{}` |
 
-Semantic search results are sorted by relevance. Text search prioritizes prompts and snippets whose names match before content-only matches.
+Sorting behavior:
+
+- Semantic search results are sorted by relevance.
+- Text search prioritizes prompts and snippets whose names match before content-only matches.
+- When `sort_by` is provided and search ordering does not take precedence, results are sorted by the requested field and `sort_order`.
