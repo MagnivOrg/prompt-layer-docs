@@ -139,7 +139,8 @@
               "features/custom-providers",
               "features/exa-integration",
               "features/xai-integration",
-              "features/openrouter-integration"
+              "features/openrouter-integration",
+              "features/concentrate-integration"
             ]
           }
         ]
