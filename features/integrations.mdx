@@ -1,11 +1,12 @@
 ---
-title: 'Integrations'
+title: "Telemetry Integrations"
+description: "Send traces, spans, LLM calls, tool calls, and agent telemetry into PromptLayer."
 icon: 'handshake'
 ---
 
-PromptLayer works seamlessly with many popular LLM frameworks and abstractions.
+Telemetry integrations send observability data from LLM frameworks, agent SDKs, and model routers into PromptLayer. Use these setup paths when you want PromptLayer to capture traces, spans, LLM calls, tool calls, prompts, completions, token usage, and model metadata from tools you already use.
 
-Don't see your framework listed? You can send traces from **any** OpenTelemetry-compatible tool using the [OpenTelemetry](/features/opentelemetry) page, or [email us!](mailto:hello@promptlayer.com)
+Don't see your framework listed? You can send traces from **any** OpenTelemetry-compatible SDK or Collector using the [OpenTelemetry](/features/opentelemetry) page, or [email us](mailto:hello@promptlayer.com).
 
 ## LiteLLM
 
@@ -375,14 +376,3 @@ Once configured, PromptLayer will ingest the OpenRouter OTLP spans and convert G
 <Tip>
 This integration is for ingesting traces from OpenRouter into PromptLayer. If you also want to use OpenRouter models inside PromptLayer as a provider, see [OpenRouter](/features/openrouter-integration).
 </Tip>
-
-## Hugging Face
-
-PromptLayer supports integration with [Hugging Face](https://huggingface.co/models), allowing you to use any model available on Hugging Face within the platform. To set up:
-
-1. Go to Settings
-2. Navigate to the Hugging Face section
-3. Click "Create New"
-
-![huggingface](../images/huggingface.png)
-![add model](../images/huggingface-add-model.png)
