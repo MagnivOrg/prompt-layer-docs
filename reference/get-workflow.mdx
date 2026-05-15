@@ -3,41 +3,16 @@ title: "Get Workflow"
 openapi: "GET /workflows/{workflow_id_or_name}"
 ---
 
-Retrieve a workflow by ID or name, including full node configuration, edges, and version details.
+Retrieve a workflow by ID or name, including full node configuration, edges, and version details. By default, the latest version is returned.
 
-By default, the latest version is returned. Optionally specify `version` (version number) or `label` (release label like "prod") to retrieve a specific version. These parameters are mutually exclusive.
+## Behavior Notes
 
-The response includes the complete node definitions with their `configuration` and `dependencies`, making it suitable for inspecting or replicating a workflow's setup.
+- Use `version` to retrieve a specific version number.
+- Use `label` to retrieve the version currently assigned to a release label.
+- `version` and `label` are mutually exclusive.
 
-## Examples
+## Related
 
-### Get the Latest Version
-
-```python
-import requests
-
-response = requests.get(
-    "https://api.promptlayer.com/workflows/my-workflow",
-    headers={"X-API-KEY": "your-api-key"},
-)
-```
-
-### Get a Specific Version by Number
-
-```python
-response = requests.get(
-    "https://api.promptlayer.com/workflows/my-workflow",
-    headers={"X-API-KEY": "your-api-key"},
-    params={"version": 3},
-)
-```
-
-### Get the Production Version by Label
-
-```python
-response = requests.get(
-    "https://api.promptlayer.com/workflows/my-workflow",
-    headers={"X-API-KEY": "your-api-key"},
-    params={"label": "prod"},
-)
-```
+- [Create Workflow](/reference/create-workflow)
+- [Update Workflow](/reference/patch-workflow)
+- [Workflows](/why-promptlayer/workflows)

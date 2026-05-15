@@ -3,24 +3,15 @@ title: "Save Draft Dataset Version"
 openapi: "POST /api/public/v2/dataset-versions/save-draft"
 ---
 
-Publish a draft dataset version by assigning it a real version number. The save is processed asynchronously in the background.
+Publish a draft dataset version by assigning it the next real version number. PromptLayer queues the save operation and returns immediately.
 
-### Authentication
+## Behavior Notes
 
-This endpoint requires API key authentication only.
+- The draft's `version_number` changes from `-1` to the next sequential version number when the background job completes.
+- If no draft exists for the dataset group, the endpoint returns `404`.
 
-### Asynchronous Processing
+## Related
 
-This endpoint queues a background job to finalize the draft. The draft's version number is updated from -1 to the next sequential version number. Returns 202 immediately.
-
-### Workflow
-
-This is the final step in the dataset version creation workflow:
-
-1. **Create draft** — Use [Create Draft](/reference/create-draft-dataset-version)
-2. **Add rows** — Use [Add Request Log](/reference/add-request-log-to-dataset) to add request logs
-3. **Save** — Use this endpoint to publish as a new version
-
-### Notes
-
-- Returns 404 if no draft version exists for the dataset group.
+- [Create Draft Dataset Version](/reference/create-draft-dataset-version)
+- [Add Request Log to Dataset](/reference/add-request-log-to-dataset)
+- [Get Dataset Rows](/reference/get-dataset-rows)

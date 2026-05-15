@@ -3,24 +3,18 @@ title: "Create Dataset Version from File"
 openapi: "POST /api/public/v2/dataset-versions/from-file"
 ---
 
-Create a new dataset version by uploading a CSV or JSON file. The file is processed asynchronously and webhooks are sent when complete. Files are uploaded to AWS S3 for processing.
+Create a dataset version by submitting a base64-encoded CSV or JSON file. PromptLayer queues the file for asynchronous processing and creates a draft dataset while the job runs.
 
-### Authentication
+## Behavior Notes
 
-This endpoint requires API key authentication only.
+- The draft dataset starts with `version_number = -1` and receives a real version number after processing succeeds.
+- The `dataset_version_created_by_file` webhook event is sent when processing succeeds.
+- The `dataset_version_created_by_file_failed` webhook event is sent when processing fails.
+- Decoded file content must be 100MB or smaller.
+- Failed drafts are automatically cleaned up.
 
-### Asynchronous Processing
+## Related
 
-This endpoint initiates an asynchronous job to process the uploaded file. The actual dataset version creation happens in the background. A draft dataset (version_number = -1) is created immediately, and upon successful processing, it's assigned a proper version number.
-
-### Webhooks
-
-The following webhooks are triggered during the process:
-
-- `dataset_version_created_by_file` - Sent when the dataset version is successfully created
-- `dataset_version_created_by_file_failed` - Sent if the dataset creation fails
-
-### Notes
-
-- Maximum file size: 100MB
-- Failed drafts are automatically cleaned up
+- [Create Dataset Version from Request History](/reference/create-dataset-version-from-filter-params)
+- [Create Draft Dataset Version](/reference/create-draft-dataset-version)
+- [Create from History](/features/evaluations/datasets-create-from-history)

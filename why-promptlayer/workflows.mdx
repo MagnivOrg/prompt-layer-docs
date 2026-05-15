@@ -139,6 +139,19 @@ Workflow versioning automatically tracks changes over time. Each update creates 
 
 ![Versioning](/images/agents/versions.png)
 
+### Programmatic Updates
+
+When updating a workflow through the REST API, use [Update Workflow](/reference/patch-workflow) to create a new version from the latest workflow version or from a specific `base_version`.
+
+Patch updates merge nodes by name:
+
+- Unmentioned nodes are preserved.
+- Object values add or update a node.
+- `null` removes a node.
+- Node `configuration` is deep-merged.
+- `dependencies`, `required_input_variables`, and `edges` are replaced when provided.
+- `release_labels` move to the newly created version.
+
 ## Running a Workflow
 
 You can run a Workflow in three ways: using the [Python SDK](/sdks/python#running-workflows) or [JavaScript SDK](/sdks/javascript#running-workflows), via the [REST API with polling](/reference/workflow-version-execution-results), or with the [REST API using callback webhooks](/reference/run-workflow) for long-running workflows.
