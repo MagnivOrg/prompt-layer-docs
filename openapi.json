@@ -11,7 +11,6 @@
           "prompt-templates"
         ],
         "summary": "Get Prompt Template Raw Data",
-        "description": "Retrieve raw prompt template data without applying input variables. Use resolve_snippets=false to preserve @@@snippet@@@ references and include_llm_kwargs=true to include provider-specific LLM API arguments.",
         "operationId": "get_prompt_template_raw",
         "parameters": [
           {
@@ -518,7 +517,6 @@
           "prompt-templates"
         ],
         "summary": "Patch Prompt Template Version",
-        "description": "Partially update a prompt template by creating a new version from the latest version, a specific version, or a release label. Chat fields and completion fields are mutually exclusive by template type.",
         "operationId": "patch_prompt_template_version",
         "parameters": [
           {
@@ -997,7 +995,6 @@
     "/reports": {
       "post": {
         "summary": "Create Evaluation Pipeline",
-        "description": "Creates a new evaluation pipeline (report) with optional evaluation columns and custom scoring.",
         "operationId": "createEvaluationPipeline",
         "tags": [
           "reports"
@@ -1147,7 +1144,6 @@
     "/report-columns": {
       "post": {
         "summary": "Add Column to Evaluation Pipeline",
-        "description": "Adds a new evaluation step (column) to an existing evaluation pipeline. Columns execute sequentially from left to right and can reference data from previous columns.\n\n**Column Types Available:**\n- **Primary**: PROMPT_TEMPLATE, ENDPOINT, MCP, HUMAN, CODE_EXECUTION, CODING_AGENT, CONVERSATION_SIMULATOR, WORKFLOW\n- **Evaluation**: LLM_ASSERTION, AI_DATA_EXTRACTION, COMPARE, CONTAINS, REGEX, REGEX_EXTRACTION, COSINE_SIMILARITY, ABSOLUTE_NUMERIC_DISTANCE\n- **Helper**: JSON_PATH, XML_PATH, PARSE_VALUE, APPLY_DIFF, VARIABLE, ASSERT_VALID, COALESCE, COMBINE_COLUMNS, COUNT, MATH_OPERATOR, MIN_MAX\n\nSee the full documentation for detailed configuration requirements for each column type.",
         "operationId": "addReportColumn",
         "tags": [
           "reports"
@@ -1714,7 +1710,6 @@
       },
       "delete": {
         "summary": "Delete Evaluation Pipeline",
-        "description": "Archive a single evaluation pipeline by ID. Prefer this over deleteReportsByName when you have the report's ID, since names can collide.",
         "operationId": "deleteReport",
         "tags": [
           "reports"
@@ -1940,7 +1935,6 @@
     "/reports/{report_id}/rename": {
       "patch": {
         "summary": "Rename Evaluation Pipeline",
-        "description": "Rename or retag an evaluation pipeline. Provide name, tags, or both. Use this instead of recreating a misnamed pipeline.",
         "operationId": "renameReport",
         "tags": [
           "reports"
@@ -2024,7 +2018,6 @@
     "/report-columns/{report_column_id}": {
       "patch": {
         "summary": "Edit Evaluation Pipeline Column",
-        "description": "Update an existing column on an evaluation pipeline. Use this to fix a bug in a CODE_EXECUTION script, change a column's configuration, rename it, or reorder it — without recreating the whole pipeline. Cannot edit DATASET columns. Editing a column re-queues the affected cells.",
         "operationId": "editReportColumn",
         "tags": [
           "reports"
@@ -2112,7 +2105,6 @@
       },
       "delete": {
         "summary": "Delete Evaluation Pipeline Column",
-        "description": "Delete a single column from an evaluation pipeline. Surrounding columns shift left to fill the gap. Cannot delete DATASET columns. Cells in columns to the right of the deleted column are re-queued.",
         "operationId": "deleteReportColumn",
         "tags": [
           "reports"
@@ -2605,7 +2597,6 @@
         "tags": [
           "datasets"
         ],
-        "description": "Retrieve paginated rows from a dataset. Each row is an array of cells matching the order of the `columns` array. All cells have `{\"type\": \"dataset\", \"value\": ...}`.",
         "parameters": [
           {
             "name": "dataset_id",
@@ -2728,7 +2719,6 @@
         "tags": [
           "evaluations"
         ],
-        "description": "Retrieve paginated evaluation results with dataset input variables and evaluation cell outcomes. Each row is an array of cells matching the order of the `columns` array. Dataset input cells have `{\"type\": \"dataset\", \"value\": ...}`. Eval result cells have `{\"type\": \"eval\", \"status\": ..., \"value\": ...}`.",
         "parameters": [
           {
             "name": "evaluation_id",
@@ -4360,8 +4350,7 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        },
-        "description": "Create a new workflow or a new version of an existing workflow. Define nodes, conditional edges, input variables, release labels, folder placement, and external IDs."
+        }
       }
     },
     "/rest/workflows/{workflow_id_or_name}": {
@@ -4511,8 +4500,7 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        },
-        "description": "Partially update a workflow by creating a new version. Node updates are merged by name; null node values remove nodes; required_input_variables and edges replace the base values when provided."
+        }
       }
     },
     "/workflows": {
@@ -5043,8 +5031,7 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        },
-        "description": "Retrieve a workflow by ID or name, including full node configuration, edges, and version details. version and label are mutually exclusive."
+        }
       }
     },
     "/workflows/{workflow_id_or_name}/labels": {
@@ -5251,8 +5238,7 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        },
-        "description": "Initiate a workflow execution by name. Run the latest version, a labeled version, or an explicit version number. Provide callback_url for asynchronous webhook delivery."
+        }
       }
     },
     "/spans-bulk": {
@@ -5492,7 +5478,6 @@
           "folders"
         ],
         "summary": "Create Folder",
-        "description": "Creates a new folder in the workspace. Folders can be nested within other folders by providing a parent_id. The folder name must be unique within its parent folder (or at the root level if no parent is specified).",
         "operationId": "create_folder_api_public_v2_folders_post",
         "requestBody": {
           "required": true,
@@ -5575,7 +5560,6 @@
           "folders"
         ],
         "summary": "Update Folder",
-        "description": "Renames an existing folder. The new name must be unique within the folder's parent (or at root level). The folder must belong to a workspace accessible by the authenticated user.",
         "operationId": "update_folder_api_public_v2_folders_patch",
         "parameters": [
           {
@@ -5652,7 +5636,6 @@
           "folders"
         ],
         "summary": "List Folder Entities",
-        "description": "Lists entities within a folder or at the workspace root. Returns folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Supports filtering by entity type, searching by name, flattening the folder hierarchy, and optionally including entity metadata.",
         "operationId": "list_folder_entities_api_public_v2_folders_entities_get",
         "parameters": [
           {
@@ -5940,7 +5923,6 @@
           "folders"
         ],
         "summary": "Move Folder Entities",
-        "description": "Moves one or more entities into a target folder, or to the workspace root if no folder_id is provided. Supports moving folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Requires appropriate edit permissions for each entity type.",
         "operationId": "move_folder_entities_api_public_v2_folders_entities_post",
         "requestBody": {
           "required": true,
@@ -6003,7 +5985,6 @@
           "folders"
         ],
         "summary": "Delete Folder Entities",
-        "description": "Deletes one or more entities from the workspace. Supports deleting folders, prompts, snippets, workflows, datasets, evaluations, AB tests, and input variable sets. Use cascade=true to recursively delete all contents of a folder. Without cascade, deleting a non-empty folder returns an error. Entities are soft-deleted where applicable.",
         "operationId": "delete_folder_entities_api_public_v2_folders_entities_delete",
         "requestBody": {
           "required": true,
@@ -6078,7 +6059,6 @@
           "folders"
         ],
         "summary": "Resolve Folder ID by Path",
-        "description": "Resolves a folder's ID from its path. The path uses dot-separated folder names representing the hierarchy (e.g., \"My Folder.Subfolder\").",
         "operationId": "resolve_folder_id_api_public_v2_folders_resolve_id_get",
         "parameters": [
           {
@@ -6149,7 +6129,6 @@
           "snippets"
         ],
         "summary": "Get Snippet Usage",
-        "description": "Get all prompts that use a given snippet (prompt template). Returns a list of prompts and their version numbers that reference this snippet.",
         "operationId": "get_snippet_usage",
         "parameters": [
           {
@@ -6205,7 +6184,6 @@
           "otlp"
         ],
         "summary": "Ingest Traces (OTLP)",
-        "description": "Ingest OpenTelemetry traces using the standard OTLP/HTTP protocol.\n\nThis endpoint accepts an `ExportTraceServiceRequest` as defined by the [OpenTelemetry specification](https://opentelemetry.io/docs/specs/otel/protocol/otlp/#otlphttp). Spans carrying [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.\n\nSupported content types:\n- `application/x-protobuf` — binary protobuf encoding (recommended)\n- `application/json` — JSON encoding\n\nGzip `Content-Encoding` is supported for both formats.\n\nSpans can include `promptlayer.prompt.name` (or `promptlayer.prompt.id`) and `promptlayer.prompt.version` (or `promptlayer.prompt.label`) attributes to link the generated request log to an existing prompt template in your workspace.",
         "operationId": "ingestOtlpTraces",
         "parameters": [
           {
@@ -6541,7 +6519,6 @@
         "tags": [
           "tracking"
         ],
-        "description": "Aggregate analytics across request logs — totals, time-series breakdowns, latency percentiles, and model/prompt/provider/tag breakdowns. Body is the same `RequestLogQuery` shape as `POST /api/public/v2/requests/search` but returns aggregated values instead of paginated rows.",
         "requestBody": {
           "required": true,
           "content": {
@@ -7333,7 +7310,6 @@
           "tool-registry"
         ],
         "summary": "List Tool Registries",
-        "description": "List all tools in the Tool Registry for the workspace.",
         "operationId": "list_tool_registries",
         "responses": {
           "200": {
@@ -7496,7 +7472,6 @@
           "tool-registry"
         ],
         "summary": "Create Tool Registry",
-        "description": "Create a new tool in the Tool Registry with an initial version.",
         "operationId": "create_tool_registry",
         "requestBody": {
           "required": true,
@@ -7596,7 +7571,6 @@
           "tool-registry"
         ],
         "summary": "Get Tool Registry",
-        "description": "Get a tool from the Tool Registry by ID or name. Optionally resolve a specific version by label or version number.",
         "operationId": "get_tool_registry",
         "parameters": [
           {
@@ -7687,7 +7661,6 @@
           "prompt-templates"
         ],
         "summary": "Upsert Prompt Template by External ID",
-        "description": "Publish a prompt template by external ID. Existing mappings create a new version on the mapped prompt template. Missing mappings create or update a prompt template and attach the mapping.",
         "operationId": "upsert_prompt_template_by_external_id",
         "parameters": [
           {
@@ -9608,7 +9581,6 @@
     "/reports/{report_id}/score-card": {
       "patch": {
         "summary": "Configure Custom Scoring",
-        "description": "Configure custom score calculation for an evaluation pipeline.",
         "operationId": "updateReportScoreCard",
         "tags": [
           "reports"

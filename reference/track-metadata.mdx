@@ -3,17 +3,10 @@ title: "Track Metadata"
 openapi: "POST /rest/track-metadata"
 ---
 
-Associate a metadata dictionary with a request. This can be used for things like session_ids, user_ids, location, etc.
+Associate metadata with an existing request log. Use this for values such as session IDs, user IDs, environment names, regions, or other searchable request context.
 
-## Example Code
-```python
-import requests
-response = requests.post(
-  "https://api.promptlayer.com/rest/track-metadata",
-  headers={"X-API-KEY": "<YOUR_API_KEY>"},
-  json={
-      "request_id": "<REQUEST_ID>",
-      "metadata": {"session_id": "abc123", "user_id": "user123"}
-  },
-)
-```
+## Related
+
+- [Track Prompt](/reference/track-prompt)
+- [Metadata](/features/prompt-history/metadata)
+- [Log Request](/reference/log-request)

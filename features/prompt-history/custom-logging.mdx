@@ -383,6 +383,16 @@ tool_response_blueprint = {
 }
 ```
 
+## Error Tracking
+
+Use `status`, `error_type`, and `error_message` when logging failed or degraded requests. This keeps warnings and failures searchable in PromptLayer and makes provider reliability easier to monitor.
+
+- `SUCCESS` means the request completed normally.
+- `WARNING` means the request succeeded but had issues, such as retries or partial responses.
+- `ERROR` means the provider call or prompt rendering failed.
+
+Use a specific `error_type` such as `PROVIDER_TIMEOUT`, `PROVIDER_RATE_LIMIT`, `PROVIDER_AUTH_ERROR`, `TEMPLATE_RENDER_ERROR`, or `UNKNOWN_ERROR` when possible, and include a short `error_message` with the provider or application detail.
+
 ## Complete JavaScript Example
 
 ```javascript

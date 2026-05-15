@@ -3,19 +3,10 @@ title: "Track Prompt"
 openapi: "POST /rest/track-prompt"
 ---
 
-Associate a prompt template with a request.
+Associate a prompt template with an existing request log. Use this after logging a request when you want PromptLayer to connect that request back to a prompt template version or release label.
 
-## Example Code
-```python
-import requests
-response = requests.post(
-  "https://api.promptlayer.com/rest/track-prompt",
-  headers={"X-API-KEY": "<YOUR_API_KEY>"},
-  json={
-      "prompt_name": "<PROMPT_NAME>",
-      "prompt_input_variables": {"variable1": "value1", "variable2": "value2"},
-      "request_id": "<REQUEST_ID>",
-      "version": "<VERSION>"
-  },
-)
-```
+## Related
+
+- [Track Metadata](/reference/track-metadata)
+- [Tracking Templates](/features/prompt-history/tracking-templates)
+- [Log Request](/reference/log-request)

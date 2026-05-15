@@ -3,65 +3,16 @@ title: "Run Workflow"
 openapi: "POST /workflows/{workflow_name}/run"
 ---
 
-Initiate the execution of a specific Workflow by its name. You can specify input variables, metadata, and choose which version of the Workflow to run.
+Initiate an execution of a Workflow by name. You can run the latest version, choose a version by label or version number, pass input variables and metadata, and optionally receive results asynchronously with a callback URL.
 
-## HTTP Request
+## Behavior Notes
 
-`POST /workflows/{workflow_name}/run`
+- `workflow_label_name` and `workflow_version_number` identify a specific version; omit both to run the latest version.
+- When `callback_url` is provided, the API accepts the run immediately and posts results to your callback when execution finishes.
+- Use [Get Workflow Version Execution Results](/reference/workflow-version-execution-results) to poll for execution output.
 
-## Path Parameters
+## Related
 
-- **workflow_name** (string, required): The name of the Workflow you wish to execute.
-
-## Request Body
-
-The request body expects a JSON object with the following structure:
-
-### Schema
-
-```json
-{
-  "workflow_label_name": "string (optional)",
-  "workflow_version_number": "integer (optional)",
-  "metadata": {
-    "string": "string"
-  },
-  "input_variables": {
-    "string": "any"
-  },
-  "return_all_outputs": "boolean (default: false)",
-  "callback_url": "string (optional)"
-}
-```
-
-### Parameters
-
-- **workflow_label_name** (string, optional): The label of the specific Workflow version to run.
-- **workflow_version_number** (integer, optional): The version number of the Workflow to run.
-- **metadata** (object, optional): Additional metadata to attach to the execution.
-- **input_variables** (object, optional): Input variables for the Workflow execution.
-- **return_all_outputs** (boolean, optional, default: false): Whether to return all node outputs or just the final output.
-- **callback_url** (string, optional): An HTTP URL where execution results will be POSTed when the Workflow completes. When provided, the API returns HTTP 202 (Accepted) immediately and sends results to this URL asynchronously. Ideal for long-running workflows and webhook-based integrations.
-
-## Response
-
-**Status Code**: 201 (Created) or 202 (Accepted) if `callback_url` is provided
-
-When a `callback_url` is provided, PromptLayer will POST the following to your callback URL when the workflow completes:
-
-```json
-{
-  "workflow_version_execution_id": "integer",
-  "final_output": {
-    "Node Name": {
-      "status": "SUCCESS | FAILURE",
-      "value": "any",
-      "error_message": "string | null",
-      "raw_error_message": "string | null",
-      "is_output_node": "boolean"
-    }
-  }
-}
-```
-
-The `final_output` structure matches the response from the [GET /workflow-version-execution-results](/reference/workflow-version-execution-results) endpoint.
+- [Create Workflow](/reference/create-workflow)
+- [Get Workflow Version Execution Results](/reference/workflow-version-execution-results)
+- [Workflows](/why-promptlayer/workflows)
