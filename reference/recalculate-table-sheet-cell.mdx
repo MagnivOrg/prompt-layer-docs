@@ -1,0 +1,9 @@
+---
+title: "Recalculate Table Sheet Cell"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}/recalculations"
+description: "Queue recalculation for one Table sheet cell."
+---
+
+Queue recalculation for one computed cell in a Table sheet.
+
+The response returns an `execution_id` when recalculation is queued. If the cell does not need recalculation, the endpoint returns successfully without an execution.

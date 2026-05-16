@@ -1,0 +1,11 @@
+---
+title: "Create Table Sheet Request Log Import"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/request-logs"
+description: "Import request history into an existing Table sheet."
+---
+
+Start an asynchronous request-history import into an existing Table sheet.
+
+Provide either `request_log_ids` or a request-log `filter_group`. You can also pass `variables_to_parse`, `include_fields`, and `limit` to control imported columns and rows.
+
+The response returns an `operation_id` and `status_url` for polling with [Get Table Sheet Import Operation](/reference/get-table-sheet-operation).

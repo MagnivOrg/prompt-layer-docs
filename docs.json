@@ -260,6 +260,42 @@
             ]
           },
           {
+            "group": "Tables",
+            "pages": [
+              "reference/list-tables",
+              "reference/create-table",
+              "reference/get-table",
+              "reference/update-table",
+              "reference/list-table-sheets",
+              "reference/create-table-sheet",
+              "reference/create-table-sheet-file-import",
+              "reference/create-table-sheet-request-log-import",
+              "reference/get-table-sheet-operation",
+              "reference/get-table-sheet",
+              "reference/update-table-sheet",
+              "reference/list-table-sheet-columns",
+              "reference/create-table-sheet-column",
+              "reference/update-table-sheet-column",
+              "reference/list-table-sheet-rows",
+              "reference/add-table-sheet-rows",
+              "reference/get-table-sheet-cell",
+              "reference/update-table-sheet-cell",
+              "reference/recalculate-table-sheet-cell",
+              "reference/recalculate-table-sheet-cells",
+              "reference/list-table-sheet-operations",
+              "reference/create-table-sheet-operation",
+              "reference/get-table-sheet-operation-status",
+              "reference/cancel-table-sheet-operation",
+              "reference/get-table-sheet-score",
+              "reference/configure-table-sheet-score",
+              "reference/recalculate-table-sheet-score",
+              "reference/list-table-sheet-versions",
+              "reference/create-table-sheet-version",
+              "reference/get-table-sheet-version",
+              "reference/get-table-sheet-score-history"
+            ]
+          },
+          {
             "group": "Workflows",
             "pages": [
               "reference/list-workflows",

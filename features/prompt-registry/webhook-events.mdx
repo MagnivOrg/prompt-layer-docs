@@ -38,6 +38,10 @@ We notify you for these events:
 - [`dataset_version_created_by_file`](#dataset_version_created_by_file)
 - [`dataset_version_created_by_file_failed`](#dataset_version_created_by_file_failed)
 - [`dataset_version_created_from_filter_params`](#dataset_version_created_from_filter_params)
+- [`table_sheet_created_from_file`](#table_sheet_created_from_file)
+- [`table_sheet_created_from_file_failed`](#table_sheet_created_from_file_failed)
+- [`table_sheet_created_from_request_history`](#table_sheet_created_from_request_history)
+- [`table_sheet_created_from_request_history_failed`](#table_sheet_created_from_request_history_failed)
 - [`skill_collection_files_changed`](#skill_collection_files_changed)
 
 #### prompt_template_version_created
@@ -251,6 +255,74 @@ When a dataset version is created from filter parameters.
     "dataset_id": 345,
     "rows_added": 100,
     "dataset_version_number": 4
+  }
+}
+```
+
+#### table_sheet_created_from_file
+
+When a Table sheet file import succeeds.
+
+```json
+{
+  "details": {
+    "operation_id": "public-file-import-1",
+    "table_id": "5c1f2e6a-1f8e-4e02-bc1e-2c48f9bdb2f4",
+    "sheet_id": "73f7d7f8-7f5f-4f27-94e5-b070b620b931",
+    "source": "file",
+    "file_name": "people.csv",
+    "rows_added": 100,
+    "row_count": 100
+  }
+}
+```
+
+#### table_sheet_created_from_file_failed
+
+When a Table sheet file import fails.
+
+```json
+{
+  "details": {
+    "operation_id": "public-file-import-1",
+    "table_id": "5c1f2e6a-1f8e-4e02-bc1e-2c48f9bdb2f4",
+    "sheet_id": "73f7d7f8-7f5f-4f27-94e5-b070b620b931",
+    "source": "file",
+    "file_name": "people.csv",
+    "error_message": "Failed to process Table CSV import."
+  }
+}
+```
+
+#### table_sheet_created_from_request_history
+
+When a Table sheet request history import succeeds.
+
+```json
+{
+  "details": {
+    "operation_id": "public-request-import-1",
+    "table_id": "5c1f2e6a-1f8e-4e02-bc1e-2c48f9bdb2f4",
+    "sheet_id": "73f7d7f8-7f5f-4f27-94e5-b070b620b931",
+    "source": "request_logs",
+    "rows_added": 100,
+    "row_count": 100
+  }
+}
+```
+
+#### table_sheet_created_from_request_history_failed
+
+When a Table sheet request history import fails.
+
+```json
+{
+  "details": {
+    "operation_id": "public-request-import-1",
+    "table_id": "5c1f2e6a-1f8e-4e02-bc1e-2c48f9bdb2f4",
+    "sheet_id": "73f7d7f8-7f5f-4f27-94e5-b070b620b931",
+    "source": "request_logs",
+    "error_message": "No requests found for the given criteria"
   }
 }
 ```

@@ -1,0 +1,9 @@
+---
+title: "Configure Table Sheet Score"
+openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/score"
+description: "Configure scoring for a Table sheet."
+---
+
+Configure scoring for a Table sheet.
+
+Use `column_ids` or `column_names` for standard boolean or numeric scoring. Use `score_type` with `score_config` for explicit configuration, or pass `code` and `code_language` for custom scoring. This endpoint updates the configuration and returns `requires_recalculation`; call the recalculation endpoint to queue score calculation.

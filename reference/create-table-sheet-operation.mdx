@@ -1,0 +1,9 @@
+---
+title: "Create Table Sheet Operation"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations"
+description: "Queue a Table sheet operation."
+---
+
+Queue a `recalculate` operation for selected columns, rows, and cell statuses.
+
+By default, recalculation targets stale computed cells. Pass `column_ids`, `row_ids`, or `statuses` to narrow the operation. If the operation affects many cells, the response may return `requires_confirmation` with a `confirmation_token`; pass that token in a follow-up request to proceed.

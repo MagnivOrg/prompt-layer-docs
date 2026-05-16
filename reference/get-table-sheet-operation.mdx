@@ -1,0 +1,9 @@
+---
+title: "Get Table Sheet Import Operation"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/operations/{operation_id}"
+description: "Check the status of an asynchronous Table sheet import."
+---
+
+Poll a sheet import operation started by [Create Table Sheet](/reference/create-table-sheet), [Create Table Sheet File Import](/reference/create-table-sheet-file-import), or [Create Table Sheet Request Log Import](/reference/create-table-sheet-request-log-import).
+
+Operation statuses are `queued`, `running`, `succeeded`, and `failed`. Successful operations can include `rows_added` and `row_count`; failed operations include `error_message` when available.

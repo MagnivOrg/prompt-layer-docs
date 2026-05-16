@@ -1,0 +1,21 @@
+---
+title: "Create Table Sheet"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets"
+description: "Create a Table sheet by importing file or request log data."
+---
+
+Create a new sheet and start an asynchronous import job. The response returns immediately with `202`, an `operation_id`, the import operation, and the newly created sheet.
+
+### File imports
+
+Use `source.type=file` to import CSV or JSON content. Send the file content as base64 in `file_content_base64`; the decoded file can be up to 100MB. JSON input is converted to CSV before processing.
+
+### Request log imports
+
+Use `source.type=request_logs` to import request history into a sheet. Provide either explicit `request_log_ids` or a request-log `filter_group`. You can also pass `variables_to_parse`, `include_fields`, and `limit` to control the imported columns and rows.
+
+### Operation tracking
+
+Pass `operation_id` when you want a stable client-side identifier for polling and webhook correlation. If omitted, PromptLayer generates one.
+
+Poll [Get Table Sheet Import Operation](/reference/get-table-sheet-operation) until the operation reaches `succeeded` or `failed`.

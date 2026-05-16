@@ -1,0 +1,9 @@
+---
+title: "Recalculate Table Sheet Cells"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/recalculations"
+description: "Queue recalculation for multiple Table sheet cells."
+---
+
+Queue recalculation for a set of cells in a Table sheet.
+
+Pass `cell_ids` for the cells to recalculate. The response includes the queued `execution_id`, the number of cells selected, and the number of cells queued.

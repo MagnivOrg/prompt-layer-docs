@@ -1,0 +1,11 @@
+---
+title: "Add Table Sheet Rows"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows"
+description: "Append rows to a Table sheet."
+---
+
+Append rows to a Table sheet.
+
+Set `count` to the number of rows to append. Pass `values` as an array of objects keyed by column ID when you want to populate text cells as rows are created.
+
+Rows are appended after the current last row. Output cells are created in a stale state so dependent computations can be recalculated.

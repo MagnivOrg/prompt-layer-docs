@@ -1,0 +1,9 @@
+---
+title: "Create Table Sheet Column"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns"
+description: "Create a column in a Table sheet."
+---
+
+Create a column in a Table sheet and create cells for existing rows.
+
+Use `type` and `config` to define the column behavior. Use `dependencies` for config-driven source columns. New columns are appended after the existing columns in the sheet.

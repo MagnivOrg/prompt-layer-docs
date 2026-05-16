@@ -1,0 +1,9 @@
+---
+title: "Create Table Sheet Version"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions"
+description: "Create a Table sheet version."
+---
+
+Create a named version for a Table sheet.
+
+Pass `name` to save the current sheet state. Pass `source_version_id` to restore from an existing version while creating a new version.

@@ -1,0 +1,9 @@
+---
+title: "Update Table Sheet Cell"
+openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}"
+description: "Update a Table sheet cell."
+---
+
+Update a text-column cell with `display_value`, `value`, or both.
+
+Only text-column cells can be edited directly. Updating a cell marks dependent cells stale and updates the sheet version.

@@ -1208,6 +1208,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
           "403": {
             "description": "Forbidden - Access to dataset group not allowed or missing permissions",
             "content": {
@@ -1239,9 +1242,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication"
           },
           "409": {
             "description": "External ID conflict",
@@ -1410,6 +1410,9 @@
               }
             }
           },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
           "403": {
             "description": "Forbidden - Cannot overwrite dataset columns or missing permissions",
             "content": {
@@ -1449,9 +1452,6 @@
                 }
               }
             }
-          },
-          "401": {
-            "description": "Unauthorized - Invalid or missing authentication"
           }
         }
       }
@@ -5110,8 +5110,8 @@
               }
             }
           },
-          "404": {
-            "description": "Not Found",
+          "401": {
+            "description": "Unauthorized",
             "content": {
               "application/json": {
                 "schema": {
@@ -5120,8 +5120,8 @@
               }
             }
           },
-          "401": {
-            "description": "Unauthorized",
+          "404": {
+            "description": "Not Found",
             "content": {
               "application/json": {
                 "schema": {
@@ -6185,22 +6185,22 @@
               }
             }
           },
-          "415": {
-            "description": "Unsupported content type.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
-                }
-              }
-            }
-          },
           "409": {
             "description": "External ID conflict",
             "content": {
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ExternalIdErrorResponse"
+                }
+              }
+            }
+          },
+          "415": {
+            "description": "Unsupported content type.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/SkillCollectionErrorResponse"
                 }
               }
             }
@@ -9030,6 +9030,3035 @@
           }
         }
       }
+    },
+    "/api/public/v2/tables": {
+      "get": {
+        "summary": "List Tables",
+        "description": "List active Tables with filters for folder, name, and prompt column configuration.",
+        "operationId": "listTables",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "folder_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter by folder ID."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Case-insensitive partial match on Table title."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor returned from the previous page. Public table cursors encode the current sort, order, cursor value, and a hash of the active filters; reuse the cursor with the same sort, order, and filter parameters from the previous request."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "description": "Number of tables to return."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at"
+              ],
+              "default": "created_at"
+            },
+            "description": "Sort field. Currently supports created_at."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort order."
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to tables that contain a prompt column for this prompt template ID."
+          },
+          {
+            "name": "prompt_version_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to tables that contain a prompt column pinned to this prompt version ID."
+          },
+          {
+            "name": "prompt_label_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to tables that contain a prompt column pinned to this prompt label ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTablesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cursor, query parameter, sort/order, filter set, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table",
+        "description": "Create a Table with a default sheet, text column, and initial empty row.",
+        "operationId": "createTable",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Table created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Folder not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to create table.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}": {
+      "get": {
+        "summary": "Get Table",
+        "description": "Retrieve one Table, including active sheet count and row counts keyed by sheet ID.",
+        "operationId": "getTable",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Table",
+        "description": "Update a Table title or folder.",
+        "operationId": "updateTable",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Table updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTableResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or folder not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to update table.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets": {
+      "get": {
+        "summary": "List Table Sheets",
+        "description": "List active sheets in a Table with cursor pagination, prompt column filters, and row counts.",
+        "operationId": "listTableSheets",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor returned from the previous page. Public table cursors encode the current sort, order, cursor value, and a hash of the active filters; reuse the cursor with the same sort, order, and filter parameters from the previous request."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "description": "Number of sheets to return."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "index"
+              ],
+              "default": "index"
+            },
+            "description": "Sort field. Currently supports index."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Sort order."
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to sheets that contain a prompt column for this prompt template ID."
+          },
+          {
+            "name": "prompt_version_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to sheets that contain a prompt column pinned to this prompt version ID."
+          },
+          {
+            "name": "prompt_label_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to sheets that contain a prompt column pinned to this prompt label ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cursor, query parameter, sort/order, filter set, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table Sheet",
+        "description": "Create a new sheet and start an asynchronous import from a CSV/JSON file or matching request logs.",
+        "operationId": "createTableSheet",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Sheet import queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetImportResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid source, file, or request log selection.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to create sheet or upload file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/operations/{operation_id}": {
+      "get": {
+        "summary": "Get Table Sheet Import Operation",
+        "description": "Poll the status of an asynchronous sheet import operation.",
+        "operationId": "getTableSheetImportOperation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Sheet import operation ID returned by the create sheet endpoint."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetImportOperationResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or operation not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}": {
+      "get": {
+        "summary": "Get Table Sheet",
+        "description": "Retrieve one Table sheet and its resolved row count.",
+        "operationId": "getTableSheet",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Table Sheet",
+        "description": "Update a Table sheet title or index.",
+        "operationId": "updateTableSheet",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTableSheetRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sheet updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTableSheetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to update sheet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows": {
+      "get": {
+        "summary": "List Table Sheet Rows",
+        "description": "Retrieve rows from a Table sheet. Rows are returned as cells keyed by column ID, with columns included on the first cursor page by default.",
+        "operationId": "listTableSheetRows",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor returned from the previous page. Public table cursors encode the current sort, order, cursor value, and a hash of the active filters; reuse the cursor with the same sort, order, and filter parameters from the previous request."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "description": "Number of rows to return."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "row_index"
+              ],
+              "default": "row_index"
+            },
+            "description": "Sort field. Currently supports row_index."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Sort order."
+          },
+          {
+            "name": "include_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "nullable": true
+            },
+            "description": "Whether to include column definitions. Defaults to true on the first page and false on later cursor pages."
+          },
+          {
+            "name": "include_row_count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "Whether to include the resolved row_count in the response."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetRowsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cursor, query parameter, sort/order, filter set, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Add Table Sheet Rows",
+        "description": "Append rows to a Table sheet. Text column values can be provided by column ID; output cells are created stale for recomputation.",
+        "operationId": "addTableSheetRows",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTableSheetRowsRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rows added.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddTableSheetRowsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body, missing columns, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to add rows.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns": {
+      "get": {
+        "summary": "List Table Sheet Columns",
+        "description": "List columns in a Table sheet.",
+        "operationId": "listTableSheetColumns",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor returned from the previous page. Public table cursors encode the current sort, order, cursor value, and a hash of the active filters; reuse the cursor with the same sort, order, and filter parameters from the previous request."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 100
+            },
+            "description": "Number of columns to return."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "position_rank"
+              ],
+              "default": "position_rank"
+            },
+            "description": "Sort field. Currently supports position_rank."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            },
+            "description": "Sort order."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetColumnsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cursor, query parameter, sort/order, filter set, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table Sheet Column",
+        "description": "Create a column in a Table sheet and materialize cells for existing rows.",
+        "operationId": "createTableSheetColumn",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Column created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableSheetColumnResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or neighbor column not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to create column.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns/{column_id}": {
+      "patch": {
+        "summary": "Update Table Sheet Column",
+        "description": "Update a Table sheet column title, config, or dependencies.",
+        "operationId": "updateTableSheetColumn",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "column_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet column ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTableSheetColumnRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTableSheetColumnResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, column, or neighbor column not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to update column.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}": {
+      "get": {
+        "summary": "Get Table Sheet Cell",
+        "description": "Retrieve one cell from a Table sheet.",
+        "operationId": "getTableSheetCell",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet cell ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetCellResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or cell not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Table Sheet Cell",
+        "description": "Update a text-column cell value and mark dependent cells stale.",
+        "operationId": "updateTableSheetCell",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet cell ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTableSheetCellRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cell updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/UpdateTableSheetCellResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body, non-text cell, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or cell not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to update cell.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/recalculations": {
+      "post": {
+        "summary": "Recalculate Table Sheet Cells",
+        "description": "Queue recalculation for a set of cells in a Table sheet.",
+        "operationId": "createTableSheetCellRecalculations",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/BatchTableSheetCellRecalculationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No cells needed recalculation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetCellRecalculationResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Recalculation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetCellRecalculationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or cells not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}/recalculations": {
+      "post": {
+        "summary": "Recalculate Table Sheet Cell",
+        "description": "Queue recalculation for one cell in a Table sheet.",
+        "operationId": "createTableSheetCellRecalculation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet cell ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "No cells needed recalculation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetCellRecalculationResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Recalculation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetCellRecalculationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or cell not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations": {
+      "get": {
+        "summary": "List Table Sheet Operations",
+        "description": "List active recalculation operations and cell status counts for a Table sheet.",
+        "operationId": "listTableSheetOperations",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetOperationsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table Sheet Operation",
+        "description": "Queue a recalculation operation for selected columns, rows, and cell statuses.",
+        "operationId": "createTableSheetOperation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetOperationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No operation was queued or confirmation is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Operation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request, query parameter, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or column not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations/{operation_id}": {
+      "get": {
+        "summary": "Get Table Sheet Operation",
+        "description": "Poll a Table sheet recalculation operation by operation ID.",
+        "operationId": "getTableSheetOperationStatus",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Operation ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or operation not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel Table Sheet Operation",
+        "description": "Cancel an active Table sheet recalculation operation.",
+        "operationId": "cancelTableSheetOperation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Operation ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation cancelled or no active operation found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/score": {
+      "get": {
+        "summary": "Get Table Sheet Score",
+        "description": "Retrieve the current score payload for a Table sheet.",
+        "operationId": "getTableSheetScore",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Configure Table Sheet Score",
+        "description": "Configure scoring for a Table sheet. This endpoint updates the configuration and returns whether recalculation is required; it does not queue score calculation.",
+        "operationId": "configureTableSheetScore",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigureTableSheetScoreRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Score configuration updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigureTableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid score configuration or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or score column not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to update score configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Recalculate Table Sheet Score",
+        "description": "Queue recalculation for an existing Table sheet score configuration.",
+        "operationId": "recalculateTableSheetScore",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Score recalculation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecalculateTableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Score is not configured or score configuration is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to queue score calculation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions": {
+      "get": {
+        "summary": "List Table Sheet Versions",
+        "description": "List saved versions for a Table sheet.",
+        "operationId": "listTableSheetVersions",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor returned from the previous page. Public table cursors encode the current sort, order, cursor value, and a hash of the active filters; reuse the cursor with the same sort, order, and filter parameters from the previous request."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "description": "Number of versions to return."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "version_number"
+              ],
+              "default": "version_number"
+            },
+            "description": "Sort field. Currently supports version_number."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort order."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetVersionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cursor, query parameter, sort/order, filter set, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table Sheet Version",
+        "description": "Create a named Table sheet version, or restore from an existing version while creating a new version.",
+        "operationId": "createTableSheetVersion",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetVersionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or source version not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/{version_id}": {
+      "get": {
+        "summary": "Get Table Sheet Version",
+        "description": "Retrieve one Table sheet version, including its snapshot.",
+        "operationId": "getTableSheetVersion",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet version ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or version not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/score-history": {
+      "get": {
+        "summary": "Get Table Sheet Score History",
+        "description": "Retrieve score-history points across Table sheet versions.",
+        "operationId": "getTableSheetVersionScoreHistory",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "max_points",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 50,
+              "maximum": 5000,
+              "default": 1200
+            },
+            "description": "Maximum points to return."
+          },
+          {
+            "name": "range",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "last_25",
+                "last_50",
+                "last_100",
+                "last_250"
+              ],
+              "default": "all"
+            },
+            "description": "History range."
+          },
+          {
+            "name": "resolution",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "raw",
+                "min_max_bucket"
+              ],
+              "default": "auto"
+            },
+            "description": "Point resolution."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetScoreHistoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameter or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/file": {
+      "post": {
+        "summary": "Import File Into Table Sheet",
+        "description": "Start an asynchronous CSV import into an existing Table sheet.",
+        "operationId": "createTableSheetFileImport",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetFileImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "File import queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetImportStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body, file, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to upload file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/request-logs": {
+      "post": {
+        "summary": "Import Request Logs Into Table Sheet",
+        "description": "Start an asynchronous request-history import into an existing Table sheet.",
+        "operationId": "createTableSheetRequestLogImport",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetRequestLogImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Request-history import queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetImportStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body, request logs, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
     }
   },
   "components": {
@@ -9041,6 +12070,641 @@
       }
     },
     "schemas": {
+      "CreateTableRequest": {
+        "type": "object",
+        "title": "CreateTableRequest",
+        "description": "Create a Table with one default sheet, one text column, and one empty row.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "Table title. If omitted, PromptLayer generates an Untitled Table name."
+          },
+          "folder_id": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Folder ID."
+          }
+        },
+        "additionalProperties": false
+      },
+      "Table": {
+        "type": "object",
+        "title": "Table",
+        "required": [
+          "id",
+          "workspace_id",
+          "folder_id",
+          "title",
+          "sheet_count"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "sheet_count": {
+            "type": "integer",
+            "description": "Number of active sheets in the table."
+          }
+        }
+      },
+      "TableDetail": {
+        "type": "object",
+        "title": "TableDetail",
+        "required": [
+          "id",
+          "workspace_id",
+          "folder_id",
+          "title",
+          "sheet_count",
+          "sheet_row_counts"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "sheet_count": {
+            "type": "integer",
+            "description": "Number of active sheets in the table."
+          },
+          "sheet_row_counts": {
+            "type": "object",
+            "description": "Map of sheet ID to resolved row count.",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "TableSheet": {
+        "type": "object",
+        "title": "TableSheet",
+        "required": [
+          "id",
+          "table_id",
+          "title",
+          "index",
+          "version_count",
+          "row_count",
+          "deleted_at",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer"
+          },
+          "version_count": {
+            "type": "integer"
+          },
+          "row_count": {
+            "type": "integer",
+            "description": "Resolved row count for the sheet."
+          },
+          "deleted_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableColumnDependency": {
+        "type": "object",
+        "title": "TableColumnDependency",
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "reference_type": {
+            "type": "string"
+          },
+          "config_key": {
+            "type": "string",
+            "nullable": true
+          },
+          "config_meta": {
+            "type": "object",
+            "nullable": true
+          },
+          "source_resolver": {
+            "type": "string"
+          },
+          "source_label": {
+            "type": "string"
+          }
+        }
+      },
+      "TableColumn": {
+        "type": "object",
+        "title": "TableColumn",
+        "required": [
+          "id",
+          "sheet_id",
+          "position_rank",
+          "title",
+          "type",
+          "config",
+          "is_output_column"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "position_rank": {
+            "type": "number"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "ABSOLUTE_NUMERIC_DISTANCE",
+              "AI_DATA_EXTRACTION",
+              "APPLY_DIFF",
+              "ASSERT_VALID",
+              "COALESCE",
+              "CONDITION",
+              "CODE_EXECUTION",
+              "COMBINE_COLUMNS",
+              "COMPARE",
+              "COMPOSITION",
+              "CONTAINS",
+              "CONVERSATION_SIMULATOR",
+              "COSINE_SIMILARITY",
+              "COUNT",
+              "DATASET",
+              "ENDPOINT",
+              "FOR_LOOP",
+              "HUMAN",
+              "JSON_PATH",
+              "LLM_ASSERTION",
+              "MATH_OPERATOR",
+              "MCP",
+              "MIN_MAX",
+              "PARSE_VALUE",
+              "PROMPT_TEMPLATE",
+              "REGEX",
+              "REGEX_EXTRACTION",
+              "VARIABLE",
+              "WHILE_LOOP",
+              "WORKFLOW",
+              "XML_PATH"
+            ]
+          },
+          "config_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "config": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "is_output_column": {
+            "type": "boolean"
+          },
+          "dependencies": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableColumnDependency"
+            }
+          },
+          "source_resolver_labels": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "string"
+            }
+          },
+          "available_sources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "sources": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "array",
+              "items": {
+                "type": "string"
+              }
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "TableCell": {
+        "type": "object",
+        "title": "TableCell",
+        "required": [
+          "id",
+          "sheet_id",
+          "column_id",
+          "row_index",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Cell UUID, or a virtual cell ID for not-yet-computed output cells."
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "execution_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "row_index": {
+            "type": "integer"
+          },
+          "last_computed_version": {
+            "type": "integer",
+            "nullable": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "STALE",
+              "QUEUED",
+              "DISPATCHED",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "display_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "input_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true,
+            "description": "Structured cell value. Shape depends on the column type."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
+      },
+      "TableRow": {
+        "type": "object",
+        "title": "TableRow",
+        "required": [
+          "row_index",
+          "cells"
+        ],
+        "properties": {
+          "row_index": {
+            "type": "integer"
+          },
+          "cells": {
+            "type": "object",
+            "description": "Cells keyed by column ID.",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/TableCell"
+            }
+          }
+        }
+      },
+      "TableImportOperation": {
+        "type": "object",
+        "title": "TableImportOperation",
+        "required": [
+          "operation_id",
+          "table_id",
+          "sheet_id",
+          "source",
+          "status",
+          "progress",
+          "message",
+          "created_at",
+          "updated_at",
+          "status_url"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string"
+          },
+          "table_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "file",
+              "request_logs"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed"
+            ]
+          },
+          "progress": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "message": {
+            "type": "string"
+          },
+          "rows_added": {
+            "type": "integer"
+          },
+          "row_count": {
+            "type": "integer"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Import operation fields returned by existing-sheet import endpoints."
+      },
+      "TableSheetFileSource": {
+        "type": "object",
+        "title": "TableSheetFileSource",
+        "required": [
+          "type",
+          "file_name",
+          "file_content_base64"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "file"
+            ]
+          },
+          "file_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "CSV or JSON file name."
+          },
+          "file_content_base64": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Base64-encoded CSV or JSON content. Maximum decoded file size is 100MB."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetRequestLogsSource": {
+        "title": "TableSheetRequestLogsSource",
+        "description": "Import request logs into a new sheet. Provide either request_log_ids or filter_group.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestLogQuery"
+          },
+          {
+            "type": "object",
+            "required": [
+              "type"
+            ],
+            "properties": {
+              "type": {
+                "type": "string",
+                "enum": [
+                  "request_logs"
+                ]
+              },
+              "request_log_ids": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "nullable": true,
+                "description": "Specific request log IDs to import. All IDs must belong to the table workspace.",
+                "minItems": 1,
+                "maxItems": 50000
+              },
+              "variables_to_parse": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [],
+                "description": "Input variable names to parse from matching request logs."
+              },
+              "include_fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true,
+                "description": "Additional request log fields to include as columns."
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "nullable": true,
+                "description": "Maximum number of matching request logs to import.",
+                "maximum": 50000
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "CreateTableSheetRequest": {
+        "type": "object",
+        "title": "CreateTableSheetRequest",
+        "required": [
+          "source"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "New sheet title. Defaults to the imported file name or Request Logs."
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "nullable": true,
+            "description": "Sheet index. Defaults to the next index in the table."
+          },
+          "operation_id": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "Optional client-provided operation ID for polling and webhook correlation. A UUID is generated when omitted."
+          },
+          "source": {
+            "oneOf": [
+              {
+                "$ref": "#/components/schemas/TableSheetFileSource"
+              },
+              {
+                "$ref": "#/components/schemas/TableSheetRequestLogsSource"
+              }
+            ],
+            "discriminator": {
+              "propertyName": "type",
+              "mapping": {
+                "file": "#/components/schemas/TableSheetFileSource",
+                "request_logs": "#/components/schemas/TableSheetRequestLogsSource"
+              }
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableResponse": {
+        "type": "object",
+        "title": "CreateTableResponse",
+        "required": [
+          "success",
+          "message",
+          "table"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "table": {
+            "$ref": "#/components/schemas/TableDetail"
+          }
+        }
+      },
+      "TableSheetImportResponse": {
+        "type": "object",
+        "title": "TableSheetImportResponse",
+        "required": [
+          "success",
+          "message",
+          "operation_id",
+          "operation",
+          "sheet"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableImportOperationSummary"
+          },
+          "sheet": {
+            "$ref": "#/components/schemas/TableSheet"
+          }
+        },
+        "additionalProperties": false
+      },
       "Evaluation": {
         "type": "object",
         "properties": {
@@ -10138,13 +13802,13 @@
         "properties": {
           "page": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Page",
             "default": 1
           },
           "per_page": {
             "type": "integer",
-            "exclusiveMinimum": 0.0,
+            "exclusiveMinimum": 0,
             "title": "Per Page",
             "default": 30
           }
@@ -10347,7 +14011,7 @@
             "anyOf": [
               {
                 "type": "integer",
-                "exclusiveMinimum": 0.0
+                "exclusiveMinimum": 0
               },
               {
                 "type": "null"
@@ -13967,8 +17631,8 @@
             "type": "integer"
           },
           "price": {
-            "default": 0.0,
-            "minimum": 0.0,
+            "default": 0,
+            "minimum": 0,
             "title": "Price",
             "type": "number"
           },
@@ -16025,6 +19689,2262 @@
           "external_ids"
         ],
         "title": "ListPromptTemplateItem"
+      },
+      "UpdateTableRequest": {
+        "type": "object",
+        "title": "UpdateTableRequest",
+        "description": "Update a Table title or folder.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "New Table title. Blank titles are rejected."
+          },
+          "folder_id": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Folder ID. Pass null to remove the Table from its folder."
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTableResponse": {
+        "type": "object",
+        "title": "UpdateTableResponse",
+        "required": [
+          "success",
+          "table"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "table": {
+            "$ref": "#/components/schemas/TableDetail"
+          }
+        }
+      },
+      "UpdateTableSheetRequest": {
+        "type": "object",
+        "title": "UpdateTableSheetRequest",
+        "description": "Update a Table sheet title or index.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "New sheet title. Blank titles are rejected."
+          },
+          "index": {
+            "type": "integer",
+            "minimum": 0,
+            "nullable": true,
+            "description": "New zero-based sheet index."
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTableSheetResponse": {
+        "type": "object",
+        "title": "UpdateTableSheetResponse",
+        "required": [
+          "success",
+          "sheet",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "sheet": {
+            "$ref": "#/components/schemas/TableSheet"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "AddTableSheetRowsRequest": {
+        "type": "object",
+        "title": "AddTableSheetRowsRequest",
+        "description": "Append rows to a Table sheet. Values are keyed by column ID.",
+        "properties": {
+          "count": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 1,
+            "description": "Number of rows to append."
+          },
+          "values": {
+            "type": "array",
+            "nullable": true,
+            "description": "Optional per-row values keyed by column ID. Values beyond count are ignored; missing values use the column default behavior.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "AddTableSheetRowsResponse": {
+        "type": "object",
+        "title": "AddTableSheetRowsResponse",
+        "required": [
+          "success",
+          "rows_created",
+          "start_row_index",
+          "row_indices",
+          "rows",
+          "cell_count",
+          "row_count",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "rows_created": {
+            "type": "integer"
+          },
+          "start_row_index": {
+            "type": "integer"
+          },
+          "row_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            }
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableRow"
+            }
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "row_count": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "TableColumnDependencyInput": {
+        "type": "object",
+        "title": "TableColumnDependencyInput",
+        "required": [
+          "column_id"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Source column ID."
+          },
+          "reference_type": {
+            "type": "string",
+            "default": "value",
+            "description": "Dependency reference type."
+          },
+          "config_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "Config field this dependency feeds."
+          },
+          "config_meta": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true,
+            "description": "Additional dependency metadata."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetColumnRequest": {
+        "type": "object",
+        "title": "CreateTableSheetColumnRequest",
+        "required": [
+          "title",
+          "type"
+        ],
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Column title. Blank titles are rejected."
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "ABSOLUTE_NUMERIC_DISTANCE",
+              "AI_DATA_EXTRACTION",
+              "APPLY_DIFF",
+              "ASSERT_VALID",
+              "COALESCE",
+              "CONDITION",
+              "CODE_EXECUTION",
+              "COMBINE_COLUMNS",
+              "COMPARE",
+              "COMPOSITION",
+              "CONTAINS",
+              "CONVERSATION_SIMULATOR",
+              "COSINE_SIMILARITY",
+              "COUNT",
+              "DATASET",
+              "ENDPOINT",
+              "FOR_LOOP",
+              "HUMAN",
+              "JSON_PATH",
+              "LLM_ASSERTION",
+              "MATH_OPERATOR",
+              "MCP",
+              "MIN_MAX",
+              "PARSE_VALUE",
+              "PROMPT_TEMPLATE",
+              "REGEX",
+              "REGEX_EXTRACTION",
+              "VARIABLE",
+              "WHILE_LOOP",
+              "WORKFLOW",
+              "XML_PATH"
+            ]
+          },
+          "config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true,
+            "description": "Column configuration. Shape depends on column type."
+          },
+          "dependencies": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TableColumnDependencyInput"
+            },
+            "description": "Config-driven source column dependencies."
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTableSheetColumnRequest": {
+        "type": "object",
+        "title": "UpdateTableSheetColumnRequest",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "New column title. Blank titles are rejected."
+          },
+          "config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true,
+            "description": "Updated column configuration. Shape depends on column type."
+          },
+          "dependencies": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TableColumnDependencyInput"
+            },
+            "description": "Updated config-driven source column dependencies."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListTableSheetColumnsResponse": {
+        "type": "object",
+        "title": "ListTableSheetColumnsResponse",
+        "required": [
+          "success",
+          "data",
+          "pagination",
+          "filters",
+          "count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableColumn"
+            },
+            "description": "Items returned on this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PublicListPagination"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/EmptyPublicFilters",
+            "description": "Filters applied to this page. The cursor includes a hash of this filter set, so changing filters while reusing a cursor returns an invalid cursor error."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items returned on this page."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetColumnResponse": {
+        "type": "object",
+        "title": "CreateTableSheetColumnResponse",
+        "required": [
+          "success",
+          "column",
+          "cells",
+          "version",
+          "id",
+          "title",
+          "position_rank",
+          "type"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "column": {
+            "$ref": "#/components/schemas/TableColumn"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableCell"
+            }
+          },
+          "version": {
+            "type": "integer"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "position_rank": {
+            "type": "number"
+          },
+          "type": {
+            "type": "string",
+            "enum": [
+              "TEXT",
+              "ABSOLUTE_NUMERIC_DISTANCE",
+              "AI_DATA_EXTRACTION",
+              "APPLY_DIFF",
+              "ASSERT_VALID",
+              "COALESCE",
+              "CONDITION",
+              "CODE_EXECUTION",
+              "COMBINE_COLUMNS",
+              "COMPARE",
+              "COMPOSITION",
+              "CONTAINS",
+              "CONVERSATION_SIMULATOR",
+              "COSINE_SIMILARITY",
+              "COUNT",
+              "DATASET",
+              "ENDPOINT",
+              "FOR_LOOP",
+              "HUMAN",
+              "JSON_PATH",
+              "LLM_ASSERTION",
+              "MATH_OPERATOR",
+              "MCP",
+              "MIN_MAX",
+              "PARSE_VALUE",
+              "PROMPT_TEMPLATE",
+              "REGEX",
+              "REGEX_EXTRACTION",
+              "VARIABLE",
+              "WHILE_LOOP",
+              "WORKFLOW",
+              "XML_PATH"
+            ]
+          },
+          "config_hash": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "UpdateTableSheetColumnResponse": {
+        "type": "object",
+        "title": "UpdateTableSheetColumnResponse",
+        "required": [
+          "success",
+          "message",
+          "column",
+          "version",
+          "requires_recalculation",
+          "affected_column_ids"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "config_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "requires_recalculation": {
+            "type": "boolean",
+            "description": "Whether the config or dependencies changed and affected cells should be recalculated."
+          },
+          "affected_column_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Column IDs affected by the config or dependency change. Empty when recalculation is not required."
+          },
+          "version": {
+            "type": "integer"
+          },
+          "column": {
+            "$ref": "#/components/schemas/TableColumn"
+          }
+        }
+      },
+      "GetTableSheetCellResponse": {
+        "type": "object",
+        "title": "GetTableSheetCellResponse",
+        "required": [
+          "success",
+          "cell"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cell": {
+            "$ref": "#/components/schemas/TableCell"
+          }
+        }
+      },
+      "UpdateTableSheetCellRequest": {
+        "type": "object",
+        "title": "UpdateTableSheetCellRequest",
+        "properties": {
+          "display_value": {
+            "type": "string",
+            "nullable": true,
+            "description": "Display value for a text-column cell."
+          },
+          "value": {
+            "nullable": true,
+            "description": "Structured value for a text-column cell."
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateTableSheetCellResponse": {
+        "type": "object",
+        "title": "UpdateTableSheetCellResponse",
+        "required": [
+          "success",
+          "cell",
+          "version",
+          "stale_count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "cell": {
+            "$ref": "#/components/schemas/TableCell"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "stale_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "RecalculateTableSheetCellsRequest": {
+        "type": "object",
+        "title": "RecalculateTableSheetCellsRequest",
+        "required": [
+          "cell_ids"
+        ],
+        "properties": {
+          "cell_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Cell IDs to recalculate."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetCellRecalculationResponse": {
+        "type": "object",
+        "title": "TableSheetCellRecalculationResponse",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "execution_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "selected_cell_count": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        }
+      },
+      "TableSheetOperationStatus": {
+        "type": "object",
+        "title": "TableSheetOperationStatus",
+        "required": [
+          "operation_id",
+          "operation",
+          "status",
+          "status_counts",
+          "cell_count",
+          "completed_count",
+          "failed_count",
+          "pending_count",
+          "status_url"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "completed_count": {
+            "type": "integer"
+          },
+          "failed_count": {
+            "type": "integer"
+          },
+          "pending_count": {
+            "type": "integer"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListTableSheetOperationsResponse": {
+        "type": "object",
+        "title": "ListTableSheetOperationsResponse",
+        "required": [
+          "success",
+          "sheet_id",
+          "version",
+          "total_cells",
+          "status_counts",
+          "pending_count",
+          "active_operations"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "total_cells": {
+            "type": "integer"
+          },
+          "status_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "pending_count": {
+            "type": "integer"
+          },
+          "active_operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetOperation"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationRequest": {
+        "type": "object",
+        "title": "CreateTableSheetOperationRequest",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ],
+            "default": "recalculate"
+          },
+          "column_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Columns to recalculate. Text columns cannot be recalculated."
+          },
+          "row_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Zero-based row indices to recalculate. If omitted, matching cells across all rows are considered."
+          },
+          "statuses": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "STALE",
+                "QUEUED",
+                "DISPATCHED",
+                "RUNNING",
+                "COMPLETED",
+                "FAILED"
+              ]
+            },
+            "description": "Cell statuses to include. Defaults to stale cells. Pass an empty array to include all statuses."
+          },
+          "confirmation_token": {
+            "type": "string",
+            "nullable": true,
+            "description": "Confirmation token returned when the operation exceeds the confirmation threshold."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationResponse": {
+        "title": "CreateTableSheetOperationResponse",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CreateTableSheetOperationQueuedResponse"
+          },
+          {
+            "$ref": "#/components/schemas/CreateTableSheetOperationNoopResponse"
+          },
+          {
+            "$ref": "#/components/schemas/CreateTableSheetOperationConfirmationResponse"
+          }
+        ]
+      },
+      "GetTableSheetOperationStatusResponse": {
+        "type": "object",
+        "title": "GetTableSheetOperationStatusResponse",
+        "required": [
+          "success",
+          "operation"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableSheetOperation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CancelTableSheetOperationResponse": {
+        "type": "object",
+        "title": "CancelTableSheetOperationResponse",
+        "required": [
+          "success",
+          "message",
+          "operation_id",
+          "execution_ids",
+          "cancelled_cell_count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "execution_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cancelled_cell_count": {
+            "type": "integer"
+          },
+          "not_started_reset_count": {
+            "type": "integer"
+          },
+          "running_invalidated_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "ScoreColumnResult": {
+        "type": "object",
+        "title": "ScoreColumnResult",
+        "required": [
+          "column_id",
+          "title",
+          "included_count",
+          "excluded_count"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "nullable": true
+          },
+          "included_count": {
+            "type": "integer"
+          },
+          "excluded_count": {
+            "type": "integer"
+          },
+          "resolved_scoring_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom"
+            ],
+            "nullable": true
+          }
+        }
+      },
+      "TableSheetScoreResponse": {
+        "type": "object",
+        "title": "TableSheetScoreResponse",
+        "required": [
+          "success",
+          "sheet_id",
+          "scoring_type",
+          "columns",
+          "aggregate_score",
+          "total_rows",
+          "scored_rows",
+          "excluded_rows",
+          "calculated_at",
+          "score_matrix",
+          "score_matrix_metrics",
+          "status",
+          "score_calculation_error",
+          "has_custom_scoring",
+          "score_configuration",
+          "score_type",
+          "overall_score",
+          "details",
+          "aggregate",
+          "per_column"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scoring_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom",
+              null
+            ],
+            "nullable": true
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetScoreColumn"
+            }
+          },
+          "aggregate_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_rows": {
+            "type": "integer"
+          },
+          "scored_rows": {
+            "type": "integer"
+          },
+          "excluded_rows": {
+            "type": "integer"
+          },
+          "calculated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "score_matrix": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "array",
+              "items": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/components/schemas/TableSheetScoreCellObject"
+                  }
+                ]
+              }
+            }
+          },
+          "score_matrix_metrics": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TableSheetScoreMetric"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              null
+            ],
+            "nullable": true
+          },
+          "score_calculation_error": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_custom_scoring": {
+            "type": "boolean"
+          },
+          "score_configuration": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TableSheetScoreConfiguration"
+              }
+            ]
+          },
+          "score_type": {
+            "type": "string",
+            "enum": [
+              "none",
+              "single_column",
+              "multi_column",
+              "custom"
+            ]
+          },
+          "overall_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "aggregate": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "per_column": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfigureTableSheetScoreRequest": {
+        "type": "object",
+        "title": "ConfigureTableSheetScoreRequest",
+        "properties": {
+          "score_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom"
+            ],
+            "nullable": true,
+            "description": "Scoring mode. Required when score_config is provided."
+          },
+          "score_config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true,
+            "description": "Explicit score configuration."
+          },
+          "column_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Column IDs to score."
+          },
+          "column_names": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Column titles to score. Titles must be unique in the sheet."
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000,
+            "nullable": true,
+            "description": "Custom scoring code."
+          },
+          "code_language": {
+            "type": "string",
+            "enum": [
+              "PYTHON",
+              "JAVASCRIPT"
+            ],
+            "default": "PYTHON"
+          },
+          "true_values": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Values treated as true for boolean scoring."
+          },
+          "false_values": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Values treated as false for boolean scoring."
+          },
+          "assertion_aggregation": {
+            "type": "string",
+            "enum": [
+              "all",
+              "any",
+              "mean"
+            ],
+            "nullable": true,
+            "description": "Aggregation mode for assertion-style boolean scoring."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfigureTableSheetScoreResponse": {
+        "type": "object",
+        "title": "ConfigureTableSheetScoreResponse",
+        "required": [
+          "success",
+          "message",
+          "score_configuration_id",
+          "status",
+          "requires_recalculation",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "score_configuration_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "description": "Returned as null by this endpoint. Use the recalculation endpoint to queue score calculation."
+          },
+          "requires_recalculation": {
+            "type": "boolean",
+            "description": "Always true after updating the score configuration."
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "RecalculateTableSheetScoreResponse": {
+        "type": "object",
+        "title": "RecalculateTableSheetScoreResponse",
+        "required": [
+          "success",
+          "score_configuration_id",
+          "status"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "score_configuration_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              null
+            ]
+          }
+        }
+      },
+      "TableSheetVersion": {
+        "type": "object",
+        "title": "TableSheetVersion",
+        "required": [
+          "id",
+          "sheet_id",
+          "version_number"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version_number": {
+            "type": "integer"
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "deltas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "score": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "score_configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ListTableSheetVersionsResponse": {
+        "type": "object",
+        "title": "ListTableSheetVersionsResponse",
+        "required": [
+          "success",
+          "data",
+          "pagination",
+          "filters",
+          "count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetVersion"
+            },
+            "description": "Items returned on this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PublicListPagination"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/EmptyPublicFilters",
+            "description": "Filters applied to this page. The cursor includes a hash of this filter set, so changing filters while reusing a cursor returns an invalid cursor error."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items returned on this page."
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTableSheetVersionResponse": {
+        "type": "object",
+        "title": "GetTableSheetVersionResponse",
+        "required": [
+          "success",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "version": {
+            "$ref": "#/components/schemas/TableSheetVersion"
+          }
+        }
+      },
+      "CreateTableSheetVersionRequest": {
+        "type": "object",
+        "title": "CreateTableSheetVersionRequest",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "Version name. Required when source_version_id is omitted."
+          },
+          "source_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Existing version to restore from while creating a new version."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ScoreHistoryResponse": {
+        "type": "object",
+        "title": "ScoreHistoryResponse",
+        "required": [
+          "success",
+          "score_history"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "score_history": {
+            "type": "object",
+            "required": [
+              "points",
+              "total_points",
+              "returned_points",
+              "resolution",
+              "range",
+              "max_points",
+              "is_sampled"
+            ],
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "total_points": {
+                "type": "integer"
+              },
+              "returned_points": {
+                "type": "integer"
+              },
+              "resolution": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "raw",
+                  "min_max_bucket"
+                ]
+              },
+              "range": {
+                "type": "string",
+                "enum": [
+                  "all",
+                  "last_25",
+                  "last_50",
+                  "last_100",
+                  "last_250"
+                ]
+              },
+              "max_points": {
+                "type": "integer"
+              },
+              "is_sampled": {
+                "type": "boolean"
+              }
+            },
+            "additionalProperties": true
+          }
+        }
+      },
+      "StartTableSheetFileImportRequest": {
+        "type": "object",
+        "title": "StartTableSheetFileImportRequest",
+        "required": [
+          "file_name",
+          "file_content_base64"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+          },
+          "file_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "CSV file name."
+          },
+          "file_content_base64": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Base64-encoded CSV content."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetRequestLogImportRequest": {
+        "title": "TableSheetRequestLogImportRequest",
+        "description": "Import request history into an existing Table sheet. Provide either request_log_ids or filter_group.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestLogQuery"
+          },
+          {
+            "type": "object",
+            "title": "TableSheetRequestLogImportFields",
+            "properties": {
+              "operation_id": {
+                "type": "string",
+                "nullable": true,
+                "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+              },
+              "request_log_ids": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "description": "Specific request log IDs to import.",
+                "minItems": 1,
+                "maxItems": 50000
+              },
+              "variables_to_parse": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [],
+                "description": "Input variable names to parse from matching request logs."
+              },
+              "include_fields": {
+                "type": "array",
+                "nullable": true,
+                "items": {
+                  "type": "string"
+                },
+                "description": "Additional request log fields to include as columns."
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "nullable": true,
+                "description": "Maximum number of matching request logs to import.",
+                "maximum": 50000
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "TableSheetImportOperationResponse": {
+        "type": "object",
+        "title": "TableSheetImportOperationResponse",
+        "required": [
+          "success",
+          "message",
+          "operation_id",
+          "operation",
+          "status_url"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableImportOperation"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        }
+      },
+      "BatchTableSheetCellRecalculationRequest": {
+        "type": "object",
+        "title": "BatchTableSheetCellRecalculationRequest",
+        "required": [
+          "cell_ids"
+        ],
+        "properties": {
+          "cell_ids": {
+            "type": "array",
+            "minItems": 1,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Cell IDs to recalculate."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetOperation": {
+        "type": "object",
+        "title": "TableSheetOperation",
+        "required": [
+          "operation_id",
+          "operation",
+          "status",
+          "status_counts",
+          "cell_count",
+          "completed_count",
+          "failed_count",
+          "pending_count",
+          "status_url"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "completed_count": {
+            "type": "integer"
+          },
+          "failed_count": {
+            "type": "integer"
+          },
+          "pending_count": {
+            "type": "integer"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTableSheetOperationResponse": {
+        "type": "object",
+        "title": "GetTableSheetOperationResponse",
+        "required": [
+          "success",
+          "operation"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableSheetOperation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetFileImportRequest": {
+        "type": "object",
+        "title": "CreateTableSheetFileImportRequest",
+        "required": [
+          "file_name",
+          "file_content_base64"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+          },
+          "file_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "CSV file name. Must end with .csv."
+          },
+          "file_content_base64": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Base64-encoded CSV file content."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetRequestLogImportRequest": {
+        "title": "CreateTableSheetRequestLogImportRequest",
+        "description": "Import request history into an existing Table sheet. Provide either request_log_ids or filter_group.",
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/RequestLogQuery"
+          },
+          {
+            "type": "object",
+            "properties": {
+              "operation_id": {
+                "type": "string",
+                "nullable": true,
+                "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+              },
+              "request_log_ids": {
+                "type": "array",
+                "items": {
+                  "type": "integer",
+                  "minimum": 1
+                },
+                "nullable": true,
+                "description": "Specific request log IDs to import.",
+                "minItems": 1,
+                "maxItems": 50000
+              },
+              "variables_to_parse": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "default": [],
+                "description": "Input variable names to parse from matching request logs."
+              },
+              "include_fields": {
+                "type": "array",
+                "items": {
+                  "type": "string"
+                },
+                "nullable": true,
+                "description": "Additional request log fields to include as columns."
+              },
+              "limit": {
+                "type": "integer",
+                "minimum": 1,
+                "nullable": true,
+                "description": "Maximum number of matching request logs to import.",
+                "maximum": 50000
+              }
+            },
+            "additionalProperties": false
+          }
+        ]
+      },
+      "TableSheetImportStartResponse": {
+        "type": "object",
+        "title": "TableSheetImportStartResponse",
+        "required": [
+          "success",
+          "message",
+          "operation_id",
+          "operation",
+          "status_url"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableImportOperation"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetScoreHistoryResponse": {
+        "type": "object",
+        "title": "TableSheetScoreHistoryResponse",
+        "required": [
+          "success",
+          "score_history"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "score_history": {
+            "type": "object",
+            "required": [
+              "points",
+              "total_points",
+              "returned_points",
+              "resolution",
+              "range",
+              "max_points",
+              "is_sampled"
+            ],
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "total_points": {
+                "type": "integer"
+              },
+              "returned_points": {
+                "type": "integer"
+              },
+              "resolution": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "raw",
+                  "min_max_bucket"
+                ]
+              },
+              "range": {
+                "type": "string"
+              },
+              "max_points": {
+                "type": "integer"
+              },
+              "is_sampled": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "PublicListPagination": {
+        "type": "object",
+        "title": "PublicListPagination",
+        "required": [
+          "next_cursor",
+          "prev_cursor",
+          "has_more",
+          "limit"
+        ],
+        "properties": {
+          "next_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Opaque cursor to pass as cursor for the next page, or null when there is no next page. The cursor is valid only with the same sort, order, and filter parameters used to produce it."
+          },
+          "prev_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Reserved for previous-page cursors. Public table list endpoints currently return null."
+          },
+          "has_more": {
+            "type": "boolean",
+            "description": "Whether another page is available."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Requested page size."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Cursor pagination metadata for public table list endpoints. Cursors are opaque and include the active sort, order, cursor value, and a hash of the active filter set."
+      },
+      "ListTablesResponse": {
+        "type": "object",
+        "title": "ListTablesResponse",
+        "required": [
+          "success",
+          "data",
+          "pagination",
+          "filters",
+          "count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/Table"
+            },
+            "description": "Items returned on this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PublicListPagination"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListTablesFilters",
+            "description": "Filters applied to this page. The cursor includes a hash of this filter set, so changing filters while reusing a cursor returns an invalid cursor error."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items returned on this page."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListTableSheetsResponse": {
+        "type": "object",
+        "title": "ListTableSheetsResponse",
+        "required": [
+          "success",
+          "data",
+          "pagination",
+          "filters",
+          "count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetListItem"
+            },
+            "description": "Items returned on this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PublicListPagination"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/ListTableSheetsFilters",
+            "description": "Filters applied to this page. The cursor includes a hash of this filter set, so changing filters while reusing a cursor returns an invalid cursor error."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items returned on this page."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListTableSheetRowsResponse": {
+        "type": "object",
+        "title": "ListTableSheetRowsResponse",
+        "required": [
+          "success",
+          "data",
+          "pagination",
+          "filters",
+          "count",
+          "version",
+          "columns"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableRow"
+            },
+            "description": "Items returned on this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PublicListPagination"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/EmptyPublicFilters",
+            "description": "Filters applied to this page. The cursor includes a hash of this filter set, so changing filters while reusing a cursor returns an invalid cursor error."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items returned on this page."
+          },
+          "version": {
+            "type": "integer",
+            "description": "Current sheet version count."
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableColumn"
+            },
+            "description": "Column definitions when included; otherwise an empty array."
+          },
+          "row_count": {
+            "type": "integer",
+            "description": "Resolved row count. Present unless include_row_count=false."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListTablesFilters": {
+        "type": "object",
+        "title": "ListTablesFilters",
+        "properties": {
+          "folder_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Folder filter applied to the request."
+          },
+          "name": {
+            "type": "string",
+            "description": "Name filter applied to the request."
+          },
+          "prompt_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Prompt template filter applied to the request."
+          },
+          "prompt_version_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Prompt version filter applied to the request."
+          },
+          "prompt_label_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Prompt label filter applied to the request."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ListTableSheetsFilters": {
+        "type": "object",
+        "title": "ListTableSheetsFilters",
+        "properties": {
+          "prompt_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Prompt template filter applied to the request."
+          },
+          "prompt_version_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Prompt version filter applied to the request."
+          },
+          "prompt_label_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "Prompt label filter applied to the request."
+          }
+        },
+        "additionalProperties": false
+      },
+      "EmptyPublicFilters": {
+        "type": "object",
+        "title": "EmptyPublicFilters",
+        "description": "This endpoint does not echo any filter fields.",
+        "maxProperties": 0,
+        "additionalProperties": false
+      },
+      "TableSheetScoreColumn": {
+        "type": "object",
+        "title": "TableSheetScoreColumn",
+        "required": [
+          "column_id",
+          "title",
+          "score",
+          "included_count",
+          "excluded_count"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "nullable": true
+          },
+          "included_count": {
+            "type": "integer"
+          },
+          "excluded_count": {
+            "type": "integer"
+          },
+          "resolved_scoring_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom",
+              null
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetScoreCellObject": {
+        "type": "object",
+        "title": "TableSheetScoreCellObject",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "nullable": true
+          },
+          "positive_metric": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScoreMetric": {
+        "type": "object",
+        "title": "TableSheetScoreMetric",
+        "required": [
+          "key",
+          "label"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "positive_metric": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetScoreConfiguration": {
+        "type": "object",
+        "title": "TableSheetScoreConfiguration",
+        "required": [
+          "score_type",
+          "score_config"
+        ],
+        "properties": {
+          "score_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom"
+            ]
+          },
+          "score_config": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetListItem": {
+        "type": "object",
+        "title": "TableSheetListItem",
+        "required": [
+          "id",
+          "table_id",
+          "title",
+          "index",
+          "version_count",
+          "row_count",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer"
+          },
+          "version_count": {
+            "type": "integer"
+          },
+          "row_count": {
+            "type": "integer",
+            "description": "Resolved row count for the sheet."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationQueuedResponse": {
+        "type": "object",
+        "title": "CreateTableSheetOperationQueuedResponse",
+        "required": [
+          "success",
+          "operation",
+          "operation_id",
+          "execution_id",
+          "execution_ids",
+          "cell_count",
+          "version",
+          "status_url",
+          "virtual_cell_count",
+          "cells"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ]
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "execution_id": {
+            "type": "string"
+          },
+          "execution_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "status_url": {
+            "type": "string"
+          },
+          "virtual_cell_count": {
+            "type": "integer"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableCell"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationNoopResponse": {
+        "type": "object",
+        "title": "CreateTableSheetOperationNoopResponse",
+        "required": [
+          "success",
+          "cell_count",
+          "virtual_cell_count",
+          "cells"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "cell_count": {
+            "type": "integer",
+            "enum": [
+              0
+            ]
+          },
+          "virtual_cell_count": {
+            "type": "integer"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableCell"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationConfirmationResponse": {
+        "type": "object",
+        "title": "CreateTableSheetOperationConfirmationResponse",
+        "required": [
+          "success",
+          "requires_confirmation",
+          "confirmation_token",
+          "affected_cell_count",
+          "message"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "requires_confirmation": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "confirmation_token": {
+            "type": "string"
+          },
+          "affected_cell_count": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableImportOperationSummary": {
+        "type": "object",
+        "title": "TableImportOperationSummary",
+        "required": [
+          "operation_id",
+          "source",
+          "status",
+          "progress",
+          "message",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "file",
+              "request_logs"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "succeeded",
+              "failed"
+            ]
+          },
+          "progress": {
+            "type": "integer",
+            "minimum": 0,
+            "maximum": 100
+          },
+          "message": {
+            "type": "string"
+          },
+          "rows_added": {
+            "type": "integer"
+          },
+          "row_count": {
+            "type": "integer"
+          },
+          "file_name": {
+            "type": "string"
+          },
+          "error_message": {
+            "type": "string"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": false,
+        "description": "Import operation fields returned by the table-level sheet import endpoints."
+      },
+      "GetTableSheetImportOperationResponse": {
+        "type": "object",
+        "title": "GetTableSheetImportOperationResponse",
+        "required": [
+          "success",
+          "operation"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableImportOperationSummary"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTableResponse": {
+        "type": "object",
+        "title": "GetTableResponse",
+        "required": [
+          "success",
+          "table"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "table": {
+            "$ref": "#/components/schemas/TableDetail"
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTableSheetResponse": {
+        "type": "object",
+        "title": "GetTableSheetResponse",
+        "required": [
+          "success",
+          "sheet"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "sheet": {
+            "$ref": "#/components/schemas/TableSheet"
+          }
+        },
+        "additionalProperties": false
       }
     }
   }
