@@ -1684,6 +1684,44 @@
                       "required": [
                         "status_counts"
                       ]
+                    },
+                    "report_columns": {
+                      "type": "array",
+                      "description": "Ordered list of column configurations for this report.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "report_id": {
+                            "type": "integer"
+                          },
+                          "column_type": {
+                            "type": "string",
+                            "description": "Type of evaluation column (e.g. LLM_ASSERTION, PROMPT_TEMPLATE, COMPARE)"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "integer",
+                            "description": "Zero-based column order"
+                          },
+                          "is_part_of_score": {
+                            "type": "boolean"
+                          },
+                          "configuration": {
+                            "type": "object",
+                            "description": "Column-type-specific configuration"
+                          },
+                          "score": {
+                            "type": "number",
+                            "nullable": true,
+                            "description": "Computed score for this column, if available"
+                          }
+                        }
+                      }
                     }
                   },
                   "required": [
@@ -17273,6 +17311,12 @@
             },
             "nullable": true,
             "description": "Request fields or variables to parse into dataset columns."
+          },
+          "limit": {
+            "type": "integer",
+            "nullable": true,
+            "minimum": 1,
+            "description": "Maximum number of request logs to include. When set, only the first N matching rows (in the current sort order) are added to the dataset version."
           }
         }
       },
