@@ -24,6 +24,24 @@ When creating a dataset from history, you can narrow what gets included by filte
 
 After you save the dataset, use it in an evaluation pipeline to backtest a new prompt version against real historical inputs. See [Backtest Prompt Changes](/onboarding-guides/backtesting-prompt-changes).
 
+## Custom Row Limit
+
+When selecting **All Matching** records to add to a dataset, you can set a custom row limit to control exactly how many rows are added. This is useful for creating a representative sample without pulling in your entire request history.
+
+In the request log view, after clicking **Select all**, a **Limit** input appears next to the selection button. Enter a number (e.g., `500`) to restrict the dataset to the first _N_ matching rows. The limit is applied in the same sort order as your current filter view.
+
+You can also set a limit when creating datasets programmatically via the filter-params API endpoint using the `limit` field:
+
+```json
+{
+  "dataset_group_id": 123,
+  "limit": 500,
+  "tags": ["prod"],
+  "start_time": "2024-01-01T00:00:00Z",
+  "end_time": "2024-01-31T23:59:59Z"
+}
+```
+
 ## Related REST APIs
 
 - [Create Dataset Group](/reference/create-dataset-group) - Create the dataset group that will contain your draft and saved versions.
