@@ -1723,14 +1723,7 @@
                         }
                       }
                     }
-                  },
-                  "required": [
-                    "success",
-                    "message",
-                    "report",
-                    "status",
-                    "stats"
-                  ]
+                  }
                 }
               }
             }
