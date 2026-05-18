@@ -8997,7 +8997,6 @@
           "tool-registry"
         ],
         "summary": "Create Tool Version",
-        "description": "Create a new version of an existing tool. Pass an optional `execution` payload to attach a sandbox-executable body — see the Auto Tool Execution feature page.",
         "operationId": "create_tool_version",
         "parameters": [
           {
@@ -9094,7 +9093,6 @@
           "tool-registry"
         ],
         "summary": "Test Execute Tool",
-        "description": "Run a tool's execution body in the sandbox against test inputs. Used by the editor's Test Run button and any caller wanting to verify a tool body. Both `execution` and `tool_definition` in the body are optional overrides — supply them to test code without saving a version first. See Auto Tool Execution for body conventions.",
         "operationId": "test_execute_tool",
         "parameters": [
           {
