@@ -157,7 +157,7 @@ experimental_telemetry: {
 
 For best results, set `promptlayer.telemetry.source` to `vercel-ai-sdk` so PromptLayer can parse the traces correctly.
 
-Once configured, PromptLayer will capture LLM calls, inputs and outputs, token usage, tool traces, workflow spans, and model metadata.
+Once configured, PromptLayer will capture LLM calls, inputs and outputs, token usage, tool traces, workflow spans, model metadata, and reasoning content from models that support extended thinking.
 
 ## Pydantic AI
 
@@ -200,7 +200,7 @@ print(result.output)
 
 If you also want to send traces to Logfire, set `send_to_logfire=True` and authenticate with Logfire. For provider-level request debugging, you can add `logfire.instrument_httpx(capture_all=True)`, but only enable it when you intentionally want to capture raw HTTP request and response bodies.
 
-Once configured, PromptLayer will capture Pydantic AI agent runs, LLM calls, tool calls, embeddings, prompts, completions, token usage, and model metadata.
+Once configured, PromptLayer will capture Pydantic AI agent runs, LLM calls, tool calls, embeddings, prompts, completions, token usage, model metadata, and thinking content from extended thinking models.
 
 ## LangChain / LangSmith
 
@@ -285,7 +285,7 @@ await trace.getTracer("langchain-app").startActiveSpan("myapp.llm.call", async (
 });
 ```
 
-Once configured, PromptLayer will capture LangChain and LangSmith spans. Manual GenAI attributes make LLM calls, tool calls, inputs, and outputs easier for PromptLayer to render as request logs.
+Once configured, PromptLayer will capture LangChain and LangSmith spans. Manual GenAI attributes make LLM calls, tool calls, inputs, and outputs easier for PromptLayer to render as request logs. Thinking blocks from extended thinking models in LangChain completions are captured and preserved in the request log view.
 
 ## OpenAI Agents SDK
 

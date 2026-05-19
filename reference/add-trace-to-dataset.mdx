@@ -1,0 +1,21 @@
+---
+title: "Add Trace to Dataset"
+openapi: "POST /api/public/v2/dataset-versions/add-trace"
+---
+
+Add an observability trace (or a specific span subtree) as a row in the draft dataset version for a dataset group.
+
+You can export an entire trace (anchored at the earliest root span) or choose a specific span to anchor on — in which case that span and its direct children become the dataset columns.
+
+## Behavior Notes
+
+- If no draft dataset version exists for the group, one is automatically created and seeded from the most recent published version's rows.
+- The trace and dataset group must belong to the same workspace.
+- Use `span_id` to export a specific span subtree instead of the full trace root.
+- The `mode` field in the response indicates whether the row was created in `trace` mode (root anchor) or `span` mode (chosen anchor).
+
+## Related
+
+- [Create Draft Dataset Version](/reference/create-draft-dataset-version)
+- [Save Draft Dataset Version](/reference/save-draft-dataset-version)
+- [Add Request Log to Dataset](/reference/add-request-log-to-dataset)
