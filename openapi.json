@@ -9596,6 +9596,93 @@
           }
         }
       }
+    },
+    "/api/public/v2/dataset-versions/add-trace": {
+      "post": {
+        "summary": "Add Trace to Draft Dataset",
+        "operationId": "addTraceToDatasetVersion",
+        "tags": [
+          "datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/AddTraceToDatasetRequest"
+              },
+              "examples": {
+                "addTrace": {
+                  "summary": "Add a full trace as a dataset row",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "trace_id": "abc123def456"
+                  }
+                },
+                "addSpan": {
+                  "summary": "Add a specific span subtree as a dataset row",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "trace_id": "abc123def456",
+                    "span_id": "span789xyz"
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Trace added to draft dataset.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AddTraceToDatasetResponse"
+                },
+                "examples": {
+                  "added": {
+                    "summary": "Trace added successfully",
+                    "value": {
+                      "success": true,
+                      "draft_dataset_id": 789,
+                      "mode": "trace"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request (e.g. dataset not found, wrong workspace, or schema error).",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "description": "Trace not found in the workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -15770,7 +15857,7 @@
       "RequestLogQuery": {
         "type": "object",
         "title": "RequestLogQuery",
-        "description": "Canonical request-log query payload — the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
+        "description": "Canonical request-log query payload \u2014 the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
         "properties": {
           "filter_group": {
             "nullable": true,
@@ -16017,7 +16104,7 @@
       "RequestAnalyticsResponse": {
         "type": "object",
         "title": "RequestAnalyticsResponse",
-        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds → minutes → hours → days).",
+        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds \u2192 minutes \u2192 hours \u2192 days).",
         "required": [
           "success"
         ],
@@ -16085,7 +16172,7 @@
           },
           "modelRequestsByDay": {
             "type": "object",
-            "description": "Map of model name → list of `[date, requestCount]` pairs.",
+            "description": "Map of model name \u2192 list of `[date, requestCount]` pairs.",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -17890,6 +17977,56 @@
             "type": "integer",
             "minimum": 1,
             "description": "ID of the dataset group containing the draft to save."
+          }
+        }
+      },
+      "AddTraceToDatasetRequest": {
+        "type": "object",
+        "title": "AddTraceToDatasetRequest",
+        "required": [
+          "dataset_group_id",
+          "trace_id"
+        ],
+        "properties": {
+          "dataset_group_id": {
+            "type": "integer",
+            "minimum": 1,
+            "description": "ID of the dataset group to add the trace row to."
+          },
+          "trace_id": {
+            "type": "string",
+            "minLength": 1,
+            "description": "ID of the trace to add as a dataset row."
+          },
+          "span_id": {
+            "type": "string",
+            "minLength": 1,
+            "nullable": true,
+            "description": "Optional span ID. When omitted the row anchors on the trace's earliest root span (Trace export). When provided the row anchors on that span and its direct children become the columns (Span export)."
+          }
+        }
+      },
+      "AddTraceToDatasetResponse": {
+        "type": "object",
+        "title": "AddTraceToDatasetResponse",
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "draft_dataset_id": {
+            "type": "integer",
+            "description": "ID of the draft dataset the trace row was added to."
+          },
+          "mode": {
+            "type": "string",
+            "enum": [
+              "trace",
+              "span"
+            ],
+            "description": "Indicates whether the row was created from a full trace root (`trace`) or a specific span subtree (`span`)."
           }
         }
       }
