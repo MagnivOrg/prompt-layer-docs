@@ -242,6 +242,7 @@
                   "reference/create-dataset-version-from-filter-params",
                   "reference/create-draft-dataset-version",
                   "reference/add-request-log-to-dataset",
+                  "reference/add-trace-to-dataset",
                   "reference/save-draft-dataset-version",
                   "reference/external-ids-dataset-groups-attach",
                   "reference/external-ids-dataset-groups-list",
