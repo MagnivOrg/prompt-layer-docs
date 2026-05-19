@@ -170,6 +170,68 @@ tracer.startActiveSpan("llm-call", (span) => {
 ```
 </CodeGroup>
 
+## Attaching User Identity & Metadata
+
+You can attach searchable metadata — including end-user identity and conversation IDs — to the request logs generated from your spans. This is the OpenTelemetry-native equivalent of the PromptLayer SDK's `track.metadata()`, with no extra REST call required.
+
+PromptLayer recognizes two kinds of span attributes for metadata.
+
+### Standard OpenTelemetry attributes
+
+If your instrumentation already follows OpenTelemetry conventions, these are picked up automatically — no PromptLayer-specific attributes needed:
+
+| Attribute | Mapped to | Description |
+|---|---|---|
+| `user.id` | `user_id` metadata | End-user identity (current OpenTelemetry attribute) |
+| `enduser.id` | `user_id` metadata | End-user identity (deprecated OpenTelemetry attribute, supported as a fallback) |
+| `gen_ai.conversation.id` | `conversation_id` metadata | Conversation / session / thread identifier (OpenTelemetry GenAI attribute) |
+| `session.id` | `conversation_id` metadata | Conversation identifier (common alias, supported as a fallback) |
+
+### PromptLayer custom metadata
+
+For arbitrary key/value metadata, use the `promptlayer.metadata.` namespace. Each attribute becomes a metadata key on the request log — for example, `promptlayer.metadata.tenant` becomes a `tenant` metadata key.
+
+| Attribute | Mapped to |
+|---|---|
+| `promptlayer.metadata.<key>` | `<key>` metadata |
+
+<CodeGroup>
+```python Python
+with tracer.start_as_current_span("llm-call") as span:
+    # Standard OpenTelemetry attributes
+    span.set_attribute("user.id", "customer-42")
+    span.set_attribute("gen_ai.conversation.id", "conv_abc123")
+
+    # Arbitrary PromptLayer metadata
+    span.set_attribute("promptlayer.metadata.tenant", "acme-corp")
+    span.set_attribute("promptlayer.metadata.environment", "production")
+
+    # ... make your LLM call ...
+```
+
+```javascript JavaScript
+tracer.startActiveSpan("llm-call", (span) => {
+  // Standard OpenTelemetry attributes
+  span.setAttribute("user.id", "customer-42");
+  span.setAttribute("gen_ai.conversation.id", "conv_abc123");
+
+  // Arbitrary PromptLayer metadata
+  span.setAttribute("promptlayer.metadata.tenant", "acme-corp");
+  span.setAttribute("promptlayer.metadata.environment", "production");
+
+  // ... make your LLM call ...
+
+  span.end();
+});
+```
+</CodeGroup>
+
+An explicit `promptlayer.metadata.<key>` always takes precedence over a standard attribute mapped to the same key. For example, if a span has both `user.id` and `promptlayer.metadata.user_id`, the `promptlayer.metadata.user_id` value wins.
+
+<Note>
+Metadata is attached to the request log generated from the span, so set these attributes on your **LLM call spans**. To apply metadata across an entire trace, set the attributes as **resource attributes** — they apply to every span in the export.
+</Note>
+
 ## Using an OpenTelemetry Collector
 
 If you're already running an [OpenTelemetry Collector](https://opentelemetry.io/docs/collector/), you can add PromptLayer as an additional exporter in your Collector config:

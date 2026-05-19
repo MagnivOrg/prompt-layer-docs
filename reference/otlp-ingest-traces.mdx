@@ -12,7 +12,8 @@ Ingest OpenTelemetry traces through PromptLayer's OTLP/HTTP endpoint.
 - Supported content types are `application/x-protobuf` for binary protobuf encoding and `application/json` for JSON encoding.
 - Gzip `Content-Encoding` is supported for both formats.
 - Spans can include `promptlayer.prompt.name` or `promptlayer.prompt.id`, plus `promptlayer.prompt.version` or `promptlayer.prompt.label`, to link the generated request log to an existing prompt template in your workspace.
-- For SDK setup, GenAI semantic conventions, prompt template linking, and collector configuration, see [OpenTelemetry](/features/opentelemetry).
+- Spans can include `user.id`/`enduser.id`, `gen_ai.conversation.id`/`session.id`, and `promptlayer.metadata.*` attributes to attach searchable user identity and metadata to the generated request log.
+- For SDK setup, GenAI semantic conventions, prompt template linking, metadata, and collector configuration, see [OpenTelemetry](/features/opentelemetry).
 
 ## Related
 
