@@ -126,10 +126,8 @@ You can associate OTEL spans with prompt templates in your PromptLayer workspace
 
 | Attribute | Type | Description |
 |---|---|---|
-| `promptlayer.prompt.name` | string | Name of the prompt template |
-| `promptlayer.prompt.id` | integer | ID of the prompt template (alternative to `name`) |
-| `promptlayer.prompt.version` | integer | Specific version number (optional) |
-| `promptlayer.prompt.label` | string | Label to resolve version (e.g. `production`) |
+| `promptlayer.prompt.name` | string | Name of the prompt template in your workspace |
+| `promptlayer.prompt.version` | integer | Specific version number to link (optional) |
 
 <CodeGroup>
 ```python Python
@@ -140,7 +138,7 @@ tracer = trace.get_tracer("my-llm-app")
 with tracer.start_as_current_span("llm-call") as span:
     # Link this span to a prompt template
     span.set_attribute("promptlayer.prompt.name", "my-prompt")
-    span.set_attribute("promptlayer.prompt.label", "production")
+    span.set_attribute("promptlayer.prompt.version", 3)
 
     # Add GenAI attributes
     span.set_attribute("gen_ai.request.model", "gpt-4")
@@ -157,7 +155,7 @@ const tracer = trace.getTracer("my-llm-app");
 tracer.startActiveSpan("llm-call", (span) => {
   // Link this span to a prompt template
   span.setAttribute("promptlayer.prompt.name", "my-prompt");
-  span.setAttribute("promptlayer.prompt.label", "production");
+  span.setAttribute("promptlayer.prompt.version", 3);
 
   // Add GenAI attributes
   span.setAttribute("gen_ai.request.model", "gpt-4");
