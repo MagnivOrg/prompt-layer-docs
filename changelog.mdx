@@ -4,6 +4,36 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## May 19, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Add Trace to Dataset**
+Export full traces or individual spans directly to datasets for evaluation and testing.
+- Click "Add to Dataset" from any trace view to create dataset rows from production logs
+- Choose between trace-level export (all root spans) or span-level export (selected span + children)
+- Automatically creates draft dataset version with proper column mapping
+
+**Complex JSON Schema Support**
+The Schema Editor now handles advanced JSON Schema patterns for structured outputs.
+- Use `oneOf`, `anyOf`, and `allOf` composition keywords for complex response formats
+- Editor automatically detects non-standard schemas and enables JSON editing mode
+- Provider-specific validation warns when using unsupported keywords (e.g., `oneOf` with Anthropic)
+
+#### Improvements
+
+- Model parameter selections now persist when switching between models from the same provider
+- Dataset archive confirmation dialog shows clearer messaging
+- Structured search autocomplete displays multi-select indicators for filter values
+- Request log cards show visual cues for recently viewed items
+- Prompt template version selector preserves current selection during navigation
+- Report score recalculation triggers automatically after updating score card columns
+
+---
+
+
 ## May 15, 2026
 
 ### Deployment 1
