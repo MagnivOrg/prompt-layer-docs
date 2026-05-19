@@ -61,12 +61,6 @@ Avoid:
 
 ## Review Comments
 
-When leaving PR review comments, tag Claude directly:
-
-```md
-@claude <actionable review comment>
-```
-
 Keep comments specific, actionable, and tied to the docs guideline being enforced.
 
 ## Review Checklist
