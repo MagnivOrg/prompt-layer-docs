@@ -1,8 +1,8 @@
-# PromptLayer OpenAI Agents Web Example
+# PromptLayer OpenAI Agents SDK Example
 
-Minimal FastAPI app using PromptLayer's OpenAI Agents SDK tracing integration.
+Minimal CLI example using PromptLayer's OpenAI Agents SDK tracing integration.
 
-The app follows the PromptLayer OpenAI Agents SDK integration pattern and exports traces to `https://api.promptlayer.com/v1/traces`:
+This example follows the PromptLayer OpenAI Agents SDK integration pattern and exports traces to `https://api.promptlayer.com/v1/traces`:
 
 ```python
 from agents import Agent, Runner
@@ -23,7 +23,7 @@ processor.force_flush()
 ## Setup
 
 ```bash
-cd examples/openai-agents-fastapi
+cd examples/openai-agents-sdk
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .
@@ -33,17 +33,13 @@ cp .env.example .env
 Edit `.env`, then run:
 
 ```bash
-.venv/bin/uvicorn app:app --port 8000 --env-file .env
+python main.py
 ```
 
-Open the local URL printed by Uvicorn in your browser.
-
-You can also call the app route directly:
+You can also pass a custom message:
 
 ```bash
-curl -X POST /api/agent \
-  -H "Content-Type: application/json" \
-  -d '{"message":"Use the embedding tool to embed exactly this text: PromptLayer OpenAI embedding trace probe. Then report the embedding dimensions and token count."}'
+python main.py "What is the weather in Tokyo?"
 ```
 
 ## Notes
