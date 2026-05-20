@@ -34,6 +34,26 @@ The Schema Editor now handles advanced JSON Schema patterns for structured outpu
 ---
 
 
+### Deployment 2
+
+#### New Features
+
+**Gemini 3.5 Flash Model Support**
+Added `gemini-3.5-flash`, Google's latest reasoning model built for speed.
+- 1M token context window with up to 65,536 output tokens
+- Supports text, image, video, and audio inputs with configurable reasoning
+- Available for both the Google and Vertex AI providers
+
+**OTLP Span Attribute Metadata Ingestion**
+OpenTelemetry traces now automatically populate request log metadata from standard span attributes — no separate `track.metadata()` call required.
+- `user.id` (or `enduser.id` as a deprecated fallback) maps to `user_id` metadata
+- `gen_ai.conversation.id` (or `session.id` as a fallback) maps to `conversation_id` metadata
+- `promptlayer.metadata.<key>` attributes map to arbitrary metadata key/value pairs on the request log
+- Explicit `promptlayer.metadata.*` attributes always take precedence over standard alias mappings
+
+---
+
+
 ## May 15, 2026
 
 ### Deployment 1
