@@ -366,6 +366,10 @@
       {
         "label": "Contact Us",
         "href": "mailto:hello@promptlayer.com"
+      },
+      {
+        "label": "Dashboard",
+        "href": "https://dashboard.promptlayer.com"
       }
     ]
   },
