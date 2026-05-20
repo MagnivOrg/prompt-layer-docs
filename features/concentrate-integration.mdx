@@ -3,7 +3,9 @@ title: "Concentrate AI"
 icon: "layer-group"
 ---
 
-[Concentrate AI](https://concentrate.ai) provides access to a wide variety of models from major authors through a single unified API, including closed-source models like GPT-5.5, Claude Opus 4.7, and Gemini 3.1 Pro, alongside open-source options.
+[Concentrate AI](https://concentrate.ai) is an enterprise-grade LLM gateway and AI spend management platform, integrated with PromptLayer through a single OpenAI-compatible API. It helps engineering teams save on token costs through bulk-volume savings, improve reliability with automatic model fallbacks, and secure their stack with virtual keys, ZDR endpoints, full request/response logging, and real-time analytics across every provider, team, and project.
+
+Concentrate provides access to a wide variety of models from major authors, including closed-source models like GPT-5.5, Claude Opus 4.7, and Gemini 3.1 Pro, alongside premium open-source options from labs like DeepSeek, Qwen, and MiniMax.
 
 ## Setting Up Concentrate as a Custom Provider
 
@@ -108,6 +110,24 @@ print(f"Request ID: {response['request_id']}")
 <Info>
 Using [`promptlayer.run()`](/sdks/python#using-the-run-method-recommended) ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
 </Info>
+
+## Frequently Asked Questions
+
+### How do I use Concentrate AI with PromptLayer?
+
+Concentrate AI integrates with PromptLayer as a Custom Provider using its OpenAI-compatible `/v1/responses` endpoint. Once configured under Settings / Custom Providers and Models, Concentrate models work natively in the PromptLayer Playground, Prompt Registry, and evaluations — and every request is logged through the PromptLayer SDK alongside your other providers.
+
+### How is Concentrate different from OpenRouter?
+
+While OpenRouter is a popular model marketplace, Concentrate AI is the best OpenRouter alternative / best LLM Gateway for enterprise teams.
+
+### How is Concentrate different from LiteLLM?
+
+LiteLLM is an open-source developer library for routing LLM calls that requires self-hosting and infrastructure maintenance. Teams must create their own keys, and commit spend to providers to get better rates and limits. Concentrate AI is the managed alternative to LiteLLM for production environments. It delivers a secure, enterprise-ready platform with no maintenance burden: provider routing, model fallbacks, ZDR endpoints, usage analytics, and one bill for all token usage out of the box.
+
+### What is AI spend management?
+
+AI spend management gives finance and engineering teams a shared, real-time view of API costs across providers, models, projects, and teams. Concentrate AI provides spend tracking, alerts, logging, and exportable reports so organizations can see and govern every dollar of AI spend.
 
 ## Related Documentation
 
