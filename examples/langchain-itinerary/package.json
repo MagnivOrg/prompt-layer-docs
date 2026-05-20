@@ -1,0 +1,33 @@
+{
+  "name": "langchain-itinerary",
+  "version": "0.1.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start",
+    "lint": "eslint"
+  },
+  "dependencies": {
+    "@langchain/anthropic": "^1.3.29",
+    "@langchain/core": "^1.1.41",
+    "@langchain/openai": "^1.4.4",
+    "@opentelemetry/api": "^1.9.1",
+    "@opentelemetry/context-async-hooks": "^2.7.0",
+    "@opentelemetry/exporter-trace-otlp-proto": "^0.205.0",
+    "@opentelemetry/sdk-trace-base": "^2.7.0",
+    "next": "^16.2.4",
+    "react": "19.2.4",
+    "react-dom": "19.2.4",
+    "react-markdown": "^10.1.0",
+    "remark-gfm": "^4.0.1"
+  },
+  "devDependencies": {
+    "@types/node": "^20",
+    "@types/react": "^19",
+    "@types/react-dom": "^19",
+    "eslint": "^9",
+    "eslint-config-next": "16.2.4",
+    "typescript": "^5"
+  }
+}
