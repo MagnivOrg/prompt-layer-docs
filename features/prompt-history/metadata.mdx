@@ -90,3 +90,9 @@ Once metadata is added, you will then be able to see it in the web UI.
 ![score](/images/metadata-ui.png)
 
 Metadata is optimized for high-cardinality, request-specific values such as user IDs, session IDs, and error messages. For a smaller set of categories, such as environment, app, feature, or pipeline stage, use [tags](/features/prompt-history/tagging-requests) instead.
+
+## Attaching metadata via OpenTelemetry
+
+If you instrument your app with OpenTelemetry, you can attach metadata directly from span attributes — no `track.metadata()` call required. PromptLayer automatically maps standard attributes like `user.id` and `gen_ai.conversation.id`, and also reads arbitrary `promptlayer.metadata.<key>` attributes.
+
+See [Attaching User Identity & Metadata](/features/opentelemetry#attaching-user-identity-metadata) in the OpenTelemetry guide for details.
