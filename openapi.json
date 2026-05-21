@@ -7259,6 +7259,10 @@
                           "name": {
                             "type": "string"
                           },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
                           "workspace_id": {
                             "type": "integer"
                           },
@@ -7418,6 +7422,11 @@
                     "type": "object",
                     "description": "Tool definition in OpenAI function-calling format"
                   },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional human-readable description of the tool",
+                    "nullable": true
+                  },
                   "folder_id": {
                     "type": "integer",
                     "description": "Folder ID to place tool in",
@@ -7434,6 +7443,26 @@
                       "$ref": "#/components/schemas/ExternalId"
                     },
                     "description": "Identifiers from other systems."
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "Optional sandbox-executable body for the tool. When set, PromptLayer auto-runs the body between LLM turns. See the Auto Tool Execution feature page.",
+                    "nullable": true,
+                    "required": ["type", "language", "code"],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["code"]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": ["python", "javascript"]
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
+                      }
+                    }
                   }
                 }
               }
@@ -7547,6 +7576,10 @@
                         "name": {
                           "type": "string"
                         },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
                         "workspace_id": {
                           "type": "integer"
                         },
@@ -7558,7 +7591,8 @@
                         },
                         "version": {
                           "type": "object",
-                          "nullable": true
+                          "nullable": true,
+                          "description": "Resolved version object — includes `tool_definition` and (if set) `execution: { type, language, code }`."
                         },
                         "tool_definition": {
                           "type": "object",
@@ -8984,6 +9018,246 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/versions": {
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Create Tool Version",
+        "operationId": "create_tool_version",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "tool_definition"
+                ],
+                "properties": {
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "Tool definition in OpenAI function-calling format"
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "Optional sandbox-executable body. When set, PromptLayer auto-runs the body between LLM turns whenever a prompt uses this version. See Auto Tool Execution.",
+                    "nullable": true,
+                    "required": ["type", "language", "code"],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["code"]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": ["python", "javascript"]
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
+                      }
+                    }
+                  },
+                  "commit_message": {
+                    "type": "string",
+                    "description": "Commit message for the new version",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool not found"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/test-execute": {
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Test Execute Tool",
+        "operationId": "test_execute_tool",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve version by label name (e.g. production). Falls back to latest if neither label nor version supplied."
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve by specific version number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "inputs": {
+                    "type": "object",
+                    "description": "Arguments passed to the tool body. Same shape the LLM would emit — keys match the tool's parameter names.",
+                    "additionalProperties": true
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "In-flight override of the stored execution config. Lets you test unsaved code.",
+                    "nullable": true,
+                    "required": ["type", "language", "code"],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": ["code"]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": ["python", "javascript"]
+                      },
+                      "code": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "In-flight override of the stored tool definition. Used to test against a different function name without saving.",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object — they do NOT raise.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": ["success", "error"]
+                        },
+                        "result": {
+                          "description": "The tool body's return value (any JSON-serializable type). Present on status=\"success\".",
+                          "nullable": true
+                        },
+                        "stdout": {
+                          "type": "string"
+                        },
+                        "stderr": {
+                          "type": "string"
+                        },
+                        "duration_ms": {
+                          "type": "integer"
+                        },
+                        "error": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Present on status=\"error\". Includes `type` and `message`."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing execution config or function name"
+          },
+          "404": {
+            "description": "Tool or version not found"
+          },
+          "502": {
+            "description": "Sandbox infrastructure failure"
           }
         }
       }

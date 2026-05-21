@@ -6,3 +6,5 @@ openapi: "POST /api/public/v2/tool-registry"
 Create a new tool in the Tool Registry with an initial version. The tool definition should be in OpenAI function-calling format.
 
 Tool names must be unique within a workspace. The initial version is created with version number 1.
+
+Pass an optional `execution` payload to attach a sandbox-executable body. PromptLayer will run it between LLM turns whenever a prompt references the tool. See [Auto Tool Execution](/features/tool-registry/auto-execution) for the body model and conventions.
