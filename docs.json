@@ -100,8 +100,7 @@
             "pages": [
               "features/tool-registry/overview",
               "features/tool-registry/using-in-prompts",
-              "features/tool-registry/save-inline-to-registry",
-              "features/tool-registry/auto-execution"
+              "features/tool-registry/save-inline-to-registry"
             ],
             "icon": "wrench"
           },
@@ -305,8 +304,6 @@
                   "reference/tool-registry-list",
                   "reference/tool-registry-get",
                   "reference/tool-registry-create",
-                  "reference/tool-registry-create-version",
-                  "reference/tool-registry-test-execute",
                   "reference/external-ids-tool-registry-attach",
                   "reference/external-ids-tool-registry-list",
                   "reference/external-ids-tool-registry-delete"

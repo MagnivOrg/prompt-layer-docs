@@ -1,8 +1,0 @@
----
-title: "Create Tool Version"
-openapi: "POST /api/public/v2/tool-registry/{identifier}/versions"
----
-
-Create a new version for an existing tool. The `identifier` can be a numeric tool ID or a tool name.
-
-Each version is immutable and assigned an incrementing version number. Include an `execution` object to attach Python or JavaScript code that PromptLayer will auto-run whenever the LLM calls this tool — see [Auto-Execution](/features/tool-registry/auto-execution).
