@@ -1,0 +1,9 @@
+---
+title: "Create Sheet"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets"
+---
+
+Create a new sheet in a table by importing data. Two source types are supported:
+
+- **file** — Upload a CSV or JSON file (base64-encoded, max 100 MB). The import runs asynchronously; poll the operation endpoint to track progress.
+- **request_logs** — Import from your PromptLayer request history. Filter by prompt, version, label, or date range.

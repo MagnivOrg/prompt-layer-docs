@@ -100,7 +100,8 @@
             "pages": [
               "features/tool-registry/overview",
               "features/tool-registry/using-in-prompts",
-              "features/tool-registry/save-inline-to-registry"
+              "features/tool-registry/save-inline-to-registry",
+              "features/tool-registry/auto-execution"
             ],
             "icon": "wrench"
           },
@@ -304,9 +305,35 @@
                   "reference/tool-registry-list",
                   "reference/tool-registry-get",
                   "reference/tool-registry-create",
+                  "reference/tool-registry-create-version",
+                  "reference/tool-registry-test-execute",
                   "reference/external-ids-tool-registry-attach",
                   "reference/external-ids-tool-registry-list",
                   "reference/external-ids-tool-registry-delete"
+                ]
+              },
+              {
+                "group": "Smart Tables",
+                "tag": "New",
+                "pages": [
+                  "reference/tables-create",
+                  "reference/tables-list",
+                  "reference/tables-get",
+                  "reference/tables-update",
+                  "reference/table-sheets-list",
+                  "reference/table-sheets-create",
+                  "reference/table-sheets-get-operation",
+                  "reference/table-sheets-get",
+                  "reference/table-sheets-update",
+                  "reference/table-sheet-columns-list",
+                  "reference/table-sheet-columns-create",
+                  "reference/table-sheet-columns-update",
+                  "reference/table-sheet-rows-list",
+                  "reference/table-sheet-rows-add",
+                  "reference/table-sheet-cells-get",
+                  "reference/table-sheet-cells-update",
+                  "reference/table-sheet-cells-recalculate",
+                  "reference/table-sheet-cells-recalculate-batch"
                 ]
               },
               {

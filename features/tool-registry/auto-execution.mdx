@@ -1,0 +1,93 @@
+---
+title: "Auto-Execution"
+icon: "bolt"
+---
+
+Auto-execution lets you attach Python or JavaScript code directly to a Tool Registry entry. When the LLM calls the tool, PromptLayer automatically runs your code in a secure sandbox, feeds the result back to the model, and continues the conversation — all without writing any client-side loop.
+
+## How it works
+
+1. A tool version stores a function schema *and* optional execution code (Python or JavaScript).
+2. During inference — in the Playground, via the Prompt Registry, or through evaluations — PromptLayer detects tool calls where an executable version is selected.
+3. The platform extracts the function arguments from the LLM response, runs the code, and appends the result as a `tool` message.
+4. The LLM receives the result and continues. The loop repeats until the model stops calling executable tools, or until the iteration limit is reached.
+
+Each LLM call in the loop is logged as its own request, so the full trace is visible in your request history.
+
+## Writing execution code
+
+Your code must define a function whose name matches the `name` field in the tool's function schema.
+
+**Python example**
+
+```python
+def get_weather(location: str) -> dict:
+    import urllib.request, json
+    url = f"https://wttr.in/{location}?format=j1"
+    with urllib.request.urlopen(url) as resp:
+        data = json.load(resp)
+    return {"temperature": data["current_condition"][0]["temp_C"], "unit": "C"}
+```
+
+**JavaScript example**
+
+```javascript
+async function get_weather(location) {
+  const resp = await fetch(`https://wttr.in/${location}?format=j1`);
+  const data = await resp.json();
+  return { temperature: data.current_condition[0].temp_C, unit: "C" };
+}
+```
+
+The function receives the LLM's tool call arguments as keyword arguments (Python) or an object (JavaScript). Whatever you return is serialised to JSON and sent back to the model.
+
+## Adding execution code in the UI
+
+1. Open a tool in the Tool Registry.
+2. Click **Edit → New Version**.
+3. Switch to the **Execution** tab next to the schema editor.
+4. Write your Python or JavaScript function.
+5. Use **Test Run** to verify it works before saving.
+
+<Frame>
+  <img src="/images/tool-registry/tool-execution-editor.png" alt="Tool registry editor showing the Execution tab with a Python function" />
+</Frame>
+
+## Test Run
+
+The **Test Run** button executes your code in isolation — no LLM involved — so you can verify inputs and outputs quickly. You can also call the test-execute endpoint directly from the API.
+
+```bash
+curl -X POST https://api.promptlayer.com/api/public/v2/tool-registry/get_weather/test-execute \
+  -H "X-API-KEY: $PROMPTLAYER_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d '{"inputs": {"location": "San Francisco"}}'
+```
+
+The response includes `status`, `result`, `stdout`, `stderr`, and `duration_ms`.
+
+## Supported providers
+
+Auto-execution works with all providers that support tool/function calling:
+
+| Provider | Supported |
+|----------|-----------|
+| OpenAI Chat Completions | ✓ |
+| OpenAI Responses API | ✓ |
+| Anthropic | ✓ |
+| Google Gemini | ✓ |
+| Vertex AI | ✓ |
+| Amazon Bedrock | ✓ |
+| Mistral | ✓ |
+| Cohere | ✓ |
+
+## Auto-execute badge
+
+In the Playground and Prompt Registry tool picker, tools with execution code show an **auto-execute** badge. When you run a prompt with one of these tools selected, the execution loop activates automatically.
+
+## API
+
+See the [Tool Registry API reference](/api-reference/tool-registry) for:
+- `POST /api/public/v2/tool-registry` — create a tool with execution code (`execution` field)
+- `POST /api/public/v2/tool-registry/{identifier}/versions` — add a version with execution code
+- `POST /api/public/v2/tool-registry/{identifier}/test-execute` — test execution without an LLM

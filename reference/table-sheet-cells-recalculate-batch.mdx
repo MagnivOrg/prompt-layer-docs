@@ -1,0 +1,8 @@
+---
+title: "Recalculate Cells (Batch)"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/recalculations"
+---
+
+Trigger recalculation for a batch of cells by ID. Returns `202 Accepted` with an `execution_id`.
+
+Use this endpoint to kick off computation for specific cells after adding rows or updating text cell values.
