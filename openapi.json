@@ -7271,10 +7271,12 @@
                             "nullable": true
                           },
                           "created_at": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date-time"
                           },
                           "updated_at": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date-time"
                           },
                           "external_ids": {
                             "type": "array",
@@ -7582,6 +7584,14 @@
                         },
                         "workspace_id": {
                           "type": "integer"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
                         },
                         "labels": {
                           "type": "array",
