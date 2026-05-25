@@ -1,1 +1,3431 @@
-placeholder - reading from file
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "FastAPI",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/prompt-templates/{identifier}": {
+      "get": {
+        "tags": [
+          "prompt-templates"
+        ],
+        "summary": "Get Prompt Template Raw Data",
+        "operationId": "get_prompt_template_raw",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id. Names may contain forward slashes (e.g. `team/my-prompt`)."
+            },
+            "example": "support-response"
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "exclusiveMinimum": 0,
+              "title": "Version",
+              "description": "Specific version number to retrieve. Mutually exclusive with `label`."
+            },
+            "example": 2
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "title": "Label",
+              "description": "Release label name to retrieve (e.g. 'prod', 'staging'). Mutually exclusive with `version`."
+            },
+            "example": "production"
+          },
+          {
+            "name": "resolve_snippets",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true,
+              "title": "Resolve Snippets",
+              "description": "When true (default), snippets are expanded in the returned prompt_template. When false, raw @@@snippet@@@ references are preserved."
+            },
+            "example": false
+          },
+          {
+            "name": "include_llm_kwargs",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false,
+              "title": "Include LLM Kwargs",
+              "description": "When true, includes provider-specific llm_kwargs in the response. Requires model metadata to be set on the template."
+            },
+            "example": true
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptTemplateRawResponse"
+                },
+                "examples": {
+                  "rawTemplate": {
+                    "summary": "Raw prompt template",
+                    "value": {
+                      "success": true,
+                      "id": 17,
+                      "prompt_name": "support-response",
+                      "version": 2,
+                      "workspace_id": 42,
+                      "prompt_template": {
+                        "type": "chat",
+                        "messages": [
+                          {
+                            "role": "system",
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "You are a helpful support assistant."
+                              }
+                            ]
+                          },
+                          {
+                            "role": "user",
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "{user_message}"
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": {
+                        "model": {
+                          "provider": "openai",
+                          "name": "gpt-4o",
+                          "parameters": {
+                            "temperature": 0.2
+                          }
+                        }
+                      },
+                      "commit_message": "Improve support tone",
+                      "tags": [
+                        "support"
+                      ],
+                      "created_at": "2025-03-15T10:30:00Z",
+                      "snippets": [],
+                      "llm_kwargs": null
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "prompt-templates"
+        ],
+        "summary": "Get Prompt Template by ID",
+        "operationId": "get_prompt_templates__prompt_identifier__post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id. Names may contain forward slashes (e.g. `team/my-prompt`)."
+            }
+          }
+        ],
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "anyOf": [
+                  {
+                    "$ref": "#/components/schemas/GetPromptTemplate"
+                  },
+                  {
+                    "type": "null"
+                  }
+                ],
+                "title": "Body"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/prompt-templates/{identifier}/labels": {
+      "get": {
+        "tags": [
+          "prompt-templates",
+          "release-labels"
+        ],
+        "summary": "Get Prompt Template Labels",
+        "operationId": "get_prompt_templates_labels_prompt_identifier__post",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "identifier",
+              "description": "The identifier can be either the prompt name or the prompt id."
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetPromptTemplateLabelResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Not Found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/prompts/{prompt_id}/label": {
+      "post": {
+        "tags": [
+          "prompts",
+          "labels"
+        ],
+        "summary": "Create a new label for a prompt",
+        "operationId": "create_prompt_label",
+        "parameters": [
+          {
+            "name": "prompt_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "prompt_id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt_version_number": {
+                    "type": "integer"
+                  },
+                  "name": {
+                    "type": "string"
+                  }
+                },
+                "required": [
+                  "prompt_version_number",
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "prompt_id": {
+                      "type": "integer"
+                    },
+                    "prompt_version_id": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "created_at",
+                    "id",
+                    "name",
+                    "prompt_id",
+                    "prompt_version_id"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/prompt-labels/{prompt_label_id}": {
+      "patch": {
+        "tags": [
+          "prompt-templates",
+          "release-labels"
+        ],
+        "summary": "Move Prompt Template Labels",
+        "operationId": "prompt_templates_labels_prompt_label_id__patch",
+        "parameters": [
+          {
+            "name": "prompt_label_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "prompt_label_id"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "prompt_version_number": {
+                    "type": "integer"
+                  }
+                },
+                "required": [
+                  "prompt_version_number"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "created_at": {
+                      "type": "string",
+                      "format": "date-time"
+                    },
+                    "id": {
+                      "type": "integer"
+                    },
+                    "name": {
+                      "type": "string"
+                    },
+                    "prompt_id": {
+                      "type": "integer"
+                    },
+                    "prompt_version_id": {
+                      "type": "integer"
+                    }
+                  },
+                  "required": [
+                    "created_at",
+                    "id",
+                    "name",
+                    "prompt_id",
+                    "prompt_version_id"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "prompt-templates",
+          "release-labels"
+        ],
+        "summary": "Delete Prompt Template Label",
+        "operationId": "delete_prompt_templates_labels_prompt_label_id",
+        "parameters": [
+          {
+            "name": "prompt_label_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "title": "prompt_label_id"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "No Content",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/rest/prompt-templates": {
+      "post": {
+        "tags": [
+          "rest",
+          "prompt-templates"
+        ],
+        "summary": "Publish Prompt Template",
+        "operationId": "publish_prompt_template_rest_prompt_templates_post",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreatePromptTemplate"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptTemplateResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "description": "External ID conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalIdErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/rest/prompt-templates/{identifier}": {
+      "patch": {
+        "tags": [
+          "rest",
+          "prompt-templates"
+        ],
+        "summary": "Patch Prompt Template Version",
+        "operationId": "patch_prompt_template_version",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Identifier",
+              "description": "The prompt template name or ID. Names may contain forward slashes (e.g. `team/my-prompt`)."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/PatchPromptTemplateVersion"
+              },
+              "examples": {
+                "patchMessage": {
+                  "summary": "Patch one message by index",
+                  "value": {
+                    "messages": {
+                      "0": {
+                        "role": "system",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "You are a helpful assistant."
+                          }
+                        ]
+                      }
+                    },
+                    "commit_message": "Updated system message"
+                  }
+                },
+                "replaceMessages": {
+                  "summary": "Replace all messages",
+                  "value": {
+                    "messages": [
+                      {
+                        "role": "system",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "New system prompt."
+                          }
+                        ]
+                      },
+                      {
+                        "role": "user",
+                        "content": [
+                          {
+                            "type": "text",
+                            "text": "{user_input}"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "tuneParameters": {
+                  "summary": "Update model parameters",
+                  "value": {
+                    "model_parameters": {
+                      "temperature": 0.7,
+                      "max_tokens": 500
+                    },
+                    "commit_message": "Tuned generation parameters"
+                  }
+                },
+                "deploy": {
+                  "summary": "Deploy with release labels",
+                  "value": {
+                    "model_parameters": {
+                      "temperature": 0.5
+                    },
+                    "response_format": {
+                      "type": "json_object"
+                    },
+                    "commit_message": "Deploy with JSON mode",
+                    "release_labels": [
+                      "staging",
+                      "production"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "New version created successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreatePromptTemplateResponse"
+                },
+                "examples": {
+                  "patched": {
+                    "summary": "Prompt template version created",
+                    "value": {
+                      "id": 17,
+                      "prompt_name": "support-response",
+                      "prompt_version_id": 109,
+                      "version_number": 5,
+                      "tags": [],
+                      "release_labels": [
+                        "staging"
+                      ],
+                      "prompt_template": {
+                        "type": "chat",
+                        "messages": [
+                          {
+                            "role": "system",
+                            "content": [
+                              {
+                                "type": "text",
+                                "text": "You are a helpful assistant."
+                              }
+                            ]
+                          }
+                        ]
+                      },
+                      "metadata": null,
+                      "commit_message": "Updated system message",
+                      "external_ids": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Validation error (e.g. conflicting fields, out-of-bounds index, wrong template type)",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/rest/track-metadata": {
+      "post": {
+        "summary": "Track Metadata",
+        "operationId": "trackMetadata",
+        "tags": [
+          "metadata"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Metadata tracking payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackMetadataRequest"
+              },
+              "examples": {
+                "metadata": {
+                  "summary": "Track metadata",
+                  "value": {
+                    "request_id": 12345,
+                    "metadata": {
+                      "session_id": "abc123",
+                      "user_id": "user123"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Metadata saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackResponse"
+                },
+                "examples": {
+                  "tracked": {
+                    "summary": "Tracked",
+                    "value": {
+                      "success": true,
+                      "message": "Metadata tracked successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/rest/track-group": {
+      "post": {
+        "summary": "Track Group",
+        "operationId": "trackGroup",
+        "tags": [
+          "group"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "request_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the request."
+                  },
+                  "group_id": {
+                    "type": "integer",
+                    "description": "The unique identifier for the group to be associated with the request."
+                  }
+                },
+                "required": [
+                  "request_id",
+                  "group_id"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Group tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/rest/track-prompt": {
+      "post": {
+        "summary": "Track Prompt",
+        "operationId": "trackPrompt",
+        "tags": [
+          "prompt"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Prompt tracking payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TrackPromptRequest"
+              },
+              "examples": {
+                "track": {
+                  "summary": "Track prompt",
+                  "value": {
+                    "prompt_name": "support-response",
+                    "prompt_input_variables": {
+                      "user_message": "Hello"
+                    },
+                    "request_id": 12345,
+                    "version": 2
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Prompt association saved.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TrackResponse"
+                },
+                "examples": {
+                  "tracked": {
+                    "summary": "Tracked",
+                    "value": {
+                      "success": true,
+                      "message": "Prompt tracked successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/rest/track-score": {
+      "post": {
+        "summary": "Track Score",
+        "operationId": "trackScore",
+        "tags": [
+          "score"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "request_id": {
+                    "type": "integer",
+                    "description": "The `request_id` from tracking a request."
+                  },
+                  "score": {
+                    "type": "integer",
+                    "description": "The score you would like to give to this request (0 - 100).",
+                    "minimum": 0,
+                    "maximum": 100
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "A name for this request score. If not provided, the score will be tracked as `default`.",
+                    "optional": true
+                  }
+                },
+                "required": [
+                  "request_id",
+                  "score"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Score tracked successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/reports/name/{report_name}": {
+      "delete": {
+        "summary": "Delete Reports by Name",
+        "operationId": "deleteReportsByName",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Name of the report to archive."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Operation",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "404": {
+            "description": "Report not found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/reports": {
+      "post": {
+        "summary": "Create Evaluation Pipeline",
+        "operationId": "createEvaluationPipeline",
+        "tags": [
+          "reports"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Evaluation pipeline creation payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateEvaluationPipelineRequest"
+              },
+              "examples": {
+                "builtInScoring": {
+                  "summary": "Built-in scoring",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "name": "Pipeline with Built-in Scoring",
+                    "columns": [
+                      {
+                        "column_type": "LLM_ASSERTION",
+                        "name": "Accuracy Check",
+                        "configuration": {
+                          "source": "response",
+                          "prompt": "Is this response accurate?"
+                        },
+                        "is_part_of_score": true
+                      },
+                      {
+                        "column_type": "LLM_ASSERTION",
+                        "name": "Safety Check",
+                        "configuration": {
+                          "source": "response",
+                          "prompt": "Is this response safe?"
+                        },
+                        "is_part_of_score": true
+                      }
+                    ]
+                  }
+                },
+                "customScoring": {
+                  "summary": "Custom scoring",
+                  "value": {
+                    "dataset_group_id": 123,
+                    "name": "Pipeline with Custom Scoring",
+                    "columns": [
+                      {
+                        "column_type": "LLM_ASSERTION",
+                        "name": "Accuracy Check",
+                        "configuration": {
+                          "source": "response",
+                          "prompt": "Is this response accurate?"
+                        }
+                      },
+                      {
+                        "column_type": "LLM_ASSERTION",
+                        "name": "Safety Check",
+                        "configuration": {
+                          "source": "response",
+                          "prompt": "Is this response safe?"
+                        }
+                      }
+                    ],
+                    "score_configuration": {
+                      "code": "weights = {\"Accuracy Check\": 0.7, \"Safety Check\": 0.3}\ntotal_weight = weighted_sum = 0\nfor row in data:\n    for col, weight in weights.items():\n        if col in row:\n            total_weight += weight\n            if row[col] == True:\n                weighted_sum += weight\nscore = (weighted_sum / total_weight * 100) if total_weight > 0 else 0\nreturn {\"score\": round(score, 2)}",
+                      "code_language": "PYTHON"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Evaluation pipeline created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateEvaluationPipelineResponse"
+                },
+                "examples": {
+                  "created": {
+                    "summary": "Pipeline created",
+                    "value": {
+                      "success": true,
+                      "report_id": 456,
+                      "report_columns": [
+                        {
+                          "id": 789,
+                          "name": "Accuracy Check",
+                          "column_type": "LLM_ASSERTION",
+                          "position": 1,
+                          "configuration": {
+                            "source": "response"
+                          }
+                        }
+                      ],
+                      "external_ids": []
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid parameters, draft dataset version, or no datasets in group",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string",
+                      "example": "Dataset must have at least one non-draft version"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "409": {
+            "description": "External ID conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalIdErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/report-columns": {
+      "post": {
+        "summary": "Add Column to Evaluation Pipeline",
+        "operationId": "addReportColumn",
+        "tags": [
+          "reports"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "report_id": {
+                    "type": "integer",
+                    "description": "The ID of the evaluation pipeline to add this column to.",
+                    "minimum": 1
+                  },
+                  "column_type": {
+                    "type": "string",
+                    "description": "The type of evaluation or transformation this column performs. Must be one of the supported column types.",
+                    "enum": [
+                      "ABSOLUTE_NUMERIC_DISTANCE",
+                      "AI_DATA_EXTRACTION",
+                      "ASSERT_VALID",
+                      "CONVERSATION_SIMULATOR",
+                      "COALESCE",
+                      "CODE_EXECUTION",
+                      "COMBINE_COLUMNS",
+                      "COMPARE",
+                      "CONTAINS",
+                      "COSINE_SIMILARITY",
+                      "COUNT",
+                      "ENDPOINT",
+                      "MCP",
+                      "HUMAN",
+                      "JSON_PATH",
+                      "LLM_ASSERTION",
+                      "MATH_OPERATOR",
+                      "MIN_MAX",
+                      "PARSE_VALUE",
+                      "APPLY_DIFF",
+                      "PROMPT_TEMPLATE",
+                      "REGEX",
+                      "REGEX_EXTRACTION",
+                      "VARIABLE",
+                      "XML_PATH",
+                      "WORKFLOW",
+                      "CODING_AGENT"
+                    ]
+                  },
+                  "name": {
+                    "type": "string",
+                    "description": "Display name for this column. Must be unique within the pipeline. This name is used to reference the column in subsequent steps.",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "configuration": {
+                    "type": "object",
+                    "description": "Column-specific configuration. The schema varies based on column_type. See documentation for each type's requirements.",
+                    "additionalProperties": true
+                  },
+                  "position": {
+                    "type": "integer",
+                    "description": "Optional position for the column. If not specified, the column is added at the end. Cannot overwrite dataset columns.",
+                    "minimum": 0,
+                    "nullable": true
+                  }
+                },
+                "required": [
+                  "report_id",
+                  "column_type",
+                  "name",
+                  "configuration"
+                ],
+                "example": {
+                  "report_id": 456,
+                  "column_type": "PROMPT_TEMPLATE",
+                  "name": "Generate Answer",
+                  "configuration": {
+                    "template": {
+                      "name": "qa_template",
+                      "version_number": null
+                    },
+                    "prompt_template_variable_mappings": {
+                      "question": "input_question"
+                    },
+                    "engine": {
+                      "provider": "openai",
+                      "model": "gpt-4",
+                      "parameters": {
+                        "temperature": 0.7
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Column added successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": true
+                    },
+                    "report_column": {
+                      "type": "object",
+                      "description": "Details of the created column including its ID and configuration"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid column type, configuration validation failed, or column name already exists",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Report already has a column with that name"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "403": {
+            "description": "Forbidden - Cannot overwrite dataset columns or missing permissions",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "You can not overwrite dataset columns"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Report not found or not accessible",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Report not found"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/reports/{report_id}/run": {
+      "post": {
+        "summary": "Run Full Evaluation",
+        "operationId": "runReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the evaluation pipeline report to run."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "name": {
+                    "type": "string",
+                    "description": "The name of the final report to be created. Must be between 1 and 255 characters in length.",
+                    "minLength": 1,
+                    "maxLength": 255
+                  },
+                  "dataset_id": {
+                    "type": [
+                      "integer",
+                      "null"
+                    ],
+                    "description": "The ID of the dataset to use for the report. If not provided, uses the evaluation pipeline's default dataset."
+                  },
+                  "refresh_dataset": {
+                    "type": [
+                      "boolean",
+                      "null"
+                    ],
+                    "description": "Whether to refresh the dataset before running the report. Only applicable for dynamic datasets."
+                  }
+                },
+                "required": [
+                  "name"
+                ]
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Report run initiated successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "report_id": {
+                      "type": "integer",
+                      "description": "The ID of the created final report."
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "report_id"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Invalid data or report generation error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - No requests found for the given criteria",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "403": {
+            "description": "Forbidden - Can only run evaluation pipeline reports or dataset refresh not allowed",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Not Found - Report or dataset not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message"
+                  ]
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/reports/{report_id}": {
+      "get": {
+        "summary": "Get Evaluation",
+        "operationId": "getReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the report to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "report": {
+                      "type": "object",
+                      "description": "The report data with all fields",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "name": {
+                          "type": "string"
+                        },
+                        "comment": {
+                          "type": [
+                            "string",
+                            "null"
+                          ]
+                        },
+                        "is_blueprint": {
+                          "type": [
+                            "boolean",
+                            "null"
+                          ]
+                        },
+                        "deleted": {
+                          "type": "boolean"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "score": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "description": "Report score data"
+                        },
+                        "score_configuration": {
+                          "type": [
+                            "object",
+                            "null"
+                          ],
+                          "description": "Score configuration settings"
+                        },
+                        "score_matrix": {
+                          "type": [
+                            "array",
+                            "null"
+                          ],
+                          "description": "Score matrix for custom scoring"
+                        },
+                        "score_calculation_error": {
+                          "type": [
+                            "string",
+                            "null"
+                          ],
+                          "description": "Error message if score calculation failed"
+                        },
+                        "parent_report_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "dataset_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "user_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ]
+                        },
+                        "workspace_id": {
+                          "type": "integer"
+                        },
+                        "prompt_registry_id": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "ID of associated prompt registry"
+                        },
+                        "prompt_version_number": {
+                          "type": [
+                            "integer",
+                            "null"
+                          ],
+                          "description": "Version number of associated prompt"
+                        }
+                      },
+                      "required": [
+                        "id",
+                        "name",
+                        "deleted",
+                        "created_at",
+                        "updated_at",
+                        "workspace_id"
+                      ]
+                    },
+                    "status": {
+                      "type": "string",
+                      "enum": [
+                        "RUNNING",
+                        "COMPLETED"
+                      ],
+                      "description": "Overall status of the report execution"
+                    },
+                    "stats": {
+                      "type": "object",
+                      "properties": {
+                        "status_counts": {
+                          "type": "object",
+                          "description": "Count of cells in each status",
+                          "properties": {
+                            "COMPLETED": {
+                              "type": "integer",
+                              "description": "Number of completed cells"
+                            },
+                            "FAILED": {
+                              "type": "integer",
+                              "description": "Number of failed cells"
+                            },
+                            "QUEUED": {
+                              "type": "integer",
+                              "description": "Number of queued cells"
+                            },
+                            "RUNNING": {
+                              "type": "integer",
+                              "description": "Number of running cells"
+                            }
+                          },
+                          "required": [
+                            "COMPLETED",
+                            "FAILED",
+                            "QUEUED",
+                            "RUNNING"
+                          ]
+                        }
+                      },
+                      "required": [
+                        "status_counts"
+                      ]
+                    },
+                    "report_columns": {
+                      "type": "array",
+                      "description": "Ordered list of column configurations for this report.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "report_id": {
+                            "type": "integer"
+                          },
+                          "column_type": {
+                            "type": "string",
+                            "description": "Type of evaluation column (e.g. LLM_ASSERTION, PROMPT_TEMPLATE, COMPARE)"
+                          },
+                          "name": {
+                            "type": "string"
+                          },
+                          "position": {
+                            "type": "integer",
+                            "description": "Zero-based column order"
+                          },
+                          "is_part_of_score": {
+                            "type": "boolean"
+                          },
+                          "configuration": {
+                            "type": "object",
+                            "description": "Column-type-specific configuration"
+                          },
+                          "score": {
+                            "type": "number",
+                            "nullable": true,
+                            "description": "Computed score for this column, if available"
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Unauthorized - Invalid or missing authentication"
+          },
+          "404": {
+            "description": "Report not found or not accessible"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Evaluation Pipeline",
+        "operationId": "deleteReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the evaluation pipeline to archive."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Evaluation pipeline archived.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteReportResponse"
+                },
+                "examples": {
+                  "archived": {
+                    "summary": "Archived",
+                    "value": {
+                      "success": true,
+                      "message": "Report archived successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/reports/{report_id}/score": {
+      "get": {
+        "summary": "Get Evaluation Score",
+        "operationId": "getReportScore",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the report to get the score for."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Report score retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "score": {
+                      "type": "object",
+                      "properties": {
+                        "overall_score": {
+                          "type": [
+                            "number",
+                            "null"
+                          ],
+                          "description": "The overall score of the report"
+                        },
+                        "score_type": {
+                          "type": "string",
+                          "enum": [
+                            "single_column",
+                            "multi_column",
+                            "custom",
+                            "none"
+                          ],
+                          "description": "Type of scoring used for this report"
+                        },
+                        "has_custom_scoring": {
+                          "type": "boolean",
+                          "description": "Whether custom scoring logic was used"
+                        },
+                        "details": {
+                          "type": "object",
+                          "oneOf": [
+                            {
+                              "description": "Single column score details",
+                              "properties": {
+                                "column_name": {
+                                  "type": "string"
+                                },
+                                "score": {
+                                  "type": [
+                                    "number",
+                                    "null"
+                                  ]
+                                },
+                                "score_type": {
+                                  "type": [
+                                    "string",
+                                    "null"
+                                  ]
+                                },
+                                "num_skipped": {
+                                  "type": "integer"
+                                }
+                              }
+                            },
+                            {
+                              "description": "Multi-column score details",
+                              "properties": {
+                                "columns": {
+                                  "type": "array",
+                                  "items": {
+                                    "type": "object",
+                                    "properties": {
+                                      "column_name": {
+                                        "type": "string"
+                                      },
+                                      "score": {
+                                        "type": [
+                                          "number",
+                                          "null"
+                                        ]
+                                      },
+                                      "score_type": {
+                                        "type": [
+                                          "string",
+                                          "null"
+                                        ]
+                                      },
+                                      "num_skipped": {
+                                        "type": "integer"
+                                      }
+                                    }
+                                  }
+                                }
+                              }
+                            },
+                            {
+                              "description": "Custom score details",
+                              "properties": {
+                                "matrix": {
+                                  "type": "array",
+                                  "description": "Score matrix from custom scoring logic"
+                                },
+                                "configuration": {
+                                  "type": [
+                                    "object",
+                                    "null"
+                                  ],
+                                  "description": "Custom scoring configuration"
+                                }
+                              }
+                            },
+                            {
+                              "description": "No score details",
+                              "properties": {
+                                "message": {
+                                  "type": "string"
+                                }
+                              }
+                            }
+                          ]
+                        }
+                      },
+                      "required": [
+                        "overall_score",
+                        "score_type",
+                        "has_custom_scoring",
+                        "details"
+                      ]
+                    }
+                  },
+                  "required": [
+                    "success",
+                    "message",
+                    "score"
+                  ]
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request - Blueprint reports do not have scores"
+          },
+          "401": {
+            "description": "Unauthorized"
+          },
+          "403": {
+            "description": "Forbidden - Invalid workspace"
+          },
+          "404": {
+            "description": "Report not found"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/reports/{report_id}/rename": {
+      "patch": {
+        "summary": "Rename Evaluation Pipeline",
+        "operationId": "renameReport",
+        "tags": [
+          "reports"
+        ],
+        "parameters": [
+          {
+            "name": "report_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the evaluation pipeline to rename."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Rename or retag payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RenameReportRequest"
+              },
+              "examples": {
+                "rename": {
+                  "summary": "Rename and retag",
+                  "value": {
+                    "name": "Customer support - production blueprint",
+                    "tags": [
+                      "production",
+                      "support"
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Evaluation pipeline renamed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RenameReportResponse"
+                },
+                "examples": {
+                  "renamed": {
+                    "summary": "Renamed",
+                    "value": {
+                      "success": true,
+                      "message": "Report renamed successfully"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/datasets": {
+      "post": {
+        "summary": "Create Dataset",
+        "operationId": "createDataset",
+        "tags": [
+          "datasets"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Dataset creation payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateDatasetRequest"
+              },
+              "examples": {
+                "create": {
+                  "summary": "Create dataset",
+                  "value": {
+                    "name": "Customer Support Dataset",
+                    "description": "Dataset for customer support evaluation",
+                    "rows": [
+                      {
+                        "input": "What is your return policy?",
+                        "expected_output": "Our return policy is 30 days."
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Dataset created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateDatasetResponse"
+                },
+                "examples": {
+                  "created": {
+                    "summary": "Dataset created",
+                    "value": {
+                      "success": true,
+                      "id": 123,
+                      "dataset_group_id": 456,
+                      "name": "Customer Support Dataset",
+                      "row_count": 1
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "409": {
+            "description": "External ID conflict",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ExternalIdErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/datasets/{dataset_id}": {
+      "get": {
+        "summary": "Get Dataset",
+        "operationId": "getDataset",
+        "tags": [
+          "datasets"
+        ],
+        "parameters": [
+          {
+            "name": "dataset_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "ID of the dataset to retrieve."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Dataset retrieved successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "id": {
+                      "type": "integer",
+                      "description": "ID of the dataset version"
+                    },
+                    "dataset_group_id": {
+                      "type": "integer",
+                      "description": "ID of the dataset group this version belongs to"
+                    },
+                    "name": {
+                      "type": "string",
+                      "description": "Name of the dataset group"
+                    },
+                    "description": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "Description of the dataset"
+                    },
+                    "external_id": {
+                      "type": [
+                        "string",
+                        "null"
+                      ],
+                      "description": "External ID for the dataset"
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "description": "Number of rows in the dataset"
+                    },
+                    "version_number": {
+                      "type": "integer",
+                      "description": "Version number of this dataset"
+                    },
+                    "is_draft": {
+                      "type": "boolean",
+                      "description": "Whether this dataset version is a draft"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "List of column names in the dataset"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": true
+                      },
+                      "description": "List of rows in the dataset"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/workflows/{identifier}/run": {
+      "post": {
+        "summary": "Run Workflow",
+        "operationId": "runWorkflow",
+        "tags": [
+          "workflows"
+        ],
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "The name or ID of the workflow to run. Names may contain forward slashes (e.g. `team/my-workflow`)."
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Workflow run payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/WorkflowRunRequest"
+              },
+              "examples": {
+                "run": {
+                  "summary": "Run workflow",
+                  "value": {
+                    "input_variables": {
+                      "user_message": "Hello, how are you?"
+                    },
+                    "metadata": {
+                      "session_id": "abc123"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Workflow run successfully",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/WorkflowRunResponse"
+                },
+                "examples": {
+                  "success": {
+                    "summary": "Successful workflow run",
+                    "value": {
+                      "success": true,
+                      "output": "Hello! I'm doing well, thank you for asking.",
+                      "request_id": 12345
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/rest/log-request": {
+      "post": {
+        "summary": "Log Request",
+        "operationId": "logRequest",
+        "tags": [
+          "request"
+        ],
+        "requestBody": {
+          "required": true,
+          "description": "Log request payload.",
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/LogRequestRequest"
+              },
+              "examples": {
+                "log": {
+                  "summary": "Log a request",
+                  "value": {
+                    "function_name": "openai.chat.completions.create",
+                    "kwargs": {
+                      "model": "gpt-4",
+                      "messages": [
+                        {
+                          "role": "user",
+                          "content": "Hello!"
+                        }
+                      ]
+                    },
+                    "request_response": {
+                      "choices": [
+                        {
+                          "message": {
+                            "role": "assistant",
+                            "content": "Hello! How can I help you?"
+                          }
+                        }
+                      ]
+                    },
+                    "request_start_time": 1710000000.0,
+                    "request_end_time": 1710000001.5
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Request logged.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/LogRequestResponse"
+                },
+                "examples": {
+                  "logged": {
+                    "summary": "Logged",
+                    "value": {
+                      "success": true,
+                      "request_id": 12345
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Bad Request"
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "securitySchemes": {
+      "apiKey": {
+        "type": "apiKey",
+        "in": "header",
+        "name": "X-API-KEY"
+      }
+    },
+    "responses": {
+      "UnauthorizedError": {
+        "description": "Unauthorized - Invalid or missing API key",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
+                  "example": "Invalid API key."
+                }
+              }
+            }
+          }
+        }
+      },
+      "NotFoundError": {
+        "description": "Not Found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
+                  "example": "Not found."
+                }
+              }
+            }
+          }
+        }
+      },
+      "ValidationError": {
+        "description": "Validation Error",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/HTTPValidationError"
+            }
+          }
+        }
+      },
+      "ForbiddenError": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "detail": {
+                  "type": "string",
+                  "example": "You do not have permission to perform this action."
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "GetPromptTemplate": {
+        "properties": {
+          "version": {
+            "anyOf": [
+              {
+                "type": "integer",
+                "exclusiveMinimum": 0
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Version",
+            "description": "The version number of the prompt template. If not provided, the latest version is returned."
+          },
+          "label": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Label",
+            "description": "The label of the prompt template."
+          },
+          "provider": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Provider",
+            "description": "The LLM provider to use for the prompt template. If not provided, the default provider is used."
+          },
+          "input_variables": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Input Variables",
+            "description": "The input variables to use for the prompt template."
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata",
+            "description": "Metadata to include with the prompt template."
+          },
+          "stream": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Stream",
+            "description": "Whether to stream the response."
+          },
+          "group_id": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Group Id",
+            "description": "The group ID to use for the prompt template."
+          },
+          "return_prompt_execution_metadata": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Return Prompt Execution Metadata",
+            "description": "Whether to return the prompt execution metadata."
+          },
+          "model_parameter_overrides": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Model Parameter Overrides",
+            "description": "Model parameter overrides to use for the prompt template."
+          }
+        },
+        "type": "object",
+        "title": "GetPromptTemplate"
+      },
+      "GetPromptTemplateResponse": {
+        "properties": {
+          "prompt_template": {
+            "title": "Prompt Template"
+          },
+          "prompt_blueprint": {
+            "title": "Prompt Blueprint"
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_template"
+        ],
+        "title": "GetPromptTemplateResponse"
+      },
+      "GetPromptTemplateRawResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "integer",
+            "description": "The internal ID of this prompt version."
+          },
+          "prompt_name": {
+            "type": "string",
+            "description": "Human-readable name of the prompt template."
+          },
+          "version": {
+            "type": "integer",
+            "description": "Version number of the prompt template."
+          },
+          "workspace_id": {
+            "type": "integer",
+            "description": "Workspace this prompt belongs to."
+          },
+          "prompt_template": {
+            "description": "The prompt template body."
+          },
+          "metadata": {
+            "description": "Optional metadata such as model configuration.",
+            "nullable": true
+          },
+          "commit_message": {
+            "type": "string",
+            "description": "Message describing what changed in this version.",
+            "nullable": true
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags associated with this prompt."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "Timestamp when this version was created."
+          },
+          "snippets": {
+            "type": "array",
+            "items": {},
+            "description": "Snippets referenced by this prompt."
+          },
+          "llm_kwargs": {
+            "description": "Provider-specific LLM kwargs (only present when include_llm_kwargs=true).",
+            "nullable": true
+          }
+        },
+        "required": [
+          "success",
+          "id",
+          "prompt_name",
+          "version",
+          "workspace_id",
+          "prompt_template",
+          "tags",
+          "created_at",
+          "snippets"
+        ]
+      },
+      "GetPromptTemplateLabelResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "labels": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "prompt_version_number": {
+                  "type": "integer"
+                }
+              }
+            }
+          }
+        }
+      },
+      "CreatePromptTemplate": {
+        "properties": {
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name",
+            "description": "The name of the prompt template. May contain forward slashes for namespacing (e.g. `team/my-prompt`)."
+          },
+          "prompt_template": {
+            "title": "Prompt Template",
+            "description": "The prompt template object."
+          },
+          "tags": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Tags",
+            "description": "Tags to apply to the prompt template."
+          },
+          "commit_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Message",
+            "description": "A message describing the changes made to the prompt template."
+          },
+          "release_labels": {
+            "anyOf": [
+              {
+                "items": {
+                  "type": "string"
+                },
+                "type": "array"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Release Labels",
+            "description": "Release labels to apply to the prompt template."
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata",
+            "description": "Metadata to include with the prompt template."
+          },
+          "external_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "External Id",
+            "description": "An external ID to associate with the prompt template."
+          }
+        },
+        "type": "object",
+        "required": [
+          "prompt_name",
+          "prompt_template"
+        ],
+        "title": "CreatePromptTemplate"
+      },
+      "CreatePromptTemplateResponse": {
+        "properties": {
+          "id": {
+            "type": "integer",
+            "title": "Id"
+          },
+          "prompt_name": {
+            "type": "string",
+            "title": "Prompt Name"
+          },
+          "prompt_version_id": {
+            "type": "integer",
+            "title": "Prompt Version Id"
+          },
+          "version_number": {
+            "type": "integer",
+            "title": "Version Number"
+          },
+          "tags": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Tags"
+          },
+          "release_labels": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "Release Labels"
+          },
+          "prompt_template": {
+            "title": "Prompt Template"
+          },
+          "metadata": {
+            "anyOf": [
+              {
+                "type": "object"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Metadata"
+          },
+          "commit_message": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Commit Message"
+          },
+          "external_ids": {
+            "items": {
+              "type": "string"
+            },
+            "type": "array",
+            "title": "External Ids"
+          }
+        },
+        "type": "object",
+        "required": [
+          "id",
+          "prompt_name",
+          "prompt_version_id",
+          "version_number",
+          "tags",
+          "release_labels",
+          "prompt_template",
+          "metadata",
+          "commit_message",
+          "external_ids"
+        ],
+        "title": "CreatePromptTemplateResponse"
+      },
+      "PatchPromptTemplateVersion": {
+        "type": "object",
+        "title": "PatchPromptTemplateVersion",
+        "description": "Request body for patching a prompt template version. Supply only the fields you want to update; omitted fields are left unchanged. The `messages` field accepts either a complete replacement list or a sparse object keyed by index for targeted edits.",
+        "properties": {
+          "messages": {
+            "title": "Messages",
+            "description": "Full replacement list, or a sparse object keyed by zero-based index for targeted updates.",
+            "oneOf": [
+              {
+                "type": "array",
+                "description": "Replace all messages with this list.",
+                "items": {
+                  "type": "object"
+                }
+              },
+              {
+                "type": "object",
+                "description": "Patch specific messages by index. Keys must be non-negative integer strings (e.g. \"0\", \"2\").",
+                "additionalProperties": {
+                  "type": "object"
+                }
+              }
+            ]
+          },
+          "model_parameters": {
+            "type": "object",
+            "title": "Model Parameters",
+            "description": "Provider model parameters to set (e.g. temperature, max_tokens). Merged with existing parameters.",
+            "additionalProperties": true
+          },
+          "response_format": {
+            "type": "object",
+            "title": "Response Format",
+            "description": "Response format object (e.g. {\"type\": \"json_object\"}).",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "commit_message": {
+            "type": "string",
+            "title": "Commit Message",
+            "description": "Description of what changed in this version.",
+            "nullable": true
+          },
+          "release_labels": {
+            "type": "array",
+            "title": "Release Labels",
+            "description": "Labels to attach to the newly created version (e.g. [\"staging\", \"production\"]).",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true
+          }
+        }
+      },
+      "ExternalIdErrorResponse": {
+        "properties": {
+          "message": {
+            "type": "string",
+            "title": "Message"
+          },
+          "external_id": {
+            "type": "string",
+            "title": "External Id"
+          },
+          "existing_id": {
+            "type": "integer",
+            "title": "Existing Id"
+          }
+        },
+        "type": "object",
+        "required": [
+          "message",
+          "external_id",
+          "existing_id"
+        ],
+        "title": "ExternalIdErrorResponse"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "TrackMetadataRequest": {
+        "type": "object",
+        "properties": {
+          "request_id": {
+            "type": "integer",
+            "description": "The request ID returned from a previous log or run call."
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Key-value metadata pairs to associate with the request."
+          }
+        },
+        "required": [
+          "request_id",
+          "metadata"
+        ]
+      },
+      "TrackPromptRequest": {
+        "type": "object",
+        "properties": {
+          "prompt_name": {
+            "type": "string",
+            "description": "Name of the prompt template."
+          },
+          "prompt_input_variables": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Input variables passed to the prompt."
+          },
+          "request_id": {
+            "type": "integer",
+            "description": "The request ID to associate with this prompt."
+          },
+          "version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional version number of the prompt used."
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional label of the prompt version used."
+          }
+        },
+        "required": [
+          "request_id"
+        ]
+      },
+      "TrackResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "CreateEvaluationPipelineRequest": {
+        "type": "object",
+        "properties": {
+          "dataset_group_id": {
+            "type": "integer",
+            "description": "The ID of the dataset group to use for the evaluation pipeline."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the evaluation pipeline.",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "columns": {
+            "type": "array",
+            "description": "Columns for the evaluation pipeline.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "column_type": {
+                  "type": "string",
+                  "description": "The type of the column.",
+                  "enum": [
+                    "ABSOLUTE_NUMERIC_DISTANCE",
+                    "AI_DATA_EXTRACTION",
+                    "ASSERT_VALID",
+                    "CONVERSATION_SIMULATOR",
+                    "COALESCE",
+                    "CODE_EXECUTION",
+                    "COMBINE_COLUMNS",
+                    "COMPARE",
+                    "CONTAINS",
+                    "COSINE_SIMILARITY",
+                    "COUNT",
+                    "ENDPOINT",
+                    "MCP",
+                    "HUMAN",
+                    "JSON_PATH",
+                    "LLM_ASSERTION",
+                    "MATH_OPERATOR",
+                    "MIN_MAX",
+                    "PARSE_VALUE",
+                    "APPLY_DIFF",
+                    "PROMPT_TEMPLATE",
+                    "REGEX",
+                    "REGEX_EXTRACTION",
+                    "VARIABLE",
+                    "XML_PATH",
+                    "WORKFLOW",
+                    "CODING_AGENT"
+                  ]
+                },
+                "name": {
+                  "type": "string",
+                  "description": "The name of the column.",
+                  "minLength": 1,
+                  "maxLength": 255
+                },
+                "configuration": {
+                  "type": "object",
+                  "description": "Configuration for the column.",
+                  "additionalProperties": true
+                },
+                "is_part_of_score": {
+                  "type": "boolean",
+                  "description": "Whether this column is part of the score calculation.",
+                  "default": false
+                }
+              },
+              "required": [
+                "column_type",
+                "name",
+                "configuration"
+              ]
+            }
+          },
+          "score_configuration": {
+            "type": "object",
+            "description": "Optional custom score configuration.",
+            "nullable": true,
+            "properties": {
+              "code": {
+                "type": "string",
+                "description": "Python code for custom scoring."
+              },
+              "code_language": {
+                "type": "string",
+                "enum": [
+                  "PYTHON"
+                ],
+                "description": "The programming language for the custom scoring code."
+              }
+            }
+          },
+          "external_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional external ID for the evaluation pipeline."
+          }
+        },
+        "required": [
+          "dataset_group_id",
+          "name",
+          "columns"
+        ]
+      },
+      "CreateEvaluationPipelineResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "report_id": {
+            "type": "integer",
+            "description": "The ID of the created evaluation pipeline."
+          },
+          "report_columns": {
+            "type": "array",
+            "description": "The columns of the created evaluation pipeline.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "integer"
+                },
+                "name": {
+                  "type": "string"
+                },
+                "column_type": {
+                  "type": "string"
+                },
+                "position": {
+                  "type": "integer"
+                },
+                "configuration": {
+                  "type": "object"
+                }
+              }
+            }
+          },
+          "external_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "required": [
+          "success",
+          "report_id",
+          "report_columns",
+          "external_ids"
+        ]
+      },
+      "DeleteReportResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "RenameReportRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "New name for the evaluation pipeline.",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Tags to associate with the evaluation pipeline.",
+            "nullable": true
+          }
+        },
+        "required": [
+          "name"
+        ]
+      },
+      "RenameReportResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "required": [
+          "success",
+          "message"
+        ]
+      },
+      "CreateDatasetRequest": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the dataset.",
+            "minLength": 1,
+            "maxLength": 255
+          },
+          "description": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional description of the dataset."
+          },
+          "rows": {
+            "type": "array",
+            "description": "The rows of the dataset. Each row is an object with key-value pairs.",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "external_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional external ID for the dataset."
+          }
+        },
+        "required": [
+          "name",
+          "rows"
+        ]
+      },
+      "CreateDatasetResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "integer",
+            "description": "The ID of the created dataset version."
+          },
+          "dataset_group_id": {
+            "type": "integer",
+            "description": "The ID of the dataset group."
+          },
+          "name": {
+            "type": "string",
+            "description": "The name of the dataset."
+          },
+          "row_count": {
+            "type": "integer",
+            "description": "The number of rows in the dataset."
+          }
+        },
+        "required": [
+          "success",
+          "id",
+          "dataset_group_id",
+          "name",
+          "row_count"
+        ]
+      },
+      "WorkflowRunRequest": {
+        "type": "object",
+        "properties": {
+          "input_variables": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "Input variables to pass to the workflow."
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "description": "Optional metadata to associate with the workflow run."
+          },
+          "label": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional label to identify which version of the workflow to run."
+          },
+          "version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional version number of the workflow to run."
+          }
+        },
+        "required": [
+          "input_variables"
+        ]
+      },
+      "WorkflowRunResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "output": {
+            "description": "The output of the workflow run."
+          },
+          "request_id": {
+            "type": "integer",
+            "description": "The ID of the request."
+          }
+        },
+        "required": [
+          "success",
+          "output",
+          "request_id"
+        ]
+      },
+      "LogRequestRequest": {
+        "type": "object",
+        "properties": {
+          "function_name": {
+            "type": "string",
+            "description": "The name of the function being logged (e.g. openai.chat.completions.create)."
+          },
+          "kwargs": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "The keyword arguments passed to the function."
+          },
+          "request_response": {
+            "type": "object",
+            "additionalProperties": true,
+            "description": "The response from the function call."
+          },
+          "request_start_time": {
+            "type": "number",
+            "description": "Unix timestamp (seconds) when the request started."
+          },
+          "request_end_time": {
+            "type": "number",
+            "description": "Unix timestamp (seconds) when the request ended."
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true,
+            "nullable": true,
+            "description": "Optional metadata to associate with the request."
+          },
+          "tags": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Optional tags to associate with the request."
+          },
+          "prompt_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional prompt ID to associate with the request."
+          },
+          "group_id": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Optional group ID to associate with the request."
+          }
+        },
+        "required": [
+          "function_name",
+          "kwargs",
+          "request_response",
+          "request_start_time",
+          "request_end_time"
+        ]
+      },
+      "LogRequestResponse": {
+        "type": "object",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "request_id": {
+            "type": "integer",
+            "description": "The ID of the logged request."
+          }
+        },
+        "required": [
+          "success",
+          "request_id"
+        ]
+      },
+      "ErrorResponse": {
+        "type": "object",
+        "properties": {
+          "detail": {
+            "type": "string",
+            "description": "Error message"
+          }
+        },
+        "required": [
+          "detail"
+        ]
+      }
+    }
+  },
+  "security": [
+    {
+      "apiKey": []
+    }
+  ]
+}
