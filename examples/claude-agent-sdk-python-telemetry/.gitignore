@@ -1,0 +1,46 @@
+# Environment and secrets
+.env
+.env.*
+!.env.example
+
+# Python bytecode and caches
+__pycache__/
+*.py[cod]
+*$py.class
+.pycache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# Build and package output
+build/
+dist/
+*.egg-info/
+*.egg
+uv.lock
+
+# Test, coverage, and tool caches
+.coverage
+.coverage.*
+htmlcov/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+.pyre/
+.tox/
+.nox/
+
+# Local editor and OS files
+.DS_Store
+.idea/
+.vscode/
+*.swp
+*.swo
+
+# Local logs and scratch output
+*.log
+tmp/
+temp/
