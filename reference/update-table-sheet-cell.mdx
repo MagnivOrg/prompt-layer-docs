@@ -7,3 +7,5 @@ description: "Update a Table sheet cell."
 Update a text-column cell with `display_value`, `value`, or both.
 
 Only text-column cells can be edited directly. Updating a cell marks dependent cells stale and updates the sheet version.
+
+The response returns the updated `cell`, the new sheet `version`, and `stale_count`, which is the number of dependent cells marked stale by the update.

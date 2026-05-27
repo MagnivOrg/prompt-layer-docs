@@ -6,4 +6,6 @@ description: "Create a Table sheet version."
 
 Create a named version for a Table sheet.
 
-Pass `name` to save the current sheet state. Pass `source_version_id` to restore from an existing version while creating a new version.
+Pass `name` to save the current sheet state. `name` is required when `source_version_id` is omitted.
+
+Pass `source_version_id` to restore from an existing version while creating a new version.

@@ -6,4 +6,8 @@ description: "Import a CSV file into an existing Table sheet."
 
 Start an asynchronous CSV import into an existing Table sheet.
 
-Send `file_name` ending in `.csv` and `file_content_base64` containing the base64-encoded CSV content. The response returns an `operation_id` and `status_url` for polling with [Get Table Sheet Import Operation](/reference/get-table-sheet-operation).
+Send `file_name` ending in `.csv` and `file_content_base64` containing the base64-encoded CSV content.
+
+Pass `operation_id` when you want a stable client-side identifier for polling and webhook correlation. If omitted, PromptLayer generates one.
+
+The response returns an `operation_id` and `status_url` for polling with [Get Table Sheet Import Operation](/reference/get-table-sheet-operation).

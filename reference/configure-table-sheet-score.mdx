@@ -6,4 +6,10 @@ description: "Configure scoring for a Table sheet."
 
 Configure scoring for a Table sheet.
 
-Use `column_ids` or `column_names` for standard boolean or numeric scoring. Use `score_type` with `score_config` for explicit configuration, or pass `code` and `code_language` for custom scoring. This endpoint updates the configuration and returns `requires_recalculation`; call the recalculation endpoint to queue score calculation.
+Use `column_ids` or `column_names` for standard boolean or numeric scoring. Column names must be unique in the sheet.
+
+Use `score_type` with `score_config` for explicit configuration. Supported scoring modes are `auto`, `boolean`, `numeric`, and `custom`; `score_type` is required when you pass `score_config`.
+
+For custom scoring, pass `code` and optionally `code_language` (`PYTHON` by default, or `JAVASCRIPT`). Boolean scoring also supports `true_values`, `false_values`, and `assertion_aggregation` (`all`, `any`, or `mean`).
+
+This endpoint updates the configuration and returns `requires_recalculation`; call the recalculation endpoint to queue score calculation.

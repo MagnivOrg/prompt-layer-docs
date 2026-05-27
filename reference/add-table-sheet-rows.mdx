@@ -6,6 +6,8 @@ description: "Append rows to a Table sheet."
 
 Append rows to a Table sheet.
 
-Set `count` to the number of rows to append. Pass `values` as an array of objects keyed by column ID when you want to populate text cells as rows are created.
+Set `count` to the number of rows to append. The public API accepts 1 to 100 rows per request and defaults to 1 when `count` is omitted.
+
+Pass `values` as an array of objects keyed by column ID when you want to populate text cells as rows are created. Values beyond `count` are ignored, and missing values use the column default behavior.
 
 Rows are appended after the current last row. Output cells are created in a stale state so dependent computations can be recalculated.
