@@ -9967,6 +9967,310 @@
           }
         }
       }
+    },
+    "/api/public/v2/tables": {
+      "get": {
+        "summary": "List Tables",
+        "operationId": "listTables",
+        "tags": [
+          "smart-tables"
+        ],
+        "description": "List all Smart Tables in the workspace. Supports cursor-based pagination and optional filtering.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "folder_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter tables by folder ID."
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Filter tables by name (case-insensitive partial match)."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Pagination cursor from a previous response."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "description": "Number of results per page (default: 20, max: 100)."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "created_at"
+              ],
+              "default": "created_at"
+            },
+            "description": "Field to sort by."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort direction."
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to tables containing a column that references this prompt ID."
+          },
+          {
+            "name": "prompt_version_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to tables containing a column that references this prompt version ID."
+          },
+          {
+            "name": "prompt_label_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "description": "Filter to tables containing a column that references this prompt label ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tables.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTablesResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace_id or cursor."
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table",
+        "operationId": "createTable",
+        "tags": [
+          "smart-tables"
+        ],
+        "description": "Create a new Smart Table in the workspace. Requires the **REPORT_CREATE** workspace permission.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Table created successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "table": {
+                      "$ref": "#/components/schemas/SmartTableDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace_id."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "User lacks the REPORT_CREATE permission for this workspace."
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}": {
+      "get": {
+        "summary": "Get Table",
+        "operationId": "getTable",
+        "tags": [
+          "smart-tables"
+        ],
+        "description": "Retrieve details for a specific Smart Table by its UUID.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "UUID of the table."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Table details.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "table": {
+                      "$ref": "#/components/schemas/SmartTableDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace_id."
+          },
+          "404": {
+            "description": "Table not found."
+          }
+        }
+      },
+      "patch": {
+        "summary": "Update Table",
+        "operationId": "updateTable",
+        "tags": [
+          "smart-tables"
+        ],
+        "description": "Update the title or folder of a Smart Table. Requires the **REPORT_EDIT** workspace permission.",
+        "security": [
+          {
+            "ApiKeyAuth": []
+          }
+        ],
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "UUID of the table to update."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTableRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Table updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "table": {
+                      "$ref": "#/components/schemas/SmartTableDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace_id."
+          },
+          "401": {
+            "description": "Authentication required."
+          },
+          "403": {
+            "description": "User lacks the REPORT_EDIT permission for this workspace."
+          },
+          "404": {
+            "description": "Table not found."
+          }
+        }
+      }
     }
   },
   "components": {
@@ -18312,6 +18616,109 @@
             ],
             "description": "Indicates whether the row was created from a full trace root (`trace`) or a specific span subtree (`span`)."
           }
+        }
+      },
+      "SmartTable": {
+        "type": "object",
+        "description": "A Smart Table resource.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier for the table."
+          },
+          "workspace_id": {
+            "type": "integer",
+            "description": "ID of the workspace this table belongs to."
+          },
+          "folder_id": {
+            "anyOf": [
+              {"type": "integer"},
+              {"type": "null"}
+            ],
+            "description": "Folder ID, or null if the table is at the workspace root."
+          },
+          "title": {
+            "type": "string",
+            "description": "Display name of the table."
+          },
+          "sheet_count": {
+            "type": "integer",
+            "description": "Number of active sheets in this table."
+          }
+        },
+        "required": ["id", "workspace_id", "title", "sheet_count"]
+      },
+      "SmartTableDetail": {
+        "allOf": [
+          {"$ref": "#/components/schemas/SmartTable"}
+        ],
+        "properties": {
+          "sheet_row_counts": {
+            "type": "object",
+            "additionalProperties": {"type": "integer"},
+            "description": "Map of sheet UUID to its current row count."
+          }
+        },
+        "required": ["sheet_row_counts"]
+      },
+      "CreateTableRequest": {
+        "type": "object",
+        "description": "Request body to create a new Smart Table.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "Display name. Auto-generated if omitted."
+          },
+          "folder_id": {
+            "anyOf": [
+              {"type": "integer", "minimum": 1},
+              {"type": "null"}
+            ],
+            "description": "Folder to place the table in. Omit or pass null for workspace root."
+          }
+        }
+      },
+      "UpdateTableRequest": {
+        "type": "object",
+        "description": "Request body to update a Smart Table.",
+        "properties": {
+          "title": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "New display name."
+          },
+          "folder_id": {
+            "anyOf": [
+              {"type": "integer", "minimum": 1},
+              {"type": "null"}
+            ],
+            "description": "Move to this folder, or pass null to move to workspace root."
+          }
+        }
+      },
+      "ListTablesResponse": {
+        "type": "object",
+        "properties": {
+          "success": {"type": "boolean"},
+          "data": {
+            "type": "array",
+            "items": {"$ref": "#/components/schemas/SmartTable"}
+          },
+          "pagination": {
+            "type": "object",
+            "properties": {
+              "next_cursor": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+              "prev_cursor": {"anyOf": [{"type": "string"}, {"type": "null"}]},
+              "has_more": {"type": "boolean"},
+              "limit": {"type": "integer"}
+            }
+          },
+          "count": {"type": "integer"},
+          "filters": {"type": "object"}
         }
       }
     },
