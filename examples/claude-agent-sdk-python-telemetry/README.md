@@ -30,12 +30,12 @@ python -m claude_promptlayer_python_lab.main
 CLI:
 
 ```bash
-uv run claude-promptlayer-python \
+uv run claude-agent-sdk-python-telemetry \
   "Use the random_number tool, then tell me the number it returned."
 ```
 
 Optional flags:
 
 ```bash
-uv run claude-promptlayer-python --model sonnet --max-turns 3
+uv run claude-agent-sdk-python-telemetry --model sonnet --max-turns 3
 ```

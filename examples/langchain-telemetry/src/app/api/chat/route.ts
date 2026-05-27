@@ -13,7 +13,7 @@ type ChatRequestBody = {
 };
 
 async function withSpan<T>(name: string, fn: (span: Span) => Promise<T>): Promise<T> {
-  return trace.getTracer("langchain-itinerary-app").startActiveSpan(name, async (span) => {
+  return trace.getTracer("langchain-telemetry").startActiveSpan(name, async (span) => {
     try {
       return await fn(span);
     } finally {

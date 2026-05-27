@@ -23,7 +23,7 @@ processor.force_flush()
 ## Setup
 
 ```bash
-cd examples/openai-agents-sdk
+cd examples/openai-agent-sdk-python-telemetry
 python -m venv .venv
 source .venv/bin/activate
 pip install -e .

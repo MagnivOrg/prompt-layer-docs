@@ -1,5 +1,5 @@
 [project]
-name = "pydantic-ai-chat"
+name = "pydantic-ai-telemetry"
 version = "0.1.0"
 description = "Minimal Pydantic AI web chat app exporting OpenTelemetry traces to PromptLayer."
 readme = "README.md"

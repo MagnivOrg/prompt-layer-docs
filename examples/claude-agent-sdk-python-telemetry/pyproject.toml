@@ -1,5 +1,5 @@
 [project]
-name = "claude-promptlayer-python"
+name = "claude-agent-sdk-python-telemetry"
 version = "0.1.0"
 description = "Tiny Python lab for PromptLayer tracing with the Claude Agent SDK."
 readme = "README.md"
@@ -11,7 +11,7 @@ dependencies = [
 ]
 
 [project.scripts]
-claude-promptlayer-python = "claude_promptlayer_python_lab.main:cli"
+claude-agent-sdk-python-telemetry = "claude_promptlayer_python_lab.main:cli"
 
 [build-system]
 requires = ["hatchling"]

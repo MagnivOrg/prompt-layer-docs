@@ -1,5 +1,5 @@
 [project]
-name = "promptlayer-openai-agents-example"
+name = "openai-agent-sdk-python-telemetry"
 version = "0.1.0"
 description = "Minimal PromptLayer OpenAI Agents SDK tracing example"
 requires-python = ">=3.9"
