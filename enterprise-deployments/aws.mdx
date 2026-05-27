@@ -1,0 +1,359 @@
+---
+title: "Deploy PromptLayer on AWS"
+description: "Deploy PromptLayer in your AWS account with OpenTofu, Amazon EKS, and Helm."
+sidebarTitle: "AWS Deployment"
+icon: "aws"
+---
+
+# Deploy PromptLayer on AWS
+
+Use this guide to deploy PromptLayer in your own AWS account. PromptLayer provides a deployment package with OpenTofu configuration, Helm values files, a release manifest, and registry credentials.
+
+The deployment has four phases:
+
+1. Prepare AWS access and customer-specific settings.
+2. Provision infrastructure with OpenTofu.
+3. Install cluster add-ons and OpenSearch.
+4. Install PromptLayer Helm charts.
+
+## What PromptLayer provides
+
+PromptLayer sends a deployment package for your environment. It includes:
+
+| Item | Purpose |
+|------|---------|
+| OpenTofu configuration | Creates the AWS infrastructure and Kubernetes add-ons. |
+| Example tfvars files | Templates for `infra.tfvars`, `kubernetes.tfvars`, and `opensearch.tfvars`. |
+| Helm values files | Configuration for the PromptLayer application charts. |
+| Release manifest | The chart versions, release names, namespaces, and values files to use. |
+| Registry credentials | Access to PromptLayer's private chart and image registry. |
+
+## Before you begin
+
+Make sure you have:
+
+| Requirement | Notes |
+|-------------|-------|
+| Enterprise license | See [Self-Hosted PromptLayer](/self-hosted) for licensing and support. |
+| OpenTofu | Version `1.10.0` or newer. |
+| AWS CLI | v2 is recommended. `aws sts get-caller-identity` must succeed. |
+| AWS IAM access | Permission to create and update VPC, EKS, RDS, ElastiCache, IAM, S3, Route53, Secrets Manager, and related resources. |
+| Helm | A Helm CLI version that supports OCI registries. |
+| kubectl | Used for verification after EKS is created. |
+| Domain | A Route53 hosted zone for the PromptLayer hostname and wildcard certificate. |
+| Deployment package | The environment-specific files from PromptLayer. |
+
+<Info>
+OpenTofu downloads provider binaries during `tofu init`. You do not install the AWS, Kubernetes, Helm, or HTTP providers separately.
+</Info>
+
+## Gather customer inputs
+
+Decide these values before you run OpenTofu:
+
+| Area | Values to confirm |
+|------|-------------------|
+| AWS account | Account ID, AWS region, AWS partition if not commercial AWS, and the IAM role or user that will run OpenTofu. |
+| Naming | Project name, environment name, resource tags, cost center, and owner tags. |
+| Networking | VPC CIDR, availability zones, public subnet CIDRs, private subnet CIDRs, NAT gateway strategy, and EKS API access CIDRs. |
+| DNS and TLS | Domain name, Route53 hosted zone ID, certificate email, wildcard DNS names, and whether external and internal ingress should use the wildcard certificate. |
+| Databases | RDS instance size, storage, Multi-AZ setting, backup retention, backup window, maintenance window, deletion protection, and optional customer-managed KMS key. |
+| Cache | ElastiCache Valkey size, failover setting, Multi-AZ setting, encryption settings, and maintenance window. |
+| EKS | Cluster name, Kubernetes version, node group sizes, instance types, disk sizes, logs, endpoint access, and optional KMS key for Kubernetes secrets. |
+| Storage | S3 bucket names or naming prefix, encryption settings, lifecycle rules, CORS needs, and whether bucket names should include the AWS account ID. |
+| IAM | Route53 zones for cert-manager and external-dns, Secrets Manager and SSM ARNs for External Secrets, KEDA scaler permissions, and application service account names. |
+| OpenSearch | Admin password delivery method, replica counts, disk sizes, resources, and optional warm tier. |
+
+## Prepare AWS access
+
+Authenticate to the target AWS account and verify the identity:
+
+```bash
+aws sts get-caller-identity
+```
+
+Use the same account and region for all OpenTofu stages unless PromptLayer gives you a different architecture.
+
+## Prepare secrets
+
+Create or select a Secrets Manager secret for RDS. The secret must contain the RDS master password and any database user passwords that the deployment package references.
+
+Example shape:
+
+```json
+{
+  "rds-master-password": "<strong-password>",
+  "promptlayer-api-password": "<strong-password>",
+  "promptlayer-worker-password": "<strong-password>",
+  "promptlayer-readonly-password": "<strong-password>",
+  "promptlayer-usage-password": "<strong-password>"
+}
+```
+
+The exact secret name and JSON keys must match `infra.tfvars` and `kubernetes.tfvars`.
+
+Set the OpenSearch admin password as an environment variable before running the OpenSearch stage:
+
+```bash
+read -rsp "OpenSearch admin password: " TF_VAR_opensearch_initial_admin_password
+echo
+export TF_VAR_opensearch_initial_admin_password
+```
+
+Unset it when the OpenSearch apply is complete:
+
+```bash
+unset TF_VAR_opensearch_initial_admin_password
+```
+
+## Prepare the deployment package
+
+From the package root, create local tfvars files from the examples:
+
+```bash
+cp environments/aws/infra/infra.tfvars.example environments/aws/infra/infra.tfvars
+cp environments/aws/kubernetes/kubernetes.tfvars.example environments/aws/kubernetes/kubernetes.tfvars
+cp environments/aws/opensearch/opensearch.tfvars.example environments/aws/opensearch/opensearch.tfvars
+```
+
+Replace every placeholder with customer-specific values. At minimum:
+
+| File | Update |
+|------|--------|
+| `infra.tfvars` | `project_name`, `environment`, `region`, tags, remote state values, VPC settings, EKS settings, RDS settings, Valkey settings, S3 bucket settings, and IRSA settings. |
+| `kubernetes.tfvars` | Remote state values, infra remote state key, storage class, cert-manager settings, Route53 settings, ingress settings, monitoring and logging settings, External Secrets settings, KEDA settings, and RDS user bootstrap settings. |
+| `opensearch.tfvars` | Remote state values, AWS region, EKS cluster name, environment, tags, OpenSearch chart versions, replicas, disk sizes, resources, and namespace. |
+
+<Warning>
+Do not leave placeholder values, example domains, local-only email addresses, or development environment names in tfvars before applying.
+</Warning>
+
+## Bootstrap OpenTofu state
+
+Create a dedicated S3 bucket for OpenTofu state. The bootstrap script creates the bucket, enables versioning, blocks public access, enables SSE-S3 encryption, and writes the S3 backend config for all three AWS stages.
+
+```bash
+chmod +x scripts/bootstrap-tf-state-bucket-aws.sh
+./scripts/bootstrap-tf-state-bucket-aws.sh <aws-region> <state-bucket-prefix>
+```
+
+The bucket name is:
+
+```text
+<state-bucket-prefix>-<aws-region>-<aws-account-id>
+```
+
+After the script runs, set the matching remote state values in each tfvars file:
+
+| Stage | `remote_state_s3_key` |
+|-------|------------------------|
+| Infrastructure | `aws/<aws-region>/infra.tfstate` |
+| Kubernetes | `aws/<aws-region>/kubernetes.tfstate` |
+| OpenSearch | `aws/<aws-region>/opensearch.tfstate` |
+
+OpenTofu uses native S3 locking. You do not need a DynamoDB lock table.
+
+## Deploy infrastructure
+
+The infrastructure stage creates the VPC, subnets, EKS cluster, node groups, RDS, ElastiCache Valkey, S3 buckets, security groups, and IAM roles for Kubernetes service accounts.
+
+```bash
+cd environments/aws/infra
+tofu init -upgrade -reconfigure
+tofu plan -var-file=infra.tfvars -out=infra.tfplan
+tofu apply infra.tfplan
+```
+
+After apply, capture the outputs. You will need the EKS cluster name, RDS endpoint, Valkey endpoint, S3 bucket names, and IAM role ARNs for verification and support.
+
+```bash
+tofu output
+```
+
+Configure kubectl for the new cluster:
+
+```bash
+aws eks update-kubeconfig \
+  --region <aws-region> \
+  --name <eks-cluster-name>
+```
+
+Verify the cluster:
+
+```bash
+kubectl get nodes
+```
+
+## Deploy Kubernetes add-ons
+
+The Kubernetes stage installs cluster add-ons such as cert-manager, ingress controllers, External Secrets, KEDA, monitoring, logging, and cluster autoscaling.
+
+Run this stage in two passes so cert-manager custom resources are available before you create the issuer and wildcard certificate.
+
+<Steps>
+  <Step title="First pass: install CRDs and add-ons">
+    In the existing `cert_manager` object in `kubernetes.tfvars`, keep `cluster_issuer.enabled` and `wildcard_certificate.enabled` set to `false`.
+
+    Then apply:
+
+    ```bash
+    cd ../kubernetes
+    tofu init -upgrade -reconfigure
+    tofu plan -var-file=kubernetes.tfvars -out=kubernetes-first.tfplan
+    tofu apply kubernetes-first.tfplan
+    ```
+  </Step>
+
+  <Step title="Second pass: enable certificates and TLS">
+    In `kubernetes.tfvars`, set `cert_manager.cluster_issuer.enabled` and `cert_manager.wildcard_certificate.enabled` to `true`.
+
+    For each ingress controller that should use the wildcard certificate, set `enable_default_tls_from_wildcard_certificate` and `enable_wildcard_tls_from_wildcard_certificate` to `true`.
+
+    Apply again:
+
+    ```bash
+    tofu plan -var-file=kubernetes.tfvars -out=kubernetes-second.tfplan
+    tofu apply kubernetes-second.tfplan
+    ```
+  </Step>
+</Steps>
+
+Verify the add-ons:
+
+```bash
+kubectl get pods -A
+kubectl get ingressclass
+helm list -A
+```
+
+## Deploy OpenSearch
+
+Deploy OpenSearch after the EKS cluster and Kubernetes add-ons are ready.
+
+Before applying:
+
+1. Set `eks_cluster_name` in `opensearch.tfvars` to the cluster name from the infrastructure output.
+2. Set `aws_region`, `environment`, `project_name`, and `default_tags`.
+3. Confirm the OpenSearch node groups exist and use the labels and taints required by the deployment package.
+4. Export `TF_VAR_opensearch_initial_admin_password`.
+
+Then apply:
+
+```bash
+cd ../opensearch
+tofu init -upgrade -reconfigure
+tofu plan -var-file=opensearch.tfvars -out=opensearch.tfplan
+tofu apply opensearch.tfplan
+```
+
+Verify OpenSearch:
+
+```bash
+kubectl get pods -n <opensearch-namespace>
+kubectl get svc -n <opensearch-namespace>
+```
+
+## Install PromptLayer charts
+
+Install the PromptLayer application charts after infrastructure, Kubernetes add-ons, and OpenSearch are ready.
+
+Use the release names, namespaces, values files, and chart versions from your release manifest. Run Helm from the directory that contains the values files.
+
+<Steps>
+  <Step title="Log in to the registry">
+    Use `--password-stdin` so the password is not passed as a command-line argument.
+
+    ```bash
+    read -rsp "PromptLayer registry password: " PL_REGISTRY_PASSWORD
+    echo
+    printf '%s' "${PL_REGISTRY_PASSWORD}" | helm registry login hub.promptlayer.com \
+      --username "<registry-username>" \
+      --password-stdin
+    unset PL_REGISTRY_PASSWORD
+    ```
+  </Step>
+
+  <Step title="Install sandbox-runtimes">
+    ```bash
+    helm install <sandbox-runtimes-release-name> oci://hub.promptlayer.com/promptlayer/sandbox-runtimes/sandbox-runtimes \
+      -f <sandbox-runtimes-values-file> \
+      --version <sandbox-runtimes-chart-version> \
+      --namespace <sandbox-namespace> \
+      --create-namespace
+    ```
+  </Step>
+
+  <Step title="Install sandboxes-api">
+    ```bash
+    helm install <sandboxes-api-release-name> oci://hub.promptlayer.com/promptlayer/sandboxes-api/sandboxes-api \
+      -f <sandboxes-api-values-file> \
+      --version <sandboxes-api-chart-version> \
+      --namespace <sandbox-namespace> \
+      --create-namespace
+    ```
+  </Step>
+
+  <Step title="Install promptlayer">
+    ```bash
+    helm install <promptlayer-release-name> oci://hub.promptlayer.com/promptlayer/promptlayer \
+      -f <promptlayer-values-file> \
+      --version <promptlayer-chart-version> \
+      --namespace <promptlayer-namespace> \
+      --create-namespace
+    ```
+  </Step>
+</Steps>
+
+If your values files reference Kubernetes image pull secrets, create those secrets before installing the charts. Use the names and namespaces from your release manifest.
+
+## Verify PromptLayer
+
+Check the Helm releases:
+
+```bash
+helm list -A
+```
+
+Check application pods:
+
+```bash
+kubectl get pods -n <sandbox-namespace>
+kubectl get pods -n <promptlayer-namespace>
+```
+
+Check ingress and DNS:
+
+```bash
+kubectl get ingress -A
+kubectl get svc -A
+```
+
+Pods should reach `Running` or `Completed` status. Ingress hostnames should resolve through the DNS records created for the deployment.
+
+## Upgrade a release
+
+For chart upgrades, use the chart version and values file from the release manifest:
+
+```bash
+helm upgrade <release-name> oci://hub.promptlayer.com/promptlayer/<chart-path> \
+  -f <values-file> \
+  --version <chart-version> \
+  --namespace <namespace>
+```
+
+Test chart upgrades in a staging environment before applying them to production.
+
+## Troubleshooting
+
+| Issue | What to check |
+|-------|---------------|
+| `tofu init` cannot read state | Confirm the generated `backend.tf` bucket, key, and region match the `remote_state_s3_*` values in the stage tfvars file. |
+| OpenTofu state is locked | Another apply may be running. Use force-unlock only after confirming no other process is active. |
+| AWS access denied | Confirm the AWS identity has access to the state bucket and to create or update the services used by the stage. |
+| EKS API connection fails | Confirm the public API CIDR list includes the runner IP, or run from a network that can reach the private endpoint. |
+| Certificate does not become ready | Check Route53 zone ID, DNS zone names, cert-manager logs, and DNS propagation. |
+| Pods stay pending | Check node group sizes, taints, tolerations, storage class, and PVC events. |
+| Pods restart repeatedly | Check pod logs, Events, values files, image pull credentials, database endpoints, and secret names. |
+| OpenSearch pods do not schedule | Confirm the OpenSearch node groups, labels, taints, storage class, and admin password variable. |
+
+If you need help with registry access, values files, or deployment issues, [contact our enterprise team](mailto:hello@promptlayer.com).
