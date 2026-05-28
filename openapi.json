@@ -7450,19 +7450,28 @@
                     "type": "object",
                     "description": "Optional sandbox-executable body for the tool. When set, PromptLayer auto-runs the body between LLM turns. See the Auto Tool Execution feature page.",
                     "nullable": true,
-                    "required": ["type", "language", "code"],
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
                     "properties": {
                       "type": {
                         "type": "string",
-                        "enum": ["code"]
+                        "enum": [
+                          "code"
+                        ]
                       },
                       "language": {
                         "type": "string",
-                        "enum": ["python", "javascript"]
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
                       },
                       "code": {
                         "type": "string",
-                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
+                        "description": "The function BODY only \u2014 the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
                       }
                     }
                   }
@@ -7602,7 +7611,7 @@
                         "version": {
                           "type": "object",
                           "nullable": true,
-                          "description": "Resolved version object — includes `tool_definition` and (if set) `execution: { type, language, code }`."
+                          "description": "Resolved version object \u2014 includes `tool_definition` and (if set) `execution: { type, language, code }`."
                         },
                         "tool_definition": {
                           "type": "object",
@@ -9077,19 +9086,28 @@
                     "type": "object",
                     "description": "Optional sandbox-executable body. When set, PromptLayer auto-runs the body between LLM turns whenever a prompt uses this version. See Auto Tool Execution.",
                     "nullable": true,
-                    "required": ["type", "language", "code"],
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
                     "properties": {
                       "type": {
                         "type": "string",
-                        "enum": ["code"]
+                        "enum": [
+                          "code"
+                        ]
                       },
                       "language": {
                         "type": "string",
-                        "enum": ["python", "javascript"]
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
                       },
                       "code": {
                         "type": "string",
-                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
+                        "description": "The function BODY only \u2014 the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
                       }
                     }
                   },
@@ -9182,22 +9200,31 @@
                 "properties": {
                   "inputs": {
                     "type": "object",
-                    "description": "Arguments passed to the tool body. Same shape the LLM would emit — keys match the tool's parameter names.",
+                    "description": "Arguments passed to the tool body. Same shape the LLM would emit \u2014 keys match the tool's parameter names.",
                     "additionalProperties": true
                   },
                   "execution": {
                     "type": "object",
                     "description": "In-flight override of the stored execution config. Lets you test unsaved code.",
                     "nullable": true,
-                    "required": ["type", "language", "code"],
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
                     "properties": {
                       "type": {
                         "type": "string",
-                        "enum": ["code"]
+                        "enum": [
+                          "code"
+                        ]
                       },
                       "language": {
                         "type": "string",
-                        "enum": ["python", "javascript"]
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
                       },
                       "code": {
                         "type": "string"
@@ -9216,7 +9243,7 @@
         },
         "responses": {
           "200": {
-            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object — they do NOT raise.",
+            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object \u2014 they do NOT raise.",
             "content": {
               "application/json": {
                 "schema": {
@@ -9233,7 +9260,10 @@
                       "properties": {
                         "status": {
                           "type": "string",
-                          "enum": ["success", "error"]
+                          "enum": [
+                            "success",
+                            "error"
+                          ]
                         },
                         "result": {
                           "description": "The tool body's return value (any JSON-serializable type). Present on status=\"success\".",
@@ -16665,7 +16695,7 @@
         "properties": {
           "field": {
             "type": "string",
-            "description": "The request log field to filter on.",
+            "description": "The request log field to filter on. Intent fields are virtual fields that classify request content by tone and do not require any additional logging configuration. `user_intent` classifies the user's message; valid values: `frustrated`, `satisfied`, `curious`. `agent_intent` classifies the agent's response; valid values: `apologetic`, `refusal`, `uncertain`. Intent fields support operators: `is`, `is_not`, `in`, `not_in`.",
             "enum": [
               "pl_id",
               "prompt_id",
@@ -16691,7 +16721,9 @@
               "output",
               "output_keys",
               "input_variables",
-              "input_variable_keys"
+              "input_variable_keys",
+              "user_intent",
+              "agent_intent"
             ]
           },
           "operator": {
