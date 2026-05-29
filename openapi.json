@@ -16204,6 +16204,11 @@
               "desc"
             ],
             "description": "Sort direction. Must be provided together with sort_by."
+          },
+          "metadata_cost_breakdown_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "When provided, the analytics response includes a `metadataValueBreakdown` array with cost and request counts for each value of this metadata key. Omit or pass null to get an aggregate breakdown across the top metadata keys."
           }
         },
         "example": {
@@ -16630,6 +16635,35 @@
                 },
                 "requests": {
                   "type": "integer"
+                }
+              }
+            }
+          },
+          "metadataValueBreakdown": {
+            "type": "array",
+            "description": "Cost and request count breakdown by metadata key-value pairs. When `metadata_cost_breakdown_key` is set in the request, all entries share that key and the `label` equals the value. Otherwise entries span the top key-value combinations and `label` is `key = value`. Ordered by cost descending; up to 50 entries.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "The metadata key."
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The metadata value."
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Display label. Equals `value` when filtered to a single key; equals `key = value` in the aggregate view."
+                },
+                "requests": {
+                  "type": "integer",
+                  "description": "Number of requests with this key-value pair."
+                },
+                "cost": {
+                  "type": "number",
+                  "description": "Total cost for requests with this key-value pair, in USD."
                 }
               }
             }
