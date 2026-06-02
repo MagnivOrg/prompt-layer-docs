@@ -167,6 +167,8 @@ tracer_provider.shutdown()
 - `OPENAI_API_KEY`
 - `PROMPTLAYER_API_KEY`
 
+Once configured, PromptLayer will capture OpenAI Agents traces with spans automatically labeled by type: agent spans appear as **LLM session**, response and generation spans appear as **LLM call**, and function/tool spans appear as **Tool: \<function name\>**. Token usage, model metadata, prompts, and completions are captured from LLM call spans.
+
 ## Vercel AI SDK
 
 PromptLayer supports integration with the [Vercel AI SDK](https://ai-sdk.dev/docs), allowing you to export OpenTelemetry traces from your application directly to PromptLayer.
