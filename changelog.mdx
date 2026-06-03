@@ -4,6 +4,34 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## June 03, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Smart Table Cell Execution Cancellation**
+Individual cell executions can now be cancelled directly from the Smart Table interface.
+- Cancel button stops active work for a specific cell and restores dependent cells to their previous state
+- Running cells are reset to stale status when cancelled, preserving data integrity
+- Dependent cells in the same row are automatically restored to not-started status
+
+**Smart Table Status Filtering**
+Filter Smart Table rows by cell execution status (completed, running, stale, error, etc.).
+- New status filter control in the grid interface allows quick access to cells by execution state
+- Status counts API endpoint provides real-time visibility into cell execution distribution
+- Combined filter support enables filtering by both status and column values simultaneously
+
+#### Improvements
+
+- Smart Table version history now includes delta counts showing the number of changes made in each version
+- Score history API improved to surface version names alongside version numbers for easier navigation
+- Smart Table title generation now recognizes "Untitled Smart Table" as a placeholder name and auto-generates unique titles
+- Image API requests fall back to signed stream URLs when presigned URL generation fails
+
+---
+
+
 ## June 02, 2026
 
 ### Deployment 1
