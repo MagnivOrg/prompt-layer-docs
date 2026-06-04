@@ -115,6 +115,7 @@ Examples:
 Capabilities:
 - Works in Logs, Prompt Registry, and Playground.
 - Evaluations: supported when the provider's OpenAI-compat layer matches PromptLayer parameters; remove unsupported params if needed (e.g., some providers do not support "seed").
+- Provider-specific parameters not in the standard OpenAI SDK (e.g., `thinking` for Kimi/Moonshot) are automatically forwarded to the provider in the request body — no extra configuration needed.
 - Tool/Function Calling and streaming availability depend on the provider/model.
 
 ## Anthropic Prompt Caching
@@ -132,7 +133,7 @@ Set a cache duration in the **Advanced Model Controls** (Prompt Caching dropdown
 Available durations:
 
 | Duration | Providers |
-|----------|-----------|
+|----------|----------|
 | **5 minutes** | Anthropic, Vertex AI, Amazon Bedrock (all supported Claude models) |
 | **1 hour** | Anthropic, Vertex AI, Amazon Bedrock (Claude Sonnet 4.5 only) |
 
