@@ -54,6 +54,7 @@ Your custom scoring code must return an object with the following keys:
 
 - `score` (required): A number representing the overall score. This is mandatory.
 - `score_matrix` (optional): A list of lists of lists, representing one or more matrices of drilled-down scores. Each cell in these matrices can be a raw value or an object with metadata.
+- `sub_scores` (optional): A dictionary mapping label names to numeric values. Sub-scores appear in the score card's drill-down breakdown panel, letting you break the overall score into named components (e.g., `{"correctness": 0.9, "relevance": 0.8}`).
 
 #### Score Matrix Cell Format
 
@@ -99,12 +100,17 @@ For example:
 #
 # Must return a dictionary with the following structure:
 # {
-#   'score': int,  # Required
-#   'score_matrix': [[[int, int, ...], ...]...],  # Optional - list of lists of lists of integers
+#   'score': int,           # Required
+#   'sub_scores': {...},    # Optional - named component scores (label -> number)
+#   'score_matrix': [[[int, int, ...], ...]...],  # Optional - list of lists of lists
 # }
 
 return {
     'score': len(data),
+    'sub_scores': {
+        'correctness': 0.85,
+        'completeness': 0.70,
+    },
     'score_matrix': [[
         ["Criteria", "Weight", "Value"],
         ["Correctness", 4, 7],
