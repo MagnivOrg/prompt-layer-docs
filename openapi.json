@@ -9997,6 +9997,451 @@
           }
         }
       }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Get Smart Table Cell",
+        "operationId": "get_smart_table_cell",
+        "description": "Retrieve a single cell by its ID. For prompt-template column cells, the response includes a `request_metrics` object with price, latency, and token usage.",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the Smart Table."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the sheet."
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the cell."
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace ID. Required when authenticating with an API key."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cell retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "cell": {
+                      "$ref": "#/components/schemas/SmartTableCell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Cell not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      },
+      "patch": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Update Smart Table Cell",
+        "operationId": "update_smart_table_cell",
+        "description": "Update the value of a text cell. Non-text cells are recalculated automatically and cannot be written to directly.",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "value": {
+                    "description": "New cell value. For text columns this is a plain string or structured value."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cell updated successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "cell": {
+                      "$ref": "#/components/schemas/SmartTableCell"
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "List Smart Table Columns",
+        "operationId": "list_smart_table_columns",
+        "description": "List columns in a Smart Table sheet. By default, system-managed metadata columns (price and latency) are excluded. Pass `include_system_columns=true` to include them.",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the Smart Table."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the sheet."
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace ID. Required when authenticating with an API key."
+          },
+          {
+            "name": "include_system_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When `true`, system-managed columns (price and latency metadata columns for prompt-template columns) are included in the response."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Pagination cursor from a previous response."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 100
+            },
+            "description": "Maximum number of columns to return."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Columns retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SmartTableColumn"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Cursor for the next page, or null if there are no more results."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "List Smart Table Rows",
+        "operationId": "list_smart_table_rows",
+        "description": "List rows in a Smart Table sheet. Each row is a map of column IDs to cell payloads. For prompt-template column cells, each cell includes a `request_metrics` object with price, latency, and token usage when available.\n\nPass `include_system_columns=true` to include price and latency metadata columns in the response. Pass `include_execution_metadata_aggregates=true` to receive sheet-wide and per-column aggregates for price and latency.",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the Smart Table."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "ID of the sheet."
+          },
+          {
+            "name": "workspace_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            },
+            "description": "Workspace ID. Required when authenticating with an API key."
+          },
+          {
+            "name": "include_system_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When `true`, system-managed price and latency columns are included in each row's cell map."
+          },
+          {
+            "name": "include_execution_metadata_aggregates",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When `true`, the response includes an `execution_metadata_aggregates` object with sheet-level and per-column aggregates for price and latency metrics."
+          },
+          {
+            "name": "include_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean"
+            },
+            "description": "When `true`, a `columns` array is included in the response alongside the rows."
+          },
+          {
+            "name": "include_row_count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            },
+            "description": "When `true` (default), the total row count is included in the response."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Pagination cursor from a previous response."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 1000
+            },
+            "description": "Maximum number of rows to return."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Rows retrieved successfully.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "rows": {
+                      "type": "array",
+                      "description": "Array of rows. Each row is an object mapping column IDs (as strings) to cell payloads.",
+                      "items": {
+                        "type": "object",
+                        "additionalProperties": {
+                          "$ref": "#/components/schemas/SmartTableCell"
+                        }
+                      }
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/SmartTableColumn"
+                      },
+                      "description": "Column definitions. Only present when `include_columns=true`."
+                    },
+                    "row_count": {
+                      "type": "integer",
+                      "description": "Total number of rows in the sheet. Only present when `include_row_count=true` (default)."
+                    },
+                    "execution_metadata_aggregates": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/ExecutionMetadataAggregates"
+                        }
+                      ],
+                      "description": "Sheet-level and per-column aggregates for price and latency metrics. Only present when `include_execution_metadata_aggregates=true`."
+                    },
+                    "next_cursor": {
+                      "type": "string",
+                      "nullable": true,
+                      "description": "Cursor for the next page, or null if there are no more results."
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "security": [
+          {
+            "ApiKeyAuth": []
+          },
+          {
+            "BearerAuth": []
+          }
+        ]
+      }
     }
   },
   "components": {
@@ -18379,6 +18824,240 @@
             "description": "Indicates whether the row was created from a full trace root (`trace`) or a specific span subtree (`span`)."
           }
         }
+      },
+      "SmartTableRequestMetrics": {
+        "type": "object",
+        "description": "Execution metrics for a prompt-template cell, derived from the underlying request log.",
+        "properties": {
+          "request_count": {
+            "type": "integer",
+            "description": "Number of LLM requests made to produce this cell's value."
+          },
+          "request_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "IDs of the request logs associated with this cell."
+          },
+          "latency_ms": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Total end-to-end latency in milliseconds."
+          },
+          "price": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total cost in USD for all requests that produced this cell."
+          },
+          "input_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Total number of input tokens across all requests."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Total number of output tokens across all requests."
+          },
+          "trace_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Trace IDs linked to this cell (present when the cell was produced via an OpenTelemetry-traced workflow)."
+          }
+        }
+      },
+      "SmartTableCell": {
+        "type": "object",
+        "description": "A single cell in a Smart Table sheet.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the cell."
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the sheet this cell belongs to."
+          },
+          "column_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the column this cell belongs to."
+          },
+          "row_index": {
+            "type": "integer",
+            "description": "Zero-based row index of the cell."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "STALE",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED",
+              "QUEUED"
+            ],
+            "description": "Current execution status of the cell."
+          },
+          "display_value": {
+            "type": "string",
+            "nullable": true,
+            "description": "Human-readable string representation of the cell value."
+          },
+          "value": {
+            "nullable": true,
+            "description": "The cell's raw value. Shape depends on the column type."
+          },
+          "input_hash": {
+            "type": "string",
+            "nullable": true,
+            "description": "Hash of the inputs used to compute this cell, used for cache invalidation."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of the last update."
+          },
+          "request_metrics": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SmartTableRequestMetrics"
+              }
+            ],
+            "nullable": true,
+            "description": "Execution metrics populated for prompt-template column cells. Present only when the cell has an associated request log."
+          }
+        }
+      },
+      "SmartTableColumn": {
+        "type": "object",
+        "description": "A column definition in a Smart Table sheet.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique identifier of the column."
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string",
+            "description": "Display title of the column."
+          },
+          "type": {
+            "type": "string",
+            "description": "Column type (e.g. PROMPT_TEMPLATE, TEXT, COMPOSITION, CODE_EXECUTION)."
+          },
+          "config": {
+            "type": "object",
+            "nullable": true,
+            "description": "Type-specific configuration for this column."
+          },
+          "position_rank": {
+            "type": "number",
+            "description": "Fractional position used to order columns left-to-right."
+          },
+          "is_output_column": {
+            "type": "boolean",
+            "description": "Whether this column is designated as an output column."
+          }
+        }
+      },
+      "ExecutionMetadataMetricAggregate": {
+        "type": "object",
+        "description": "Aggregated statistics for a single execution metric (e.g. price or latency) across all rows in a sheet.",
+        "properties": {
+          "metric_key": {
+            "type": "string",
+            "description": "Internal metric identifier. One of `price` or `latency_ms`.",
+            "enum": [
+              "price",
+              "latency_ms"
+            ]
+          },
+          "metric_label": {
+            "type": "string",
+            "nullable": true,
+            "description": "Human-readable label for the metric."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of rows that have a value for this metric."
+          },
+          "sum": {
+            "type": "number",
+            "description": "Sum of all metric values."
+          },
+          "avg": {
+            "type": "number",
+            "nullable": true,
+            "description": "Average metric value, or null if count is 0."
+          },
+          "min": {
+            "type": "number",
+            "nullable": true,
+            "description": "Minimum metric value, or null if count is 0."
+          },
+          "max": {
+            "type": "number",
+            "nullable": true,
+            "description": "Maximum metric value, or null if count is 0."
+          },
+          "column_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the system-managed metadata column for this metric. Omitted for sheet-level aggregates."
+          },
+          "source_column_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the prompt-template source column. Omitted for sheet-level aggregates."
+          }
+        },
+        "required": [
+          "metric_key",
+          "count",
+          "sum"
+        ]
+      },
+      "ExecutionMetadataAggregates": {
+        "type": "object",
+        "description": "Sheet-level and per-column aggregates for execution metrics (price and latency) across all prompt-template columns.",
+        "properties": {
+          "by_column_id": {
+            "type": "object",
+            "description": "Per-column aggregates keyed by the system-managed metadata column ID.",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ExecutionMetadataMetricAggregate"
+            }
+          },
+          "sheet": {
+            "type": "object",
+            "description": "Sheet-wide aggregates rolled up across all prompt-template columns.",
+            "properties": {
+              "by_metric": {
+                "type": "object",
+                "description": "Aggregates keyed by metric key (`price`, `latency_ms`).",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/ExecutionMetadataMetricAggregate"
+                }
+              }
+            },
+            "required": [
+              "by_metric"
+            ]
+          }
+        },
+        "required": [
+          "by_column_id",
+          "sheet"
+        ]
       }
     },
     "responses": {
