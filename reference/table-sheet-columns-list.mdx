@@ -1,0 +1,10 @@
+---
+title: "List Columns"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns"
+---
+
+List all columns in a sheet, ordered by their position rank.
+
+Each column has a `type` that determines how its cells are populated:
+- `text` — Free-text cells, editable directly.
+- `prompt_template`, `llm`, `code`, `score`, `comparison`, `composition` — Computed columns that run automatically.

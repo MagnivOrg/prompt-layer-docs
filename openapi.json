@@ -7515,7 +7515,7 @@
                       },
                       "code": {
                         "type": "string",
-                        "description": "The function BODY only \u2014 the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
+                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
                       }
                     }
                   }
@@ -7655,7 +7655,7 @@
                         "version": {
                           "type": "object",
                           "nullable": true,
-                          "description": "Resolved version object \u2014 includes `tool_definition` and (if set) `execution: { type, language, code }`."
+                          "description": "Resolved version object — includes `tool_definition` and (if set) `execution: { type, language, code }`."
                         },
                         "tool_definition": {
                           "type": "object",
@@ -9085,267 +9085,6 @@
         }
       }
     },
-    "/api/public/v2/tool-registry/{identifier}/versions": {
-      "post": {
-        "tags": [
-          "tool-registry"
-        ],
-        "summary": "Create Tool Version",
-        "operationId": "create_tool_version",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
-          {
-            "name": "identifier",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Tool ID (numeric) or name"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "required": [
-                  "tool_definition"
-                ],
-                "properties": {
-                  "tool_definition": {
-                    "type": "object",
-                    "description": "Tool definition in OpenAI function-calling format"
-                  },
-                  "execution": {
-                    "type": "object",
-                    "description": "Optional sandbox-executable body. When set, PromptLayer auto-runs the body between LLM turns whenever a prompt uses this version. See Auto Tool Execution.",
-                    "nullable": true,
-                    "required": [
-                      "type",
-                      "language",
-                      "code"
-                    ],
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "code"
-                        ]
-                      },
-                      "language": {
-                        "type": "string",
-                        "enum": [
-                          "python",
-                          "javascript"
-                        ]
-                      },
-                      "code": {
-                        "type": "string",
-                        "description": "The function BODY only \u2014 the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
-                      }
-                    }
-                  },
-                  "commit_message": {
-                    "type": "string",
-                    "description": "Commit message for the new version",
-                    "nullable": true
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "201": {
-            "description": "Version created",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "version": {
-                      "type": "object"
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "404": {
-            "description": "Tool not found"
-          }
-        }
-      }
-    },
-    "/api/public/v2/tool-registry/{identifier}/test-execute": {
-      "post": {
-        "tags": [
-          "tool-registry"
-        ],
-        "summary": "Test Execute Tool",
-        "operationId": "test_execute_tool",
-        "parameters": [
-          {
-            "required": true,
-            "schema": {
-              "type": "string",
-              "title": "X-Api-Key"
-            },
-            "name": "X-API-KEY",
-            "in": "header"
-          },
-          {
-            "name": "identifier",
-            "in": "path",
-            "required": true,
-            "schema": {
-              "type": "string",
-              "description": "Tool ID (numeric) or name"
-            }
-          },
-          {
-            "name": "label",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "Resolve version by label name (e.g. production). Falls back to latest if neither label nor version supplied."
-            }
-          },
-          {
-            "name": "version",
-            "in": "query",
-            "required": false,
-            "schema": {
-              "type": "string",
-              "description": "Resolve by specific version number"
-            }
-          }
-        ],
-        "requestBody": {
-          "required": true,
-          "content": {
-            "application/json": {
-              "schema": {
-                "type": "object",
-                "properties": {
-                  "inputs": {
-                    "type": "object",
-                    "description": "Arguments passed to the tool body. Same shape the LLM would emit \u2014 keys match the tool's parameter names.",
-                    "additionalProperties": true
-                  },
-                  "execution": {
-                    "type": "object",
-                    "description": "In-flight override of the stored execution config. Lets you test unsaved code.",
-                    "nullable": true,
-                    "required": [
-                      "type",
-                      "language",
-                      "code"
-                    ],
-                    "properties": {
-                      "type": {
-                        "type": "string",
-                        "enum": [
-                          "code"
-                        ]
-                      },
-                      "language": {
-                        "type": "string",
-                        "enum": [
-                          "python",
-                          "javascript"
-                        ]
-                      },
-                      "code": {
-                        "type": "string"
-                      }
-                    }
-                  },
-                  "tool_definition": {
-                    "type": "object",
-                    "description": "In-flight override of the stored tool definition. Used to test against a different function name without saving.",
-                    "nullable": true
-                  }
-                }
-              }
-            }
-          }
-        },
-        "responses": {
-          "200": {
-            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object \u2014 they do NOT raise.",
-            "content": {
-              "application/json": {
-                "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "result": {
-                      "type": "object",
-                      "properties": {
-                        "status": {
-                          "type": "string",
-                          "enum": [
-                            "success",
-                            "error"
-                          ]
-                        },
-                        "result": {
-                          "description": "The tool body's return value (any JSON-serializable type). Present on status=\"success\".",
-                          "nullable": true
-                        },
-                        "stdout": {
-                          "type": "string"
-                        },
-                        "stderr": {
-                          "type": "string"
-                        },
-                        "duration_ms": {
-                          "type": "integer"
-                        },
-                        "error": {
-                          "type": "object",
-                          "nullable": true,
-                          "description": "Present on status=\"error\". Includes `type` and `message`."
-                        }
-                      }
-                    }
-                  }
-                }
-              }
-            }
-          },
-          "400": {
-            "description": "Missing execution config or function name"
-          },
-          "404": {
-            "description": "Tool or version not found"
-          },
-          "502": {
-            "description": "Sandbox infrastructure failure"
-          }
-        }
-      }
-    },
     "/api/public/v2/tool-registry/{tool_id}/external-ids": {
       "post": {
         "tags": [
@@ -10038,6 +9777,2141 @@
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables": {
+      "post": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Create Table",
+        "description": "Create a new Table. A default sheet with one text column is created automatically.",
+        "operationId": "create_table",
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "description": "Table title. Defaults to a unique 'Untitled Table' name if omitted.",
+                    "nullable": true
+                  },
+                  "folder_id": {
+                    "type": "integer",
+                    "description": "Folder to place the table in.",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Table created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "table": {
+                      "$ref": "#/components/schemas/TableDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Folder not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "List Tables",
+        "description": "List Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column.",
+        "operationId": "list_tables",
+        "parameters": [
+          {
+            "name": "folder_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Filter by folder ID."
+            }
+          },
+          {
+            "name": "name",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Filter by title (case-insensitive contains match)."
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Pagination cursor from a previous response."
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            }
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "description": "Filter to tables containing a column referencing this prompt."
+            }
+          },
+          {
+            "name": "prompt_version_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "prompt_label_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of tables",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Table"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Get Table",
+        "operationId": "get_table",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Table detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "table": {
+                      "$ref": "#/components/schemas/TableDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Update Table",
+        "operationId": "update_table",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "folder_id": {
+                    "type": "integer",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Table updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "table": {
+                      "$ref": "#/components/schemas/TableDetail"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "List Sheets",
+        "description": "List all sheets in a table, ordered by their index.",
+        "operationId": "list_table_sheets",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 20,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            }
+          },
+          {
+            "name": "prompt_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "prompt_version_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          },
+          {
+            "name": "prompt_label_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of sheets",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Sheet"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Create Sheet",
+        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history.",
+        "operationId": "create_table_sheet",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "source"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Sheet title. Defaults to the source file name or 'Request Logs'."
+                  },
+                  "index": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "Display position within the table (0-based). Defaults to appending at the end."
+                  },
+                  "operation_id": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Optional idempotency key for the import operation."
+                  },
+                  "source": {
+                    "description": "Data source for the sheet.",
+                    "oneOf": [
+                      {
+                        "type": "object",
+                        "title": "File source",
+                        "required": [
+                          "type",
+                          "file_name",
+                          "file_content_base64"
+                        ],
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "file"
+                            ]
+                          },
+                          "file_name": {
+                            "type": "string",
+                            "description": "Original file name (must end in .csv or .json)."
+                          },
+                          "file_content_base64": {
+                            "type": "string",
+                            "description": "Base64-encoded file content (max 100 MB)."
+                          }
+                        }
+                      },
+                      {
+                        "type": "object",
+                        "title": "Request logs source",
+                        "required": [
+                          "type"
+                        ],
+                        "properties": {
+                          "type": {
+                            "type": "string",
+                            "enum": [
+                              "request_logs"
+                            ]
+                          },
+                          "request_log_ids": {
+                            "type": "array",
+                            "items": {
+                              "type": "integer"
+                            },
+                            "nullable": true,
+                            "description": "Specific request log IDs to import. When omitted, filter params are used."
+                          },
+                          "prompt_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "prompt_version_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "prompt_label_id": {
+                            "type": "integer",
+                            "nullable": true
+                          },
+                          "start_time": {
+                            "type": "string",
+                            "format": "date-time",
+                            "nullable": true
+                          },
+                          "end_time": {
+                            "type": "string",
+                            "format": "date-time",
+                            "nullable": true
+                          }
+                        }
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Import started. Poll the operation endpoint to track progress.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "operation_id": {
+                      "type": "string"
+                    },
+                    "operation": {
+                      "$ref": "#/components/schemas/TableImportOperation"
+                    },
+                    "sheet": {
+                      "$ref": "#/components/schemas/Sheet"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/operations/{operation_id}": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Get Sheet Import Operation",
+        "description": "Poll the status of an asynchronous sheet import operation.",
+        "operationId": "get_table_sheet_operation",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation status",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "operation": {
+                      "$ref": "#/components/schemas/TableImportOperation"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Operation not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Get Sheet",
+        "operationId": "get_table_sheet",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Sheet detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "sheet": {
+                      "$ref": "#/components/schemas/Sheet"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table or sheet not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Update Sheet",
+        "operationId": "update_table_sheet",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "index": {
+                    "type": "integer",
+                    "nullable": true,
+                    "description": "New display position within the table (0-based)."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Sheet updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "sheet": {
+                      "$ref": "#/components/schemas/Sheet"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table or sheet not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "List Columns",
+        "description": "List columns in a sheet, ordered by position rank.",
+        "operationId": "list_table_sheet_columns",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 100
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of columns",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Column"
+                      }
+                    },
+                    "next_cursor": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table or sheet not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Create Column",
+        "description": "Add a new column to a sheet. Non-text columns will generate cells for all existing rows.",
+        "operationId": "create_table_sheet_column",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "title",
+                  "type"
+                ],
+                "properties": {
+                  "title": {
+                    "type": "string"
+                  },
+                  "type": {
+                    "type": "string",
+                    "enum": [
+                      "text",
+                      "prompt_template",
+                      "llm",
+                      "code",
+                      "score",
+                      "comparison",
+                      "composition"
+                    ]
+                  },
+                  "config": {
+                    "type": "object",
+                    "nullable": true,
+                    "description": "Type-specific column configuration."
+                  },
+                  "dependencies": {
+                    "type": "array",
+                    "nullable": true,
+                    "description": "Column dependency edges for non-text columns.",
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "column_id"
+                      ],
+                      "properties": {
+                        "column_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "reference_type": {
+                          "type": "string",
+                          "default": "value"
+                        },
+                        "config_key": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "config_meta": {
+                          "type": "object",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Column created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "column": {
+                      "$ref": "#/components/schemas/Column"
+                    },
+                    "cells": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Cell"
+                      }
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cycle detected or invalid config",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table or sheet not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns/{column_id}": {
+      "patch": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Update Column",
+        "description": "Update a column's title, config, or dependencies. Returns `requires_recalculation: true` when the change invalidates existing cell values.",
+        "operationId": "update_table_sheet_column",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "column_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "title": {
+                    "type": "string",
+                    "nullable": true
+                  },
+                  "config": {
+                    "type": "object",
+                    "nullable": true
+                  },
+                  "dependencies": {
+                    "type": "array",
+                    "nullable": true,
+                    "items": {
+                      "type": "object",
+                      "required": [
+                        "column_id"
+                      ],
+                      "properties": {
+                        "column_id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "reference_type": {
+                          "type": "string",
+                          "default": "value"
+                        },
+                        "config_key": {
+                          "type": "string",
+                          "nullable": true
+                        },
+                        "config_meta": {
+                          "type": "object",
+                          "nullable": true
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Column updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "column": {
+                      "$ref": "#/components/schemas/Column"
+                    },
+                    "requires_recalculation": {
+                      "type": "boolean"
+                    },
+                    "affected_column_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string",
+                        "format": "uuid"
+                      }
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cycle detected or invalid config",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table, sheet, or column not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "List Rows",
+        "description": "List rows in a sheet, each containing a map of column_id → cell. Supports cursor pagination. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
+        "operationId": "list_table_sheet_rows",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "default": 100,
+              "minimum": 1,
+              "maximum": 100
+            }
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "asc"
+            }
+          },
+          {
+            "name": "include_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "description": "Include column metadata in the response. Defaults to true on the first page."
+            }
+          },
+          {
+            "name": "include_row_count",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": true
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "List of rows",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "data": {
+                      "type": "array",
+                      "description": "Each item represents one row.",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "row_index": {
+                            "type": "integer"
+                          },
+                          "cells": {
+                            "type": "object",
+                            "description": "Map of column_id (UUID string) → cell object.",
+                            "additionalProperties": {
+                              "$ref": "#/components/schemas/Cell"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "next_cursor": {
+                      "type": "string",
+                      "nullable": true
+                    },
+                    "has_more": {
+                      "type": "boolean"
+                    },
+                    "row_count": {
+                      "type": "integer"
+                    },
+                    "columns": {
+                      "type": "array",
+                      "items": {
+                        "$ref": "#/components/schemas/Column"
+                      }
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table or sheet not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Add Rows",
+        "description": "Append one or more rows to a sheet. Text column values can be set immediately; non-text column cells are created with `stale` status and must be triggered via a recalculation.",
+        "operationId": "add_table_sheet_rows",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "count": {
+                    "type": "integer",
+                    "description": "Number of rows to append (1–100).",
+                    "default": 1,
+                    "minimum": 1,
+                    "maximum": 100
+                  },
+                  "values": {
+                    "type": "array",
+                    "nullable": true,
+                    "description": "Per-row initial values for text columns. Each element is a map of column_id → value.",
+                    "items": {
+                      "type": "object",
+                      "additionalProperties": true
+                    }
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Rows added",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "rows_created": {
+                      "type": "integer"
+                    },
+                    "start_row_index": {
+                      "type": "integer"
+                    },
+                    "row_indices": {
+                      "type": "array",
+                      "items": {
+                        "type": "integer"
+                      }
+                    },
+                    "rows": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "row_index": {
+                            "type": "integer"
+                          },
+                          "cells": {
+                            "type": "object",
+                            "additionalProperties": {
+                              "$ref": "#/components/schemas/Cell"
+                            }
+                          }
+                        }
+                      }
+                    },
+                    "cell_count": {
+                      "type": "integer"
+                    },
+                    "row_count": {
+                      "type": "integer"
+                    },
+                    "version": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "No columns defined",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table or sheet not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}": {
+      "get": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Get Cell",
+        "operationId": "get_table_sheet_cell",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Cell detail",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "cell": {
+                      "$ref": "#/components/schemas/Cell"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Cell not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Update Cell",
+        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly.",
+        "operationId": "update_table_sheet_cell",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "display_value": {
+                    "type": "string",
+                    "nullable": true,
+                    "description": "Human-readable display value."
+                  },
+                  "value": {
+                    "description": "Structured value to store."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cell updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "cell": {
+                      "$ref": "#/components/schemas/Cell"
+                    },
+                    "version": {
+                      "type": "integer"
+                    },
+                    "stale_count": {
+                      "type": "integer",
+                      "description": "Number of downstream cells marked stale due to this edit."
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Cell is not a text column cell",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Cell not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/recalculations": {
+      "post": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Recalculate Cells (Batch)",
+        "description": "Trigger recalculation for a batch of cells identified by ID.",
+        "operationId": "create_table_sheet_cell_recalculations_batch",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "cell_ids"
+                ],
+                "properties": {
+                  "cell_ids": {
+                    "type": "array",
+                    "items": {
+                      "type": "string",
+                      "format": "uuid"
+                    },
+                    "description": "List of cell IDs to recalculate."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Recalculation started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "execution_id": {
+                      "type": "string"
+                    },
+                    "cell_count": {
+                      "type": "integer"
+                    },
+                    "selected_cell_count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "No cells to recalculate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table, sheet, or cells not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}/recalculations": {
+      "post": {
+        "tags": [
+          "smart-tables"
+        ],
+        "summary": "Recalculate Cell",
+        "description": "Trigger recalculation for a single cell.",
+        "operationId": "create_table_sheet_cell_recalculation",
+        "parameters": [
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          },
+          {
+            "name": "cell_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Recalculation started",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "execution_id": {
+                      "type": "string"
+                    },
+                    "cell_count": {
+                      "type": "integer"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "No cells to recalculate",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "description": "Table, sheet, or cell not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/versions": {
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Create Tool Version",
+        "operationId": "create_tool_version",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "tool_definition"
+                ],
+                "properties": {
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "Tool definition in OpenAI function-calling format"
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "Optional sandbox-executable body. When set, PromptLayer auto-runs the body between LLM turns whenever a prompt uses this version. See Auto Tool Execution.",
+                    "nullable": true,
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "code"
+                        ]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
+                      }
+                    }
+                  },
+                  "commit_message": {
+                    "type": "string",
+                    "description": "Commit message for the new version",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool not found"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/test-execute": {
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Test Execute Tool",
+        "operationId": "test_execute_tool",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve version by label name (e.g. production). Falls back to latest if neither label nor version supplied."
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve by specific version number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "inputs": {
+                    "type": "object",
+                    "description": "Arguments passed to the tool body. Same shape the LLM would emit — keys match the tool's parameter names.",
+                    "additionalProperties": true
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "In-flight override of the stored execution config. Lets you test unsaved code.",
+                    "nullable": true,
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "code"
+                        ]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
+                      },
+                      "code": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "In-flight override of the stored tool definition. Used to test against a different function name without saving.",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object — they do NOT raise.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "success",
+                            "error"
+                          ]
+                        },
+                        "result": {
+                          "description": "The tool body's return value (any JSON-serializable type). Present on status=\"success\".",
+                          "nullable": true
+                        },
+                        "stdout": {
+                          "type": "string"
+                        },
+                        "stderr": {
+                          "type": "string"
+                        },
+                        "duration_ms": {
+                          "type": "integer"
+                        },
+                        "error": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Present on status=\"error\". Includes `type` and `message`."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing execution config or function name"
+          },
+          "404": {
+            "description": "Tool or version not found"
+          },
+          "502": {
+            "description": "Sandbox infrastructure failure"
           }
         }
       }
@@ -16371,7 +18245,7 @@
       "RequestLogQuery": {
         "type": "object",
         "title": "RequestLogQuery",
-        "description": "Canonical request-log query payload \u2014 the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
+        "description": "Canonical request-log query payload — the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
         "properties": {
           "filter_group": {
             "nullable": true,
@@ -16623,7 +18497,7 @@
       "RequestAnalyticsResponse": {
         "type": "object",
         "title": "RequestAnalyticsResponse",
-        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds \u2192 minutes \u2192 hours \u2192 days).",
+        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds → minutes → hours → days).",
         "required": [
           "success"
         ],
@@ -16691,7 +18565,7 @@
           },
           "modelRequestsByDay": {
             "type": "object",
-            "description": "Map of model name \u2192 list of `[date, requestCount]` pairs.",
+            "description": "Map of model name → list of `[date, requestCount]` pairs.",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -18577,6 +20451,241 @@
               "span"
             ],
             "description": "Indicates whether the row was created from a full trace root (`trace`) or a specific span subtree (`span`)."
+          }
+        }
+      },
+      "Table": {
+        "type": "object",
+        "description": "A Table — a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "Unique table identifier."
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "folder_id": {
+            "type": "integer",
+            "nullable": true
+          },
+          "sheet_count": {
+            "type": "integer",
+            "description": "Number of active sheets."
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "TableDetail": {
+        "allOf": [
+          {
+            "$ref": "#/components/schemas/Table"
+          }
+        ],
+        "type": "object",
+        "properties": {
+          "sheet_row_counts": {
+            "type": "object",
+            "description": "Map of sheet_id → row count.",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          }
+        }
+      },
+      "Sheet": {
+        "type": "object",
+        "description": "A sheet within a Table.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "table_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "index": {
+            "type": "integer",
+            "description": "Display order of the sheet within the table (0-based)."
+          },
+          "row_count": {
+            "type": "integer"
+          },
+          "version_count": {
+            "type": "integer"
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        }
+      },
+      "Column": {
+        "type": "object",
+        "description": "A column within a Table sheet.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "title": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string",
+            "description": "Column type. 'text' columns store free-text; 'prompt_template', 'llm', 'code', 'score', 'comparison', and 'composition' columns run automated computations.",
+            "enum": [
+              "text",
+              "prompt_template",
+              "llm",
+              "code",
+              "score",
+              "comparison",
+              "composition"
+            ]
+          },
+          "config": {
+            "type": "object",
+            "description": "Type-specific configuration. Shape depends on the column type."
+          },
+          "position_rank": {
+            "type": "number",
+            "description": "Fractional position rank used for ordering."
+          },
+          "is_output_column": {
+            "type": "boolean"
+          }
+        }
+      },
+      "Cell": {
+        "type": "object",
+        "description": "A single cell at the intersection of a column and a row.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "row_index": {
+            "type": "integer"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "completed",
+              "stale",
+              "running",
+              "queued",
+              "error",
+              "cancelled"
+            ],
+            "description": "Current computation status of the cell."
+          },
+          "display_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "description": "Structured cell value (type depends on column type)."
+          },
+          "error": {
+            "type": "string",
+            "nullable": true
+          }
+        }
+      },
+      "TableImportOperation": {
+        "type": "object",
+        "description": "Status of an asynchronous sheet import operation.",
+        "properties": {
+          "operation_id": {
+            "type": "string"
+          },
+          "source": {
+            "type": "string",
+            "enum": [
+              "file",
+              "request_logs"
+            ]
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "pending",
+              "running",
+              "completed",
+              "failed"
+            ]
+          },
+          "progress": {
+            "type": "number",
+            "nullable": true
+          },
+          "message": {
+            "type": "string",
+            "nullable": true
+          },
+          "rows_added": {
+            "type": "integer",
+            "nullable": true
+          },
+          "row_count": {
+            "type": "integer",
+            "nullable": true
+          },
+          "file_name": {
+            "type": "string",
+            "nullable": true
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
           }
         }
       }
