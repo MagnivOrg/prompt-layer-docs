@@ -6136,6 +6136,16 @@
               ]
             },
             "description": "Set to `gzip` if the request body is gzip-compressed."
+          },
+          {
+            "name": "close_after",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, all trace IDs in the request are marked as closed after ingestion. Subsequent span writes for those traces will be rejected with HTTP 409. Defaults to false."
           }
         ],
         "requestBody": {
@@ -6280,6 +6290,40 @@
               "application/json": {
                 "schema": {
                   "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "One or more traces in the request are already closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "error": {
+                      "type": "string",
+                      "example": "Trace already closed: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+                    },
+                    "trace_ids": {
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      },
+                      "description": "The trace IDs that are already closed."
+                    }
+                  }
+                },
+                "examples": {
+                  "traceClosed": {
+                    "summary": "Trace already closed",
+                    "value": {
+                      "error": "Trace already closed: a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+                      "trace_ids": [
+                        "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+                      ]
+                    }
+                  }
                 }
               }
             }
@@ -7259,6 +7303,10 @@
                           "name": {
                             "type": "string"
                           },
+                          "description": {
+                            "type": "string",
+                            "nullable": true
+                          },
                           "workspace_id": {
                             "type": "integer"
                           },
@@ -7267,10 +7315,12 @@
                             "nullable": true
                           },
                           "created_at": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date-time"
                           },
                           "updated_at": {
-                            "type": "string"
+                            "type": "string",
+                            "format": "date-time"
                           },
                           "external_ids": {
                             "type": "array",
@@ -7418,6 +7468,11 @@
                     "type": "object",
                     "description": "Tool definition in OpenAI function-calling format"
                   },
+                  "description": {
+                    "type": "string",
+                    "description": "Optional human-readable description of the tool",
+                    "nullable": true
+                  },
                   "folder_id": {
                     "type": "integer",
                     "description": "Folder ID to place tool in",
@@ -7434,6 +7489,35 @@
                       "$ref": "#/components/schemas/ExternalId"
                     },
                     "description": "Identifiers from other systems."
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "Optional sandbox-executable body for the tool. When set, PromptLayer auto-runs the body between LLM turns. See the Auto Tool Execution feature page.",
+                    "nullable": true,
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "code"
+                        ]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
+                      }
+                    }
                   }
                 }
               }
@@ -7547,8 +7631,20 @@
                         "name": {
                           "type": "string"
                         },
+                        "description": {
+                          "type": "string",
+                          "nullable": true
+                        },
                         "workspace_id": {
                           "type": "integer"
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
                         },
                         "labels": {
                           "type": "array",
@@ -7558,7 +7654,8 @@
                         },
                         "version": {
                           "type": "object",
-                          "nullable": true
+                          "nullable": true,
+                          "description": "Resolved version object — includes `tool_definition` and (if set) `execution: { type, language, code }`."
                         },
                         "tool_definition": {
                           "type": "object",
@@ -10907,7 +11004,7 @@
           "smart-tables"
         ],
         "summary": "List Rows",
-        "description": "List rows in a sheet, each containing a map of column_id \u2192 cell. Supports cursor pagination. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
+        "description": "List rows in a sheet, each containing a map of column_id → cell. Supports cursor pagination. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
         "operationId": "list_table_sheet_rows",
         "parameters": [
           {
@@ -10998,7 +11095,7 @@
                           },
                           "cells": {
                             "type": "object",
-                            "description": "Map of column_id (UUID string) \u2192 cell object.",
+                            "description": "Map of column_id (UUID string) → cell object.",
                             "additionalProperties": {
                               "$ref": "#/components/schemas/Cell"
                             }
@@ -11081,7 +11178,7 @@
                 "properties": {
                   "count": {
                     "type": "integer",
-                    "description": "Number of rows to append (1\u2013100).",
+                    "description": "Number of rows to append (1–100).",
                     "default": 1,
                     "minimum": 1,
                     "maximum": 100
@@ -11089,7 +11186,7 @@
                   "values": {
                     "type": "array",
                     "nullable": true,
-                    "description": "Per-row initial values for text columns. Each element is a map of column_id \u2192 value.",
+                    "description": "Per-row initial values for text columns. Each element is a map of column_id → value.",
                     "items": {
                       "type": "object",
                       "additionalProperties": true
@@ -11547,6 +11644,390 @@
           },
           "404": {
             "description": "Table, sheet, or cell not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/versions": {
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Create Tool Version",
+        "operationId": "create_tool_version",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "tool_definition"
+                ],
+                "properties": {
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "Tool definition in OpenAI function-calling format"
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "Optional sandbox-executable body. When set, PromptLayer auto-runs the body between LLM turns whenever a prompt uses this version. See Auto Tool Execution.",
+                    "nullable": true,
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "code"
+                        ]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
+                      },
+                      "code": {
+                        "type": "string",
+                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
+                      }
+                    }
+                  },
+                  "commit_message": {
+                    "type": "string",
+                    "description": "Commit message for the new version",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "version": {
+                      "type": "object"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool not found"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/test-execute": {
+      "post": {
+        "tags": [
+          "tool-registry"
+        ],
+        "summary": "Test Execute Tool",
+        "operationId": "test_execute_tool",
+        "parameters": [
+          {
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "X-Api-Key"
+            },
+            "name": "X-API-KEY",
+            "in": "header"
+          },
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          },
+          {
+            "name": "label",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve version by label name (e.g. production). Falls back to latest if neither label nor version supplied."
+            }
+          },
+          {
+            "name": "version",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "description": "Resolve by specific version number"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "inputs": {
+                    "type": "object",
+                    "description": "Arguments passed to the tool body. Same shape the LLM would emit — keys match the tool's parameter names.",
+                    "additionalProperties": true
+                  },
+                  "execution": {
+                    "type": "object",
+                    "description": "In-flight override of the stored execution config. Lets you test unsaved code.",
+                    "nullable": true,
+                    "required": [
+                      "type",
+                      "language",
+                      "code"
+                    ],
+                    "properties": {
+                      "type": {
+                        "type": "string",
+                        "enum": [
+                          "code"
+                        ]
+                      },
+                      "language": {
+                        "type": "string",
+                        "enum": [
+                          "python",
+                          "javascript"
+                        ]
+                      },
+                      "code": {
+                        "type": "string"
+                      }
+                    }
+                  },
+                  "tool_definition": {
+                    "type": "object",
+                    "description": "In-flight override of the stored tool definition. Used to test against a different function name without saving.",
+                    "nullable": true
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object — they do NOT raise.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "result": {
+                      "type": "object",
+                      "properties": {
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "success",
+                            "error"
+                          ]
+                        },
+                        "result": {
+                          "description": "The tool body's return value (any JSON-serializable type). Present on status=\"success\".",
+                          "nullable": true
+                        },
+                        "stdout": {
+                          "type": "string"
+                        },
+                        "stderr": {
+                          "type": "string"
+                        },
+                        "duration_ms": {
+                          "type": "integer"
+                        },
+                        "error": {
+                          "type": "object",
+                          "nullable": true,
+                          "description": "Present on status=\"error\". Includes `type` and `message`."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Missing execution config or function name"
+          },
+          "404": {
+            "description": "Tool or version not found"
+          },
+          "502": {
+            "description": "Sandbox infrastructure failure"
+          }
+        }
+      }
+    },
+    "/api/public/v2/traces/{trace_id}/close": {
+      "post": {
+        "summary": "Close Trace",
+        "operationId": "closeTrace",
+        "tags": [
+          "tracking"
+        ],
+        "description": "Marks a trace as closed, preventing any further span ingestion for that trace. Once closed, subsequent calls to `/spans-bulk` or `/v1/traces` that include spans for this trace will have those spans rejected.",
+        "parameters": [
+          {
+            "name": "trace_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "The trace ID to close.",
+            "example": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Trace successfully closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "closure": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "string",
+                          "format": "uuid"
+                        },
+                        "workspace_id": {
+                          "type": "integer"
+                        },
+                        "trace_id": {
+                          "type": "string"
+                        },
+                        "status": {
+                          "type": "string",
+                          "enum": [
+                            "closed"
+                          ]
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        }
+                      }
+                    }
+                  }
+                },
+                "examples": {
+                  "closed": {
+                    "summary": "Trace closed",
+                    "value": {
+                      "success": true,
+                      "closure": {
+                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                        "workspace_id": 1,
+                        "trace_id": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6",
+                        "status": "closed",
+                        "created_at": "2026-06-06T18:00:00Z",
+                        "updated_at": "2026-06-06T18:00:00Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFoundError"
+          },
+          "409": {
+            "description": "Trace is already closed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean",
+                      "example": false
+                    },
+                    "message": {
+                      "type": "string",
+                      "example": "Trace already closed"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          },
+          "500": {
+            "description": "Internal server error.",
             "content": {
               "application/json": {
                 "schema": {
@@ -16972,6 +17453,12 @@
               "$ref": "#/components/schemas/Span"
             },
             "title": "Spans"
+          },
+          "close_after": {
+            "type": "boolean",
+            "default": false,
+            "title": "Close After",
+            "description": "When true, all trace IDs in this batch are marked as closed after the spans are persisted. Subsequent span writes for those traces will be rejected with a trace_closed rejection reason. Defaults to false."
           }
         },
         "required": [
@@ -17000,6 +17487,33 @@
               "type": "object"
             },
             "title": "Request Logs",
+            "nullable": true
+          },
+          "rejected_span_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "Rejected Span IDs",
+            "description": "Span IDs that were dropped because they belong to a closed trace. Only present when one or more spans were rejected.",
+            "nullable": true
+          },
+          "rejected_trace_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "title": "Rejected Trace IDs",
+            "description": "Trace IDs that were closed and caused span rejections. Only present when one or more spans were rejected.",
+            "nullable": true
+          },
+          "rejection_reason": {
+            "type": "string",
+            "enum": [
+              "trace_closed"
+            ],
+            "title": "Rejection Reason",
+            "description": "The reason spans were rejected. Currently only `trace_closed` is possible. Only present when one or more spans were rejected.",
             "nullable": true
           }
         },
@@ -17731,7 +18245,7 @@
       "RequestLogQuery": {
         "type": "object",
         "title": "RequestLogQuery",
-        "description": "Canonical request-log query payload \u2014 the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
+        "description": "Canonical request-log query payload — the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
         "properties": {
           "filter_group": {
             "nullable": true,
@@ -17764,6 +18278,11 @@
               "desc"
             ],
             "description": "Sort direction. Must be provided together with sort_by."
+          },
+          "metadata_cost_breakdown_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "When provided, the analytics response includes a `metadataValueBreakdown` array with cost and request counts for each value of this metadata key. Omit or pass null to get an aggregate breakdown across the top metadata keys."
           }
         },
         "example": {
@@ -17978,7 +18497,7 @@
       "RequestAnalyticsResponse": {
         "type": "object",
         "title": "RequestAnalyticsResponse",
-        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds \u2192 minutes \u2192 hours \u2192 days).",
+        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds → minutes → hours → days).",
         "required": [
           "success"
         ],
@@ -18046,7 +18565,7 @@
           },
           "modelRequestsByDay": {
             "type": "object",
-            "description": "Map of model name \u2192 list of `[date, requestCount]` pairs.",
+            "description": "Map of model name → list of `[date, requestCount]` pairs.",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -18193,6 +18712,35 @@
                 }
               }
             }
+          },
+          "metadataValueBreakdown": {
+            "type": "array",
+            "description": "Cost and request count breakdown by metadata key-value pairs. When `metadata_cost_breakdown_key` is set in the request, all entries share that key and the `label` equals the value. Otherwise entries span the top key-value combinations and `label` is `key = value`. Ordered by cost descending; up to 50 entries.",
+            "items": {
+              "type": "object",
+              "properties": {
+                "key": {
+                  "type": "string",
+                  "description": "The metadata key."
+                },
+                "value": {
+                  "type": "string",
+                  "description": "The metadata value."
+                },
+                "label": {
+                  "type": "string",
+                  "description": "Display label. Equals `value` when filtered to a single key; equals `key = value` in the aggregate view."
+                },
+                "requests": {
+                  "type": "integer",
+                  "description": "Number of requests with this key-value pair."
+                },
+                "cost": {
+                  "type": "number",
+                  "description": "Total cost for requests with this key-value pair, in USD."
+                }
+              }
+            }
           }
         }
       },
@@ -18255,7 +18803,7 @@
         "properties": {
           "field": {
             "type": "string",
-            "description": "The request log field to filter on.",
+            "description": "The request log field to filter on. Intent fields are virtual fields that classify request content by tone and do not require any additional logging configuration. `user_intent` classifies the user's message; valid values: `frustrated`, `satisfied`, `curious`. `agent_intent` classifies the agent's response; valid values: `apologetic`, `refusal`, `uncertain`. Intent fields support operators: `is`, `is_not`, `in`, `not_in`.",
             "enum": [
               "pl_id",
               "prompt_id",
@@ -18281,7 +18829,9 @@
               "output",
               "output_keys",
               "input_variables",
-              "input_variable_keys"
+              "input_variable_keys",
+              "user_intent",
+              "agent_intent"
             ]
           },
           "operator": {
@@ -19906,7 +20456,7 @@
       },
       "Table": {
         "type": "object",
-        "description": "A Table \u2014 a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
+        "description": "A Table — a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
         "properties": {
           "id": {
             "type": "string",
@@ -19947,7 +20497,7 @@
         "properties": {
           "sheet_row_counts": {
             "type": "object",
-            "description": "Map of sheet_id \u2192 row count.",
+            "description": "Map of sheet_id → row count.",
             "additionalProperties": {
               "type": "integer"
             }

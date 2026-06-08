@@ -1,0 +1,10 @@
+---
+title: "Create Tool Version"
+openapi: "POST /api/public/v2/tool-registry/{identifier}/versions"
+---
+
+Create a new immutable version of an existing tool. Use this to update the schema or to attach an [auto-execution](/features/tool-registry/auto-execution) body.
+
+The new version is assigned the next sequential version number. Pass a `commit_message` to leave an audit-trail note.
+
+If you include `execution`, PromptLayer will run the body in a sandbox whenever a prompt referencing this version is invoked. The `code` field is the function **body only**. The signature is generated server-side.

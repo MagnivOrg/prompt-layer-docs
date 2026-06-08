@@ -1,0 +1,19 @@
+---
+title: "Close Trace"
+openapi: "POST /api/public/v2/traces/{trace_id}/close"
+---
+
+Marks a trace as closed, preventing any further spans from being written to it. Once closed, subsequent calls to [Create Spans Bulk](/reference/spans-bulk) or [Ingest Traces (OTLP)](/reference/otlp-ingest-traces) that include spans for this trace will have those spans rejected.
+
+## Behavior Notes
+
+- Closing is permanent — there is no re-open operation.
+- If the trace is already closed, the endpoint returns `409 Conflict`.
+- If no spans exist for the given `trace_id` in your workspace, the endpoint returns `404 Not Found`.
+
+## Related
+
+- [Get Trace](/reference/get-trace)
+- [Create Spans Bulk](/reference/spans-bulk)
+- [Ingest Traces (OTLP)](/reference/otlp-ingest-traces)
+- [Traces](/running-requests/traces)

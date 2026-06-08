@@ -113,6 +113,62 @@ Once configured, PromptLayer will capture Claude Code sessions, LLM calls, tool 
 
 For troubleshooting and additional details on the direct plugin install path, see the [PromptLayer Claude Code plugin repository](https://github.com/MagnivOrg/promptlayer-claude-plugins).
 
+## OpenAI Agents SDK
+
+PromptLayer supports the OpenAI Agents SDK in both [JavaScript](https://openai.github.io/openai-agents-js/) and [Python](https://openai.github.io/openai-agents-python/), allowing you to export agent traces directly to PromptLayer with a native PromptLayer trace processor.
+
+To set up:
+
+1. Install the required packages
+
+<CodeGroup>
+```bash JavaScript
+npm install promptlayer @openai/agents
+```
+
+```bash Python
+pip install "promptlayer[openai-agents]"
+```
+</CodeGroup>
+
+2. Register PromptLayer tracing before your first agent run:
+
+<CodeGroup>
+```ts JavaScript
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+
+const processor = await instrumentOpenAIAgents();
+```
+
+```python Python
+from promptlayer.integrations.openai_agents import instrument_openai_agents
+
+instrument_openai_agents()
+```
+</CodeGroup>
+
+3. Flush tracing before process exit so PromptLayer receives the final spans:
+
+<CodeGroup>
+```ts JavaScript
+await processor.forceFlush();
+await processor.shutdown();
+```
+
+```python Python
+# Optional - if you created your own tracer provider
+tracer_provider.force_flush()
+tracer_provider.shutdown()
+```
+</CodeGroup>
+
+4. Set your environment variables:
+
+- `OPENAI_API_KEY`
+- `PROMPTLAYER_API_KEY`
+
+Once configured, PromptLayer will capture OpenAI Agents traces with spans automatically labeled by type: agent spans appear as **LLM session**, response and generation spans appear as **LLM call**, and function/tool spans appear as **Tool: \<function name\>**. Token usage, model metadata, prompts, and completions are captured from LLM call spans.
+
 ## Vercel AI SDK
 
 PromptLayer supports integration with the [Vercel AI SDK](https://ai-sdk.dev/docs), allowing you to export OpenTelemetry traces from your application directly to PromptLayer.
@@ -206,7 +262,7 @@ Once configured, PromptLayer will capture Pydantic AI agent runs, LLM calls, too
 
 PromptLayer supports ingesting [LangChain](https://js.langchain.com/) traces through [LangSmith's OpenTelemetry bridge](https://docs.langchain.com/langsmith/trace-with-opentelemetry). For new JavaScript applications where you can choose the framework, use the [Vercel AI SDK](#vercel-ai-sdk) integration because its OpenTelemetry spans map more directly into PromptLayer. This is also aligned with LangChain / LangSmith's JavaScript observability path: their docs provide a first-party [Vercel AI SDK tracing guide](https://docs.langchain.com/langsmith/trace-with-vercel-ai-sdk). Use this LangChain / LangSmith path when you already have a LangChain application.
 
-LangChain's native spans can be sparse or framework-shaped rather than LLM-call-shaped. For best PromptLayer results, add manual child spans around important route, LLM, and tool boundaries and include GenAI attributes such as `gen_ai.operation.name`, `gen_ai.system`, `gen_ai.request.model`, `gen_ai.prompt`, and `gen_ai.completion`.
+LangSmith's OTEL bridge creates LangChain spans automatically. Add manual spans for application-specific work, custom tool data, or extra inputs and outputs that should appear in PromptLayer traces.
 
 To set up:
 
@@ -263,83 +319,27 @@ initializeOTEL({
 });
 ```
 
-4. Add manual spans for LLM and tool boundaries when you need request logs to be complete
+4. Optionally add manual spans for application-specific data
 
 ```ts
 import { trace } from "@opentelemetry/api";
 
-await trace.getTracer("langchain-app").startActiveSpan("myapp.llm.call", async (span) => {
+await trace.getTracer("langchain-app").startActiveSpan("app.workflow_step", async (span) => {
   try {
-    span.setAttribute("langsmith.span.kind", "llm");
-    span.setAttribute("gen_ai.operation.name", "chat");
-    span.setAttribute("gen_ai.system", "openai");
-    span.setAttribute("gen_ai.request.model", "gpt-4o-mini");
-    span.setAttribute("gen_ai.prompt", JSON.stringify(messages));
+    span.setAttribute("app.operation", "retrieve_context");
+    span.setAttribute("app.input", JSON.stringify(input));
 
-    const result = await llm.invoke(messages);
+    const result = await runApplicationStep(input);
 
-    span.setAttribute("gen_ai.completion", String(result.content));
+    span.setAttribute("app.result_count", result.items.length);
+    return result;
   } finally {
     span.end();
   }
 });
 ```
 
-Once configured, PromptLayer will capture LangChain and LangSmith spans. Manual GenAI attributes make LLM calls, tool calls, inputs, and outputs easier for PromptLayer to render as request logs. Thinking blocks from extended thinking models in LangChain completions are captured and preserved in the request log view.
-
-## OpenAI Agents SDK
-
-PromptLayer supports the OpenAI Agents SDK in both [JavaScript](https://openai.github.io/openai-agents-js/) and [Python](https://openai.github.io/openai-agents-python/), allowing you to export agent traces directly to PromptLayer with a native PromptLayer trace processor.
-
-To set up:
-
-1. Install the required packages
-
-<CodeGroup>
-```bash JavaScript
-npm install promptlayer @openai/agents
-```
-
-```bash Python
-pip install "promptlayer[openai-agents]"
-```
-</CodeGroup>
-
-2. Register PromptLayer tracing before your first agent run:
-
-<CodeGroup>
-```ts JavaScript
-import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
-
-const processor = await instrumentOpenAIAgents();
-```
-
-```python Python
-from promptlayer.integrations.openai_agents import instrument_openai_agents
-
-instrument_openai_agents()
-```
-</CodeGroup>
-
-3. Flush tracing before process exit so PromptLayer receives the final spans:
-
-<CodeGroup>
-```ts JavaScript
-await processor.forceFlush();
-await processor.shutdown();
-```
-
-```python Python
-# Optional - if you created your own tracer provider
-tracer_provider.force_flush()
-tracer_provider.shutdown()
-```
-</CodeGroup>
-
-4. Set your environment variables:
-
-- `OPENAI_API_KEY`
-- `PROMPTLAYER_API_KEY`
+Once configured, PromptLayer will capture LangChain and LangSmith spans. PromptLayer renders request logs from LangSmith and LangChain LLM attributes, including model metadata, messages, outputs, token counts, and thinking blocks from extended thinking models.
 
 ## OpenRouter
 

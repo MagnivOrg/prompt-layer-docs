@@ -1,0 +1,23 @@
+---
+title: "Test Execute Tool"
+openapi: "POST /api/public/v2/tool-registry/{identifier}/test-execute"
+---
+
+Run a tool's [execution body](/features/tool-registry/auto-execution) in the sandbox against test inputs. This is what the editor's **Test Run** button calls behind the scenes; useful for verifying a body works as expected before promoting the version.
+
+## Resolving the version
+
+Without `label` or `version` query params, the latest version is used. Pass `label=production` to test the production version, or `version=3` to pin to a specific number.
+
+## In-flight overrides
+
+Both `execution` and `tool_definition` in the body are **optional overrides**. If you supply them, they take precedence over what's stored on the version. This lets you test changes without saving a new version first.
+
+## Result shape
+
+The endpoint returns `200` for both successful runs and user-code errors. Inspect `result.status`:
+
+- `"success"` → your body returned a value, available at `result.result`
+- `"error"` → your body raised, with details under `result.error.message`
+
+Sandbox infrastructure failures (sandbox unreachable, internal errors) return `502`. These are operational issues, not your code's fault.

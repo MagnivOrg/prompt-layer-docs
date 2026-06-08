@@ -11,7 +11,7 @@ Image generation is available through three distinct paths:
 
 | Provider | API / Method | Models | Template Type |
 |----------|-------------|--------|---------------|
-| **OpenAI** | Images API | `dall-e-2`, `dall-e-3`, `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5` | Completion |
+| **OpenAI** | Images API | `dall-e-2`, `dall-e-3`, `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2` | Completion |
 | **OpenAI** | Responses API (`image_generation` tool) | `gpt-5`, `gpt-5.4`, `gpt-5.2`, `gpt-5-nano`, `gpt-4.1`, and [other supported models](https://developers.openai.com/api/docs/guides/tools-image-generation#supported-models) | Chat |
 | **OpenAI Azure** | Images API | Same as OpenAI (depends on Azure deployment) | Completion |
 | **OpenAI Azure** | Responses API (`image_generation` tool) | Same as OpenAI Responses API | Chat |
@@ -95,7 +95,7 @@ for (const item of content) {
 
 ### Pricing
 
-GPT Image models (`gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`) use **token-based pricing** — cost is calculated from input and output tokens, just like text models. PromptLayer automatically tracks these tokens and calculates cost.
+GPT Image models (`gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`) use **token-based pricing** — cost is calculated from input and output tokens, just like text models. PromptLayer automatically tracks these tokens and calculates cost.
 
 DALL-E models (`dall-e-2`, `dall-e-3`) use **per-image pricing** based on the image size and model. PromptLayer tracks this automatically.
 

@@ -4,6 +4,316 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## June 08, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Environment Variables for Tool Execution**
+Securely store and manage environment variables for tool execution at both workspace and individual tool levels.
+- Set workspace-wide variables accessible to all tools
+- Override with tool-specific variables for granular control
+- Manage via dashboard UI or programmatic API
+
+**Trace Closure API**
+Close traces to prevent additional spans from being added after execution completes.
+- Call `/traces/{trace_id}/close` via dashboard or public API
+- Automatically close traces in bulk operations with `close_after` parameter
+- Late spans to closed traces are rejected with clear error messaging
+
+#### Improvements
+
+- Added token-gated metrics endpoint for operational monitoring
+- Tool deletion now removes associated environment variables
+- Workspace deletion cleans up environment variables
+- OTLP trace ingestion supports automatic trace closure
+- Tool execution test endpoints accept workspace and tool context parameters
+
+---
+
+
+
+### Deployment 2
+
+#### New Features
+
+**Model Comparison Preset**
+Quickly compare multiple LLM models side-by-side using the same prompt template.
+- Create comparison tables directly from any prompt template with 2+ model configurations
+- Automatically runs all model variants on the same input set for immediate comparison
+- View execution metrics (latency, tokens, cost) for each model in dedicated columns
+- Identify the fastest or most cost-effective model with built-in "lowest metric" analysis columns
+
+**Evaluation Presets**
+Pre-configured evaluation workflows for systematic prompt testing.
+- Ground Truth Comparison: automatically validate model outputs against expected responses using customizable assertions
+- Structural Validation: verify outputs meet format, ordering, or field requirements without reference data
+- Batch evaluate outputs with multiple simultaneous assertions per row
+
+**Custom Preset Tables**
+Initialize new tables pre-configured with a specific prompt template and input variables for faster testing workflows.
+
+---
+
+## June 04, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Request Metrics in Smart Tables**
+Smart Tables now track and display cost and latency metrics for LLM requests executed in prompt columns.
+- View per-cell execution metrics including total cost and response time
+- Export metrics to CSV for analysis across your dataset
+- Access aggregated metrics across all rows in a sheet
+- Metrics automatically sync when cells are recalculated
+
+#### Improvements
+
+- Smart Tables batch processing performance optimizations for large datasets
+- Enhanced column dependency tracking for more accurate staleness detection
+- Improved error messages when configuring prompt template columns
+- Better handling of column type conversions with automatic metadata preservation
+
+---
+
+
+
+### Deployment 2
+
+#### New Features
+
+**Smart Tables**
+A new spreadsheet-like interface for building and testing LLM workflows at scale, combining prompt engineering, data transformations, and evaluation in a unified grid view.
+- Create columns that reference other columns, prompt templates, workflows, or external data sources
+- Run computations across entire columns or individual cells with real-time status tracking
+- Track version history with score metrics to compare iteration performance over time
+- Import data from CSV, request logs, or manual entry
+
+#### Improvements
+
+- Enhanced AI chat assistant with smart table creation and management capabilities
+- Improved column dependency resolution for complex data transformations
+- Better handling of execution metadata display in grid cells
+- Optimized grid rendering performance for large datasets
+- Streamlined navigation between registry items and smart table resources
+
+---
+
+
+### Deployment 3
+
+#### Improvements
+- Added support for `gemini-3.5-flash` model on Vertex AI with reasoning capabilities and up to 1M token context window
+- Simplified metadata and resource filtering in trace queries for improved reliability
+
+---
+
+## June 03, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Smart Table Cell Execution Cancellation**
+Individual cell executions can now be cancelled directly from the Smart Table interface.
+- Cancel button stops active work for a specific cell and restores dependent cells to their previous state
+- Running cells are reset to stale status when cancelled, preserving data integrity
+- Dependent cells in the same row are automatically restored to not-started status
+
+**Smart Table Status Filtering**
+Filter Smart Table rows by cell execution status (completed, running, stale, error, etc.).
+- New status filter control in the grid interface allows quick access to cells by execution state
+- Status counts API endpoint provides real-time visibility into cell execution distribution
+- Combined filter support enables filtering by both status and column values simultaneously
+
+#### Improvements
+
+- Smart Table version history now includes delta counts showing the number of changes made in each version
+- Score history API improved to surface version names alongside version numbers for easier navigation
+- Smart Table title generation now recognizes "Untitled Smart Table" as a placeholder name and auto-generates unique titles
+- Image API requests fall back to signed stream URLs when presigned URL generation fails
+
+---
+
+
+
+### Deployment 2
+
+#### New Features
+
+**OpenAI API Compatibility Enhancement**
+The PromptLayer API now automatically routes unknown OpenAI parameters into `extra_body`, ensuring better compatibility with newer OpenAI features and reducing integration friction when using custom or experimental parameters.
+
+#### Improvements
+
+- Enhanced `Smart Tables` sidebar with improved request log data handling for faster navigation
+- Expanded tool support in assistant features for more flexible workflow automation
+- Streamlined entity management by removing deprecated fallback references
+- Improved shared session runtime configuration flexibility
+
+---
+
+## June 02, 2026
+
+### Deployment 1
+
+#### Improvements
+- Enhanced `Vibe` assistant with request log search suggestions for faster query building
+- Improved assistant context handling for large prompt templates with embedded media
+
+---
+
+
+## June 01, 2026
+
+### Deployment 1
+
+#### Improvements
+- Fixed an issue where filtering requests by child metadata was not working correctly
+- Resolved a bug where the refresh button in the drawer was not functioning properly
+- Fixed tooltip display issues in the request log view
+- Addressed a visual glitch causing duplicate loading animations on the home page
+
+---
+
+
+## May 28, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Claude Opus 4.8 Model Support**
+Added support for Anthropic's latest Claude Opus 4.8 model with 1M token context length and 128K max output tokens.
+- Most capable model optimized for complex reasoning and agentic coding tasks
+- Includes adaptive thinking with configurable display options
+- Knowledge cutoff updated to January 2026
+
+**User and Agent Intent Tracking**
+New filtering capabilities for tracking user and agent intents in request logs.
+- Filter requests by intent type to analyze user behavior patterns
+- View intent breakdown in analytics dashboards
+- Available in structured search with autocomplete support
+
+**Metadata Cost Breakdown Analytics**
+Added detailed cost analysis by metadata key-value pairs in analytics dashboard.
+- Break down costs by specific metadata values (e.g., customer ID, environment)
+- View top cost drivers across metadata dimensions
+- Set limit to 50 results for comprehensive analysis
+
+#### Improvements
+
+- Improved search suggestion performance with optimized query routing between data stores
+- Enhanced autocomplete dropdown with better handling for large result sets
+- Streamlined analytics chart controls with metadata key selection for cost insights
+- Request log cards now display highlighted previews for input text and responses
+- Improved request logs grid with better data rendering and column configurations
+
+---
+
+
+## May 27, 2026
+
+### Deployment 1
+
+#### New Features
+
+**User and Agent Intent Search**
+Advanced search now highlights user questions and agent responses in your request logs, making it easier to find specific conversational patterns and intents.
+- Search for specific user intents like questions, requests for information, or task completions
+- Identify agent response patterns including confirmations, explanations, and error handling
+- Filter requests by conversational structure to analyze dialogue quality
+
+**Legacy Table Migration System**
+Automatically migrate your existing Datasets and Reports to the new Smart Tables format with detailed migration previews.
+- Preview migration changes before committing to see estimated impact on sheets, columns, and cells
+- Resume interrupted migrations and continue on error for large-scale data transformations
+- Track migration history to see which legacy tables have been successfully converted
+
+#### Improvements
+
+- Smart table cell errors now display clearer error messages with execution details
+- Tool execution loop now properly handles registry tool name collisions
+- OpenAI Responses API correctly processes `tool_choice` parameter configurations
+- Dataset filter queries support more flexible variable format detection
+- Improved code execution error reporting for custom scoring functions
+
+---
+
+
+
+### Deployment 2
+
+#### Improvements
+- Enhanced column setup workflow efficiency with batched version history tracking
+- Improved intent detection accuracy for user sentiment analysis in conversation logs
+
+---
+
+## May 26, 2026
+
+### Deployment 1
+
+#### Improvements
+
+- Enhanced `Smart Tables` access control enforcement across all data operations
+- Improved `Smart Tables` evaluation billing accuracy by consolidating usage tracking
+- Fixed search filter UI behavior for smoother tag and metadata filtering
+- Resolved folder drag-and-drop edge case in navigation sidebar
+
+---
+
+
+
+### Deployment 2
+
+#### Improvements
+- Added search field for filtering requests by the last user message content
+- Enhanced search results to include the most recent user input in each conversation
+- Improved workflow execution visibility with per-iteration trace spans for multi-step LLM calls
+- Added detailed trace spans for individual tool executions within automated workflows
+
+---
+
+## May 25, 2026
+
+### Deployment 1
+
+#### Improvements
+- Fixed an issue where prompt templates and workflows with forward slashes in their names could not be retrieved via the API
+- Improved cost calculation accuracy for models with multimodal token pricing (audio and image inputs/outputs)
+- Resolved prompt registry lookup behavior when using template identifiers in API requests
+- Fixed image display in logged request details
+
+---
+
+
+## May 22, 2026
+
+### Deployment 1
+
+#### Improvements
+
+- Fixed `Smart Tables` CSV export to properly include all column data in composition-based exports
+- Resolved issue where `Smart Tables` full-payload column execution would not trigger staleness propagation to dependent cells
+- Improved `Smart Tables` dependency resolution for code execution and endpoint columns to correctly merge all sibling column sources with explicitly defined dependencies
+
+---
+
+
+## May 21, 2026
+
+### Deployment 1
+
+#### Improvements
+- Improved navigation menu for request logs with better organization and clearer visual hierarchy
+- Enhanced tool registry version creation to persist execution configuration when tools are created through the assistant interface
+
+---
+
+
 ## May 19, 2026
 
 ### Deployment 1

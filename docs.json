@@ -100,7 +100,8 @@
             "pages": [
               "features/tool-registry/overview",
               "features/tool-registry/using-in-prompts",
-              "features/tool-registry/save-inline-to-registry"
+              "features/tool-registry/save-inline-to-registry",
+              "features/tool-registry/auto-execution"
             ],
             "icon": "wrench"
           },
@@ -153,8 +154,15 @@
             "icon": "ship",
             "pages": [
               "onboarding-guides/deployment-strategies",
-              "self-hosted",
               "features/prompt-registry/zero-downtime-releases"
+            ]
+          },
+          {
+            "group": "Self-Hosted PromptLayer",
+            "icon": "server",
+            "pages": [
+              "self-hosted",
+              "enterprise-deployments/aws"
             ]
           },
           {
@@ -221,6 +229,7 @@
                 "pages": [
                   "reference/get-request",
                   "reference/get-trace",
+                  "reference/close-trace",
                   "reference/search-request-logs",
                   "reference/search-request-suggestions",
                   "reference/request-analytics",
@@ -304,6 +313,8 @@
                   "reference/tool-registry-list",
                   "reference/tool-registry-get",
                   "reference/tool-registry-create",
+                  "reference/tool-registry-create-version",
+                  "reference/tool-registry-test-execute",
                   "reference/external-ids-tool-registry-attach",
                   "reference/external-ids-tool-registry-list",
                   "reference/external-ids-tool-registry-delete"
@@ -365,7 +376,7 @@
     "options": [
       "copy",
       "view",
-      "add-mcp"
+      "mcp"
     ]
   },
   "logo": {

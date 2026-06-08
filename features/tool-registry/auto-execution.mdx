@@ -1,0 +1,152 @@
+---
+title: "Auto Tool Execution"
+icon: "play"
+---
+
+Define a tool's **execution body** alongside its schema and PromptLayer will run it for you in a sandbox between LLM turns. Your prompt runs end-to-end without you writing a tool-call loop in your application code.
+
+## The Tool-Call Loop
+
+Tool calling is a two-step dance. The LLM emits a `tool_call`, your app reads it, runs your function, sends the `tool_result` back, and the LLM produces a final answer. That loop lives in *your* code, and you have to write it for every prompt that uses tools, in every language, in every service.
+
+Most of that loop is identical: parse the tool call, dispatch to the right function, capture the return, send it back, repeat until the model is done. It's boilerplate that grows linearly with the number of tools and services.
+
+## Letting PromptLayer Drive
+
+Attach an **execution body** to a tool in the registry. When a prompt that references the tool is run, PromptLayer:
+
+1. Calls the LLM with the tool's schema
+2. If the LLM emits a `tool_call` for the tool, runs the body in a sandbox
+3. Feeds the return value back as a `tool_result`
+4. Calls the LLM again
+5. Repeats until the model returns a plain message (no more tool calls), or until a hard cap of 10 round trips
+
+Your client just calls `pl.run(...)` and gets a final answer back. The whole tool-call loop happens inside PromptLayer.
+
+```
+Your app: pl.run(blueprint)
+       ↓
+   LLM call 1 → tool_call: get_weather({city: "Paris"})
+       ↓
+   sandbox runs your body → {temp_c: 18, ...}
+       ↓
+   LLM call 2 → final answer
+       ↓
+Your app: receives answer
+```
+
+## Writing an Execution Body
+
+In the Tool Registry editor, turn on the **Execution** panel and write the body of your tool function. You only write the body. The signature is auto-generated from the tool's name and is shown above the editor as a read-only line:
+
+<CodeGroup>
+```python Python
+return {"city": args["city"], "temp_c": 18, "forecast": "sunny"}
+```
+
+```javascript JavaScript
+return { city: args.city, temp_c: 18, forecast: "sunny" };
+```
+</CodeGroup>
+
+The arguments the LLM emits arrive as a single `args` object. Access individual fields with `args["name"]` (Python) or `args.name` (JavaScript). Return whatever JSON-serializable value you want the LLM to see.
+
+<Tabs>
+  <Tab title="Python">
+    <Frame>
+      <img
+        src="/images/tool-registry/execution-editor-py.png"
+        alt="Tool execution editor — Python body"
+        style={{ borderRadius: "8px" }}
+      />
+    </Frame>
+  </Tab>
+  <Tab title="JavaScript">
+    <Frame>
+      <img
+        src="/images/tool-registry/execution-editor-js.png"
+        alt="Tool execution editor — JavaScript body"
+        style={{ borderRadius: "8px" }}
+      />
+    </Frame>
+  </Tab>
+</Tabs>
+
+<Tip>
+The body is wrapped server-side as `def <tool_name>(args): <your body>` (Python) or `function <tool_name>(args) { <your body> }` (JavaScript). You can define helper functions inside the body; they live in the same scope.
+</Tip>
+
+## Testing Your Body
+
+Click **Test run** at the top of the editor to open the test dialog. Fill in the schema's parameters, click **Run Test**, and see the body's return value rendered in the Output column. The dialog runs against the same sandbox auto-execution uses, so anything that works here will work at LLM call time.
+
+<Frame>
+  <img
+    src="/images/tool-registry/test-run-dialog.png"
+    alt="Tool test run dialog"
+    style={{ borderRadius: "8px" }}
+  />
+</Frame>
+
+## Supported Languages
+
+- **Python 3**: standard library available; common third-party packages installed in the sandbox
+- **JavaScript**: modern ES syntax, Node-compatible
+
+Pick the language with the dropdown at the top of the editor. The signature line updates to match.
+
+## Behaviour Inside a Prompt
+
+When you run a prompt that contains a registry tool with execution code:
+
+- **Single tool call per turn** → executed. The result is fed back and the LLM is called again.
+- **Multiple tool calls in one turn, all executable** → all run, results fed back together.
+- **Mixed turn (some executable, some not)** → auto-execution bails for that turn and returns. This avoids sending partial `tool_results` (which would 400 from the provider). Handle the rest in your own code.
+- **Registry tool without execution code** → auto-execution skips it; behaves exactly like a normal function tool.
+
+The loop is capped at 10 LLM calls per request to prevent runaway loops. If the cap is hit while tool calls are still pending, the loop halts and returns the latest response.
+
+## Errors
+
+| What happens | What you get back |
+|---|---|
+| Your body raises (e.g. `KeyError`, `TypeError`) | The error message is fed to the LLM as the `tool_result`. The model usually recovers: apologises, retries with different args, or asks you for more info. |
+| Your body times out or the sandbox is unreachable | Hard failure. Propagates as a `CodeExecutionError` from `pl.run`. No partial result. |
+| Your body returns a non-JSON-serializable value | Hard failure with a clear error message. Fix the return value and retry. |
+
+This split keeps the LLM resilient to expected errors (bad args, missing keys) but lets infrastructure failures surface so you can see and fix them.
+
+## Sandbox & Security
+
+Execution bodies run in an isolated sandbox per request. Each invocation gets a fresh process: no shared state between calls, no access to your application's environment or filesystem. Standard libraries plus the common Python/JS ecosystem are available.
+
+<Warning>
+The execution body is your code. Treat it like production code. Anything secret it needs (API keys, etc.) must be injected via your tool's logic, not hard-coded in the body. Hardcoded secrets in the editor are versioned and visible to anyone with workspace access.
+</Warning>
+
+## Enabling Auto Execution
+
+1. Open a tool in the Tool Registry
+2. Click the **Execution** toggle at the top of the editor
+3. Pick the language and write the body
+4. **Save Version**
+
+The next time a prompt referencing this tool runs through PromptLayer, the body will fire automatically. No code changes in your application required.
+
+<Frame>
+  <img
+    src="/images/tool-registry/execution-toggle.png"
+    alt="Tool registry editor with Schema and Execution panels enabled"
+    style={{ borderRadius: "8px" }}
+  />
+</Frame>
+
+## When To Use It
+
+**Good fits:**
+- Pure data transformations (`format_date`, `parse_address`)
+- Calls to public APIs (`fetch_weather`, `get_stock_price`)
+- Computations the LLM is bad at (math, sorting, dedup)
+- Glue logic you don't want repeated across services
+
+Anything else (private database access, auth-bound logic, long-running operations, side effects like sending real emails or charging payments) is better handled in your own application. To keep a tool schema-only, uncheck the **Execution** toggle in the editor and save a new version. The LLM emits a `tool_call` and your application handles it like a normal function tool.
