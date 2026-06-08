@@ -10624,7 +10624,7 @@
           "smart-tables"
         ],
         "summary": "List Columns",
-        "description": "List columns in a sheet, ordered by position rank.",
+        "description": "List columns in a sheet, ordered by position rank. By default, system-managed metadata columns such as price and latency columns are excluded; pass `include_system_columns=true` to include them.",
         "operationId": "list_table_sheet_columns",
         "parameters": [
           {
@@ -10644,6 +10644,16 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "include_system_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, include system-managed metadata columns such as price and latency columns for prompt-template outputs."
           },
           {
             "name": "cursor",
@@ -11004,7 +11014,7 @@
           "smart-tables"
         ],
         "summary": "List Rows",
-        "description": "List rows in a sheet, each containing a map of column_id → cell. Supports cursor pagination. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
+        "description": "List rows in a sheet, each containing a map of column_id to cell. For prompt-template column cells, each cell can include a `request_metrics` object with price, latency, and token usage when available. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
         "operationId": "list_table_sheet_rows",
         "parameters": [
           {
@@ -11024,6 +11034,26 @@
               "type": "string",
               "format": "uuid"
             }
+          },
+          {
+            "name": "include_system_columns",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, include system-managed metadata columns such as price and latency columns for prompt-template outputs."
+          },
+          {
+            "name": "include_execution_metadata_aggregates",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "boolean",
+              "default": false
+            },
+            "description": "When true, include sheet-level and per-column aggregates for execution metrics such as price and latency."
           },
           {
             "name": "cursor",
@@ -11121,6 +11151,14 @@
                     },
                     "version": {
                       "type": "integer"
+                    },
+                    "execution_metadata_aggregates": {
+                      "allOf": [
+                        {
+                          "$ref": "#/components/schemas/ExecutionMetadataAggregates"
+                        }
+                      ],
+                      "description": "Sheet-level and per-column aggregates for price and latency metrics. Only present when `include_execution_metadata_aggregates=true`."
                     }
                   }
                 }
@@ -11348,14 +11386,15 @@
               }
             }
           }
-        }
+        },
+        "description": "Retrieve a single cell by ID. For prompt-template column cells, the response includes a `request_metrics` object with price, latency, and token usage when available."
       },
       "patch": {
         "tags": [
           "smart-tables"
         ],
         "summary": "Update Cell",
-        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly.",
+        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly; computed cells are recalculated automatically.",
         "operationId": "update_table_sheet_cell",
         "parameters": [
           {
@@ -20548,7 +20587,8 @@
         "properties": {
           "id": {
             "type": "string",
-            "format": "uuid"
+            "format": "uuid",
+            "description": "Unique identifier of the column."
           },
           "sheet_id": {
             "type": "string",
@@ -20558,7 +20598,8 @@
             "type": "integer"
           },
           "title": {
-            "type": "string"
+            "type": "string",
+            "description": "Display title of the column."
           },
           "type": {
             "type": "string",
@@ -20582,7 +20623,8 @@
             "description": "Fractional position rank used for ordering."
           },
           "is_output_column": {
-            "type": "boolean"
+            "type": "boolean",
+            "description": "Whether this column is designated as an output column."
           }
         }
       },
@@ -20627,6 +20669,25 @@
           "error": {
             "type": "string",
             "nullable": true
+          },
+          "input_hash": {
+            "type": "string",
+            "nullable": true,
+            "description": "Hash of the inputs used to compute this cell, used for cache invalidation."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "description": "ISO 8601 timestamp of the last update."
+          },
+          "request_metrics": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/SmartTableRequestMetrics"
+              }
+            ],
+            "nullable": true,
+            "description": "Execution metrics populated for prompt-template column cells. Present only when the cell has an associated request log."
           }
         }
       },
@@ -20688,6 +20749,140 @@
             "nullable": true
           }
         }
+      },
+      "SmartTableRequestMetrics": {
+        "type": "object",
+        "description": "Execution metrics for a prompt-template cell, derived from the underlying request log.",
+        "properties": {
+          "request_count": {
+            "type": "integer",
+            "description": "Number of LLM requests made to produce this cell's value."
+          },
+          "request_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer"
+            },
+            "description": "IDs of the request logs associated with this cell."
+          },
+          "latency_ms": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Total end-to-end latency in milliseconds."
+          },
+          "price": {
+            "type": "number",
+            "nullable": true,
+            "description": "Total cost in USD for all requests that produced this cell."
+          },
+          "input_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Total number of input tokens across all requests."
+          },
+          "output_tokens": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Total number of output tokens across all requests."
+          },
+          "trace_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "description": "Trace IDs linked to this cell (present when the cell was produced via an OpenTelemetry-traced workflow)."
+          }
+        }
+      },
+      "ExecutionMetadataMetricAggregate": {
+        "type": "object",
+        "description": "Aggregated statistics for a single execution metric (e.g. price or latency) across all rows in a sheet.",
+        "properties": {
+          "metric_key": {
+            "type": "string",
+            "description": "Internal metric identifier. One of `price` or `latency_ms`.",
+            "enum": [
+              "price",
+              "latency_ms"
+            ]
+          },
+          "metric_label": {
+            "type": "string",
+            "nullable": true,
+            "description": "Human-readable label for the metric."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of rows that have a value for this metric."
+          },
+          "sum": {
+            "type": "number",
+            "description": "Sum of all metric values."
+          },
+          "avg": {
+            "type": "number",
+            "nullable": true,
+            "description": "Average metric value, or null if count is 0."
+          },
+          "min": {
+            "type": "number",
+            "nullable": true,
+            "description": "Minimum metric value, or null if count is 0."
+          },
+          "max": {
+            "type": "number",
+            "nullable": true,
+            "description": "Maximum metric value, or null if count is 0."
+          },
+          "column_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the system-managed metadata column for this metric. Omitted for sheet-level aggregates."
+          },
+          "source_column_id": {
+            "type": "string",
+            "format": "uuid",
+            "description": "ID of the prompt-template source column. Omitted for sheet-level aggregates."
+          }
+        },
+        "required": [
+          "metric_key",
+          "count",
+          "sum"
+        ]
+      },
+      "ExecutionMetadataAggregates": {
+        "type": "object",
+        "description": "Sheet-level and per-column aggregates for execution metrics (price and latency) across all prompt-template columns.",
+        "properties": {
+          "by_column_id": {
+            "type": "object",
+            "description": "Per-column aggregates keyed by the system-managed metadata column ID.",
+            "additionalProperties": {
+              "$ref": "#/components/schemas/ExecutionMetadataMetricAggregate"
+            }
+          },
+          "sheet": {
+            "type": "object",
+            "description": "Sheet-wide aggregates rolled up across all prompt-template columns.",
+            "properties": {
+              "by_metric": {
+                "type": "object",
+                "description": "Aggregates keyed by metric key (`price`, `latency_ms`).",
+                "additionalProperties": {
+                  "$ref": "#/components/schemas/ExecutionMetadataMetricAggregate"
+                }
+              }
+            },
+            "required": [
+              "by_metric"
+            ]
+          }
+        },
+        "required": [
+          "by_column_id",
+          "sheet"
+        ]
       }
     },
     "responses": {
