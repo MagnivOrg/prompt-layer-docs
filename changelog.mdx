@@ -56,6 +56,32 @@ Initialize new tables pre-configured with a specific prompt template and input v
 
 ---
 
+
+### Deployment 3
+
+#### New Features
+
+**Smart Table Aggregate Scoring**
+Smart Tables now support aggregate scoring to automatically identify the best-performing option across evaluation rows.
+- Choose from most frequent value, minimum value, or maximum value aggregation types
+- Optionally specify a label column to display human-readable names for winning values
+- Aggregate scores appear in the scoring sidebar with detailed breakdowns of top values and percentages
+
+**Timezone Selector on Requests Page**
+View request timestamps in your preferred timezone across the requests analytics page.
+- Select from a searchable list of common timezones
+- Timezone preference persists across sessions in browser local storage
+
+#### Improvements
+
+- Smart Table boolean scoring now supports assertion aggregation modes (all assertions must pass vs. any assertion passes)
+- Evaluation preset tables automatically configure boolean scoring with assertion-based validation
+- Model comparison preset tables now include aggregate scoring to highlight the lowest-cost option
+- Environment variables can now be created through AI-assisted scaffolding tools
+- Empty environment variable detection added to improve configuration validation
+
+---
+
 ## June 04, 2026
 
 ### Deployment 1
