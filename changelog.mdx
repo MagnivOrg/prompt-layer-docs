@@ -4,6 +4,35 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## June 08, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Environment Variables for Tool Execution**
+Securely store and manage environment variables for tool execution at both workspace and individual tool levels.
+- Set workspace-wide variables accessible to all tools
+- Override with tool-specific variables for granular control
+- Manage via dashboard UI or programmatic API
+
+**Trace Closure API**
+Close traces to prevent additional spans from being added after execution completes.
+- Call `/traces/{trace_id}/close` via dashboard or public API
+- Automatically close traces in bulk operations with `close_after` parameter
+- Late spans to closed traces are rejected with clear error messaging
+
+#### Improvements
+
+- Added token-gated metrics endpoint for operational monitoring
+- Tool deletion now removes associated environment variables
+- Workspace deletion cleans up environment variables
+- OTLP trace ingestion supports automatic trace closure
+- Tool execution test endpoints accept workspace and tool context parameters
+
+---
+
+
 ## June 04, 2026
 
 ### Deployment 1
