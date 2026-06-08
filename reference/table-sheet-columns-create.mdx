@@ -1,0 +1,8 @@
+---
+title: "Create Column"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns"
+---
+
+Add a new column to a sheet. For non-text columns, cells for all existing rows are created with `stale` status and queued for computation.
+
+Use `dependencies` to declare which other columns this column's config references. PromptLayer enforces a DAG (no cycles allowed) and uses the dependency graph to propagate staleness when upstream cells change.

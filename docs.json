@@ -229,6 +229,7 @@
                 "pages": [
                   "reference/get-request",
                   "reference/get-trace",
+                  "reference/close-trace",
                   "reference/search-request-logs",
                   "reference/search-request-suggestions",
                   "reference/request-analytics",
@@ -317,6 +318,30 @@
                   "reference/external-ids-tool-registry-attach",
                   "reference/external-ids-tool-registry-list",
                   "reference/external-ids-tool-registry-delete"
+                ]
+              },
+              {
+                "group": "Tables",
+                "tag": "New",
+                "pages": [
+                  "reference/tables-create",
+                  "reference/tables-list",
+                  "reference/tables-get",
+                  "reference/tables-update",
+                  "reference/table-sheets-list",
+                  "reference/table-sheets-create",
+                  "reference/table-sheets-get-operation",
+                  "reference/table-sheets-get",
+                  "reference/table-sheets-update",
+                  "reference/table-sheet-columns-list",
+                  "reference/table-sheet-columns-create",
+                  "reference/table-sheet-columns-update",
+                  "reference/table-sheet-rows-list",
+                  "reference/table-sheet-rows-add",
+                  "reference/table-sheet-cells-get",
+                  "reference/table-sheet-cells-update",
+                  "reference/table-sheet-cells-recalculate",
+                  "reference/table-sheet-cells-recalculate-batch"
                 ]
               },
               {

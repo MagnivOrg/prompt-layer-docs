@@ -1,0 +1,6 @@
+---
+title: "Recalculate Cell"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}/recalculations"
+---
+
+Trigger recalculation for a single cell. Returns `202 Accepted` with an `execution_id` that can be used to track progress.

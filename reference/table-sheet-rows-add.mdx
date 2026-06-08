@@ -1,0 +1,8 @@
+---
+title: "Add Rows"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows"
+---
+
+Append one or more rows (up to 100 at a time) to a sheet.
+
+Text column values can be set immediately via the `values` array. Non-text column cells are created with `stale` status — trigger a [recalculation](/reference/table-sheet-cells-recalculate) to compute them.

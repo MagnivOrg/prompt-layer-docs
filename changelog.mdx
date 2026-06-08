@@ -4,6 +4,58 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## June 08, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Environment Variables for Tool Execution**
+Securely store and manage environment variables for tool execution at both workspace and individual tool levels.
+- Set workspace-wide variables accessible to all tools
+- Override with tool-specific variables for granular control
+- Manage via dashboard UI or programmatic API
+
+**Trace Closure API**
+Close traces to prevent additional spans from being added after execution completes.
+- Call `/traces/{trace_id}/close` via dashboard or public API
+- Automatically close traces in bulk operations with `close_after` parameter
+- Late spans to closed traces are rejected with clear error messaging
+
+#### Improvements
+
+- Added token-gated metrics endpoint for operational monitoring
+- Tool deletion now removes associated environment variables
+- Workspace deletion cleans up environment variables
+- OTLP trace ingestion supports automatic trace closure
+- Tool execution test endpoints accept workspace and tool context parameters
+
+---
+
+
+
+### Deployment 2
+
+#### New Features
+
+**Model Comparison Preset**
+Quickly compare multiple LLM models side-by-side using the same prompt template.
+- Create comparison tables directly from any prompt template with 2+ model configurations
+- Automatically runs all model variants on the same input set for immediate comparison
+- View execution metrics (latency, tokens, cost) for each model in dedicated columns
+- Identify the fastest or most cost-effective model with built-in "lowest metric" analysis columns
+
+**Evaluation Presets**
+Pre-configured evaluation workflows for systematic prompt testing.
+- Ground Truth Comparison: automatically validate model outputs against expected responses using customizable assertions
+- Structural Validation: verify outputs meet format, ordering, or field requirements without reference data
+- Batch evaluate outputs with multiple simultaneous assertions per row
+
+**Custom Preset Tables**
+Initialize new tables pre-configured with a specific prompt template and input variables for faster testing workflows.
+
+---
+
 ## June 04, 2026
 
 ### Deployment 1

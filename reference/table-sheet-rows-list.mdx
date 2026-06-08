@@ -1,0 +1,10 @@
+---
+title: "List Rows"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows"
+---
+
+List rows in a sheet. Each row contains a map of `column_id → cell`.
+
+Pass `include_columns=true` (the default on the first page) to receive column metadata alongside rows — useful for building column headers.
+
+Use cursor-based pagination for large sheets.
