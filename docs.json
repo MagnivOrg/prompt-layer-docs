@@ -310,7 +310,7 @@
                 ]
               },
               {
-                "group": "Smart Tables",
+                "group": "Tables",
                 "tag": "New",
                 "pages": [
                   "reference/tables-create",

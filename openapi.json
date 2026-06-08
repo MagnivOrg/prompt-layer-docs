@@ -9690,7 +9690,7 @@
           "smart-tables"
         ],
         "summary": "Create Table",
-        "description": "Create a new Smart Table. A default sheet with one text column is created automatically.",
+        "description": "Create a new Table. A default sheet with one text column is created automatically.",
         "operationId": "create_table",
         "requestBody": {
           "required": false,
@@ -9729,7 +9729,7 @@
                       "type": "string"
                     },
                     "table": {
-                      "$ref": "#/components/schemas/SmartTableDetail"
+                      "$ref": "#/components/schemas/TableDetail"
                     }
                   }
                 }
@@ -9769,7 +9769,7 @@
           "smart-tables"
         ],
         "summary": "List Tables",
-        "description": "List Smart Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column.",
+        "description": "List Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column.",
         "operationId": "list_tables",
         "parameters": [
           {
@@ -9860,7 +9860,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/SmartTable"
+                        "$ref": "#/components/schemas/Table"
                       }
                     },
                     "next_cursor": {
@@ -9914,7 +9914,7 @@
                       "type": "boolean"
                     },
                     "table": {
-                      "$ref": "#/components/schemas/SmartTableDetail"
+                      "$ref": "#/components/schemas/TableDetail"
                     }
                   }
                 }
@@ -9988,7 +9988,7 @@
                       "type": "boolean"
                     },
                     "table": {
-                      "$ref": "#/components/schemas/SmartTableDetail"
+                      "$ref": "#/components/schemas/TableDetail"
                     }
                   }
                 }
@@ -10100,7 +10100,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/SmartSheet"
+                        "$ref": "#/components/schemas/Sheet"
                       }
                     },
                     "next_cursor": {
@@ -10274,10 +10274,10 @@
                       "type": "string"
                     },
                     "operation": {
-                      "$ref": "#/components/schemas/SmartTableImportOperation"
+                      "$ref": "#/components/schemas/TableImportOperation"
                     },
                     "sheet": {
-                      "$ref": "#/components/schemas/SmartSheet"
+                      "$ref": "#/components/schemas/Sheet"
                     }
                   }
                 }
@@ -10352,7 +10352,7 @@
                       "type": "boolean"
                     },
                     "operation": {
-                      "$ref": "#/components/schemas/SmartTableImportOperation"
+                      "$ref": "#/components/schemas/TableImportOperation"
                     }
                   }
                 }
@@ -10414,7 +10414,7 @@
                       "type": "boolean"
                     },
                     "sheet": {
-                      "$ref": "#/components/schemas/SmartSheet"
+                      "$ref": "#/components/schemas/Sheet"
                     }
                   }
                 }
@@ -10495,7 +10495,7 @@
                       "type": "boolean"
                     },
                     "sheet": {
-                      "$ref": "#/components/schemas/SmartSheet"
+                      "$ref": "#/components/schemas/Sheet"
                     },
                     "version": {
                       "type": "integer"
@@ -10579,7 +10579,7 @@
                     "data": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/SmartColumn"
+                        "$ref": "#/components/schemas/Column"
                       }
                     },
                     "next_cursor": {
@@ -10713,12 +10713,12 @@
                       "type": "boolean"
                     },
                     "column": {
-                      "$ref": "#/components/schemas/SmartColumn"
+                      "$ref": "#/components/schemas/Column"
                     },
                     "cells": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/SmartCell"
+                        "$ref": "#/components/schemas/Cell"
                       }
                     },
                     "version": {
@@ -10855,7 +10855,7 @@
                       "type": "boolean"
                     },
                     "column": {
-                      "$ref": "#/components/schemas/SmartColumn"
+                      "$ref": "#/components/schemas/Column"
                     },
                     "requires_recalculation": {
                       "type": "boolean"
@@ -11000,7 +11000,7 @@
                             "type": "object",
                             "description": "Map of column_id (UUID string) \u2192 cell object.",
                             "additionalProperties": {
-                              "$ref": "#/components/schemas/SmartCell"
+                              "$ref": "#/components/schemas/Cell"
                             }
                           }
                         }
@@ -11019,7 +11019,7 @@
                     "columns": {
                       "type": "array",
                       "items": {
-                        "$ref": "#/components/schemas/SmartColumn"
+                        "$ref": "#/components/schemas/Column"
                       }
                     },
                     "version": {
@@ -11134,7 +11134,7 @@
                           "cells": {
                             "type": "object",
                             "additionalProperties": {
-                              "$ref": "#/components/schemas/SmartCell"
+                              "$ref": "#/components/schemas/Cell"
                             }
                           }
                         }
@@ -11231,7 +11231,7 @@
                       "type": "boolean"
                     },
                     "cell": {
-                      "$ref": "#/components/schemas/SmartCell"
+                      "$ref": "#/components/schemas/Cell"
                     }
                   }
                 }
@@ -11321,7 +11321,7 @@
                       "type": "boolean"
                     },
                     "cell": {
-                      "$ref": "#/components/schemas/SmartCell"
+                      "$ref": "#/components/schemas/Cell"
                     },
                     "version": {
                       "type": "integer"
@@ -19904,9 +19904,9 @@
           }
         }
       },
-      "SmartTable": {
+      "Table": {
         "type": "object",
-        "description": "A Smart Table \u2014 a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
+        "description": "A Table \u2014 a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
         "properties": {
           "id": {
             "type": "string",
@@ -19937,10 +19937,10 @@
           }
         }
       },
-      "SmartTableDetail": {
+      "TableDetail": {
         "allOf": [
           {
-            "$ref": "#/components/schemas/SmartTable"
+            "$ref": "#/components/schemas/Table"
           }
         ],
         "type": "object",
@@ -19954,9 +19954,9 @@
           }
         }
       },
-      "SmartSheet": {
+      "Sheet": {
         "type": "object",
-        "description": "A sheet within a Smart Table.",
+        "description": "A sheet within a Table.",
         "properties": {
           "id": {
             "type": "string",
@@ -19992,9 +19992,9 @@
           }
         }
       },
-      "SmartColumn": {
+      "Column": {
         "type": "object",
-        "description": "A column within a Smart Table sheet.",
+        "description": "A column within a Table sheet.",
         "properties": {
           "id": {
             "type": "string",
@@ -20036,7 +20036,7 @@
           }
         }
       },
-      "SmartCell": {
+      "Cell": {
         "type": "object",
         "description": "A single cell at the intersection of a column and a row.",
         "properties": {
@@ -20080,7 +20080,7 @@
           }
         }
       },
-      "SmartTableImportOperation": {
+      "TableImportOperation": {
         "type": "object",
         "description": "Status of an asynchronous sheet import operation.",
         "properties": {
