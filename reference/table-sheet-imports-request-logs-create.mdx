@@ -1,0 +1,12 @@
+---
+title: "Import Request Logs"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/request-logs"
+---
+
+Start an asynchronous request-history import into an existing sheet.
+
+Provide either `request_log_ids` or a request-log `filter_group`. You can also pass `variables_to_parse`, `include_fields`, and `limit` to control imported columns and rows. `request_log_ids` and `limit` support up to 50,000 rows.
+
+Pass `operation_id` when you want a stable client-side identifier for polling and webhook correlation. If omitted, PromptLayer generates one.
+
+The response returns an `operation_id` and `status_url` for polling with [Get Sheet Import Operation](/reference/table-sheets-get-operation).

@@ -9787,7 +9787,7 @@
           "smart-tables"
         ],
         "summary": "Create Table",
-        "description": "Create a new Table. A default sheet with one text column is created automatically.",
+        "description": "Create a new Table. A default sheet with one text column is created automatically. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table",
         "requestBody": {
           "required": false,
@@ -9866,7 +9866,7 @@
           "smart-tables"
         ],
         "summary": "List Tables",
-        "description": "List Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column.",
+        "description": "List Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_tables",
         "parameters": [
           {
@@ -10034,7 +10034,8 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        }
+        },
+        "description": "Get Table. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       },
       "patch": {
         "tags": [
@@ -10108,7 +10109,8 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        }
+        },
+        "description": "Update Table. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       }
     },
     "/api/public/v2/tables/{table_id}/sheets": {
@@ -10117,7 +10119,7 @@
           "smart-tables"
         ],
         "summary": "List Sheets",
-        "description": "List all sheets in a table, ordered by their index.",
+        "description": "List all sheets in a table, ordered by their index. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_table_sheets",
         "parameters": [
           {
@@ -10235,7 +10237,7 @@
           "smart-tables"
         ],
         "summary": "Create Sheet",
-        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history.",
+        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet",
         "parameters": [
           {
@@ -10416,7 +10418,7 @@
           "smart-tables"
         ],
         "summary": "Get Sheet Import Operation",
-        "description": "Poll the status of an asynchronous sheet import operation.",
+        "description": "Poll the status of an asynchronous sheet import operation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "get_table_sheet_operation",
         "parameters": [
           {
@@ -10531,7 +10533,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Get Sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       },
       "patch": {
         "tags": [
@@ -10595,7 +10598,8 @@
                       "$ref": "#/components/schemas/Sheet"
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -10615,7 +10619,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Update Sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       }
     },
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns": {
@@ -10624,7 +10629,7 @@
           "smart-tables"
         ],
         "summary": "List Columns",
-        "description": "List columns in a sheet, ordered by position rank. By default, system-managed metadata columns such as price and latency columns are excluded; pass `include_system_columns=true` to include them.",
+        "description": "List columns in a sheet, ordered by position rank. By default, system-managed metadata columns such as price and latency columns are excluded; pass `include_system_columns=true` to include them. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_table_sheet_columns",
         "parameters": [
           {
@@ -10721,7 +10726,7 @@
           "smart-tables"
         ],
         "summary": "Create Column",
-        "description": "Add a new column to a sheet. Non-text columns will generate cells for all existing rows.",
+        "description": "Add a new column to a sheet. Non-text columns will generate cells for all existing rows. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet_column",
         "parameters": [
           {
@@ -10829,7 +10834,8 @@
                       }
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -10871,7 +10877,7 @@
           "smart-tables"
         ],
         "summary": "Update Column",
-        "description": "Update a column's title, config, or dependencies. Returns `requires_recalculation: true` when the change invalidates existing cell values.",
+        "description": "Update a column's title, config, or dependencies. Returns `requires_recalculation: true` when the change invalidates existing cell values. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "update_table_sheet_column",
         "parameters": [
           {
@@ -10975,7 +10981,8 @@
                       }
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -11014,7 +11021,7 @@
           "smart-tables"
         ],
         "summary": "List Rows",
-        "description": "List rows in a sheet, each containing a map of column_id to cell. For prompt-template column cells, each cell can include a `request_metrics` object with price, latency, and token usage when available. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
+        "description": "List rows in a sheet, each containing a map of column_id to cell. For prompt-template column cells, each cell can include a `request_metrics` object with price, latency, and token usage when available. Pass `include_columns=true` on the first page to receive column metadata alongside rows. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_table_sheet_rows",
         "parameters": [
           {
@@ -11150,7 +11157,8 @@
                       }
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     },
                     "execution_metadata_aggregates": {
                       "allOf": [
@@ -11185,7 +11193,7 @@
           "smart-tables"
         ],
         "summary": "Add Rows",
-        "description": "Append one or more rows to a sheet. Text column values can be set immediately; non-text column cells are created with `stale` status and must be triggered via a recalculation.",
+        "description": "Append one or more rows to a sheet. Text column values can be set immediately; non-text column cells are created with `stale` status and must be triggered via a recalculation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "add_table_sheet_rows",
         "parameters": [
           {
@@ -11282,7 +11290,8 @@
                       "type": "integer"
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -11387,14 +11396,14 @@
             }
           }
         },
-        "description": "Retrieve a single cell by ID. For prompt-template column cells, the response includes a `request_metrics` object with price, latency, and token usage when available."
+        "description": "Retrieve a single cell by ID. For prompt-template column cells, the response includes a `request_metrics` object with price, latency, and token usage when available. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       },
       "patch": {
         "tags": [
           "smart-tables"
         ],
         "summary": "Update Cell",
-        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly; computed cells are recalculated automatically.",
+        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly; computed cells are recalculated automatically. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "update_table_sheet_cell",
         "parameters": [
           {
@@ -11460,7 +11469,8 @@
                       "$ref": "#/components/schemas/Cell"
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     },
                     "stale_count": {
                       "type": "integer",
@@ -11503,7 +11513,7 @@
           "smart-tables"
         ],
         "summary": "Recalculate Cells (Batch)",
-        "description": "Trigger recalculation for a batch of cells identified by ID.",
+        "description": "Trigger recalculation for a batch of cells identified by ID. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet_cell_recalculations_batch",
         "parameters": [
           {
@@ -11615,7 +11625,7 @@
           "smart-tables"
         ],
         "summary": "Recalculate Cell",
-        "description": "Trigger recalculation for a single cell.",
+        "description": "Trigger recalculation for a single cell. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet_cell_recalculation",
         "parameters": [
           {
@@ -11697,7 +11707,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations": {
       "get": {
         "summary": "List Table Sheet Operations",
-        "description": "List active recalculation operations and cell status counts for a Table sheet.",
+        "description": "List active recalculation operations and cell status counts for a Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "listTableSheetOperations",
         "tags": [
           "tables"
@@ -11710,7 +11720,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -11768,7 +11778,7 @@
       },
       "post": {
         "summary": "Create Table Sheet Operation",
-        "description": "Queue a recalculation operation for selected columns, rows, and cell statuses.",
+        "description": "Queue a recalculation operation for selected columns, rows, and cell statuses. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "createTableSheetOperation",
         "tags": [
           "tables"
@@ -11781,7 +11791,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -11871,7 +11881,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations/{operation_id}": {
       "get": {
         "summary": "Get Table Sheet Operation",
-        "description": "Poll a Table sheet recalculation operation by operation ID.",
+        "description": "Poll a Table sheet recalculation operation by operation ID. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "getTableSheetOperationStatus",
         "tags": [
           "tables"
@@ -11884,7 +11894,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -11951,7 +11961,7 @@
       },
       "delete": {
         "summary": "Cancel Table Sheet Operation",
-        "description": "Cancel an active Table sheet recalculation operation.",
+        "description": "Cancel an active Table sheet recalculation operation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "cancelTableSheetOperation",
         "tags": [
           "tables"
@@ -11964,7 +11974,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12033,7 +12043,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/score": {
       "get": {
         "summary": "Get Table Sheet Score",
-        "description": "Retrieve the current score payload for a Table sheet.",
+        "description": "Retrieve the current score payload for a Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "getTableSheetScore",
         "tags": [
           "tables"
@@ -12046,7 +12056,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12104,7 +12114,7 @@
       },
       "patch": {
         "summary": "Configure Table Sheet Score",
-        "description": "Configure scoring for a Table sheet. This endpoint updates the configuration and returns whether recalculation is required; it does not queue score calculation.",
+        "description": "Configure scoring for a Table sheet. This endpoint updates the configuration and returns whether recalculation is required; it does not queue score calculation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "configureTableSheetScore",
         "tags": [
           "tables"
@@ -12117,7 +12127,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12205,7 +12215,7 @@
       },
       "post": {
         "summary": "Recalculate Table Sheet Score",
-        "description": "Queue recalculation for an existing Table sheet score configuration.",
+        "description": "Queue recalculation for an existing Table sheet score configuration. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "recalculateTableSheetScore",
         "tags": [
           "tables"
@@ -12218,7 +12228,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12288,7 +12298,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions": {
       "get": {
         "summary": "List Table Sheet Versions",
-        "description": "List saved versions for a Table sheet.",
+        "description": "List saved versions for a Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "listTableSheetVersions",
         "tags": [
           "tables"
@@ -12301,7 +12311,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12407,7 +12417,7 @@
       },
       "post": {
         "summary": "Create Table Sheet Version",
-        "description": "Create a named Table sheet version, or restore from an existing version while creating a new version.",
+        "description": "Create a named Table sheet version, or restore from an existing version while creating a new version. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "createTableSheetVersion",
         "tags": [
           "tables"
@@ -12420,7 +12430,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12500,7 +12510,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/{version_id}": {
       "get": {
         "summary": "Get Table Sheet Version",
-        "description": "Retrieve one Table sheet version, including its snapshot.",
+        "description": "Retrieve one Table sheet version, including its snapshot. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "getTableSheetVersion",
         "tags": [
           "tables"
@@ -12513,7 +12523,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12583,7 +12593,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/score-history": {
       "get": {
         "summary": "Get Table Sheet Score History",
-        "description": "Retrieve score-history points across Table sheet versions.",
+        "description": "Retrieve score-history points across Table sheet versions. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "getTableSheetVersionScoreHistory",
         "tags": [
           "tables"
@@ -12596,7 +12606,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12700,7 +12710,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/file": {
       "post": {
         "summary": "Import File Into Table Sheet",
-        "description": "Start an asynchronous CSV import into an existing Table sheet.",
+        "description": "Start an asynchronous CSV import into an existing Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "createTableSheetFileImport",
         "tags": [
           "tables"
@@ -12713,7 +12723,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -12803,7 +12813,7 @@
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/request-logs": {
       "post": {
         "summary": "Import Request Logs Into Table Sheet",
-        "description": "Start an asynchronous request-history import into an existing Table sheet.",
+        "description": "Start an asynchronous request-history import into an existing Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "createTableSheetRequestLogImport",
         "tags": [
           "tables"
@@ -12816,7 +12826,7 @@
             "schema": {
               "type": "string"
             },
-            "description": "Your PromptLayer API key."
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
           },
           {
             "name": "table_id",
@@ -22472,7 +22482,8 @@
             "description": "Unique table identifier."
           },
           "workspace_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Workspace that owns this resource; determined by the authenticated request scope."
           },
           "title": {
             "type": "string"
@@ -22525,7 +22536,8 @@
             "format": "uuid"
           },
           "workspace_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Workspace that owns this resource; determined by the authenticated request scope."
           },
           "title": {
             "type": "string"
@@ -22538,7 +22550,8 @@
             "type": "integer"
           },
           "version_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Current sheet version number. It increments when sheet data, layout, score configuration, imports, or execution output changes."
           },
           "created_at": {
             "type": "string",
@@ -22564,7 +22577,8 @@
             "format": "uuid"
           },
           "workspace_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Workspace that owns this resource; determined by the authenticated request scope."
           },
           "title": {
             "type": "string",
@@ -22657,6 +22671,22 @@
             ],
             "nullable": true,
             "description": "Execution metrics populated for prompt-template column cells. Present only when the cell has an associated request log."
+          },
+          "execution_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Execution ID associated with the current or most recent computed value, when available."
+          },
+          "last_computed_version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Sheet version_count when this cell was last computed. Null for text cells, virtual cells, or cells that have not completed computation."
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true,
+            "description": "User-visible error message for failed computed cells, when available."
           }
         }
       },
@@ -23856,7 +23886,8 @@
             "format": "uuid"
           },
           "version_number": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Sequential saved version number for this sheet."
           },
           "name": {
             "type": "string",
@@ -23959,7 +23990,8 @@
           "execution_id": {
             "type": "string",
             "format": "uuid",
-            "nullable": true
+            "nullable": true,
+            "description": "Execution ID associated with the current or most recent computed value, when available."
           },
           "column_id": {
             "type": "string",
@@ -23970,7 +24002,8 @@
           },
           "last_computed_version": {
             "type": "integer",
-            "nullable": true
+            "nullable": true,
+            "description": "Sheet version_count when this cell was last computed. Null for text cells, virtual cells, or cells that have not completed computation."
           },
           "status": {
             "type": "string",

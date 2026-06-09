@@ -4,3 +4,5 @@ openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}"
 ---
 
 Update a sheet's title or display index (position within the table).
+
+Updating a sheet creates a new sheet version. The response returns `version`, the current sheet version count after the update.

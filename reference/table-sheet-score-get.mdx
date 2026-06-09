@@ -1,0 +1,8 @@
+---
+title: "Get Score"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/score"
+---
+
+Retrieve the current score payload for a sheet.
+
+When explicit scoring is not configured, PromptLayer returns the default score it can infer from output columns. Configured scoring responses include status and configuration metadata.

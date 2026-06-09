@@ -6,3 +6,5 @@ openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns/{colu
 Update a column's title, config, or dependencies.
 
 When the change invalidates existing cell values (e.g., the prompt template or code changes), the response includes `requires_recalculation: true` and the list of `affected_column_ids`.
+
+When the update changes column metadata or configuration, PromptLayer creates a new sheet version and returns `version`.
