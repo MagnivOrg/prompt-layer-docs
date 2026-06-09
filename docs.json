@@ -17,60 +17,30 @@
         "group": "Get Started",
         "pages": [
           "quickstart",
-          "quickstart-part-two",
           "tutorial-videos"
         ]
       },
       {
-        "group": "Usage Documentation",
+        "group": "Core Concepts",
         "pages": [
           {
             "group": "Prompt Registry",
             "icon": "notebook",
             "pages": [
               "features/prompt-registry/new-overview",
+              "features/prompt-registry/prompt-editor-versioning",
               "features/prompt-registry/template-variables",
               "features/prompt-registry/input-variable-sets",
               "features/prompt-registry/snippets",
               "features/prompt-registry/placeholder-messages",
               "features/prompt-registry/structured-outputs",
               "features/prompt-registry/tool-calling",
+              "features/image-generation",
               "why-promptlayer/playground",
               "features/prompt-history/sharing-prompts",
               "features/prompt-registry/release-labels",
               "features/prompt-registry/dynamic-release-labels",
               "why-promptlayer/ab-releases"
-            ]
-          },
-          {
-            "group": "Tool Registry",
-            "tag": "New",
-            "pages": [
-              "features/tool-registry/overview",
-              "features/tool-registry/using-in-prompts",
-              "features/tool-registry/save-inline-to-registry"
-            ],
-            "icon": "wrench"
-          },
-          {
-            "group": "Skill Collections",
-            "tag": "New",
-            "icon": "book-sparkles",
-            "pages": [
-              "features/skill-collections/overview",
-              "features/skill-collections/editing-with-wrangler",
-              "features/skill-collections/sharing-and-remixing",
-              "features/skill-collections/pulling-skills",
-              "features/skill-collections/tuning-skills"
-            ]
-          },
-          {
-            "group": "Datasets",
-            "icon": "database",
-            "pages": [
-              "features/evaluations/datasets-overview",
-              "features/evaluations/datasets-create-from-file",
-              "features/evaluations/datasets-create-from-history"
             ]
           },
           {
@@ -89,6 +59,15 @@
             ]
           },
           {
+            "group": "Datasets",
+            "icon": "database",
+            "pages": [
+              "features/evaluations/datasets-overview",
+              "features/evaluations/datasets-create-from-file",
+              "features/evaluations/datasets-create-from-history"
+            ]
+          },
+          {
             "group": "Observability",
             "icon": "chart-column",
             "pages": [
@@ -96,6 +75,8 @@
               "why-promptlayer/advanced-search",
               "why-promptlayer/analytics",
               "running-requests/traces",
+              "features/opentelemetry",
+              "features/integrations",
               {
                 "group": "Advanced Logging",
                 "icon": "cassette-tape",
@@ -106,7 +87,6 @@
                   "features/prompt-history/scoring-requests",
                   "features/prompt-history/tracking-templates",
                   "features/prompt-history/custom-logging",
-                  "features/opentelemetry",
                   "features/prompt-history/structured-output-logging",
                   "features/prompt-history/search-data-model"
                 ]
@@ -114,6 +94,29 @@
             ]
           },
           "why-promptlayer/workflows",
+          {
+            "group": "Tool Registry",
+            "tag": "New",
+            "pages": [
+              "features/tool-registry/overview",
+              "features/tool-registry/using-in-prompts",
+              "features/tool-registry/save-inline-to-registry",
+              "features/tool-registry/auto-execution"
+            ],
+            "icon": "wrench"
+          },
+          {
+            "group": "Skill Collections",
+            "tag": "New",
+            "icon": "book-sparkles",
+            "pages": [
+              "features/skill-collections/overview",
+              "features/skill-collections/editing-with-wrangler",
+              "features/skill-collections/sharing-and-remixing",
+              "features/skill-collections/pulling-skills",
+              "features/skill-collections/tuning-skills"
+            ]
+          },
           {
             "group": "Orgs & Workspaces",
             "icon": "users-gear",
@@ -127,34 +130,48 @@
         ]
       },
       {
+        "group": "Providers",
+        "pages": [
+          "features/supported-providers",
+          {
+            "group": "Custom Providers",
+            "icon": "plug",
+            "pages": [
+              "features/custom-providers",
+              "features/exa-integration",
+              "features/xai-integration",
+              "features/openrouter-integration",
+              "features/concentrate-integration"
+            ]
+          }
+        ]
+      },
+      {
         "group": "Guides",
         "pages": [
           {
-            "group": "Providers & Models",
-            "icon": "plug",
-            "pages": [
-              "features/supported-providers",
-              {
-                "group": "Custom Providers",
-                "icon": "plug",
-                "pages": [
-                  "features/custom-providers",
-                  "features/exa-integration",
-                  "features/xai-integration",
-                  "features/openrouter-integration"
-                ]
-              },
-              "features/integrations",
-              "features/image-generation"
-            ]
-          },
-          {
-            "group": "Implementation",
+            "group": "Deployment",
             "icon": "ship",
             "pages": [
               "onboarding-guides/deployment-strategies",
+              "features/prompt-registry/zero-downtime-releases"
+            ]
+          },
+          {
+            "group": "Self-Hosted PromptLayer",
+            "icon": "server",
+            "pages": [
               "self-hosted",
-              "migration"
+              "enterprise-deployments/aws"
+            ]
+          },
+          {
+            "group": "Eval Strategies",
+            "icon": "vial-circle-check",
+            "pages": [
+              "onboarding-guides/compare-models",
+              "onboarding-guides/backtesting-prompt-changes",
+              "onboarding-guides/batch-runs"
             ]
           },
           {
@@ -163,199 +180,221 @@
             "pages": [
               "why-promptlayer/multi-turn-chat",
               "why-promptlayer/fine-tuning",
-              "features/prompt-registry/zero-downtime-releases",
               "running-requests/prompt-blueprints"
             ]
-          },
-          "features/faq"
+          }
         ]
       },
       {
-        "group": "SDKs",
+        "group": "AI Tools",
         "pages": [
-          "sdks/python",
-          "sdks/javascript"
+          "agents/overview"
         ]
       },
       {
-        "group": "Agents",
+        "group": "Reference",
         "pages": [
-          "agents/mcp"
-        ]
-      },
-      {
-        "group": "REST API Reference",
-        "pages": [
-          "reference/introduction",
           {
-            "group": "Prompt Templates",
+            "group": "SDKs",
             "pages": [
-              "reference/templates-get",
-              "reference/templates-get-raw",
-              "reference/list-prompt-templates",
-              "reference/templates-publish",
-              "reference/templates-patch",
-              "reference/templates-labels-get",
-              "reference/prompt-labels-create",
-              "reference/prompt-labels-patch",
-              "reference/prompt-labels-delete",
-              "reference/get-snippet-usage",
-              "reference/external-ids-prompt-templates-upsert",
-              "reference/external-ids-prompt-templates-attach",
-              "reference/external-ids-prompt-templates-list",
-              "reference/external-ids-prompt-templates-delete"
+              "sdks/python",
+              "sdks/javascript"
             ]
           },
           {
-            "group": "Tracking",
+            "group": "REST API",
             "pages": [
-              "reference/get-request",
-              "reference/get-trace",
-              "reference/search-request-logs",
-              "reference/search-request-suggestions",
-              "reference/request-analytics",
-              "reference/log-request",
-              "reference/track-prompt",
-              "reference/track-score",
-              "reference/track-metadata",
-              "reference/spans-bulk",
-              "reference/otlp-ingest-traces"
+              "reference/introduction",
+              {
+                "group": "Prompt Templates",
+                "pages": [
+                  "reference/templates-get",
+                  "reference/templates-get-raw",
+                  "reference/list-prompt-templates",
+                  "reference/templates-publish",
+                  "reference/templates-patch",
+                  "reference/templates-labels-get",
+                  "reference/prompt-labels-create",
+                  "reference/prompt-labels-patch",
+                  "reference/prompt-labels-delete",
+                  "reference/get-snippet-usage",
+                  "reference/external-ids-prompt-templates-upsert",
+                  "reference/external-ids-prompt-templates-attach",
+                  "reference/external-ids-prompt-templates-list",
+                  "reference/external-ids-prompt-templates-delete"
+                ]
+              },
+              {
+                "group": "Tracking",
+                "pages": [
+                  "reference/get-request",
+                  "reference/get-trace",
+                  "reference/close-trace",
+                  "reference/search-request-logs",
+                  "reference/search-request-suggestions",
+                  "reference/request-analytics",
+                  "reference/log-request",
+                  "reference/track-prompt",
+                  "reference/track-score",
+                  "reference/track-metadata",
+                  "reference/spans-bulk",
+                  "reference/otlp-ingest-traces"
+                ]
+              },
+              {
+                "group": "Datasets",
+                "pages": [
+                  "reference/list-datasets",
+                  "reference/get-dataset-rows",
+                  "reference/create-dataset-group",
+                  "reference/create-dataset-version-from-file",
+                  "reference/create-dataset-version-from-filter-params",
+                  "reference/create-draft-dataset-version",
+                  "reference/add-request-log-to-dataset",
+                  "reference/add-trace-to-dataset",
+                  "reference/save-draft-dataset-version",
+                  "reference/external-ids-dataset-groups-attach",
+                  "reference/external-ids-dataset-groups-list",
+                  "reference/external-ids-dataset-groups-delete"
+                ]
+              },
+              {
+                "group": "Evaluations",
+                "pages": [
+                  "reference/list-evaluations",
+                  "reference/get-evaluation-rows",
+                  "reference/create-reports",
+                  "reference/run-report",
+                  "reference/get-report",
+                  "reference/get-report-score",
+                  "reference/add-report-columns",
+                  "reference/edit-report-column",
+                  "reference/delete-report-column",
+                  "reference/update-report-score-card",
+                  "reference/rename-report",
+                  "reference/delete-report",
+                  "reference/delete-reports-by-name",
+                  "reference/external-ids-reports-attach",
+                  "reference/external-ids-reports-list",
+                  "reference/external-ids-reports-delete"
+                ]
+              },
+              {
+                "group": "Workflows",
+                "pages": [
+                  "reference/list-workflows",
+                  "reference/get-workflow",
+                  "reference/get-workflow-labels",
+                  "reference/create-workflow",
+                  "reference/patch-workflow",
+                  "reference/run-workflow",
+                  "reference/workflow-version-execution-results",
+                  "reference/external-ids-workflows-attach",
+                  "reference/external-ids-workflows-list",
+                  "reference/external-ids-workflows-delete"
+                ]
+              },
+              {
+                "group": "Skill Collections",
+                "pages": [
+                  "reference/list-skill-collections",
+                  "reference/create-skill-collection",
+                  "reference/get-skill-collection",
+                  "reference/update-skill-collection",
+                  "reference/save-skill-collection-version",
+                  "reference/external-ids-skill-collections-attach",
+                  "reference/external-ids-skill-collections-list",
+                  "reference/external-ids-skill-collections-delete"
+                ]
+              },
+              {
+                "group": "Tool Registry",
+                "pages": [
+                  "reference/tool-registry-list",
+                  "reference/tool-registry-get",
+                  "reference/tool-registry-create",
+                  "reference/tool-registry-create-version",
+                  "reference/tool-registry-test-execute",
+                  "reference/external-ids-tool-registry-attach",
+                  "reference/external-ids-tool-registry-list",
+                  "reference/external-ids-tool-registry-delete"
+                ]
+              },
+              {
+                "group": "Environment Variables",
+                "tag": "New",
+                "pages": [
+                  "reference/env-vars-workspace-list",
+                  "reference/env-vars-workspace-create",
+                  "reference/env-vars-workspace-update",
+                  "reference/env-vars-workspace-delete",
+                  "reference/env-vars-tool-list",
+                  "reference/env-vars-tool-create",
+                  "reference/env-vars-tool-update",
+                  "reference/env-vars-tool-delete"
+                ]
+              },
+              {
+                "group": "Tables",
+                "tag": "New",
+                "pages": [
+                  "reference/tables-create",
+                  "reference/tables-list",
+                  "reference/tables-get",
+                  "reference/tables-update",
+                  "reference/table-sheets-list",
+                  "reference/table-sheets-create",
+                  "reference/table-sheets-get-operation",
+                  "reference/table-sheets-get",
+                  "reference/table-sheets-update",
+                  "reference/table-sheet-columns-list",
+                  "reference/table-sheet-columns-create",
+                  "reference/table-sheet-columns-update",
+                  "reference/table-sheet-rows-list",
+                  "reference/table-sheet-rows-add",
+                  "reference/table-sheet-cells-get",
+                  "reference/table-sheet-cells-update",
+                  "reference/table-sheet-cells-recalculate",
+                  "reference/table-sheet-cells-recalculate-batch",
+                  "reference/create-table-sheet-file-import",
+                  "reference/create-table-sheet-request-log-import",
+                  "reference/list-table-sheet-operations",
+                  "reference/create-table-sheet-operation",
+                  "reference/get-table-sheet-operation-status",
+                  "reference/cancel-table-sheet-operation",
+                  "reference/get-table-sheet-score",
+                  "reference/configure-table-sheet-score",
+                  "reference/recalculate-table-sheet-score",
+                  "reference/list-table-sheet-versions",
+                  "reference/create-table-sheet-version",
+                  "reference/get-table-sheet-version",
+                  "reference/get-table-sheet-score-history"
+                ]
+              },
+              {
+                "group": "Unified Registry",
+                "pages": [
+                  "reference/create-folder",
+                  "reference/update-folder",
+                  "reference/list-folder-entities",
+                  "reference/move-folder-entities",
+                  "reference/delete-folder-entities",
+                  "reference/resolve-folder-id",
+                  "reference/external-ids-folders-attach",
+                  "reference/external-ids-folders-list",
+                  "reference/external-ids-folders-delete"
+                ]
+              },
+              "reference/external-ids-overview"
             ]
           },
           {
-            "group": "Datasets",
+            "group": "Webhooks",
             "pages": [
-              "reference/list-datasets",
-              "reference/get-dataset-rows",
-              "reference/create-dataset-group",
-              "reference/create-dataset-version-from-file",
-              "reference/create-dataset-version-from-filter-params",
-              "reference/create-draft-dataset-version",
-              "reference/add-request-log-to-dataset",
-              "reference/save-draft-dataset-version",
-              "reference/external-ids-dataset-groups-attach",
-              "reference/external-ids-dataset-groups-list",
-              "reference/external-ids-dataset-groups-delete"
+              "features/prompt-registry/webhooks",
+              "features/prompt-registry/webhook-events"
             ]
-          },
-          {
-            "group": "Evaluations",
-            "pages": [
-              "reference/list-evaluations",
-              "reference/get-evaluation-rows",
-              "reference/create-reports",
-              "reference/run-report",
-              "reference/get-report",
-              "reference/get-report-score",
-              "reference/add-report-columns",
-              "reference/edit-report-column",
-              "reference/delete-report-column",
-              "reference/update-report-score-card",
-              "reference/rename-report",
-              "reference/delete-report",
-              "reference/delete-reports-by-name",
-              "reference/external-ids-reports-attach",
-              "reference/external-ids-reports-list",
-              "reference/external-ids-reports-delete"
-            ]
-          },
-          {
-            "group": "Tables",
-            "pages": [
-              "reference/list-tables",
-              "reference/create-table",
-              "reference/get-table",
-              "reference/update-table",
-              "reference/list-table-sheets",
-              "reference/create-table-sheet",
-              "reference/create-table-sheet-file-import",
-              "reference/create-table-sheet-request-log-import",
-              "reference/get-table-sheet-operation",
-              "reference/get-table-sheet",
-              "reference/update-table-sheet",
-              "reference/list-table-sheet-columns",
-              "reference/create-table-sheet-column",
-              "reference/update-table-sheet-column",
-              "reference/list-table-sheet-rows",
-              "reference/add-table-sheet-rows",
-              "reference/get-table-sheet-cell",
-              "reference/update-table-sheet-cell",
-              "reference/recalculate-table-sheet-cell",
-              "reference/recalculate-table-sheet-cells",
-              "reference/list-table-sheet-operations",
-              "reference/create-table-sheet-operation",
-              "reference/get-table-sheet-operation-status",
-              "reference/cancel-table-sheet-operation",
-              "reference/get-table-sheet-score",
-              "reference/configure-table-sheet-score",
-              "reference/recalculate-table-sheet-score",
-              "reference/list-table-sheet-versions",
-              "reference/create-table-sheet-version",
-              "reference/get-table-sheet-version",
-              "reference/get-table-sheet-score-history"
-            ]
-          },
-          {
-            "group": "Workflows",
-            "pages": [
-              "reference/list-workflows",
-              "reference/get-workflow",
-              "reference/get-workflow-labels",
-              "reference/create-workflow",
-              "reference/patch-workflow",
-              "reference/run-workflow",
-              "reference/workflow-version-execution-results",
-              "reference/external-ids-workflows-attach",
-              "reference/external-ids-workflows-list",
-              "reference/external-ids-workflows-delete"
-            ]
-          },
-          {
-            "group": "Skill Collections",
-            "pages": [
-              "reference/list-skill-collections",
-              "reference/create-skill-collection",
-              "reference/get-skill-collection",
-              "reference/update-skill-collection",
-              "reference/save-skill-collection-version",
-              "reference/external-ids-skill-collections-attach",
-              "reference/external-ids-skill-collections-list",
-              "reference/external-ids-skill-collections-delete"
-            ]
-          },
-          {
-            "group": "Tool Registry",
-            "pages": [
-              "reference/tool-registry-list",
-              "reference/tool-registry-get",
-              "reference/tool-registry-create",
-              "reference/external-ids-tool-registry-attach",
-              "reference/external-ids-tool-registry-list",
-              "reference/external-ids-tool-registry-delete"
-            ]
-          },
-          {
-            "group": "Unified Registry",
-            "pages": [
-              "reference/create-folder",
-              "reference/update-folder",
-              "reference/list-folder-entities",
-              "reference/move-folder-entities",
-              "reference/delete-folder-entities",
-              "reference/resolve-folder-id",
-              "reference/external-ids-folders-attach",
-              "reference/external-ids-folders-list",
-              "reference/external-ids-folders-delete"
-            ]
-          },
-          "reference/external-ids-overview"
-        ]
-      },
-      {
-        "group": "Webhooks",
-        "pages": [
-          "features/prompt-registry/webhooks",
-          "features/prompt-registry/webhook-events"
+          }
         ]
       }
     ]
@@ -363,7 +402,8 @@
   "contextual": {
     "options": [
       "copy",
-      "view"
+      "view",
+      "mcp"
     ]
   },
   "logo": {
@@ -388,6 +428,10 @@
       {
         "label": "Contact Us",
         "href": "mailto:hello@promptlayer.com"
+      },
+      {
+        "label": "Dashboard",
+        "href": "https://dashboard.promptlayer.com"
       }
     ]
   },
@@ -404,13 +448,17 @@
       "source": "/",
       "destination": "/overview"
     },
-    {
-      "source": "/introduction",
-      "destination": "/overview"
-    },
-    {
-      "source": "/languages/python",
-      "destination": "/sdks/python"
+        {
+          "source": "/introduction",
+          "destination": "/overview"
+        },
+        {
+          "source": "/quickstart-part-two",
+          "destination": "/quickstart"
+        },
+        {
+          "source": "/languages/python",
+          "destination": "/sdks/python"
     },
     {
       "source": "/languages/javascript",
@@ -419,6 +467,10 @@
     {
       "source": "/why-promptlayer/agents",
       "destination": "/why-promptlayer/workflows"
+    },
+    {
+      "source": "/agents/mcp",
+      "destination": "/agents/overview"
     },
     {
       "source": "/running-requests/promptlayer-run-agent",

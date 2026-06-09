@@ -183,6 +183,38 @@ When filtering nested fields (metadata, output, input_variables), the matching b
 As a rule of thumb: use `key_equals` for structured data (IDs, numbers, short strings) and `key_contains` for natural language text. If `key_equals` isn't returning expected results for a longer text value, try `key_contains`.
 </Tip>
 
+## Filter Operators
+
+Request-log filters use an operator that matches the field type:
+
+| Field Type | Common Fields | Operators |
+|------------|---------------|-----------|
+| String | `engine`, `provider_type`, `status` | `is`, `is_not`, `in`, `not_in` |
+| Text | `input_text`, `output_text` | `contains`, `not_contains`, `starts_with`, `ends_with` |
+| Numeric | `cost`, `latency_ms`, `input_tokens`, `output_tokens` | `eq`, `neq`, `gt`, `gte`, `lt`, `lte`, `between`, `is_null`, `is_not_null` |
+| Datetime | `request_start_time`, `request_end_time` | `is`, `before`, `after`, `between` |
+| Boolean | `is_json`, `is_tool_call`, `is_plain_text` | `is_true`, `is_false` |
+| Array | `tags`, `metadata_keys`, `tool_names`, `output_keys`, `input_variable_keys` | `contains`, `not_contains`, `in`, `not_in`, `is_empty`, `is_not_empty` |
+| Nested | `metadata`, `output`, `input_variables` | `key_equals`, `key_not_equals`, `key_contains`, `in`, `not_in`, `is_empty`, `is_not_empty` |
+
+Nested fields require `nested_key` to identify the flattened key to inspect.
+
+```json
+{
+  "filter_group": {
+    "logic": "AND",
+    "filters": [
+      {
+        "field": "metadata",
+        "operator": "key_equals",
+        "nested_key": "user_id",
+        "value": "customer_123"
+      }
+    ]
+  }
+}
+```
+
 ## Quick Reference
 
 | Field | What's Indexed | When |

@@ -1,69 +1,12 @@
 ---
 title: "Get Request"
 openapi: "GET /api/public/v2/requests/{request_id}"
-description: "Retrieve a request's payload as a prompt blueprint, along with token usage and timing data."
 ---
 
-Retrieve the full payload of a logged request by its ID, returned as a [prompt blueprint](/running-requests/prompt-blueprints). This is useful for:
+Retrieve the full payload of a logged request by ID. The response includes a prompt blueprint, token usage, timing data, pricing, and an associated `trace_id` when tracing data is available.
 
-- **Request replay**: Re-run a request with the same input and parameters
-- **Debugging**: Inspect the exact prompt and model configuration used
-- **Dataset creation**: Extract request data for use in evaluations
-- **Cost analysis**: Review token usage and pricing for individual requests
+## Related
 
-The response includes the prompt blueprint (input messages, model configuration, and parameters) along with token counts, timing data, and a `trace_id` field linking to the associated trace (if the request was logged via tracing or OpenTelemetry).
-
-### Authentication
-
-This endpoint requires API key authentication via the `X-API-KEY` header.
-
-### Example
-
-```bash
-curl -H "X-API-KEY: your_api_key" \
-  https://api.promptlayer.com/api/public/v2/requests/12345
-```
-
-### Response
-
-```json
-{
-  "success": true,
-  "prompt_blueprint": {
-    "prompt_template": {
-      "type": "chat",
-      "messages": [
-        {
-          "role": "user",
-          "content": [{ "type": "text", "text": "Hello, world!" }]
-        }
-      ]
-    },
-    "metadata": {
-      "model": {
-        "provider": "openai",
-        "name": "gpt-4",
-        "parameters": {}
-      }
-    },
-    "inference_client_name": null
-  },
-  "request_id": 12345,
-  "provider": "openai",
-  "model": "gpt-4",
-  "input_tokens": 12,
-  "output_tokens": 25,
-  "tokens": 37,
-  "price": 0.00123,
-  "request_start_time": "2024-04-03T20:57:25",
-  "request_end_time": "2024-04-03T20:57:26",
-  "latency_ms": 1000.0,
-  "trace_id": "a1b2c3d4e5f6a7b8c9d0e1f2a3b4c5d6"
-}
-```
-
-### Related
-
-- [Request IDs](/features/prompt-history/request-id) - How to obtain request IDs
-- [Prompt Blueprints](/running-requests/prompt-blueprints) - Understanding the blueprint format
-- [Log Request](/reference/log-request) - Log new requests
+- [Request IDs](/features/prompt-history/request-id)
+- [Prompt Blueprints](/running-requests/prompt-blueprints)
+- [Get Trace](/reference/get-trace)

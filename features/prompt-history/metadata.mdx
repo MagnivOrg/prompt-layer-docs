@@ -7,6 +7,34 @@ PromptLayer allows you to attach multiple key value pairs as metadata to a reque
 
 We recommend using this for things like session IDs, user IDs, or error messages. Metadata is useful to help you use the [advanced search](/why-promptlayer/advanced-search) or understand the Analytics page.
 
+## Add metadata when running a prompt
+
+Pass metadata directly into `client.run()` when you already know the request context, such as the user, session, or feature that triggered the prompt.
+
+```python Python
+response = client.run(
+    prompt_name="cake-recipe",
+    input_variables={"cake_type": "Chocolate", "serving_size": "8"},
+    tags=["production", "recipe-feature"],
+    metadata={
+        "user_id": "user_123",
+        "session_id": "sess_abc"
+    }
+)
+
+client.track.score(request_id=response["request_id"], score=95)
+```
+
+Your metadata and tags appear in the log details, letting you filter and search by user or feature.
+
+<Frame>
+  <img src="/new-quickstart-images/metadata-search.png" alt="Log with metadata" />
+</Frame>
+
+## Add metadata after a request
+
+Use `track.metadata()` when you need to attach or update metadata after a request has already run.
+
 [Endpoint Reference](/reference/track-metadata)
 
 <CodeGroup>
@@ -61,4 +89,10 @@ Once metadata is added, you will then be able to see it in the web UI.
 
 ![score](/images/metadata-ui.png)
 
-Please note that while metadata is optimized for storing unique, request-specific data such as user IDs or session IDs, it might not be the best choice for categorizing requests when you have a small set of predefined categories. For categorization based on a small number of predefined options, please use [tags](/features/prompt-history/tagging-requests) instead.
+Metadata is optimized for high-cardinality, request-specific values such as user IDs, session IDs, and error messages. For a smaller set of categories, such as environment, app, feature, or pipeline stage, use [tags](/features/prompt-history/tagging-requests) instead.
+
+## Attaching metadata via OpenTelemetry
+
+If you instrument your app with OpenTelemetry, you can attach metadata directly from span attributes — no `track.metadata()` call required. PromptLayer automatically maps standard attributes like `user.id` and `gen_ai.conversation.id`, and also reads arbitrary `promptlayer.metadata.<key>` attributes.
+
+See [Attaching User Identity & Metadata](/features/opentelemetry#attaching-user-identity-%26-metadata) in the OpenTelemetry guide for details.

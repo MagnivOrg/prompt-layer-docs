@@ -7,12 +7,12 @@ PromptLayer natively supports [OpenTelemetry (OTEL)](https://opentelemetry.io/),
 
 This is ideal when:
 
-- Your framework isn't listed on the [Integrations](/features/integrations) page
+- Your framework isn't listed on the [Telemetry Integrations](/features/integrations) page
 - You already have an OpenTelemetry pipeline and want to add PromptLayer as a destination
 - You want vendor-neutral instrumentation
 
 <Note>
-If you're using a supported framework like the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [OpenAI Agents SDK](/features/integrations#openai-agents-sdk), or [Claude Code](/features/integrations#claude-code), see the [Integrations](/features/integrations) page for framework-specific setup — those integrations handle the OTEL configuration for you.
+If you're using a supported framework like the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [OpenAI Agents SDK](/features/integrations#openai-agents-sdk), or [Claude Code](/features/integrations#claude-code), see the [Telemetry Integrations](/features/integrations) page for framework-specific setup — those integrations handle the OTEL configuration for you.
 </Note>
 
 ## How It Works
@@ -126,10 +126,8 @@ You can associate OTEL spans with prompt templates in your PromptLayer workspace
 
 | Attribute | Type | Description |
 |---|---|---|
-| `promptlayer.prompt.name` | string | Name of the prompt template |
-| `promptlayer.prompt.id` | integer | ID of the prompt template (alternative to `name`) |
-| `promptlayer.prompt.version` | integer | Specific version number (optional) |
-| `promptlayer.prompt.label` | string | Label to resolve version (e.g. `production`) |
+| `promptlayer.prompt.name` | string | Name of the prompt template in your workspace |
+| `promptlayer.prompt.version` | integer | Specific version number to link (optional) |
 
 <CodeGroup>
 ```python Python
@@ -140,7 +138,7 @@ tracer = trace.get_tracer("my-llm-app")
 with tracer.start_as_current_span("llm-call") as span:
     # Link this span to a prompt template
     span.set_attribute("promptlayer.prompt.name", "my-prompt")
-    span.set_attribute("promptlayer.prompt.label", "production")
+    span.set_attribute("promptlayer.prompt.version", 3)
 
     # Add GenAI attributes
     span.set_attribute("gen_ai.request.model", "gpt-4")
@@ -157,7 +155,7 @@ const tracer = trace.getTracer("my-llm-app");
 tracer.startActiveSpan("llm-call", (span) => {
   // Link this span to a prompt template
   span.setAttribute("promptlayer.prompt.name", "my-prompt");
-  span.setAttribute("promptlayer.prompt.label", "production");
+  span.setAttribute("promptlayer.prompt.version", 3);
 
   // Add GenAI attributes
   span.setAttribute("gen_ai.request.model", "gpt-4");
@@ -169,6 +167,68 @@ tracer.startActiveSpan("llm-call", (span) => {
 });
 ```
 </CodeGroup>
+
+## Attaching User Identity & Metadata
+
+You can attach searchable metadata — including end-user identity and conversation IDs — to the request logs generated from your spans. This is the OpenTelemetry-native equivalent of the PromptLayer SDK's `track.metadata()`, with no extra REST call required.
+
+PromptLayer recognizes two kinds of span attributes for metadata.
+
+### Standard OpenTelemetry attributes
+
+If your instrumentation already follows OpenTelemetry conventions, these are picked up automatically — no PromptLayer-specific attributes needed:
+
+| Attribute | Mapped to | Description |
+|---|---|---|
+| `user.id` | `user_id` metadata | End-user identity (current OpenTelemetry attribute) |
+| `enduser.id` | `user_id` metadata | End-user identity (deprecated OpenTelemetry attribute, supported as a fallback) |
+| `gen_ai.conversation.id` | `conversation_id` metadata | Conversation / session / thread identifier (OpenTelemetry GenAI attribute) |
+| `session.id` | `conversation_id` metadata | Conversation identifier (common alias, supported as a fallback) |
+
+### PromptLayer custom metadata
+
+For arbitrary key/value metadata, use the `promptlayer.metadata.` namespace. Each attribute becomes a metadata key on the request log — for example, `promptlayer.metadata.tenant` becomes a `tenant` metadata key.
+
+| Attribute | Mapped to |
+|---|---|
+| `promptlayer.metadata.<key>` | `<key>` metadata |
+
+<CodeGroup>
+```python Python
+with tracer.start_as_current_span("llm-call") as span:
+    # Standard OpenTelemetry attributes
+    span.set_attribute("user.id", "customer-42")
+    span.set_attribute("gen_ai.conversation.id", "conv_abc123")
+
+    # Arbitrary PromptLayer metadata
+    span.set_attribute("promptlayer.metadata.tenant", "acme-corp")
+    span.set_attribute("promptlayer.metadata.environment", "production")
+
+    # ... make your LLM call ...
+```
+
+```javascript JavaScript
+tracer.startActiveSpan("llm-call", (span) => {
+  // Standard OpenTelemetry attributes
+  span.setAttribute("user.id", "customer-42");
+  span.setAttribute("gen_ai.conversation.id", "conv_abc123");
+
+  // Arbitrary PromptLayer metadata
+  span.setAttribute("promptlayer.metadata.tenant", "acme-corp");
+  span.setAttribute("promptlayer.metadata.environment", "production");
+
+  // ... make your LLM call ...
+
+  span.end();
+});
+```
+</CodeGroup>
+
+An explicit `promptlayer.metadata.<key>` always takes precedence over a standard attribute mapped to the same key. For example, if a span has both `user.id` and `promptlayer.metadata.user_id`, the `promptlayer.metadata.user_id` value wins.
+
+<Note>
+Metadata is attached to the request log generated from the span, so set these attributes on your **LLM call spans**. To apply metadata across an entire trace, set the attributes as **resource attributes** — they apply to every span in the export.
+</Note>
 
 ## Using an OpenTelemetry Collector
 
@@ -196,5 +256,5 @@ The endpoint accepts both binary protobuf (`application/x-protobuf`, recommended
 ## Next Steps
 
 - [OTLP Ingest Traces API Reference](/reference/otlp-ingest-traces) — full endpoint documentation
-- [Integrations](/features/integrations) — framework-specific setups (Vercel AI SDK, OpenAI Agents, Claude Code)
+- [Telemetry Integrations](/features/integrations) — framework-specific setups (Vercel AI SDK, OpenAI Agents, Claude Code)
 - [Traces](/running-requests/traces) — PromptLayer SDK native tracing with `@traceable` and `wrapWithSpan`

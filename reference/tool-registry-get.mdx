@@ -8,3 +8,5 @@ Retrieve a tool from the Tool Registry by ID or name. Optionally resolve a speci
 The `identifier` can be either:
 - A numeric tool ID (e.g., `123`)
 - A tool name (e.g., `get_weather`)
+
+The resolved version includes the `tool_definition`. If the version was saved with an [auto-execution](/features/tool-registry/auto-execution) body, it also includes an `execution: { type, language, code }` object.

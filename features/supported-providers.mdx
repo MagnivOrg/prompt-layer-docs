@@ -1,5 +1,6 @@
 ---
 title: "Supported Providers"
+description: "Review the LLM providers and model capabilities PromptLayer supports."
 icon: "list-check"
 ---
 
@@ -11,7 +12,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 
 - Chat Completions, Responses API, and Images API are all supported.
 - Function/Tool Calling (including built-in Responses API tools: Web Search, File Search, Image Generation) — see [Tool Calling](/features/prompt-registry/tool-calling).
-- **Image Generation** via three paths: Images API (`dall-e-2`, `dall-e-3`, `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`), Responses API `image_generation` tool, and GPT Image models — see [Image Generation](/features/image-generation).
+- **Image Generation** via three paths: Images API (`dall-e-2`, `dall-e-3`, `gpt-image-1`, `gpt-image-1-mini`, `gpt-image-1.5`, `gpt-image-2`), Responses API `image_generation` tool, and GPT Image models — see [Image Generation](/features/image-generation).
 - JSON mode / structured outputs.
 - Vision models (e.g., `gpt-4-vision`) — see [FAQ: multimodal](/features/faq#does-promptlayer-support-multi-modal-image-models-like-gpt-4-vision).
 - Streaming via SDK (Python/JS).
@@ -54,6 +55,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 
 - Access Anthropic Claude, Meta Llama, Mistral, Cohere, AI21 Jamba, Nova, DeepSeek, Gemma, and GPT-OSS models via AWS Bedrock Converse API.
 - **Prompt Caching** — supported for Claude models on Bedrock (PromptLayer handles the Bedrock `cachePoint` format automatically). See [Anthropic Prompt Caching](#anthropic-prompt-caching) below.
+- **Structured output** — Claude models on Bedrock receive the same JSON Schema normalization as the native Anthropic provider (including `oneOf` → `anyOf` rewriting). Other Bedrock models use standard nullable-union normalization.
 - Capabilities vary per model family—see tool calling support below.
 - Streaming via SDK (Python/JS).
 
@@ -78,6 +80,7 @@ Limitations:
 ### Cohere
 
 - Command/Command-R family supported.
+- **Structured output** — JSON Schema response format is supported and available in the Playground's Advanced Model Controls.
 - Feature availability (streaming, tool use) depends on the chosen model.
 
 ### Hugging Face
@@ -112,6 +115,7 @@ Examples:
 Capabilities:
 - Works in Logs, Prompt Registry, and Playground.
 - Evaluations: supported when the provider's OpenAI-compat layer matches PromptLayer parameters; remove unsupported params if needed (e.g., some providers do not support "seed").
+- Provider-specific parameters not in the standard OpenAI SDK (e.g., `thinking` for Kimi/Moonshot) are automatically forwarded to the provider in the request body — no extra configuration needed.
 - Tool/Function Calling and streaming availability depend on the provider/model.
 
 ## Anthropic Prompt Caching
@@ -129,7 +133,7 @@ Set a cache duration in the **Advanced Model Controls** (Prompt Caching dropdown
 Available durations:
 
 | Duration | Providers |
-|----------|-----------|
+|----------|----------|
 | **5 minutes** | Anthropic, Vertex AI, Amazon Bedrock (all supported Claude models) |
 | **1 hour** | Anthropic, Vertex AI, Amazon Bedrock (Claude Sonnet 4.5 only) |
 

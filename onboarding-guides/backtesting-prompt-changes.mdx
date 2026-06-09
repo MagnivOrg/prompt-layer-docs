@@ -1,0 +1,46 @@
+---
+title: "Backtest Prompt Changes"
+description: "Test a new prompt version against historical request data before releasing it."
+icon: "clock-rotate-left"
+---
+
+Backtesting lets you run a new prompt version against real historical inputs. Use it when you want to understand how a prompt change would have affected production or staging traffic.
+
+## Create a historical dataset
+
+Go to **Datasets** and click **Add from Request History**. This opens a request log browser where you can filter and select requests.
+
+<Frame>
+  <img src="/new-quickstart-images/add-from-request-history.png" alt="Adding from request history" />
+</Frame>
+
+Filter by prompt name, date range, metadata, score, tag, or request content. Select the requests you want and click **Add Requests**.
+
+The dataset captures the real inputs users sent, along with the outputs your current prompt produced.
+
+## Run a backtest
+
+Create an evaluation that runs your new prompt version against the historical dataset.
+
+Add columns for:
+
+- **New prompt output**: The response from your updated prompt version
+- **Comparison**: An equality comparison, semantic similarity check, LLM-as-judge score, or human review column
+
+<Frame>
+  <img src="/new-quickstart-images/backtest-results.png" alt="Backtest results" />
+</Frame>
+
+Review the differences before assigning a production release label to the new version.
+
+## Automate backtests
+
+Attach the backtest evaluation to your prompt so it runs when you save a new version. This creates a regression check before the change reaches production.
+
+Learn more in [Continuous Integration](/features/evaluations/continuous-integration).
+
+## Next steps
+
+- [Create datasets from history](/features/evaluations/datasets-create-from-history)
+- [Evaluation pipelines](/features/evaluations/building-pipelines)
+- [Release labels](/features/prompt-registry/release-labels)

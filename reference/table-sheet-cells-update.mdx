@@ -1,0 +1,8 @@
+---
+title: "Update Cell"
+openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}"
+---
+
+Edit the value of a text column cell. Only cells in `text` type columns can be edited directly — non-text column cells are computed automatically.
+
+Editing a cell marks downstream dependent cells as `stale`.

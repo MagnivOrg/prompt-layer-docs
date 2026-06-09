@@ -6,7 +6,7 @@ icon: "diagram-project"
 Traces are a powerful feature in PromptLayer that allow you to monitor and analyze the execution flow of your applications, including LLM requests. Built on OpenTelemetry, Traces provide detailed insights into function calls, their durations, inputs, and outputs.
 
 <Note>
-This page covers tracing with the **PromptLayer SDK** (`@traceable`, `wrapWithSpan`). If you want to send traces from any OpenTelemetry SDK or Collector without using the PromptLayer SDK, see the [OpenTelemetry](/features/opentelemetry) page. For framework-specific integrations (Vercel AI SDK, OpenAI Agents, Claude Code), see [Integrations](/features/integrations).
+This page covers tracing with the **PromptLayer SDK** (`@traceable`, `wrapWithSpan`). If you want to send traces from any OpenTelemetry SDK or Collector without using the PromptLayer SDK, see the [OpenTelemetry](/features/opentelemetry) page. For framework-specific integrations (Vercel AI SDK, OpenAI Agents, Claude Code), see [Telemetry Integrations](/features/integrations).
 </Note>
 
 ## Overview
@@ -222,3 +222,13 @@ if __name__ == "__main__":
 ```
 
 ![Group nests spans](/images/traces/nested-spans.png)
+
+## Filtering Traces by Span Attributes
+
+The trace list can be filtered by metadata and resource attribute values. Filters search across the **entire span hierarchy** — a trace appears in results if any span within it (root or child) carries a matching attribute.
+
+For example, if only a nested LLM call span has `{"environment": "production"}` in its attributes, filtering the trace list by `environment = production` will still surface the parent trace in results, even if the root span itself does not carry that attribute.
+
+### Adding Filters from the Span Detail Panel
+
+When you open a span in the trace detail view, hovering over a scalar metadata or resource value reveals a filter button. Clicking it adds the key-value pair as an active filter on the trace list. The filter button appears only for top-level scalar values (string, number, or boolean). Nested objects and arrays are displayed for inspection but cannot be used as direct filter targets.

@@ -1,0 +1,6 @@
+---
+title: "Create Workspace Env Var"
+openapi: "POST /api/public/v2/env-vars"
+---
+
+Create a workspace-scoped environment variable. The key must be a valid identifier (`^[A-Za-z_][A-Za-z0-9_]*$`). The value may be empty to create a placeholder that the user fills in later via the Settings UI.

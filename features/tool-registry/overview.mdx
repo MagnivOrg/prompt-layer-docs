@@ -5,6 +5,8 @@ icon: "wrench"
 
 The Tool Registry is a centralized store for tool definitions (function schemas) that can be reused across prompts. Instead of copying the same tool definition into every prompt, define it once and reference it everywhere.
 
+Tools can also carry an **execution body** that PromptLayer runs in a sandbox between LLM turns, so prompts that use them complete end-to-end without your application writing a tool-call loop. See [Auto Tool Execution](/features/tool-registry/auto-execution) for details.
+
 ## The Problem
 
 Without a registry, tool definitions get copy-pasted across prompts. A `get_weather` tool might exist in 20 different prompts, each with slightly different parameter names, descriptions, or schemas. When you need to update it, you have to find and edit every copy. Some get missed, and now your prompts behave inconsistently.

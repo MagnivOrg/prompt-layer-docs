@@ -4,24 +4,3 @@ openapi: "GET /api/public/v2/evaluations"
 ---
 
 Retrieve a paginated list of evaluations in your workspace.
-
-### Authentication
-
-This endpoint requires API key authentication.
-
-### Filtering by Name
-
-Use the `name` parameter to search for evaluations by name. The search is case-insensitive and matches partial names. This is useful for discovering existing evaluations programmatically.
-
-### Filtering by Status
-
-Use the `status` parameter to control which evaluations are returned based on their deletion status:
-- `active` (default): Returns only active evaluations
-- `deleted`: Returns only deleted/archived evaluations
-- `all`: Returns both active and deleted evaluations
-
-### Including Batch Runs
-
-Use the `include_runs` parameter to include batch run details nested under each evaluation. When set to `true`, each evaluation object in the response will include a `runs` array containing all of its batch runs with their status and cell status counts.
-
-This is useful for programmatically discovering batch run IDs without needing to inspect the UI.

@@ -31,6 +31,13 @@ Steps execute in order left to right. That means that if a column depends on a p
 - **Custom API Endpoint**: Define a URL to send and receive data, suitable for custom evaluators or external systems.
 - **Human Input**: Engage human graders by adding a step that allows for textual input.
 - **String Comparison**: Use this step to compare the outputs of two previous step, showing a visual diff when relevant.
+- **LLM Assertion**: Use an AI judge to score whether an output satisfies a natural-language criterion.
+
+<Frame>
+  <img src="/new-quickstart-images/eval-pipeline.png" alt="Eval pipeline setup" />
+</Frame>
+
+For model comparison, add multiple **Prompt Template** columns that use the same prompt with different model overrides. See [Compare Models](/onboarding-guides/compare-models).
 
 #### Scoring
 

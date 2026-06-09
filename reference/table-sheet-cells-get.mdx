@@ -1,0 +1,8 @@
+---
+title: "Get Cell"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}"
+---
+
+Retrieve a single cell by ID, including its current status, display value, and structured value.
+
+Cell statuses: `completed`, `stale`, `running`, `queued`, `error`, `cancelled`.
