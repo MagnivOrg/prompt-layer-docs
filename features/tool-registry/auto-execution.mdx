@@ -116,12 +116,39 @@ The loop is capped at 10 LLM calls per request to prevent runaway loops. If the 
 
 This split keeps the LLM resilient to expected errors (bad args, missing keys) but lets infrastructure failures surface so you can see and fix them.
 
+## Environment Variables
+
+Execution bodies often need secrets — API keys, tokens, connection strings — that shouldn't be hard-coded in the editor (editor content is versioned and visible to anyone with workspace access).
+
+Use **environment variables** to inject secrets at execution time. There are two scopes:
+
+- **Workspace env vars** — shared across all tools in the workspace. Set them once in **Settings → Environment Variables**.
+- **Tool env vars** — scoped to a specific tool. Set them in the tool's **Configure** dialog. Tool-level values override workspace-level values when the same key exists in both.
+
+Inside an execution body, read them with the standard runtime API:
+
+<CodeGroup>
+```python Python
+import os
+
+api_key = os.environ["MY_API_KEY"]
+```
+
+```javascript JavaScript
+const apiKey = process.env.MY_API_KEY;
+```
+</CodeGroup>
+
+Values are encrypted at rest and only the last 4 characters are shown in the UI. Variables are injected into the sandbox process at runtime and never appear in the versioned source code.
+
+You can also create and list env vars through the [public API](/api-reference/env-vars/list-workspace-env-vars).
+
 ## Sandbox & Security
 
 Execution bodies run in an isolated sandbox per request. Each invocation gets a fresh process: no shared state between calls, no access to your application's environment or filesystem. Standard libraries plus the common Python/JS ecosystem are available.
 
 <Warning>
-The execution body is your code. Treat it like production code. Anything secret it needs (API keys, etc.) must be injected via your tool's logic, not hard-coded in the body. Hardcoded secrets in the editor are versioned and visible to anyone with workspace access.
+The execution body is your code. Treat it like production code. Never hard-code secrets directly in the body — use [environment variables](#environment-variables) instead.
 </Warning>
 
 ## Enabling Auto Execution

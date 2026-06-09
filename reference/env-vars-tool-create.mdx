@@ -1,0 +1,6 @@
+---
+title: "Create Tool Env Var"
+openapi: "POST /api/public/v2/tool-registry/{identifier}/env-vars"
+---
+
+Create a tool-scoped environment variable. Tool-level variables take precedence over workspace-level variables with the same key when the tool executes.

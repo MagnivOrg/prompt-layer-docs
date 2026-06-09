@@ -321,6 +321,20 @@
                 ]
               },
               {
+                "group": "Environment Variables",
+                "tag": "New",
+                "pages": [
+                  "reference/env-vars-workspace-list",
+                  "reference/env-vars-workspace-create",
+                  "reference/env-vars-workspace-update",
+                  "reference/env-vars-workspace-delete",
+                  "reference/env-vars-tool-list",
+                  "reference/env-vars-tool-create",
+                  "reference/env-vars-tool-update",
+                  "reference/env-vars-tool-delete"
+                ]
+              },
+              {
                 "group": "Tables",
                 "tag": "New",
                 "pages": [
