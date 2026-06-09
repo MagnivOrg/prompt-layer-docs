@@ -7515,7 +7515,7 @@
                       },
                       "code": {
                         "type": "string",
-                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
+                        "description": "The function BODY only \u2014 the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. The LLM's arguments arrive as a single `args` object."
                       }
                     }
                   }
@@ -7655,7 +7655,7 @@
                         "version": {
                           "type": "object",
                           "nullable": true,
-                          "description": "Resolved version object — includes `tool_definition` and (if set) `execution: { type, language, code }`."
+                          "description": "Resolved version object \u2014 includes `tool_definition` and (if set) `execution: { type, language, code }`."
                         },
                         "tool_definition": {
                           "type": "object",
@@ -11125,7 +11125,7 @@
                           },
                           "cells": {
                             "type": "object",
-                            "description": "Map of column_id (UUID string) → cell object.",
+                            "description": "Map of column_id (UUID string) \u2192 cell object.",
                             "additionalProperties": {
                               "$ref": "#/components/schemas/Cell"
                             }
@@ -11216,7 +11216,7 @@
                 "properties": {
                   "count": {
                     "type": "integer",
-                    "description": "Number of rows to append (1–100).",
+                    "description": "Number of rows to append (1\u2013100).",
                     "default": 1,
                     "minimum": 1,
                     "maximum": 100
@@ -11224,7 +11224,7 @@
                   "values": {
                     "type": "array",
                     "nullable": true,
-                    "description": "Per-row initial values for text columns. Each element is a map of column_id → value.",
+                    "description": "Per-row initial values for text columns. Each element is a map of column_id \u2192 value.",
                     "items": {
                       "type": "object",
                       "additionalProperties": true
@@ -11760,7 +11760,7 @@
                       },
                       "code": {
                         "type": "string",
-                        "description": "The function BODY only — the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
+                        "description": "The function BODY only \u2014 the signature `def <name>(args):` (Python) or `function <name>(args) { ... }` (JavaScript) is generated automatically. LLM arguments arrive as a single `args` object."
                       }
                     }
                   },
@@ -11853,7 +11853,7 @@
                 "properties": {
                   "inputs": {
                     "type": "object",
-                    "description": "Arguments passed to the tool body. Same shape the LLM would emit — keys match the tool's parameter names.",
+                    "description": "Arguments passed to the tool body. Same shape the LLM would emit \u2014 keys match the tool's parameter names.",
                     "additionalProperties": true
                   },
                   "execution": {
@@ -11896,7 +11896,7 @@
         },
         "responses": {
           "200": {
-            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object — they do NOT raise.",
+            "description": "Tool executed (success or user-code error). User-code errors return status=\"error\" inside the result object \u2014 they do NOT raise.",
             "content": {
               "application/json": {
                 "schema": {
@@ -12074,6 +12074,776 @@
                 }
               }
             }
+          }
+        }
+      }
+    },
+    "/api/public/v2/env-vars": {
+      "get": {
+        "tags": [
+          "env-vars"
+        ],
+        "summary": "List Workspace Env Vars",
+        "operationId": "list_workspace_env_vars",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "workspace_env_vars": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "key": {
+                            "type": "string"
+                          },
+                          "value_suffix": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Last 4 characters of the stored value. Null or empty when the value is empty."
+                          },
+                          "is_empty": {
+                            "type": "boolean",
+                            "description": "True when the value has not been set yet (placeholder created by the AI assistant)."
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "workspace_id": {
+                            "type": "integer",
+                            "description": "Present on workspace-scoped env vars."
+                          },
+                          "tool_registry_id": {
+                            "type": "integer",
+                            "description": "Present on tool-scoped env vars."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "env-vars"
+        ],
+        "summary": "Create Workspace Env Var",
+        "operationId": "create_workspace_env_var",
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "key"
+                ],
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                    "description": "Environment variable name. Must start with a letter or underscore and contain only letters, digits, and underscores."
+                  },
+                  "value": {
+                    "type": "string",
+                    "maxLength": 8192,
+                    "description": "Value to store. May be empty to create a placeholder that the user will fill in later."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "workspace_env_var": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "value_suffix": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Last 4 characters of the stored value. Null or empty when the value is empty."
+                        },
+                        "is_empty": {
+                          "type": "boolean",
+                          "description": "True when the value has not been set yet (placeholder created by the AI assistant)."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "workspace_id": {
+                          "type": "integer",
+                          "description": "Present on workspace-scoped env vars."
+                        },
+                        "tool_registry_id": {
+                          "type": "integer",
+                          "description": "Present on tool-scoped env vars."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "An environment variable with that key already exists in this workspace.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/env-vars/{var_id}": {
+      "patch": {
+        "tags": [
+          "env-vars"
+        ],
+        "summary": "Update Workspace Env Var",
+        "operationId": "update_workspace_env_var",
+        "parameters": [
+          {
+            "name": "var_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 8192,
+                    "description": "New value for the environment variable. Must be non-empty."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "workspace_env_var": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "value_suffix": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Last 4 characters of the stored value. Null or empty when the value is empty."
+                        },
+                        "is_empty": {
+                          "type": "boolean",
+                          "description": "True when the value has not been set yet (placeholder created by the AI assistant)."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "workspace_id": {
+                          "type": "integer",
+                          "description": "Present on workspace-scoped env vars."
+                        },
+                        "tool_registry_id": {
+                          "type": "integer",
+                          "description": "Present on tool-scoped env vars."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workspace env var not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "env-vars"
+        ],
+        "summary": "Delete Workspace Env Var",
+        "operationId": "delete_workspace_env_var",
+        "parameters": [
+          {
+            "name": "var_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Workspace env var not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/env-vars": {
+      "get": {
+        "tags": [
+          "env-vars",
+          "tool-registry"
+        ],
+        "summary": "List Tool Env Vars",
+        "operationId": "list_tool_env_vars",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "tool_env_vars": {
+                      "type": "array",
+                      "items": {
+                        "type": "object",
+                        "properties": {
+                          "id": {
+                            "type": "integer"
+                          },
+                          "key": {
+                            "type": "string"
+                          },
+                          "value_suffix": {
+                            "type": "string",
+                            "nullable": true,
+                            "description": "Last 4 characters of the stored value. Null or empty when the value is empty."
+                          },
+                          "is_empty": {
+                            "type": "boolean",
+                            "description": "True when the value has not been set yet (placeholder created by the AI assistant)."
+                          },
+                          "created_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "updated_at": {
+                            "type": "string",
+                            "format": "date-time"
+                          },
+                          "workspace_id": {
+                            "type": "integer",
+                            "description": "Present on workspace-scoped env vars."
+                          },
+                          "tool_registry_id": {
+                            "type": "integer",
+                            "description": "Present on tool-scoped env vars."
+                          }
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "post": {
+        "tags": [
+          "env-vars",
+          "tool-registry"
+        ],
+        "summary": "Create Tool Env Var",
+        "operationId": "create_tool_env_var",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "key"
+                ],
+                "properties": {
+                  "key": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 255,
+                    "pattern": "^[A-Za-z_][A-Za-z0-9_]*$",
+                    "description": "Environment variable name. Must start with a letter or underscore and contain only letters, digits, and underscores."
+                  },
+                  "value": {
+                    "type": "string",
+                    "maxLength": 8192,
+                    "description": "Value to store. May be empty to create a placeholder that the user will fill in later."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "tool_env_var": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "value_suffix": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Last 4 characters of the stored value. Null or empty when the value is empty."
+                        },
+                        "is_empty": {
+                          "type": "boolean",
+                          "description": "True when the value has not been set yet (placeholder created by the AI assistant)."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "workspace_id": {
+                          "type": "integer",
+                          "description": "Present on workspace-scoped env vars."
+                        },
+                        "tool_registry_id": {
+                          "type": "integer",
+                          "description": "Present on tool-scoped env vars."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "409": {
+            "description": "An environment variable with that key already exists on this tool.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/tool-registry/{identifier}/env-vars/{var_id}": {
+      "patch": {
+        "tags": [
+          "env-vars",
+          "tool-registry"
+        ],
+        "summary": "Update Tool Env Var",
+        "operationId": "update_tool_env_var",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          },
+          {
+            "name": "var_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "required": [
+                  "value"
+                ],
+                "properties": {
+                  "value": {
+                    "type": "string",
+                    "minLength": 1,
+                    "maxLength": 8192,
+                    "description": "New value for the environment variable. Must be non-empty."
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "tool_env_var": {
+                      "type": "object",
+                      "properties": {
+                        "id": {
+                          "type": "integer"
+                        },
+                        "key": {
+                          "type": "string"
+                        },
+                        "value_suffix": {
+                          "type": "string",
+                          "nullable": true,
+                          "description": "Last 4 characters of the stored value. Null or empty when the value is empty."
+                        },
+                        "is_empty": {
+                          "type": "boolean",
+                          "description": "True when the value has not been set yet (placeholder created by the AI assistant)."
+                        },
+                        "created_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "updated_at": {
+                          "type": "string",
+                          "format": "date-time"
+                        },
+                        "workspace_id": {
+                          "type": "integer",
+                          "description": "Present on workspace-scoped env vars."
+                        },
+                        "tool_registry_id": {
+                          "type": "integer",
+                          "description": "Present on tool-scoped env vars."
+                        }
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool or env var not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      },
+      "delete": {
+        "tags": [
+          "env-vars",
+          "tool-registry"
+        ],
+        "summary": "Delete Tool Env Var",
+        "operationId": "delete_tool_env_var",
+        "parameters": [
+          {
+            "name": "identifier",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "description": "Tool ID (numeric) or name"
+            }
+          },
+          {
+            "name": "var_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Tool or env var not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "message": {
+                      "type": "string"
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
           }
         }
       }
@@ -18284,7 +19054,7 @@
       "RequestLogQuery": {
         "type": "object",
         "title": "RequestLogQuery",
-        "description": "Canonical request-log query payload — the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
+        "description": "Canonical request-log query payload \u2014 the filter / search / sort fields shared by `POST /api/public/v2/requests/search` (which also accepts pagination + `include_prompt_name`) and `POST /api/public/v2/requests/analytics`.",
         "properties": {
           "filter_group": {
             "nullable": true,
@@ -18536,7 +19306,7 @@
       "RequestAnalyticsResponse": {
         "type": "object",
         "title": "RequestAnalyticsResponse",
-        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds → minutes → hours → days).",
+        "description": "Aggregated analytics across the matching request logs. Bucket size is selected automatically based on the filter time range (seconds \u2192 minutes \u2192 hours \u2192 days).",
         "required": [
           "success"
         ],
@@ -18604,7 +19374,7 @@
           },
           "modelRequestsByDay": {
             "type": "object",
-            "description": "Map of model name → list of `[date, requestCount]` pairs.",
+            "description": "Map of model name \u2192 list of `[date, requestCount]` pairs.",
             "additionalProperties": {
               "type": "array",
               "items": {
@@ -20495,7 +21265,7 @@
       },
       "Table": {
         "type": "object",
-        "description": "A Table — a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
+        "description": "A Table \u2014 a versioned, multi-sheet table that can run LLM columns to generate or evaluate data at scale.",
         "properties": {
           "id": {
             "type": "string",
@@ -20536,7 +21306,7 @@
         "properties": {
           "sheet_row_counts": {
             "type": "object",
-            "description": "Map of sheet_id → row count.",
+            "description": "Map of sheet_id \u2192 row count.",
             "additionalProperties": {
               "type": "integer"
             }
