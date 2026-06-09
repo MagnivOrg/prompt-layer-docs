@@ -13,6 +13,31 @@ General performance and stability improvements
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Claude Fable 5 and Mythos 5 Models**
+Added support for Anthropic's latest frontier models with always-on adaptive reasoning across all major platforms (Anthropic API, Amazon Bedrock, and Vertex AI).
+- Claude Fable 5 provides state-of-the-art performance on coding, vision, and knowledge tasks with adaptive thinking enabled by default
+- Claude Mythos 5 (Project Glasswing) offers the same capabilities with modified safety guardrails for approved cybersecurity defenders
+- Both models support 1M token context windows and 128K token outputs with enhanced reasoning parameters
+
+**Smart Table Auto-Execution for Evaluations and Workflows**
+Smart table columns using prompt templates now automatically execute tool calls when referenced in evaluations or workflow nodes.
+- Tool registry references are resolved at execution time, ensuring consistent behavior between manual runs and automated pipelines
+- Final answers are displayed in cells when auto-execution is enabled, improving readability in datasets
+
+#### Improvements
+
+- Added exponential backoff retries to code execution sandboxes for improved reliability during transient network issues
+- Smart table cells now display prompt template content consistently using the same rendering engine across all views
+- Tool calls with zero arguments now execute correctly when using Wrangler AI provider
+- Improved source selector interface to prevent circular dependencies in composite smart table columns
+
+---
+
 ## June 08, 2026
 
 ### Deployment 1
