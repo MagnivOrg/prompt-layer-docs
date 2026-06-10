@@ -23530,58 +23530,88 @@
         "additionalProperties": false
       },
       "CreateTableSheetRequestLogImportRequest": {
+        "type": "object",
         "title": "CreateTableSheetRequestLogImportRequest",
         "description": "Import request history into an existing Table sheet. Provide either request_log_ids or filter_group.",
-        "allOf": [
-          {
-            "$ref": "#/components/schemas/RequestLogQuery"
+        "properties": {
+          "filter_group": {
+            "nullable": true,
+            "description": "Nested filter group with AND/OR logic. Use this for complex queries.",
+            "$ref": "#/components/schemas/StructuredFilterGroup"
           },
-          {
-            "type": "object",
-            "properties": {
-              "operation_id": {
-                "type": "string",
-                "nullable": true,
-                "description": "Optional client-provided operation ID. A UUID is generated when omitted."
-              },
-              "request_log_ids": {
-                "type": "array",
-                "items": {
-                  "type": "integer",
-                  "minimum": 1
-                },
-                "nullable": true,
-                "description": "Specific request log IDs to import.",
-                "minItems": 1,
-                "maxItems": 50000
-              },
-              "variables_to_parse": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "default": [],
-                "description": "Input variable names to parse from matching request logs."
-              },
-              "include_fields": {
-                "type": "array",
-                "items": {
-                  "type": "string"
-                },
-                "nullable": true,
-                "description": "Additional request log fields to include as columns."
-              },
-              "limit": {
-                "type": "integer",
-                "minimum": 1,
-                "nullable": true,
-                "description": "Maximum number of matching request logs to import.",
-                "maximum": 50000
-              }
+          "q": {
+            "type": "string",
+            "nullable": true,
+            "description": "Free-text request-log search query applied with filter_group."
+          },
+          "sort_by": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "request_start_time",
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "status"
+            ],
+            "description": "Field to sort matching request logs before import."
+          },
+          "sort_order": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "Sort direction. Must be provided together with sort_by."
+          },
+          "metadata_cost_breakdown_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "Request-log query metadata key used by shared request-log query payloads."
+          },
+          "operation_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+          },
+          "request_log_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
             },
-            "additionalProperties": false
+            "nullable": true,
+            "description": "Specific request log IDs to import.",
+            "minItems": 1,
+            "maxItems": 50000
+          },
+          "variables_to_parse": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "Input variable names to parse from matching request logs."
+          },
+          "include_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Additional request log fields to include as columns."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Maximum number of matching request logs to import.",
+            "maximum": 50000
           }
-        ]
+        },
+        "additionalProperties": false
       },
       "TableSheetOperation": {
         "type": "object",
