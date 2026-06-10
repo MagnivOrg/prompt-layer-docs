@@ -1,0 +1,13 @@
+---
+title: "Create Table"
+openapi: "POST /api/public/v2/tables"
+description: "Create a Table from the public API."
+---
+
+Create a Table with a default `Sheet 1`, a `Column A` text column, and one empty row.
+
+### Workspace and folders
+
+The table is created in the workspace associated with your API key. Pass `folder_id` to create the table inside a registry folder in that workspace.
+
+When `title` is omitted, PromptLayer generates an `Untitled Table` name.

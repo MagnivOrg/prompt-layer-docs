@@ -1,0 +1,12 @@
+---
+title: "Import File"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/file"
+---
+
+Start an asynchronous CSV import into an existing sheet.
+
+Send `file_name` ending in `.csv` and `file_content_base64` containing the base64-encoded CSV content.
+
+Pass `operation_id` when you want a stable client-side identifier for polling and webhook correlation. If omitted, PromptLayer generates one.
+
+The response returns an `operation_id` and `status_url` for polling with [Get Sheet Import Operation](/reference/table-sheets-get-operation).

@@ -8,3 +8,5 @@ List rows in a sheet. Each row contains a map of `column_id → cell`.
 Pass `include_columns=true` (the default on the first page) to receive column metadata alongside rows — useful for building column headers.
 
 Use cursor-based pagination for large sheets.
+
+The response includes `version`, the current sheet version count for the returned rows.

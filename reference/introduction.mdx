@@ -60,6 +60,46 @@ Generate API keys from the API keys page in your PromptLayer dashboard. Each wor
 - [Delete Evaluation Pipeline](/reference/delete-report)
 - [Delete Reports by Name](/reference/delete-reports-by-name)
 
+### Tables
+
+Table endpoints are scoped to the workspace associated with your API key. Sheet read responses include `version_count`; sheet mutations that create a new sheet version return `version`, the current sheet version count after the operation.
+
+- [Create Table](/reference/tables-create)
+- [List Tables](/reference/tables-list)
+- [Get Table](/reference/tables-get)
+- [Update Table](/reference/tables-update)
+- [List Sheets](/reference/table-sheets-list)
+- [Create Sheet](/reference/table-sheets-create)
+- [Import File](/reference/table-sheet-imports-file-create)
+- [Import Request Logs](/reference/table-sheet-imports-request-logs-create)
+- [Get Sheet Import Operation](/reference/table-sheets-get-operation)
+- [Get Sheet](/reference/table-sheets-get)
+- [Update Sheet](/reference/table-sheets-update)
+- [List Columns](/reference/table-sheet-columns-list)
+- [Create Column](/reference/table-sheet-columns-create)
+- [Update Column](/reference/table-sheet-columns-update)
+- [List Rows](/reference/table-sheet-rows-list)
+- [Add Rows](/reference/table-sheet-rows-add)
+- [Get Cell](/reference/table-sheet-cells-get)
+- [Update Cell](/reference/table-sheet-cells-update)
+- [Recalculate Cell](/reference/table-sheet-cells-recalculate)
+- [Recalculate Cells](/reference/table-sheet-cells-recalculate-batch)
+- [List Operations](/reference/table-sheet-operations-list)
+- [Create Operation](/reference/table-sheet-operations-create)
+- [Get Operation](/reference/table-sheet-operations-get)
+- [Cancel Operation](/reference/table-sheet-operations-cancel)
+- [Get Score](/reference/table-sheet-score-get)
+- [Configure Score](/reference/table-sheet-score-configure)
+- [Recalculate Score](/reference/table-sheet-score-recalculate)
+- [List Versions](/reference/table-sheet-versions-list)
+- [Create Version](/reference/table-sheet-versions-create)
+- [Get Version](/reference/table-sheet-versions-get)
+- [Get Score History](/reference/table-sheet-score-history-get)
+
+<Tip>
+Pass `folder_id` on `Create Evaluation Pipeline`, [Create Table](/reference/tables-create), and the create endpoints under [Prompt Templates](#prompt-templates), [Datasets](#datasets), and [Workflows](#workflows) to organize new resources directly into a folder. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) to look up an ID, or [Create Folder](/reference/create-folder) to make one. See [Unified Registry](#unified-registry).
+</Tip>
+
 ### Workflows
 
 - [List Workflows](/reference/list-workflows)

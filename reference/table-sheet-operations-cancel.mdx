@@ -1,0 +1,8 @@
+---
+title: "Cancel Operation"
+openapi: "DELETE /api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations/{operation_id}"
+---
+
+Cancel an active recalculation operation for a sheet.
+
+If no active execution exists for the provided `operation_id`, the endpoint returns success with zero cancelled cells.

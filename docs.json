@@ -355,7 +355,20 @@
                   "reference/table-sheet-cells-get",
                   "reference/table-sheet-cells-update",
                   "reference/table-sheet-cells-recalculate",
-                  "reference/table-sheet-cells-recalculate-batch"
+                  "reference/table-sheet-cells-recalculate-batch",
+                  "reference/table-sheet-imports-file-create",
+                  "reference/table-sheet-imports-request-logs-create",
+                  "reference/table-sheet-operations-list",
+                  "reference/table-sheet-operations-create",
+                  "reference/table-sheet-operations-get",
+                  "reference/table-sheet-operations-cancel",
+                  "reference/table-sheet-score-get",
+                  "reference/table-sheet-score-configure",
+                  "reference/table-sheet-score-recalculate",
+                  "reference/table-sheet-versions-list",
+                  "reference/table-sheet-versions-create",
+                  "reference/table-sheet-versions-get",
+                  "reference/table-sheet-score-history-get"
                 ]
               },
               {

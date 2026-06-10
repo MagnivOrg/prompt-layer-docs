@@ -1,0 +1,16 @@
+---
+title: "Configure Score"
+openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/score"
+---
+
+Configure scoring for a sheet.
+
+Use `column_ids` or `column_names` for standard boolean or numeric scoring. Column names must be unique in the sheet.
+
+Use `score_type` with `score_config` for explicit configuration. Supported scoring modes are `auto`, `boolean`, `numeric`, and `custom`; `score_type` is required when you pass `score_config`.
+
+For custom scoring, pass `code` and optionally `code_language` (`PYTHON` by default, or `JAVASCRIPT`). Boolean scoring also supports `true_values`, `false_values`, and `assertion_aggregation` (`all`, `any`, or `mean`).
+
+This endpoint updates the configuration and returns `requires_recalculation`; call the recalculation endpoint to queue score calculation.
+
+Changing score configuration creates a new sheet version. The response returns `version`, the current sheet version count after the configuration update.

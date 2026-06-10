@@ -9787,7 +9787,7 @@
           "smart-tables"
         ],
         "summary": "Create Table",
-        "description": "Create a new Table. A default sheet with one text column is created automatically.",
+        "description": "Create a new Table. A default sheet with one text column is created automatically. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table",
         "requestBody": {
           "required": false,
@@ -9866,7 +9866,7 @@
           "smart-tables"
         ],
         "summary": "List Tables",
-        "description": "List Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column.",
+        "description": "List Tables in the workspace. Supports cursor-based pagination and optional filtering by folder or prompt column. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_tables",
         "parameters": [
           {
@@ -10034,7 +10034,8 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        }
+        },
+        "description": "Get Table. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       },
       "patch": {
         "tags": [
@@ -10108,7 +10109,8 @@
           "422": {
             "$ref": "#/components/responses/ValidationError"
           }
-        }
+        },
+        "description": "Update Table. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       }
     },
     "/api/public/v2/tables/{table_id}/sheets": {
@@ -10117,7 +10119,7 @@
           "smart-tables"
         ],
         "summary": "List Sheets",
-        "description": "List all sheets in a table, ordered by their index.",
+        "description": "List all sheets in a table, ordered by their index. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_table_sheets",
         "parameters": [
           {
@@ -10235,7 +10237,7 @@
           "smart-tables"
         ],
         "summary": "Create Sheet",
-        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history.",
+        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet",
         "parameters": [
           {
@@ -10416,7 +10418,7 @@
           "smart-tables"
         ],
         "summary": "Get Sheet Import Operation",
-        "description": "Poll the status of an asynchronous sheet import operation.",
+        "description": "Poll the status of an asynchronous sheet import operation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "get_table_sheet_operation",
         "parameters": [
           {
@@ -10531,7 +10533,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Get Sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       },
       "patch": {
         "tags": [
@@ -10595,7 +10598,8 @@
                       "$ref": "#/components/schemas/Sheet"
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -10615,7 +10619,8 @@
               }
             }
           }
-        }
+        },
+        "description": "Update Sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       }
     },
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns": {
@@ -10624,7 +10629,7 @@
           "smart-tables"
         ],
         "summary": "List Columns",
-        "description": "List columns in a sheet, ordered by position rank. By default, system-managed metadata columns such as price and latency columns are excluded; pass `include_system_columns=true` to include them.",
+        "description": "List columns in a sheet, ordered by position rank. By default, system-managed metadata columns such as price and latency columns are excluded; pass `include_system_columns=true` to include them. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_table_sheet_columns",
         "parameters": [
           {
@@ -10721,7 +10726,7 @@
           "smart-tables"
         ],
         "summary": "Create Column",
-        "description": "Add a new column to a sheet. Non-text columns will generate cells for all existing rows.",
+        "description": "Add a new column to a sheet. Non-text columns will generate cells for all existing rows. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet_column",
         "parameters": [
           {
@@ -10829,7 +10834,8 @@
                       }
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -10871,7 +10877,7 @@
           "smart-tables"
         ],
         "summary": "Update Column",
-        "description": "Update a column's title, config, or dependencies. Returns `requires_recalculation: true` when the change invalidates existing cell values.",
+        "description": "Update a column's title, config, or dependencies. Returns `requires_recalculation: true` when the change invalidates existing cell values. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "update_table_sheet_column",
         "parameters": [
           {
@@ -10975,7 +10981,8 @@
                       }
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -11014,7 +11021,7 @@
           "smart-tables"
         ],
         "summary": "List Rows",
-        "description": "List rows in a sheet, each containing a map of column_id to cell. For prompt-template column cells, each cell can include a `request_metrics` object with price, latency, and token usage when available. Pass `include_columns=true` on the first page to receive column metadata alongside rows.",
+        "description": "List rows in a sheet, each containing a map of column_id to cell. For prompt-template column cells, each cell can include a `request_metrics` object with price, latency, and token usage when available. Pass `include_columns=true` on the first page to receive column metadata alongside rows. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "list_table_sheet_rows",
         "parameters": [
           {
@@ -11150,7 +11157,8 @@
                       }
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     },
                     "execution_metadata_aggregates": {
                       "allOf": [
@@ -11185,7 +11193,7 @@
           "smart-tables"
         ],
         "summary": "Add Rows",
-        "description": "Append one or more rows to a sheet. Text column values can be set immediately; non-text column cells are created with `stale` status and must be triggered via a recalculation.",
+        "description": "Append one or more rows to a sheet. Text column values can be set immediately; non-text column cells are created with `stale` status and must be triggered via a recalculation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "add_table_sheet_rows",
         "parameters": [
           {
@@ -11282,7 +11290,8 @@
                       "type": "integer"
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     }
                   }
                 }
@@ -11387,14 +11396,14 @@
             }
           }
         },
-        "description": "Retrieve a single cell by ID. For prompt-template column cells, the response includes a `request_metrics` object with price, latency, and token usage when available."
+        "description": "Retrieve a single cell by ID. For prompt-template column cells, the response includes a `request_metrics` object with price, latency, and token usage when available. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace."
       },
       "patch": {
         "tags": [
           "smart-tables"
         ],
         "summary": "Update Cell",
-        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly; computed cells are recalculated automatically.",
+        "description": "Edit the value of a text column cell. Only cells in `text` type columns can be edited directly; computed cells are recalculated automatically. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "update_table_sheet_cell",
         "parameters": [
           {
@@ -11460,7 +11469,8 @@
                       "$ref": "#/components/schemas/Cell"
                     },
                     "version": {
-                      "type": "integer"
+                      "type": "integer",
+                      "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
                     },
                     "stale_count": {
                       "type": "integer",
@@ -11503,7 +11513,7 @@
           "smart-tables"
         ],
         "summary": "Recalculate Cells (Batch)",
-        "description": "Trigger recalculation for a batch of cells identified by ID.",
+        "description": "Trigger recalculation for a batch of cells identified by ID. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet_cell_recalculations_batch",
         "parameters": [
           {
@@ -11615,7 +11625,7 @@
           "smart-tables"
         ],
         "summary": "Recalculate Cell",
-        "description": "Trigger recalculation for a single cell.",
+        "description": "Trigger recalculation for a single cell. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet_cell_recalculation",
         "parameters": [
           {
@@ -11683,6 +11693,1205 @@
           },
           "404": {
             "description": "Table, sheet, or cell not found",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations": {
+      "get": {
+        "summary": "List Table Sheet Operations",
+        "description": "List active recalculation operations and cell status counts for a Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "listTableSheetOperations",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetOperationsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table Sheet Operation",
+        "description": "Queue a recalculation operation for selected columns, rows, and cell statuses. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "createTableSheetOperation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetOperationRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "No operation was queued or confirmation is required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "202": {
+            "description": "Operation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CreateTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request, query parameter, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or column not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations/{operation_id}": {
+      "get": {
+        "summary": "Get Table Sheet Operation",
+        "description": "Poll a Table sheet recalculation operation by operation ID. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "getTableSheetOperationStatus",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Operation ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or operation not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Cancel Table Sheet Operation",
+        "description": "Cancel an active Table sheet recalculation operation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "cancelTableSheetOperation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "operation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Operation ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Operation cancelled or no active operation found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelTableSheetOperationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/score": {
+      "get": {
+        "summary": "Get Table Sheet Score",
+        "description": "Retrieve the current score payload for a Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "getTableSheetScore",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Configure Table Sheet Score",
+        "description": "Configure scoring for a Table sheet. This endpoint updates the configuration and returns whether recalculation is required; it does not queue score calculation. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "configureTableSheetScore",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigureTableSheetScoreRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Score configuration updated.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigureTableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid score configuration or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or score column not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to update score configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Recalculate Table Sheet Score",
+        "description": "Queue recalculation for an existing Table sheet score configuration. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "recalculateTableSheetScore",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "202": {
+            "description": "Score recalculation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecalculateTableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Score is not configured or score configuration is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to queue score calculation.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions": {
+      "get": {
+        "summary": "List Table Sheet Versions",
+        "description": "List saved versions for a Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "listTableSheetVersions",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Cursor returned from the previous page. Public table cursors encode the current sort, order, cursor value, and a hash of the active filters; reuse the cursor with the same sort, order, and filter parameters from the previous request."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 20
+            },
+            "description": "Number of versions to return."
+          },
+          {
+            "name": "sort",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "version_number"
+              ],
+              "default": "version_number"
+            },
+            "description": "Sort field. Currently supports version_number."
+          },
+          {
+            "name": "order",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "asc",
+                "desc"
+              ],
+              "default": "desc"
+            },
+            "description": "Sort order."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetVersionsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cursor, query parameter, sort/order, filter set, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "post": {
+        "summary": "Create Table Sheet Version",
+        "description": "Create a named Table sheet version, or restore from an existing version while creating a new version. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "createTableSheetVersion",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetVersionRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Version created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or source version not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/{version_id}": {
+      "get": {
+        "summary": "Get Table Sheet Version",
+        "description": "Retrieve one Table sheet version, including its snapshot. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "getTableSheetVersion",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "version_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet version ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetVersionResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table, sheet, or version not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/score-history": {
+      "get": {
+        "summary": "Get Table Sheet Score History",
+        "description": "Retrieve score-history points across Table sheet versions. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "getTableSheetVersionScoreHistory",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "max_points",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 50,
+              "maximum": 5000,
+              "default": 1200
+            },
+            "description": "Maximum points to return."
+          },
+          {
+            "name": "range",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "all",
+                "last_25",
+                "last_50",
+                "last_100",
+                "last_250"
+              ],
+              "default": "all"
+            },
+            "description": "History range."
+          },
+          {
+            "name": "resolution",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "auto",
+                "raw",
+                "min_max_bucket"
+              ],
+              "default": "auto"
+            },
+            "description": "Point resolution."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetScoreHistoryResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameter or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/file": {
+      "post": {
+        "summary": "Import File Into Table Sheet",
+        "description": "Start an asynchronous CSV import into an existing Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "createTableSheetFileImport",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetFileImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "File import queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetImportStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body, file, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "500": {
+            "description": "Failed to upload file.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/imports/request-logs": {
+      "post": {
+        "summary": "Import Request Logs Into Table Sheet",
+        "description": "Start an asynchronous request-history import into an existing Table sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "operationId": "createTableSheetRequestLogImport",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTableSheetRequestLogImportRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Request-history import queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetImportStartResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid request body, request logs, or workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
             "content": {
               "application/json": {
                 "schema": {
@@ -21273,7 +22482,8 @@
             "description": "Unique table identifier."
           },
           "workspace_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Workspace that owns this resource; determined by the authenticated request scope."
           },
           "title": {
             "type": "string"
@@ -21326,7 +22536,8 @@
             "format": "uuid"
           },
           "workspace_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Workspace that owns this resource; determined by the authenticated request scope."
           },
           "title": {
             "type": "string"
@@ -21339,7 +22550,8 @@
             "type": "integer"
           },
           "version_count": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Current sheet version number. It increments when sheet data, layout, score configuration, imports, or execution output changes."
           },
           "created_at": {
             "type": "string",
@@ -21365,7 +22577,8 @@
             "format": "uuid"
           },
           "workspace_id": {
-            "type": "integer"
+            "type": "integer",
+            "description": "Workspace that owns this resource; determined by the authenticated request scope."
           },
           "title": {
             "type": "string",
@@ -21458,6 +22671,22 @@
             ],
             "nullable": true,
             "description": "Execution metrics populated for prompt-template column cells. Present only when the cell has an associated request log."
+          },
+          "execution_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Execution ID associated with the current or most recent computed value, when available."
+          },
+          "last_computed_version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Sheet version_count when this cell was last computed. Null for text cells, virtual cells, or cells that have not completed computation."
+          },
+          "error_message": {
+            "type": "string",
+            "nullable": true,
+            "description": "User-visible error message for failed computed cells, when available."
           }
         }
       },
@@ -21653,6 +22882,1188 @@
           "by_column_id",
           "sheet"
         ]
+      },
+      "ListTableSheetOperationsResponse": {
+        "type": "object",
+        "title": "ListTableSheetOperationsResponse",
+        "required": [
+          "success",
+          "sheet_id",
+          "version",
+          "total_cells",
+          "status_counts",
+          "pending_count",
+          "active_operations"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "total_cells": {
+            "type": "integer"
+          },
+          "status_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "pending_count": {
+            "type": "integer"
+          },
+          "active_operations": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetOperation"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationRequest": {
+        "type": "object",
+        "title": "CreateTableSheetOperationRequest",
+        "properties": {
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ],
+            "default": "recalculate"
+          },
+          "column_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Columns to recalculate. Text columns cannot be recalculated."
+          },
+          "row_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Zero-based row indices to recalculate. If omitted, matching cells across all rows are considered."
+          },
+          "statuses": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "enum": [
+                "STALE",
+                "QUEUED",
+                "DISPATCHED",
+                "RUNNING",
+                "COMPLETED",
+                "FAILED"
+              ]
+            },
+            "description": "Cell statuses to include. Defaults to stale cells. Pass an empty array to include all statuses."
+          },
+          "confirmation_token": {
+            "type": "string",
+            "nullable": true,
+            "description": "Confirmation token returned when the operation exceeds the confirmation threshold."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationResponse": {
+        "title": "CreateTableSheetOperationResponse",
+        "oneOf": [
+          {
+            "$ref": "#/components/schemas/CreateTableSheetOperationQueuedResponse"
+          },
+          {
+            "$ref": "#/components/schemas/CreateTableSheetOperationNoopResponse"
+          },
+          {
+            "$ref": "#/components/schemas/CreateTableSheetOperationConfirmationResponse"
+          }
+        ]
+      },
+      "GetTableSheetOperationResponse": {
+        "type": "object",
+        "title": "GetTableSheetOperationResponse",
+        "required": [
+          "success",
+          "operation"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableSheetOperation"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CancelTableSheetOperationResponse": {
+        "type": "object",
+        "title": "CancelTableSheetOperationResponse",
+        "required": [
+          "success",
+          "message",
+          "operation_id",
+          "execution_ids",
+          "cancelled_cell_count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "execution_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cancelled_cell_count": {
+            "type": "integer"
+          },
+          "not_started_reset_count": {
+            "type": "integer"
+          },
+          "running_invalidated_count": {
+            "type": "integer"
+          }
+        }
+      },
+      "TableSheetScoreResponse": {
+        "type": "object",
+        "title": "TableSheetScoreResponse",
+        "required": [
+          "success",
+          "sheet_id",
+          "scoring_type",
+          "columns",
+          "aggregate_score",
+          "total_rows",
+          "scored_rows",
+          "excluded_rows",
+          "calculated_at",
+          "score_matrix",
+          "score_matrix_metrics",
+          "status",
+          "score_calculation_error",
+          "has_custom_scoring",
+          "score_configuration",
+          "score_type",
+          "overall_score",
+          "details",
+          "aggregate",
+          "per_column"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scoring_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom",
+              null
+            ],
+            "nullable": true
+          },
+          "columns": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetScoreColumn"
+            }
+          },
+          "aggregate_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "total_rows": {
+            "type": "integer"
+          },
+          "scored_rows": {
+            "type": "integer"
+          },
+          "excluded_rows": {
+            "type": "integer"
+          },
+          "calculated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "score_matrix": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "array",
+              "items": {
+                "nullable": true,
+                "oneOf": [
+                  {
+                    "type": "number"
+                  },
+                  {
+                    "type": "string"
+                  },
+                  {
+                    "$ref": "#/components/schemas/TableSheetScoreCellObject"
+                  }
+                ]
+              }
+            }
+          },
+          "score_matrix_metrics": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "$ref": "#/components/schemas/TableSheetScoreMetric"
+            }
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              null
+            ],
+            "nullable": true
+          },
+          "score_calculation_error": {
+            "type": "string",
+            "nullable": true
+          },
+          "has_custom_scoring": {
+            "type": "boolean"
+          },
+          "score_configuration": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TableSheetScoreConfiguration"
+              }
+            ]
+          },
+          "score_type": {
+            "type": "string",
+            "enum": [
+              "none",
+              "single_column",
+              "multi_column",
+              "custom"
+            ]
+          },
+          "overall_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "details": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "aggregate": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "per_column": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfigureTableSheetScoreRequest": {
+        "type": "object",
+        "title": "ConfigureTableSheetScoreRequest",
+        "properties": {
+          "score_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom"
+            ],
+            "nullable": true,
+            "description": "Scoring mode. Required when score_config is provided."
+          },
+          "score_config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true,
+            "description": "Explicit score configuration."
+          },
+          "column_ids": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Column IDs to score."
+          },
+          "column_names": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Column titles to score. Titles must be unique in the sheet."
+          },
+          "code": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000,
+            "nullable": true,
+            "description": "Custom scoring code."
+          },
+          "code_language": {
+            "type": "string",
+            "enum": [
+              "PYTHON",
+              "JAVASCRIPT"
+            ],
+            "default": "PYTHON"
+          },
+          "true_values": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Values treated as true for boolean scoring."
+          },
+          "false_values": {
+            "type": "array",
+            "nullable": true,
+            "items": {
+              "type": "string"
+            },
+            "description": "Values treated as false for boolean scoring."
+          },
+          "assertion_aggregation": {
+            "type": "string",
+            "enum": [
+              "all",
+              "any",
+              "mean"
+            ],
+            "nullable": true,
+            "description": "Aggregation mode for assertion-style boolean scoring."
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfigureTableSheetScoreResponse": {
+        "type": "object",
+        "title": "ConfigureTableSheetScoreResponse",
+        "required": [
+          "success",
+          "message",
+          "score_configuration_id",
+          "status",
+          "requires_recalculation",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "score_configuration_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "description": "Returned as null by this endpoint. Use the recalculation endpoint to queue score calculation."
+          },
+          "requires_recalculation": {
+            "type": "boolean",
+            "description": "Always true after updating the score configuration."
+          },
+          "version": {
+            "type": "integer"
+          }
+        }
+      },
+      "RecalculateTableSheetScoreResponse": {
+        "type": "object",
+        "title": "RecalculateTableSheetScoreResponse",
+        "required": [
+          "success",
+          "score_configuration_id",
+          "status"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "score_configuration_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              null
+            ]
+          }
+        }
+      },
+      "ListTableSheetVersionsResponse": {
+        "type": "object",
+        "title": "ListTableSheetVersionsResponse",
+        "required": [
+          "success",
+          "data",
+          "pagination",
+          "filters",
+          "count"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "data": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetVersion"
+            },
+            "description": "Items returned on this page."
+          },
+          "pagination": {
+            "$ref": "#/components/schemas/PublicListPagination"
+          },
+          "filters": {
+            "$ref": "#/components/schemas/EmptyPublicFilters",
+            "description": "Filters applied to this page. The cursor includes a hash of this filter set, so changing filters while reusing a cursor returns an invalid cursor error."
+          },
+          "count": {
+            "type": "integer",
+            "description": "Number of items returned on this page."
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetVersionRequest": {
+        "type": "object",
+        "title": "CreateTableSheetVersionRequest",
+        "properties": {
+          "name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "nullable": true,
+            "description": "Version name. Required when source_version_id is omitted."
+          },
+          "source_version_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Existing version to restore from while creating a new version."
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTableSheetVersionResponse": {
+        "type": "object",
+        "title": "GetTableSheetVersionResponse",
+        "required": [
+          "success",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "version": {
+            "$ref": "#/components/schemas/TableSheetVersion"
+          }
+        }
+      },
+      "TableSheetScoreHistoryResponse": {
+        "type": "object",
+        "title": "TableSheetScoreHistoryResponse",
+        "required": [
+          "success",
+          "score_history"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "score_history": {
+            "type": "object",
+            "required": [
+              "points",
+              "total_points",
+              "returned_points",
+              "resolution",
+              "range",
+              "max_points",
+              "is_sampled"
+            ],
+            "properties": {
+              "points": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "additionalProperties": true
+                }
+              },
+              "total_points": {
+                "type": "integer"
+              },
+              "returned_points": {
+                "type": "integer"
+              },
+              "resolution": {
+                "type": "string",
+                "enum": [
+                  "auto",
+                  "raw",
+                  "min_max_bucket"
+                ]
+              },
+              "range": {
+                "type": "string"
+              },
+              "max_points": {
+                "type": "integer"
+              },
+              "is_sampled": {
+                "type": "boolean"
+              }
+            }
+          }
+        }
+      },
+      "CreateTableSheetFileImportRequest": {
+        "type": "object",
+        "title": "CreateTableSheetFileImportRequest",
+        "required": [
+          "file_name",
+          "file_content_base64"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+          },
+          "file_name": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 255,
+            "description": "CSV file name. Must end with .csv."
+          },
+          "file_content_base64": {
+            "type": "string",
+            "minLength": 1,
+            "description": "Base64-encoded CSV file content."
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetImportStartResponse": {
+        "type": "object",
+        "title": "TableSheetImportStartResponse",
+        "required": [
+          "success",
+          "message",
+          "operation_id",
+          "operation",
+          "status_url"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "$ref": "#/components/schemas/TableImportOperation"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetRequestLogImportRequest": {
+        "type": "object",
+        "title": "CreateTableSheetRequestLogImportRequest",
+        "description": "Import request history into an existing Table sheet. Provide either request_log_ids or filter_group.",
+        "properties": {
+          "filter_group": {
+            "nullable": true,
+            "description": "Nested filter group with AND/OR logic. Use this for complex queries.",
+            "$ref": "#/components/schemas/StructuredFilterGroup"
+          },
+          "q": {
+            "type": "string",
+            "nullable": true,
+            "description": "Free-text request-log search query applied with filter_group."
+          },
+          "sort_by": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "request_start_time",
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "status"
+            ],
+            "description": "Field to sort matching request logs before import."
+          },
+          "sort_order": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "asc",
+              "desc"
+            ],
+            "description": "Sort direction. Must be provided together with sort_by."
+          },
+          "metadata_cost_breakdown_key": {
+            "type": "string",
+            "nullable": true,
+            "description": "Request-log query metadata key used by shared request-log query payloads."
+          },
+          "operation_id": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional client-provided operation ID. A UUID is generated when omitted."
+          },
+          "request_log_ids": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 1
+            },
+            "nullable": true,
+            "description": "Specific request log IDs to import.",
+            "minItems": 1,
+            "maxItems": 50000
+          },
+          "variables_to_parse": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": [],
+            "description": "Input variable names to parse from matching request logs."
+          },
+          "include_fields": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "nullable": true,
+            "description": "Additional request log fields to include as columns."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "nullable": true,
+            "description": "Maximum number of matching request logs to import.",
+            "maximum": 50000
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetOperation": {
+        "type": "object",
+        "title": "TableSheetOperation",
+        "required": [
+          "operation_id",
+          "operation",
+          "status",
+          "status_counts",
+          "cell_count",
+          "completed_count",
+          "failed_count",
+          "pending_count",
+          "status_url"
+        ],
+        "properties": {
+          "operation_id": {
+            "type": "string"
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ]
+          },
+          "status": {
+            "type": "string"
+          },
+          "status_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "completed_count": {
+            "type": "integer"
+          },
+          "failed_count": {
+            "type": "integer"
+          },
+          "pending_count": {
+            "type": "integer"
+          },
+          "status_url": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationQueuedResponse": {
+        "type": "object",
+        "title": "CreateTableSheetOperationQueuedResponse",
+        "required": [
+          "success",
+          "operation",
+          "operation_id",
+          "execution_id",
+          "execution_ids",
+          "cell_count",
+          "version",
+          "status_url",
+          "virtual_cell_count",
+          "cells"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "operation": {
+            "type": "string",
+            "enum": [
+              "recalculate"
+            ]
+          },
+          "operation_id": {
+            "type": "string"
+          },
+          "execution_id": {
+            "type": "string"
+          },
+          "execution_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "cell_count": {
+            "type": "integer"
+          },
+          "version": {
+            "type": "integer"
+          },
+          "status_url": {
+            "type": "string"
+          },
+          "virtual_cell_count": {
+            "type": "integer"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableCell"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationNoopResponse": {
+        "type": "object",
+        "title": "CreateTableSheetOperationNoopResponse",
+        "required": [
+          "success",
+          "cell_count",
+          "virtual_cell_count",
+          "cells"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "cell_count": {
+            "type": "integer",
+            "enum": [
+              0
+            ]
+          },
+          "virtual_cell_count": {
+            "type": "integer"
+          },
+          "cells": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableCell"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CreateTableSheetOperationConfirmationResponse": {
+        "type": "object",
+        "title": "CreateTableSheetOperationConfirmationResponse",
+        "required": [
+          "success",
+          "requires_confirmation",
+          "confirmation_token",
+          "affected_cell_count",
+          "message"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              false
+            ]
+          },
+          "requires_confirmation": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "confirmation_token": {
+            "type": "string"
+          },
+          "affected_cell_count": {
+            "type": "integer"
+          },
+          "message": {
+            "type": "string"
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetScoreColumn": {
+        "type": "object",
+        "title": "TableSheetScoreColumn",
+        "required": [
+          "column_id",
+          "title",
+          "score",
+          "included_count",
+          "excluded_count"
+        ],
+        "properties": {
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "title": {
+            "type": "string"
+          },
+          "score": {
+            "type": "number",
+            "nullable": true
+          },
+          "included_count": {
+            "type": "integer"
+          },
+          "excluded_count": {
+            "type": "integer"
+          },
+          "resolved_scoring_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom",
+              null
+            ],
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetScoreCellObject": {
+        "type": "object",
+        "title": "TableSheetScoreCellObject",
+        "required": [
+          "value"
+        ],
+        "properties": {
+          "value": {
+            "nullable": true
+          },
+          "positive_metric": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScoreMetric": {
+        "type": "object",
+        "title": "TableSheetScoreMetric",
+        "required": [
+          "key",
+          "label"
+        ],
+        "properties": {
+          "key": {
+            "type": "string"
+          },
+          "label": {
+            "type": "string"
+          },
+          "positive_metric": {
+            "type": "boolean",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetScoreConfiguration": {
+        "type": "object",
+        "title": "TableSheetScoreConfiguration",
+        "required": [
+          "score_type",
+          "score_config"
+        ],
+        "properties": {
+          "score_type": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "boolean",
+              "numeric",
+              "custom"
+            ]
+          },
+          "score_config": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "TableSheetVersion": {
+        "type": "object",
+        "title": "TableSheetVersion",
+        "required": [
+          "id",
+          "sheet_id",
+          "version_number"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "version_number": {
+            "type": "integer",
+            "description": "Sequential saved version number for this sheet."
+          },
+          "name": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_by": {
+            "type": "string",
+            "nullable": true
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "metadata": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "deltas": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "snapshot": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "score": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "score_configuration": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "PublicListPagination": {
+        "type": "object",
+        "title": "PublicListPagination",
+        "required": [
+          "next_cursor",
+          "prev_cursor",
+          "has_more",
+          "limit"
+        ],
+        "properties": {
+          "next_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Opaque cursor to pass as cursor for the next page, or null when there is no next page. The cursor is valid only with the same sort, order, and filter parameters used to produce it."
+          },
+          "prev_cursor": {
+            "type": "string",
+            "nullable": true,
+            "description": "Reserved for previous-page cursors. Public table list endpoints currently return null."
+          },
+          "has_more": {
+            "type": "boolean",
+            "description": "Whether another page is available."
+          },
+          "limit": {
+            "type": "integer",
+            "description": "Requested page size."
+          }
+        },
+        "additionalProperties": false,
+        "description": "Cursor pagination metadata for public table list endpoints. Cursors are opaque and include the active sort, order, cursor value, and a hash of the active filter set."
+      },
+      "EmptyPublicFilters": {
+        "type": "object",
+        "title": "EmptyPublicFilters",
+        "description": "This endpoint does not echo any filter fields.",
+        "maxProperties": 0,
+        "additionalProperties": false
+      },
+      "TableCell": {
+        "type": "object",
+        "title": "TableCell",
+        "required": [
+          "id",
+          "sheet_id",
+          "column_id",
+          "row_index",
+          "status"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Cell UUID, or a virtual cell ID for not-yet-computed output cells."
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "execution_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true,
+            "description": "Execution ID associated with the current or most recent computed value, when available."
+          },
+          "column_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "row_index": {
+            "type": "integer"
+          },
+          "last_computed_version": {
+            "type": "integer",
+            "nullable": true,
+            "description": "Sheet version_count when this cell was last computed. Null for text cells, virtual cells, or cells that have not completed computation."
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "STALE",
+              "QUEUED",
+              "DISPATCHED",
+              "RUNNING",
+              "COMPLETED",
+              "FAILED"
+            ]
+          },
+          "display_value": {
+            "type": "string",
+            "nullable": true
+          },
+          "input_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "value": {
+            "nullable": true,
+            "description": "Structured cell value. Shape depends on the column type."
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        }
       }
     },
     "responses": {

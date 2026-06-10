@@ -1,0 +1,15 @@
+---
+title: "Create Table Sheet Operation"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/operations"
+description: "Queue a Table sheet operation."
+---
+
+Queue a `recalculate` operation for selected columns, rows, and cell statuses.
+
+By default, recalculation targets stale computed cells. Pass `column_ids`, `row_ids`, or `statuses` to narrow the operation.
+
+`row_ids` are zero-based row indices. `statuses` accepts `STALE`, `QUEUED`, `DISPATCHED`, `RUNNING`, `COMPLETED`, and `FAILED`; omit it to target stale cells, or pass an empty array to include all statuses. Text columns cannot be recalculated.
+
+If the operation affects many cells, the response may return `requires_confirmation` with a `confirmation_token`; pass that token in a follow-up request to proceed. If no matching cells need work, the endpoint can return success with `cell_count: 0`.
+
+Queued recalculations return `version`, the sheet version count used for the operation response. Computed cells report `last_computed_version` after they complete.

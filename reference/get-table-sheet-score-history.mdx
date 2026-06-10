@@ -1,0 +1,9 @@
+---
+title: "Get Table Sheet Score History"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions/score-history"
+description: "Retrieve Table sheet score history."
+---
+
+Retrieve score-history points across Table sheet versions.
+
+Use `range` to limit the history window (`all`, `last_25`, `last_50`, `last_100`, or `last_250`), `resolution` to control sampling (`auto`, `raw`, or `min_max_bucket`), and `max_points` to cap the number of returned points. `max_points` defaults to 1200 and must be between 50 and 5000.

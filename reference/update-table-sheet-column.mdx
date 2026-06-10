@@ -1,0 +1,9 @@
+---
+title: "Update Table Sheet Column"
+openapi: "PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns/{column_id}"
+description: "Update a Table sheet column."
+---
+
+Update a column title, config, or dependencies.
+
+Config or dependency changes may require recalculation. The response includes `requires_recalculation` and `affected_column_ids` so you can decide whether to run a recalculation operation.
