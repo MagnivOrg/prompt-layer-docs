@@ -14059,8 +14059,8 @@
     },
     "/api/public/v2/requests/analytics/custom-analytics": {
       "post": {
-        "summary": "Request Analytics Custom Queries",
-        "operationId": "getRequestAnalyticsCustomQueries",
+        "summary": "Request Analytics Custom Analytics",
+        "operationId": "getRequestAnalyticsCustomAnalytics",
         "tags": [
           "tracking"
         ],
@@ -14069,7 +14069,7 @@
           "content": {
             "application/json": {
               "schema": {
-                "$ref": "#/components/schemas/RequestAnalyticsCustomChartsQuery"
+                "$ref": "#/components/schemas/RequestAnalyticsCustomAnalyticsQuery"
               },
               "examples": {
                 "cost_by_model": {
@@ -14175,7 +14175,7 @@
             "content": {
               "application/json": {
                 "schema": {
-                  "$ref": "#/components/schemas/RequestAnalyticsCustomChartsResponse"
+                  "$ref": "#/components/schemas/RequestAnalyticsCustomAnalyticsResponse"
                 },
                 "examples": {
                   "cost_by_model": {
@@ -24242,60 +24242,6 @@
           }
         }
       },
-      "CustomChartSeriesSpec": {
-        "type": "object",
-        "title": "CustomChartSeriesSpec",
-        "description": "One series in a multi-series custom chart.",
-        "required": [
-          "key",
-          "label",
-          "metric",
-          "metricField"
-        ],
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "Unique identifier for this series within the chart (alphanumeric, hyphens, underscores; max 64 chars)."
-          },
-          "label": {
-            "type": "string",
-            "description": "Human-readable series label shown in chart legends (max 120 chars)."
-          },
-          "metric": {
-            "type": "string",
-            "enum": [
-              "sum",
-              "avg",
-              "min",
-              "max",
-              "percentile"
-            ],
-            "description": "Aggregation function for this series."
-          },
-          "metricField": {
-            "type": "string",
-            "enum": [
-              "input_tokens",
-              "output_tokens",
-              "cost",
-              "latency_ms",
-              "prompt_version_number",
-              "turn_count",
-              "tool_call_count",
-              "cached_tokens",
-              "thinking_tokens"
-            ],
-            "description": "Numeric field to aggregate."
-          },
-          "percentile": {
-            "type": "number",
-            "nullable": true,
-            "minimum": 0,
-            "maximum": 100,
-            "description": "Required when metric is `percentile`; omit otherwise."
-          }
-        }
-      },
       "DerivedRatioInsightSpec": {
         "type": "object",
         "title": "DerivedRatioInsightSpec",
@@ -24327,10 +24273,36 @@
           }
         }
       },
-      "CustomChartSpec": {
+      "DerivedRatioInsightResult": {
         "type": "object",
-        "title": "CustomChartSpec",
-        "description": "Definition for a single custom analytics chart.",
+        "title": "DerivedRatioInsightResult",
+        "description": "A computed ratio insight in the response.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ratio"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "numeratorSeriesKey": {
+            "type": "string"
+          },
+          "denominatorSeriesKey": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "description": "Ratio of numerator total to denominator total."
+          }
+        }
+      },
+      "CustomAnalyticsSpec": {
+        "type": "object",
+        "title": "CustomAnalyticsSpec",
+        "description": "Definition for a single custom analytics query.",
         "required": [
           "id",
           "chartType"
@@ -24395,7 +24367,7 @@
             "nullable": true,
             "description": "Multi-series mode: define two or more series. Omit metric/metricField/percentile when using this.",
             "items": {
-              "$ref": "#/components/schemas/CustomChartSeriesSpec"
+              "$ref": "#/components/schemas/CustomAnalyticsSeriesSpec"
             }
           },
           "derivedInsights": {
@@ -24443,10 +24415,136 @@
           }
         }
       },
-      "RequestAnalyticsCustomChartsQuery": {
+      "CustomAnalyticsSeriesSpec": {
         "type": "object",
-        "title": "RequestAnalyticsCustomChartsQuery",
-        "description": "Request body for POST /api/public/v2/requests/analytics/custom-charts. Inherits all filter fields from RequestLogQuery and adds `customCharts`.",
+        "title": "CustomAnalyticsSeriesSpec",
+        "description": "One series in a multi-series custom analytics query.",
+        "required": [
+          "key",
+          "label",
+          "metric",
+          "metricField"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Unique identifier for this series within the chart (alphanumeric, hyphens, underscores; max 64 chars)."
+          },
+          "label": {
+            "type": "string",
+            "description": "Human-readable series label shown in chart legends (max 120 chars)."
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "sum",
+              "avg",
+              "min",
+              "max",
+              "percentile"
+            ],
+            "description": "Aggregation function for this series."
+          },
+          "metricField": {
+            "type": "string",
+            "enum": [
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "prompt_version_number",
+              "turn_count",
+              "tool_call_count",
+              "cached_tokens",
+              "thinking_tokens"
+            ],
+            "description": "Numeric field to aggregate."
+          },
+          "percentile": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Required when metric is `percentile`; omit otherwise."
+          }
+        }
+      },
+      "CustomAnalyticsSeriesMeta": {
+        "type": "object",
+        "title": "CustomAnalyticsSeriesMeta",
+        "description": "Metadata describing one series in a custom analytics query response.",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Series key (matches keys in each data row)."
+          },
+          "label": {
+            "type": "string",
+            "description": "Human-readable label."
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "count",
+              "tokens",
+              "currency",
+              "duration_seconds",
+              "number"
+            ],
+            "description": "Unit hint for rendering axes."
+          }
+        }
+      },
+      "CustomAnalyticsResult": {
+        "type": "object",
+        "title": "CustomAnalyticsResult",
+        "description": "Computed result for a single custom analytics query.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Echoes the chart id from the request."
+          },
+          "title": {
+            "type": "string",
+            "description": "Chart title (echoed from request, or defaults to id)."
+          },
+          "chartType": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line",
+              "area"
+            ]
+          },
+          "series": {
+            "type": "array",
+            "description": "Series descriptors (one entry per series). For single-metric charts the only entry has key `value`.",
+            "items": {
+              "$ref": "#/components/schemas/CustomAnalyticsSeriesMeta"
+            }
+          },
+          "data": {
+            "type": "array",
+            "description": "Rows of chart data. Each row has a `label` string and one numeric key per series. Time-series rows also include `bucketKey` (ISO date string).",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "derivedInsights": {
+            "type": "array",
+            "nullable": true,
+            "description": "Computed ratio insights (multi-series charts only).",
+            "items": {
+              "$ref": "#/components/schemas/DerivedRatioInsightResult"
+            }
+          }
+        }
+      },
+      "RequestAnalyticsCustomAnalyticsQuery": {
+        "type": "object",
+        "title": "RequestAnalyticsCustomAnalyticsQuery",
+        "description": "Request body for POST /api/public/v2/requests/analytics/custom-analytics. Inherits all filter fields from RequestLogQuery and adds `customCharts`.",
         "required": [
           "customCharts"
         ],
@@ -24487,7 +24585,7 @@
             "minItems": 1,
             "description": "One or more chart definitions to compute. Chart ids must be unique.",
             "items": {
-              "$ref": "#/components/schemas/CustomChartSpec"
+              "$ref": "#/components/schemas/CustomAnalyticsSpec"
             }
           }
         },
@@ -24524,107 +24622,9 @@
           ]
         }
       },
-      "CustomChartSeriesMeta": {
+      "RequestAnalyticsCustomAnalyticsResponse": {
         "type": "object",
-        "title": "CustomChartSeriesMeta",
-        "description": "Metadata describing one series in a custom chart response.",
-        "properties": {
-          "key": {
-            "type": "string",
-            "description": "Series key (matches keys in each data row)."
-          },
-          "label": {
-            "type": "string",
-            "description": "Human-readable label."
-          },
-          "unit": {
-            "type": "string",
-            "enum": [
-              "count",
-              "tokens",
-              "currency",
-              "duration_seconds",
-              "number"
-            ],
-            "description": "Unit hint for rendering axes."
-          }
-        }
-      },
-      "DerivedRatioInsightResult": {
-        "type": "object",
-        "title": "DerivedRatioInsightResult",
-        "description": "A computed ratio insight in the response.",
-        "properties": {
-          "type": {
-            "type": "string",
-            "enum": [
-              "ratio"
-            ]
-          },
-          "label": {
-            "type": "string"
-          },
-          "numeratorSeriesKey": {
-            "type": "string"
-          },
-          "denominatorSeriesKey": {
-            "type": "string"
-          },
-          "value": {
-            "type": "number",
-            "description": "Ratio of numerator total to denominator total."
-          }
-        }
-      },
-      "CustomChartResult": {
-        "type": "object",
-        "title": "CustomChartResult",
-        "description": "Computed result for a single custom chart.",
-        "properties": {
-          "id": {
-            "type": "string",
-            "description": "Echoes the chart id from the request."
-          },
-          "title": {
-            "type": "string",
-            "description": "Chart title (echoed from request, or defaults to id)."
-          },
-          "chartType": {
-            "type": "string",
-            "enum": [
-              "bar",
-              "line",
-              "area"
-            ]
-          },
-          "series": {
-            "type": "array",
-            "description": "Series descriptors (one entry per series). For single-metric charts the only entry has key `value`.",
-            "items": {
-              "$ref": "#/components/schemas/CustomChartSeriesMeta"
-            }
-          },
-          "data": {
-            "type": "array",
-            "description": "Rows of chart data. Each row has a `label` string and one numeric key per series. Time-series rows also include `bucketKey` (ISO date string).",
-            "items": {
-              "type": "object",
-              "additionalProperties": true
-            }
-          },
-          "derivedInsights": {
-            "type": "array",
-            "nullable": true,
-            "description": "Computed ratio insights (multi-series charts only).",
-            "items": {
-              "$ref": "#/components/schemas/DerivedRatioInsightResult"
-            }
-          }
-        }
-      },
-      "RequestAnalyticsCustomChartsResponse": {
-        "type": "object",
-        "title": "RequestAnalyticsCustomChartsResponse",
+        "title": "RequestAnalyticsCustomAnalyticsResponse",
         "required": [
           "success",
           "customCharts"
@@ -24640,7 +24640,7 @@
             "type": "array",
             "description": "Results in the same order as the input `customCharts` array.",
             "items": {
-              "$ref": "#/components/schemas/CustomChartResult"
+              "$ref": "#/components/schemas/CustomAnalyticsResult"
             }
           }
         }
