@@ -1,0 +1,128 @@
+---
+title: "Migrate from Evaluations and Datasets"
+description: "Move legacy Dataset, Evaluation, and Report workflows into Tables."
+icon: "arrows-rotate"
+---
+
+Tables are the recommended replacement for new Dataset, Evaluation, and Report workflows. They keep the data, computation, scoring, history, and analytics in one place.
+
+<Warning>
+  Legacy Evaluations, Reports, and Datasets remain available for existing projects, but new workflows should use Tables.
+</Warning>
+
+## Concept mapping
+
+| Legacy concept | Tables concept |
+| --- | --- |
+| Dataset group | Table |
+| Dataset version | Table sheet version |
+| Dataset row | Table row |
+| Dataset column | Text column |
+| Evaluation pipeline | Table sheet with computed columns |
+| Evaluation step | Computed column |
+| Report run | Recalculation operation |
+| Report row | Table row with computed cell outputs |
+| Report score card | Sheet score configuration |
+| Report history | Table version history and score history |
+
+## Migration workflow
+
+1. **Create a Table** for the workflow you are replacing.
+2. **Import existing input data** with CSV upload or request-history import.
+3. **Recreate evaluation steps as computed columns** in the same order they previously ran.
+4. **Configure scoring** from the score panel or the Tables API.
+5. **Recalculate the sheet** and inspect failed or stale cells.
+6. **Save or review a version** once the migrated workflow is ready.
+7. **Move new automation to Tables APIs** instead of Dataset and Report endpoints.
+
+## Migrating dataset workflows
+
+### Dataset from file
+
+Old flow:
+
+1. Create Dataset Group.
+2. Upload a CSV or JSON file.
+3. Save a Dataset Version.
+4. Attach that version to an Evaluation pipeline.
+
+New flow:
+
+1. Create a Table.
+2. Upload a CSV directly into the Table sheet.
+3. Add computed columns and score columns in the same sheet.
+4. Use sheet versions to preserve checkpoints.
+
+<Frame>
+  <img src="/images/tables/polished/06-upload-menu.jpg" alt="Upload a CSV file into a Table" />
+</Frame>
+
+### Dataset from request history
+
+Old flow:
+
+1. Filter request history.
+2. Save the results as a Dataset Version.
+3. Use that Dataset Version in an Evaluation pipeline.
+
+New flow:
+
+1. Create a Table.
+2. Import request history into the Table sheet.
+3. Keep request context and metadata as columns.
+4. Add prompt, comparison, and scoring columns in the same sheet.
+
+<Frame>
+  <img src="/images/tables/polished/07-request-history-import.jpg" alt="Import request history into a Table" />
+</Frame>
+
+## Migrating evaluation and report workflows
+
+Legacy Reports separated the pipeline definition from each run. Tables collapse that into one versioned sheet.
+
+| If your Report did this | Do this in Tables |
+| --- | --- |
+| Ran a Prompt Template step | Add a prompt-template column. |
+| Ran an LLM judge | Add an LLM, score, or comparison column. |
+| Ran code for each row | Add a code column. |
+| Compared output to expected values | Add a comparison or score column. |
+| Produced a report score | Configure the sheet score. |
+| Needed reruns | Recalculate stale cells or queue a Table operation. |
+| Needed CI | Create or update the Table through the API, run operations, poll status, then read score data. |
+
+<Frame>
+  <img src="/images/tables/polished/08-score-details.jpg" alt="Configure a score for a Table sheet" />
+</Frame>
+
+## Programmatic migration
+
+Use the Tables API for new automation:
+
+<CardGroup cols={2}>
+  <Card title="Create Table" icon="plus" href="/reference/tables-create">
+    Create the Table that replaces the legacy Dataset or Report container.
+  </Card>
+  <Card title="Import file" icon="file-arrow-up" href="/reference/table-sheet-imports-file-create">
+    Import a CSV into a Table sheet.
+  </Card>
+  <Card title="Import request logs" icon="history" href="/reference/table-sheet-imports-request-logs-create">
+    Build a Table sheet from request history.
+  </Card>
+  <Card title="Configure score" icon="star" href="/reference/table-sheet-score-configure">
+    Configure boolean, numeric, auto, or custom scoring for a sheet.
+  </Card>
+  <Card title="Create operation" icon="rotate" href="/reference/table-sheet-operations-create">
+    Queue recalculation across selected rows, columns, or statuses.
+  </Card>
+  <Card title="Get score" icon="chart-line" href="/reference/table-sheet-score-get">
+    Read the current sheet score after recalculation completes.
+  </Card>
+</CardGroup>
+
+## What to leave in legacy docs
+
+Keep legacy Evaluation, Report, and Dataset docs only for teams maintaining existing workflows. Link new users to Tables from those pages and avoid adding new examples that depend on legacy Datasets or Reports.
+
+## Recommended next step
+
+Start with [Tables best practices](/features/tables/best-practices), then migrate one existing workflow into a Table before moving CI or production automation.

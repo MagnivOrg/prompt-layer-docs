@@ -3,6 +3,10 @@ title: "Attach Report External ID"
 openapi: "POST /reports/{report_id}/external-ids"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 Attach a `{source, external_id}` mapping to an existing report or evaluation pipeline.
 
 Attaching the same mapping to the same report is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).

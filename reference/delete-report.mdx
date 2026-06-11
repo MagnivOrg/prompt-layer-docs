@@ -3,6 +3,10 @@ title: "Delete Evaluation Pipeline"
 openapi: "DELETE /reports/{report_id}"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 Archive a single evaluation pipeline by ID. Prefer this endpoint over [Delete Reports by Name](/reference/delete-reports-by-name) when you know the pipeline ID, since names can collide across pipelines.
 
 ## Related

@@ -1,0 +1,132 @@
+---
+title: "Overview"
+description: "Use Tables to build datasets, run prompt experiments, evaluate outputs, score results, and preserve versions in one workspace-native surface."
+icon: "table"
+---
+
+Tables are PromptLayer's workspace-native way to build, run, and evaluate prompt workflows at scale. A Table combines dataset rows, prompt outputs, scoring columns, request history imports, analytics, and version history in one spreadsheet-like interface.
+
+Use Tables for new evaluation, report, dataset, backtesting, and batch workflows. Legacy Evaluations, Reports, and Datasets are still documented for existing projects, but new work should start in Tables.
+
+<Frame>
+  <img src="/images/tables/polished/01-tables-home.jpg" alt="Tables in a PromptLayer workspace" />
+</Frame>
+
+## What you can do
+
+- Create a Table from a preset, a prompt, a CSV file, request history, or a blank sheet.
+- Use text columns for inputs, expected outputs, labels, metadata, or notes.
+- Add computed columns that run prompt templates, LLM calls, code, comparisons, composition logic, or scoring.
+- Import production and staging traffic from request history to backtest against real examples.
+- Recalculate stale cells after editing inputs, prompts, or column configuration.
+- Track request metrics such as cost, latency, tokens, request IDs, and trace IDs for prompt-generated cells.
+- Configure a score for the sheet and compare quality across versions.
+- Save and inspect sheet versions as your data, columns, scoring configuration, imports, and execution outputs change.
+
+## Create a Table
+
+From the workspace home page, click **New** and choose **Table**.
+
+<Frame>
+  <img src="/images/tables/polished/02-new-table-menu.jpg" alt="Create a new Table from the New menu" />
+</Frame>
+
+The creation dialog gives you a few starting points:
+
+| Preset | Use it when |
+| --- | --- |
+| **Model comparison** | You want to run one prompt across multiple models and compare outputs. |
+| **Ground truth check** | You have trusted answers and want to validate model outputs against them. |
+| **Structure check** | You need to verify that outputs follow the requested format. |
+| **Custom** | You want prompt inputs, a connected prompt output column, and evaluation checks that you configure yourself. |
+| **Blank table** | You want to build the sheet manually from rows and columns. |
+
+<Frame>
+  <img src="/images/tables/polished/03-table-presets.jpg" alt="Table creation presets" />
+</Frame>
+
+## Build from a prompt
+
+For most prompt-evaluation workflows, start with **Create from a prompt** or choose the **Custom** preset. This sets up prompt inputs, output columns, and evaluation checks together so you can iterate without stitching together separate datasets and reports.
+
+<Frame>
+  <img src="/images/tables/polished/04-custom-preset.jpg" alt="Custom prompt-based Table preset" />
+</Frame>
+
+## Build manually
+
+A blank Table starts with a sheet, one text column, and one row. Use text columns for source data, then add computed columns for the work you want PromptLayer to run.
+
+<Frame>
+  <img src="/images/tables/polished/05-table-start.jpg" alt="Blank Table with rows, columns, and sheet controls" />
+</Frame>
+
+## Import data
+
+Tables replace most dataset setup flows. Upload a CSV when you already have a prepared test set, or import request history when you want to backtest against real logged traffic.
+
+<Frame>
+  <img src="/images/tables/polished/06-upload-menu.jpg" alt="Upload menu for importing CSV files or request history into a Table" />
+</Frame>
+
+Request history import lets you filter, search, and select existing requests before adding them as rows.
+
+<Frame>
+  <img src="/images/tables/polished/07-request-history-import.jpg" alt="Import request history into a Table" />
+</Frame>
+
+## Score results
+
+Use the score panel to configure how a sheet is scored. Tables can auto-detect boolean or numeric scores, use selected columns, and recalculate score data as cells update.
+
+<Frame>
+  <img src="/images/tables/polished/08-score-details.jpg" alt="Score configuration panel in a Table" />
+</Frame>
+
+## Review history and analytics
+
+Tables preserve version history as your sheet changes. Use this to compare changes over time, restore confidence in edits, and audit what changed during an experiment.
+
+<Frame>
+  <img src="/images/tables/polished/09-version-history.jpg" alt="Table version history" />
+</Frame>
+
+The actions menu gives you quick access to import, export, analytics, history, and tour controls.
+
+<Frame>
+  <img src="/images/tables/polished/11-actions-menu.jpg" alt="More actions menu for Tables" />
+</Frame>
+
+Analytics is available directly from the Table so you can inspect requests associated with table execution.
+
+<Frame>
+  <img src="/images/tables/polished/10-analytics.jpg" alt="Analytics modal opened from a Table" />
+</Frame>
+
+## How Tables map to legacy workflows
+
+| Legacy workflow | Tables replacement |
+| --- | --- |
+| Dataset from CSV | Upload the CSV directly into a Table sheet. |
+| Dataset from request history | Import request history into a Table sheet. |
+| Evaluation pipeline | Add prompt, code, comparison, and score columns to a Table. |
+| Report run | Recalculate the Table cells or queue a sheet operation. |
+| Report score card | Configure the sheet score in the score panel or Tables API. |
+| Batch run | Add rows to a Table and recalculate the output columns. |
+
+## Next steps
+
+<CardGroup cols={2}>
+  <Card title="Tables best practices" icon="sparkles" href="/features/tables/best-practices">
+    Learn how to structure Tables for prompt evaluation, backtesting, and production-quality iteration.
+  </Card>
+  <Card title="Migrate from Evaluations and Datasets" icon="arrows-rotate" href="/features/tables/migrate-from-evaluations-and-datasets">
+    Move legacy Dataset, Evaluation, and Report workflows into Tables.
+  </Card>
+  <Card title="Create Table API" icon="code" href="/reference/tables-create">
+    Create Tables programmatically from your workspace API key.
+  </Card>
+  <Card title="Import request logs" icon="history" href="/reference/table-sheet-imports-request-logs-create">
+    Import production or staging traffic into an existing Table sheet.
+  </Card>
+</CardGroup>

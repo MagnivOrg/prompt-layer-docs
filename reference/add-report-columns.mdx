@@ -3,6 +3,10 @@ title: "Add Column to Evaluation Pipeline"
 openapi: "POST /report-columns"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 This endpoint adds evaluation steps (columns) to an existing evaluation pipeline. Columns execute sequentially from left to right, with each column able to reference outputs from previous columns.
 
 ## Important Notes

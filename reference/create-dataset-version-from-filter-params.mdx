@@ -3,6 +3,10 @@ title: "Create Dataset Version from Request History"
 openapi: "POST /api/public/v2/dataset-versions/from-filter-params"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 Create a dataset version asynchronously from existing request logs. You can populate the version with explicit request log IDs or with structured request-log filters.
 
 ## Behavior Notes

@@ -44,7 +44,16 @@
             ]
           },
           {
-            "group": "Evaluations",
+            "group": "Tables",
+            "icon": "table",
+            "pages": [
+              "features/tables/overview",
+              "features/tables/best-practices",
+              "features/tables/migrate-from-evaluations-and-datasets"
+            ]
+          },
+          {
+            "group": "Legacy Evaluations",
             "icon": "vial-circle-check",
             "pages": [
               "features/evaluations/overview",
@@ -59,7 +68,7 @@
             ]
           },
           {
-            "group": "Datasets",
+            "group": "Legacy Datasets",
             "icon": "database",
             "pages": [
               "features/evaluations/datasets-overview",
@@ -166,7 +175,7 @@
             ]
           },
           {
-            "group": "Eval Strategies",
+            "group": "Legacy Eval Strategies",
             "icon": "vial-circle-check",
             "pages": [
               "onboarding-guides/compare-models",
@@ -242,7 +251,44 @@
                 ]
               },
               {
-                "group": "Datasets",
+                "group": "Tables",
+                "tag": "New",
+                "pages": [
+                  "reference/tables-create",
+                  "reference/tables-list",
+                  "reference/tables-get",
+                  "reference/tables-update",
+                  "reference/table-sheets-list",
+                  "reference/table-sheets-create",
+                  "reference/table-sheets-get-operation",
+                  "reference/table-sheets-get",
+                  "reference/table-sheets-update",
+                  "reference/table-sheet-columns-list",
+                  "reference/table-sheet-columns-create",
+                  "reference/table-sheet-columns-update",
+                  "reference/table-sheet-rows-list",
+                  "reference/table-sheet-rows-add",
+                  "reference/table-sheet-cells-get",
+                  "reference/table-sheet-cells-update",
+                  "reference/table-sheet-cells-recalculate",
+                  "reference/table-sheet-cells-recalculate-batch",
+                  "reference/table-sheet-imports-file-create",
+                  "reference/table-sheet-imports-request-logs-create",
+                  "reference/table-sheet-operations-list",
+                  "reference/table-sheet-operations-create",
+                  "reference/table-sheet-operations-get",
+                  "reference/table-sheet-operations-cancel",
+                  "reference/table-sheet-score-get",
+                  "reference/table-sheet-score-configure",
+                  "reference/table-sheet-score-recalculate",
+                  "reference/table-sheet-versions-list",
+                  "reference/table-sheet-versions-create",
+                  "reference/table-sheet-versions-get",
+                  "reference/table-sheet-score-history-get"
+                ]
+              },
+              {
+                "group": "Legacy Datasets",
                 "pages": [
                   "reference/list-datasets",
                   "reference/get-dataset-rows",
@@ -259,7 +305,7 @@
                 ]
               },
               {
-                "group": "Evaluations",
+                "group": "Legacy Evaluations",
                 "pages": [
                   "reference/list-evaluations",
                   "reference/get-evaluation-rows",
@@ -332,43 +378,6 @@
                   "reference/env-vars-tool-create",
                   "reference/env-vars-tool-update",
                   "reference/env-vars-tool-delete"
-                ]
-              },
-              {
-                "group": "Tables",
-                "tag": "New",
-                "pages": [
-                  "reference/tables-create",
-                  "reference/tables-list",
-                  "reference/tables-get",
-                  "reference/tables-update",
-                  "reference/table-sheets-list",
-                  "reference/table-sheets-create",
-                  "reference/table-sheets-get-operation",
-                  "reference/table-sheets-get",
-                  "reference/table-sheets-update",
-                  "reference/table-sheet-columns-list",
-                  "reference/table-sheet-columns-create",
-                  "reference/table-sheet-columns-update",
-                  "reference/table-sheet-rows-list",
-                  "reference/table-sheet-rows-add",
-                  "reference/table-sheet-cells-get",
-                  "reference/table-sheet-cells-update",
-                  "reference/table-sheet-cells-recalculate",
-                  "reference/table-sheet-cells-recalculate-batch",
-                  "reference/table-sheet-imports-file-create",
-                  "reference/table-sheet-imports-request-logs-create",
-                  "reference/table-sheet-operations-list",
-                  "reference/table-sheet-operations-create",
-                  "reference/table-sheet-operations-get",
-                  "reference/table-sheet-operations-cancel",
-                  "reference/table-sheet-score-get",
-                  "reference/table-sheet-score-configure",
-                  "reference/table-sheet-score-recalculate",
-                  "reference/table-sheet-versions-list",
-                  "reference/table-sheet-versions-create",
-                  "reference/table-sheet-versions-get",
-                  "reference/table-sheet-score-history-get"
                 ]
               },
               {
@@ -448,17 +457,17 @@
       "source": "/",
       "destination": "/overview"
     },
-        {
-          "source": "/introduction",
-          "destination": "/overview"
-        },
-        {
-          "source": "/quickstart-part-two",
-          "destination": "/quickstart"
-        },
-        {
-          "source": "/languages/python",
-          "destination": "/sdks/python"
+    {
+      "source": "/introduction",
+      "destination": "/overview"
+    },
+    {
+      "source": "/quickstart-part-two",
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/languages/python",
+      "destination": "/sdks/python"
     },
     {
       "source": "/languages/javascript",
