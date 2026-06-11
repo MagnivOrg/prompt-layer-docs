@@ -14059,8 +14059,8 @@
     },
     "/api/public/v2/requests/analytics/custom-charts": {
       "post": {
-        "summary": "Request Analytics Custom Charts",
-        "operationId": "getRequestAnalyticsCustomCharts",
+        "summary": "Request Analytics Custom Queries",
+        "operationId": "getRequestAnalyticsCustomQueries",
         "tags": [
           "tracking"
         ],

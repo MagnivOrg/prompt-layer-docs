@@ -1,18 +1,18 @@
 ---
-title: "Request Analytics — Custom Charts"
+title: "Request Analytics — Custom Queries"
 openapi: "POST /api/public/v2/requests/analytics/custom-charts"
 ---
 
-Build custom charts from your request logs. You define which metrics to compute and how to slice them; the API runs the aggregations and returns ready-to-render data.
+Run custom aggregations over your request logs. Define what to measure and how to slice it; the API returns structured data you can use however you want — feed it into a chart, run analysis on it, pipe it into a dashboard, or process it programmatically.
 
-Each chart in the `customCharts` array has an `id`, a `chartType`, and a shape that controls what is computed:
+Each query in the `customCharts` array specifies a metric and optionally a breakdown dimension or time bucketing:
 
 | Shape | Fields required |
 |---|---|
-| Simple aggregate | `metric` (and `metricField` unless `metric` is `count`) |
+| Single aggregate | `metric` (and `metricField` unless `metric` is `count`) |
 | Grouped breakdown | Add `groupByField` or `groupByMetadataKey` |
-| Time series | Add `timeSeries: true` |
-| Multi-series | Replace `metric`/`metricField` with a `series` array |
+| Over time | Add `timeSeries: true` |
+| Multiple metrics at once | Replace `metric`/`metricField` with a `series` array |
 
 ## Metrics
 
@@ -37,29 +37,29 @@ Each chart in the `customCharts` array has an `id`, a `chartType`, and a shape t
 
 `engine`, `provider_type`, `prompt_id`, `prompt_version_number`, `status`, `error_type`, `tags`, `metadata_keys`, `output_keys`, `input_variable_keys`, `tool_names`
 
-Use `groupByMetadataKey` instead of `groupByField` to break down by the values of a specific metadata key.
+Use `groupByMetadataKey` instead to break down by values of a specific metadata key (e.g. `"environment"` or `"user_id"`).
 
 ## Filters
 
-The request body inherits all filter fields from [Search Request Logs](/reference/search-request-logs) (`filter_group`, `q`, `sort_by`, `sort_order`). Filters are applied before any aggregation.
+All filter fields from [Search Request Logs](/reference/search-request-logs) are supported (`filter_group`, `q`, `sort_by`, `sort_order`). Filters are applied before aggregation.
 
 ## Response shape
 
-Each entry in `customCharts` contains:
+Each entry in the response `customCharts` array contains:
 
 - **`id`** — echoes the id you sent
-- **`title`** — echoes `title`, or falls back to `id`
-- **`chartType`** — `bar`, `line`, or `area`
-- **`series`** — array of series descriptors: `{ key, label, unit }`
-- **`data`** — array of rows; each row has a `label` (and `bucketKey` for time-series) plus one numeric key per series
-- **`derivedInsights`** — (multi-series only) computed ratio summaries
+- **`series`** — array of series descriptors: `{ key, label, unit }` — describes what each numeric key in the data rows represents
+- **`data`** — array of rows, each with a `label` and one numeric key per series. Time-bucketed rows also include `bucketKey` (ISO date string).
+- **`derivedInsights`** — (multi-metric only) pre-computed ratio summaries
+
+`chartType` and `title` are also echoed back but are optional hints — use them if you're rendering a chart, ignore them if you're just processing the numbers.
 
 ## Behavior Notes
 
 - `sort_by` / `sort_order` are accepted for compatibility but do not affect aggregated output.
-- Overall aggregate charts (no `timeSeries`, no `groupByField`) must use `chartType: bar`.
-- Multi-series grouped time-series is not supported (use multiple single-series charts instead).
-- `series` keys must be unique within a chart; chart `id` values must be unique within the request.
+- Overall aggregates (no `timeSeries`, no `groupByField`) return a single row with `label: "Overall"`.
+- Multi-metric grouped time-series is not supported — use multiple single-metric queries instead.
+- `series` keys must be unique within a query; `id` values must be unique within the request.
 
 ## Related
 
