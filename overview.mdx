@@ -109,93 +109,82 @@ mode: custom
       <div>
         <p className="promptlayer-section-kicker">Core surfaces</p>
         <h2 id="promptlayer-core-title" className="promptlayer-section-title">
-          See what happened. Measure quality. Control what ships.
+          A simple loop from signal to release.
         </h2>
       </div>
       <p className="promptlayer-section-description">
-        Connect observability, monitor quality in Tables, and use Prompt Registry when
-        approved versions are ready to ship.
+        Move from what happened to what should ship.
       </p>
     </div>
 
-    <div className="promptlayer-bento-grid">
-      <a href="/features/observability" className="promptlayer-bento-card promptlayer-card-interactive promptlayer-bento-card-large">
+    <div className="promptlayer-surface-grid">
+      <a href="/features/observability" className="promptlayer-surface-card promptlayer-card-interactive">
         <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
-        <div className="promptlayer-card-icon promptlayer-card-icon-blue">
-          <img
-            src="/images/promptlayer/icon-monitor-usage.png"
-            alt=""
-            aria-hidden="true"
-            width="160"
-            height="158"
-          />
-        </div>
+        <span className="promptlayer-surface-index">01</span>
         <div>
-          <span className="promptlayer-card-pill">Observability</span>
-          <h3>Connect production signals first.</h3>
+          <span className="promptlayer-surface-label">Observability</span>
+          <h3>Start with the production record.</h3>
           <p>
-            Trace requests, responses, metadata, cost, latency, and model behavior from one
-            place so your team can see what is actually happening.
+            Capture requests, responses, metadata, cost, latency, and feedback in one timeline.
           </p>
         </div>
+        <div className="promptlayer-surface-meta" aria-hidden="true">
+          <span>Traces</span>
+          <span>Costs</span>
+          <span>Latency</span>
+        </div>
       </a>
 
-      <a href="/features/tables/overview" className="promptlayer-bento-card promptlayer-card-interactive">
+      <a href="/features/tables/overview" className="promptlayer-surface-card promptlayer-card-interactive">
         <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
-        <div className="promptlayer-card-icon">
-          <img
-            src="/images/promptlayer/icon-evaluations-v2.png"
-            alt=""
-            aria-hidden="true"
-            width="160"
-            height="158"
-          />
-        </div>
-        <span className="promptlayer-card-pill">Tables</span>
-        <h3>Monitor quality with evals.</h3>
-        <p>
-          Turn observed behavior into datasets, experiments, scores, and version comparisons.
-        </p>
-      </a>
-
-      <a href="/features/prompt-registry/new-overview" className="promptlayer-bento-card promptlayer-card-interactive">
-        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
-        <div className="promptlayer-card-icon promptlayer-card-icon-gold">
-          <img
-            src="/images/promptlayer/icon-prompt-management.png"
-            alt=""
-            aria-hidden="true"
-            width="188"
-            height="197"
-          />
-        </div>
-        <span className="promptlayer-card-pill">Prompt Registry</span>
-        <h3>Keep prompt versions under control.</h3>
-        <p>
-          Manage versions, labels, and releases while giving reviewers a clean place to weigh in.
-        </p>
-      </a>
-
-      <a href="/why-promptlayer/workflows" className="promptlayer-bento-card promptlayer-card-interactive promptlayer-bento-card-wide">
-        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
-        <div className="promptlayer-card-icon promptlayer-card-icon-green">
-          <img
-            src="/images/promptlayer/icon-agents.png"
-            alt=""
-            aria-hidden="true"
-            width="160"
-            height="158"
-          />
-        </div>
+        <span className="promptlayer-surface-index">02</span>
         <div>
-          <span className="promptlayer-card-pill">Workflows</span>
-          <h3>Connect observability and evaluation loops.</h3>
+          <span className="promptlayer-surface-label">Tables</span>
+          <h3>Turn examples into decisions.</h3>
           <p>
-            Chain prompts and logic when your application needs more than a single request.
+            Organize datasets, score experiments, and compare versions against real behavior.
           </p>
         </div>
+        <div className="promptlayer-surface-meta" aria-hidden="true">
+          <span>Datasets</span>
+          <span>Evals</span>
+          <span>Scores</span>
+        </div>
       </a>
 
+      <a href="/features/prompt-registry/new-overview" className="promptlayer-surface-card promptlayer-card-interactive">
+        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
+        <span className="promptlayer-surface-index">03</span>
+        <div>
+          <span className="promptlayer-surface-label">Prompt Registry</span>
+          <h3>Ship approved prompt versions.</h3>
+          <p>
+            Manage versions, labels, and release state so engineers and reviewers stay aligned.
+          </p>
+        </div>
+        <div className="promptlayer-surface-meta" aria-hidden="true">
+          <span>Versions</span>
+          <span>Labels</span>
+          <span>Reviews</span>
+        </div>
+      </a>
+
+      <a href="/why-promptlayer/workflows" className="promptlayer-surface-card promptlayer-card-interactive">
+        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
+        <span className="promptlayer-surface-index">04</span>
+        <div>
+          <span className="promptlayer-surface-label">Workflows</span>
+          <h3>Connect the loop end to end.</h3>
+          <p>
+            Trace multi-step systems and bring evaluation back into the release process.
+          </p>
+        </div>
+        <div className="promptlayer-surface-meta" aria-hidden="true">
+          <span>Logic</span>
+          <span>Runs</span>
+          <span>Release</span>
+        </div>
+      </a>
     </div>
   </section>
 
