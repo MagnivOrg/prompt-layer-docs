@@ -1,0 +1,68 @@
+---
+title: "Request Analytics — Custom Queries"
+openapi: "POST /api/public/v2/requests/analytics/custom-charts"
+---
+
+Run custom aggregations over your request logs. Define what to measure and how to slice it; the API returns structured data you can use however you want — feed it into a chart, run analysis on it, pipe it into a dashboard, or process it programmatically.
+
+Each query in the `customCharts` array specifies a metric and optionally a breakdown dimension or time bucketing:
+
+| Shape | Fields required |
+|---|---|
+| Single aggregate | `metric` (and `metricField` unless `metric` is `count`) |
+| Grouped breakdown | Add `groupByField` or `groupByMetadataKey` |
+| Over time | Add `timeSeries: true` |
+| Multiple metrics at once | Replace `metric`/`metricField` with a `series` array |
+
+## Metrics
+
+`metric` controls the aggregation function:
+
+| Value | Description |
+|---|---|
+| `count` | Number of matching requests (no `metricField` needed) |
+| `sum` | Total of a numeric field |
+| `avg` | Average of a numeric field |
+| `min` | Minimum value |
+| `max` | Maximum value |
+| `percentile` | Arbitrary percentile — requires `percentile` (0–100) |
+
+## Supported metric fields (`metricField`)
+
+`input_tokens`, `output_tokens`, `cost`, `latency_ms`, `prompt_version_number`, `turn_count`, `tool_call_count`, `cached_tokens`, `thinking_tokens`
+
+> Latency values are returned in **seconds** (converted from milliseconds internally).
+
+## Group-by fields (`groupByField`)
+
+`engine`, `provider_type`, `prompt_id`, `prompt_version_number`, `status`, `error_type`, `tags`, `metadata_keys`, `output_keys`, `input_variable_keys`, `tool_names`
+
+Use `groupByMetadataKey` instead to break down by values of a specific metadata key (e.g. `"environment"` or `"user_id"`).
+
+## Filters
+
+All filter fields from [Search Request Logs](/reference/search-request-logs) are supported (`filter_group`, `q`, `sort_by`, `sort_order`). Filters are applied before aggregation.
+
+## Response shape
+
+Each entry in the response `customCharts` array contains:
+
+- **`id`** — echoes the id you sent
+- **`series`** — array of series descriptors: `{ key, label, unit }` — describes what each numeric key in the data rows represents
+- **`data`** — array of rows, each with a `label` and one numeric key per series. Time-bucketed rows also include `bucketKey` (ISO date string).
+- **`derivedInsights`** — (multi-metric only) pre-computed ratio summaries
+
+`chartType` and `title` are also echoed back but are optional hints — use them if you're rendering a chart, ignore them if you're just processing the numbers.
+
+## Behavior Notes
+
+- `sort_by` / `sort_order` are accepted for compatibility but do not affect aggregated output.
+- Overall aggregates (no `timeSeries`, no `groupByField`) return a single row with `label: "Overall"`.
+- Multi-metric grouped time-series is not supported — use multiple single-metric queries instead.
+- `series` keys must be unique within a query; `id` values must be unique within the request.
+
+## Related
+
+- [Request Analytics](/reference/request-analytics)
+- [Search Request Logs](/reference/search-request-logs)
+- [Analytics](/why-promptlayer/analytics)

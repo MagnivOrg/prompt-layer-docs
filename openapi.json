@@ -14056,6 +14056,183 @@
           }
         }
       }
+    },
+    "/api/public/v2/requests/analytics/custom-charts": {
+      "post": {
+        "summary": "Request Analytics Custom Queries",
+        "operationId": "getRequestAnalyticsCustomQueries",
+        "tags": [
+          "tracking"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RequestAnalyticsCustomChartsQuery"
+              },
+              "examples": {
+                "cost_by_model": {
+                  "summary": "Cost breakdown by model",
+                  "value": {
+                    "filter_group": {
+                      "logic": "AND",
+                      "filters": [
+                        {
+                          "field": "request_start_time",
+                          "operator": "between",
+                          "value": [
+                            "2025-06-01T00:00:00Z",
+                            "2025-06-08T00:00:00Z"
+                          ]
+                        }
+                      ]
+                    },
+                    "customCharts": [
+                      {
+                        "id": "cost_by_model",
+                        "title": "Cost by Model",
+                        "chartType": "bar",
+                        "metric": "sum",
+                        "metricField": "cost",
+                        "groupByField": "engine",
+                        "limit": 10
+                      }
+                    ]
+                  }
+                },
+                "requests_over_time": {
+                  "summary": "Request volume over time",
+                  "value": {
+                    "customCharts": [
+                      {
+                        "id": "requests_over_time",
+                        "title": "Requests Over Time",
+                        "chartType": "line",
+                        "metric": "count",
+                        "timeSeries": true
+                      }
+                    ]
+                  }
+                },
+                "multi_series": {
+                  "summary": "Input vs output tokens over time",
+                  "value": {
+                    "customCharts": [
+                      {
+                        "id": "token_breakdown",
+                        "title": "Token Usage",
+                        "chartType": "area",
+                        "timeSeries": true,
+                        "series": [
+                          {
+                            "key": "input",
+                            "label": "Input Tokens",
+                            "metric": "sum",
+                            "metricField": "input_tokens"
+                          },
+                          {
+                            "key": "output",
+                            "label": "Output Tokens",
+                            "metric": "sum",
+                            "metricField": "output_tokens"
+                          }
+                        ],
+                        "derivedInsights": [
+                          {
+                            "label": "Input/Output Ratio",
+                            "numeratorSeriesKey": "input",
+                            "denominatorSeriesKey": "output"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                },
+                "p95_latency_by_metadata": {
+                  "summary": "p95 latency broken down by a metadata key",
+                  "value": {
+                    "customCharts": [
+                      {
+                        "id": "latency_by_env",
+                        "title": "p95 Latency by Environment",
+                        "chartType": "bar",
+                        "metric": "percentile",
+                        "percentile": 95,
+                        "metricField": "latency_ms",
+                        "groupByMetadataKey": "environment"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Custom chart results in the order requested.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestAnalyticsCustomChartsResponse"
+                },
+                "examples": {
+                  "cost_by_model": {
+                    "summary": "Cost by model result",
+                    "value": {
+                      "success": true,
+                      "customCharts": [
+                        {
+                          "id": "cost_by_model",
+                          "title": "Cost by Model",
+                          "chartType": "bar",
+                          "series": [
+                            {
+                              "key": "value",
+                              "label": "Cost",
+                              "unit": "currency"
+                            }
+                          ],
+                          "data": [
+                            {
+                              "label": "gpt-4o",
+                              "value": 8.42
+                            },
+                            {
+                              "label": "claude-sonnet-4-6",
+                              "value": 3.91
+                            }
+                          ]
+                        }
+                      ]
+                    }
+                  }
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid chart spec or unsupported filter.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "$ref": "#/components/responses/UnauthorizedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/ForbiddenError"
+          },
+          "422": {
+            "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
     }
   },
   "components": {
@@ -24062,6 +24239,409 @@
             "type": "string",
             "format": "date-time",
             "nullable": true
+          }
+        }
+      },
+      "CustomChartSeriesSpec": {
+        "type": "object",
+        "title": "CustomChartSeriesSpec",
+        "description": "One series in a multi-series custom chart.",
+        "required": [
+          "key",
+          "label",
+          "metric",
+          "metricField"
+        ],
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Unique identifier for this series within the chart (alphanumeric, hyphens, underscores; max 64 chars)."
+          },
+          "label": {
+            "type": "string",
+            "description": "Human-readable series label shown in chart legends (max 120 chars)."
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "sum",
+              "avg",
+              "min",
+              "max",
+              "percentile"
+            ],
+            "description": "Aggregation function for this series."
+          },
+          "metricField": {
+            "type": "string",
+            "enum": [
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "prompt_version_number",
+              "turn_count",
+              "tool_call_count",
+              "cached_tokens",
+              "thinking_tokens"
+            ],
+            "description": "Numeric field to aggregate."
+          },
+          "percentile": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Required when metric is `percentile`; omit otherwise."
+          }
+        }
+      },
+      "DerivedRatioInsightSpec": {
+        "type": "object",
+        "title": "DerivedRatioInsightSpec",
+        "description": "A display-only derived insight computed as a ratio of two series totals.",
+        "required": [
+          "label",
+          "numeratorSeriesKey",
+          "denominatorSeriesKey"
+        ],
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ratio"
+            ],
+            "default": "ratio"
+          },
+          "label": {
+            "type": "string",
+            "description": "Label shown for this insight (max 200 chars)."
+          },
+          "numeratorSeriesKey": {
+            "type": "string",
+            "description": "Key of the numerator series (must match a series key in the chart)."
+          },
+          "denominatorSeriesKey": {
+            "type": "string",
+            "description": "Key of the denominator series (must match a series key in the chart)."
+          }
+        }
+      },
+      "CustomChartSpec": {
+        "type": "object",
+        "title": "CustomChartSpec",
+        "description": "Definition for a single custom analytics chart.",
+        "required": [
+          "id",
+          "chartType"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable identifier for this chart in the response (alphanumeric, hyphens, underscores; max 64 chars). Must be unique within the request."
+          },
+          "title": {
+            "type": "string",
+            "nullable": true,
+            "description": "Optional display title (max 200 chars). Defaults to id."
+          },
+          "chartType": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line",
+              "area"
+            ],
+            "description": "Chart visualization type. Overall aggregate charts (no timeSeries, no groupByField) must use `bar`."
+          },
+          "metric": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "count",
+              "sum",
+              "avg",
+              "min",
+              "max",
+              "percentile"
+            ],
+            "description": "Aggregation function. Omit when using `series` (multi-series mode)."
+          },
+          "metricField": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "prompt_version_number",
+              "turn_count",
+              "tool_call_count",
+              "cached_tokens",
+              "thinking_tokens"
+            ],
+            "description": "Numeric field to aggregate. Required unless metric is `count` or using multi-series mode."
+          },
+          "percentile": {
+            "type": "number",
+            "nullable": true,
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Required when metric is `percentile`."
+          },
+          "series": {
+            "type": "array",
+            "nullable": true,
+            "description": "Multi-series mode: define two or more series. Omit metric/metricField/percentile when using this.",
+            "items": {
+              "$ref": "#/components/schemas/CustomChartSeriesSpec"
+            }
+          },
+          "derivedInsights": {
+            "type": "array",
+            "nullable": true,
+            "description": "Ratio insights computed from series totals. Only valid in multi-series mode.",
+            "items": {
+              "$ref": "#/components/schemas/DerivedRatioInsightSpec"
+            }
+          },
+          "groupByField": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "engine",
+              "provider_type",
+              "prompt_id",
+              "prompt_version_number",
+              "status",
+              "error_type",
+              "tags",
+              "metadata_keys",
+              "output_keys",
+              "input_variable_keys",
+              "tool_names"
+            ],
+            "description": "Break results down by this request log field. Cannot be combined with groupByMetadataKey."
+          },
+          "groupByMetadataKey": {
+            "type": "string",
+            "nullable": true,
+            "description": "Break results down by the values of this metadata key. Cannot be combined with groupByField."
+          },
+          "timeSeries": {
+            "type": "boolean",
+            "default": false,
+            "description": "When true, bucket results over time (bucket size chosen automatically from the filter range)."
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25,
+            "description": "Maximum number of group-by buckets to return."
+          }
+        }
+      },
+      "RequestAnalyticsCustomChartsQuery": {
+        "type": "object",
+        "title": "RequestAnalyticsCustomChartsQuery",
+        "description": "Request body for POST /api/public/v2/requests/analytics/custom-charts. Inherits all filter fields from RequestLogQuery and adds `customCharts`.",
+        "required": [
+          "customCharts"
+        ],
+        "properties": {
+          "filter_group": {
+            "nullable": true,
+            "description": "Nested filter group with AND/OR logic.",
+            "$ref": "#/components/schemas/StructuredFilterGroup"
+          },
+          "q": {
+            "type": "string",
+            "nullable": true,
+            "description": "Free-text search query."
+          },
+          "sort_by": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "request_start_time",
+              "input_tokens",
+              "output_tokens",
+              "cost",
+              "latency_ms",
+              "status"
+            ],
+            "description": "Accepted for compatibility; does not affect aggregated output."
+          },
+          "sort_order": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "asc",
+              "desc"
+            ]
+          },
+          "customCharts": {
+            "type": "array",
+            "minItems": 1,
+            "description": "One or more chart definitions to compute. Chart ids must be unique.",
+            "items": {
+              "$ref": "#/components/schemas/CustomChartSpec"
+            }
+          }
+        },
+        "example": {
+          "filter_group": {
+            "logic": "AND",
+            "filters": [
+              {
+                "field": "request_start_time",
+                "operator": "between",
+                "value": [
+                  "2025-06-01T00:00:00Z",
+                  "2025-06-08T00:00:00Z"
+                ]
+              }
+            ]
+          },
+          "customCharts": [
+            {
+              "id": "cost_by_model",
+              "title": "Cost by Model",
+              "chartType": "bar",
+              "metric": "sum",
+              "metricField": "cost",
+              "groupByField": "engine"
+            },
+            {
+              "id": "requests_over_time",
+              "title": "Requests Over Time",
+              "chartType": "line",
+              "metric": "count",
+              "timeSeries": true
+            }
+          ]
+        }
+      },
+      "CustomChartSeriesMeta": {
+        "type": "object",
+        "title": "CustomChartSeriesMeta",
+        "description": "Metadata describing one series in a custom chart response.",
+        "properties": {
+          "key": {
+            "type": "string",
+            "description": "Series key (matches keys in each data row)."
+          },
+          "label": {
+            "type": "string",
+            "description": "Human-readable label."
+          },
+          "unit": {
+            "type": "string",
+            "enum": [
+              "count",
+              "tokens",
+              "currency",
+              "duration_seconds",
+              "number"
+            ],
+            "description": "Unit hint for rendering axes."
+          }
+        }
+      },
+      "DerivedRatioInsightResult": {
+        "type": "object",
+        "title": "DerivedRatioInsightResult",
+        "description": "A computed ratio insight in the response.",
+        "properties": {
+          "type": {
+            "type": "string",
+            "enum": [
+              "ratio"
+            ]
+          },
+          "label": {
+            "type": "string"
+          },
+          "numeratorSeriesKey": {
+            "type": "string"
+          },
+          "denominatorSeriesKey": {
+            "type": "string"
+          },
+          "value": {
+            "type": "number",
+            "description": "Ratio of numerator total to denominator total."
+          }
+        }
+      },
+      "CustomChartResult": {
+        "type": "object",
+        "title": "CustomChartResult",
+        "description": "Computed result for a single custom chart.",
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Echoes the chart id from the request."
+          },
+          "title": {
+            "type": "string",
+            "description": "Chart title (echoed from request, or defaults to id)."
+          },
+          "chartType": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line",
+              "area"
+            ]
+          },
+          "series": {
+            "type": "array",
+            "description": "Series descriptors (one entry per series). For single-metric charts the only entry has key `value`.",
+            "items": {
+              "$ref": "#/components/schemas/CustomChartSeriesMeta"
+            }
+          },
+          "data": {
+            "type": "array",
+            "description": "Rows of chart data. Each row has a `label` string and one numeric key per series. Time-series rows also include `bucketKey` (ISO date string).",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            }
+          },
+          "derivedInsights": {
+            "type": "array",
+            "nullable": true,
+            "description": "Computed ratio insights (multi-series charts only).",
+            "items": {
+              "$ref": "#/components/schemas/DerivedRatioInsightResult"
+            }
+          }
+        }
+      },
+      "RequestAnalyticsCustomChartsResponse": {
+        "type": "object",
+        "title": "RequestAnalyticsCustomChartsResponse",
+        "required": [
+          "success",
+          "customCharts"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean",
+            "enum": [
+              true
+            ]
+          },
+          "customCharts": {
+            "type": "array",
+            "description": "Results in the same order as the input `customCharts` array.",
+            "items": {
+              "$ref": "#/components/schemas/CustomChartResult"
+            }
           }
         }
       }
