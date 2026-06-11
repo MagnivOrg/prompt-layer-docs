@@ -1,0 +1,172 @@
+---
+title: "Scoring"
+description: "Configure sheet scores with score columns, Boolean and numeric scoring, custom code, and winner aggregation."
+icon: "gauge"
+---
+
+Scoring turns a sheet into one summary signal. Use it after computed columns produce the outputs or checks you care about.
+
+Click **Score** in the Table toolbar to open the score panel.
+
+<Frame>
+  <img src="/images/tables/polished/15-open-scoring.png" alt="Score button in the Table toolbar" />
+</Frame>
+
+## Score panel
+
+The score panel shows:
+
+- The current average score or aggregate result.
+- Column and sub-score breakdowns.
+- Score configuration.
+- Recalculation status.
+- A **Recalculate** button.
+
+<Frame>
+  <img src="/images/tables/polished/19-score-panel.png" alt="Score panel showing average score, column breakdown, and score configuration" />
+</Frame>
+
+## Configure scoring
+
+In **Scoring configuration**, choose a scoring mode and the columns that count toward the score.
+
+<Frame>
+  <img src="/images/tables/polished/16-score-configuration.png" alt="Score configuration panel with scoring mode, score columns, Boolean token settings, assertion aggregation, and Recalculate" />
+</Frame>
+
+For non-custom, non-aggregate modes, choose **Score columns**. Use **Use default** to reset the selection to default score columns.
+
+Changes save automatically. Use **Recalculate** after changing score settings.
+
+## Scoring modes
+
+| Mode | Use when | Configuration |
+| --- | --- | --- |
+| **Auto detect (boolean/number)** | The selected score columns already produce booleans or numbers. | Select score columns and recalculate. |
+| **Boolean** | Selected columns produce pass/fail style outputs. | Configure true tokens, false tokens, and assertion aggregation. |
+| **Numeric** | Selected columns produce numeric values. | Select score columns and recalculate. |
+| **Custom code** | You need custom scoring logic across the sheet. | Write Python or JavaScript that returns a deterministic scoring object. |
+| **Winner / aggregate** | You want a qualitative result such as most frequent winner, lowest value, or highest value. | Choose an aggregate question, source column, and optional display label column. |
+
+## Boolean scoring
+
+Boolean mode converts selected column values into pass/fail results.
+
+Configure:
+
+- **True tokens**: comma-separated or newline-separated values such as `pass`, `yes`, or `true`.
+- **False tokens**: comma-separated or newline-separated values such as `fail`, `no`, or `false`.
+- **Assertion aggregation**:
+  - **Mean**: average the assertion results.
+  - **All**: the row passes only when all assertions pass.
+  - **Any**: the row passes when any assertion passes.
+
+Use Boolean scoring for assertion columns, quality checks, moderation checks, format checks, and other pass/fail evaluations.
+
+## Numeric scoring
+
+Numeric mode averages selected numeric outputs. Use it when columns already return scores, distances, similarity values, ratings, or normalized metrics.
+
+For numeric scoring, make sure higher values mean better quality if you want the average score to be directly comparable across versions.
+
+## Auto detect scoring
+
+Auto detect chooses boolean or numeric handling based on the selected score column outputs. Use it when the selected columns are already clean booleans or numbers and you do not need custom token rules.
+
+## Custom code scoring
+
+Custom code mode lets you score the whole sheet with Python or JavaScript.
+
+The scorer receives sheet data and must return a deterministic object with a numeric `score`.
+
+Required key:
+
+```json
+{
+  "score": 0.91
+}
+```
+
+Optional keys:
+
+```json
+{
+  "score": 0.91,
+  "sub_scores": {
+    "coverage": 0.96,
+    "quality": 0.88
+  },
+  "score_matrix": [[0.91, "pass"]]
+}
+```
+
+Supported `score_matrix` shapes:
+
+- 2D matrix: `list[list[cell]]`.
+- Single-table 3D matrix: `list[list[list[cell]]]` where the top-level length is `1`.
+
+A matrix cell can be:
+
+- A number.
+- A string.
+- `null`.
+- An object like `{ "value": 0.92, "positive_metric": true }`.
+
+Use custom code when score logic depends on multiple columns, row-level weighting, custom sub-scores, or a custom matrix display.
+
+## Winner and aggregate scoring
+
+Winner / aggregate mode summarizes one column into a qualitative result.
+
+Available questions:
+
+| Question | Use when |
+| --- | --- |
+| **Most frequent value** | You want the value that appears most often, such as the most common winning model. |
+| **Lowest value** | You want the row with the smallest numeric value, such as lowest cost or latency. |
+| **Highest value** | You want the row with the largest numeric value, such as highest quality score. |
+
+Choose the source **Column**. For lowest or highest value, optionally choose **Show winner as** to display a label from the same row instead of only the metric value.
+
+Use aggregate scoring for model bakeoffs, latency comparisons, cost comparisons, routing decisions, or any sheet where the result is a winner rather than an average.
+
+## Read the score
+
+The score summary can show:
+
+- **Average score** for boolean, numeric, auto, or custom scoring.
+- **Result** for aggregate scoring.
+- Status labels such as recalculating or error.
+- Column and sub-score breakdowns.
+- Skipped counts for columns with missing or unusable values.
+- Top values for aggregate results.
+
+Use breakdowns to see which columns contribute most to the score and which columns are skipped.
+
+## Recalculate after changes
+
+Recalculate the score after:
+
+- Changing the scoring mode.
+- Changing score columns.
+- Updating true or false tokens.
+- Editing custom scorer code.
+- Changing aggregate settings.
+- Rerunning computed cells that feed the score.
+
+## API references
+
+<CardGroup cols={2}>
+  <Card title="Get sheet score" icon="gauge" href="/reference/table-sheet-score-get">
+    Read the current score result.
+  </Card>
+  <Card title="Configure score" icon="sliders" href="/reference/table-sheet-score-configure">
+    Configure scoring for a sheet.
+  </Card>
+  <Card title="Recalculate score" icon="rotate" href="/reference/table-sheet-score-recalculate">
+    Queue a score recalculation.
+  </Card>
+  <Card title="Score history" icon="chart-line" href="/reference/table-sheet-score-history-get">
+    Read score history for a sheet.
+  </Card>
+</CardGroup>

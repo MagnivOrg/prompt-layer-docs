@@ -48,7 +48,12 @@
             "icon": "table",
             "pages": [
               "features/tables/overview",
-              "features/tables/best-practices",
+              "features/tables/sheets",
+              "features/tables/columns",
+              "features/tables/column-types",
+              "features/tables/cells-and-runs",
+              "features/tables/scoring",
+              "features/tables/history-and-analytics",
               "features/tables/migrate-from-evaluations-and-datasets"
             ]
           },

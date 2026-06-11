@@ -1,0 +1,142 @@
+---
+title: "Columns"
+description: "Add, configure, map, filter, sort, run, and manage Table columns."
+icon: "columns-3"
+---
+
+Columns define what each row stores or produces. Start with input text columns, then add computed columns that run work from left to right through the sheet.
+
+## Column types at a glance
+
+Tables have two broad column categories:
+
+| Category | Use for | Run behavior |
+| --- | --- | --- |
+| **Text columns** | Inputs, expected outputs, labels, metadata, and notes. | Editable directly in the grid. They do not run. |
+| **Computed columns** | Prompts, code, assertions, extraction, comparisons, composition, and helpers. | Run against each row and store computed cell outputs. |
+
+For the full reference, see [Column Types](/features/tables/column-types).
+
+## Add a column
+
+Click **Add Column** to add a new field to the sheet.
+
+<Frame>
+  <img src="/images/tables/polished/05-add-columns.png" alt="Add Column control in a Table sheet" />
+</Frame>
+
+Use this order when designing a sheet:
+
+1. Input text columns.
+2. Prompt, workflow, endpoint, or code output columns.
+3. Comparison, assertion, extraction, parsing, and helper columns.
+4. Composition columns when a sheet should reuse a value from another sheet or table.
+5. Reviewer notes or human-input columns.
+
+## Choose a computed type
+
+Computed columns use the same building blocks as PromptLayer evaluation columns and workflow nodes, plus the Tables-specific **Composition** type.
+
+Common computed types include:
+
+- **Prompt Template** to run a Prompt Registry template or inline prompt.
+- **Code Execution** to run row-level Python or JavaScript.
+- **LLM Assertion** to judge output quality with natural-language assertions.
+- **AI Data Extraction** to extract structured values using an LLM.
+- **Compare**, **Contains**, **Regex**, and **Absolute Numeric Distance** for deterministic checks.
+- **JSON Extraction**, **XML Path**, **Regex Extraction**, **Parse Value**, **Count**, **Min Max**, **Coalesce**, and **Combine Columns** for helper transforms.
+- **Composition** to reference a source column from another sheet or table.
+
+<Frame>
+  <img src="/images/tables/polished/06-column-types.png" alt="A Table with input columns followed by computed prompt, code, quality, and edge-case columns" />
+</Frame>
+
+## Configure a column
+
+Open a column menu and choose **Configure column** to edit its settings.
+
+<Frame>
+  <img src="/images/tables/polished/22-add-column-menu.png" alt="Column menu showing Configure column, Hide, Auto size, Pin, Filter, Sort, Run column, Stop column, Duplicate, and Delete actions" />
+</Frame>
+
+Column menus can include:
+
+- **Configure column**.
+- **Hide**.
+- **Auto size column**.
+- **Pin left**, **Pin right**, or **Unpin**.
+- **Filter**.
+- **Sort ascending**, **Sort descending**, and **Clear sort**.
+- **Run column** for computed columns that are not running.
+- **Stop column** for computed columns that are running.
+- **Duplicate**.
+- **Delete**.
+
+## Map sources
+
+Computed columns read from source columns. A Prompt Template column, for example, exposes the prompt's input variables and lets you map each variable to a source column.
+
+<Frame>
+  <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template column configuration showing input variables mapped to source columns" />
+</Frame>
+
+Source mappings become dependencies. When a source value or computed column configuration changes, dependent computed cells can become stale and should be rerun.
+
+If a variable is unmapped, open the source selector.
+
+<Frame>
+  <img src="/images/tables/polished/08-source-selector.png" alt="Source selector for an unmapped Prompt Template input variable" />
+</Frame>
+
+Choose the source column for the variable.
+
+<Frame>
+  <img src="/images/tables/polished/09-source-assignment.png" alt="Assigning a source column to a Prompt Template input variable" />
+</Frame>
+
+## Filter and sort columns
+
+Use **Filter** from the column menu to show only rows where the column contains a value. The filter popover asks: **Show rows where this column contains:**. Enter a filter value, then click **Apply Filter**. Use **Clear** to remove the filter.
+
+Use **Sort ascending**, **Sort descending**, and **Clear sort** to reorder visible rows by the selected column.
+
+## Pin, hide, resize, duplicate, and delete columns
+
+Use column menu actions to manage grid layout:
+
+- **Pin left** or **Pin right** keeps important columns visible while scrolling.
+- **Hide** removes a column from the visible grid without deleting it.
+- **Auto size column** resizes a column to fit visible content.
+- **Duplicate** copies a column when you want a similar configuration.
+- **Delete** removes the column.
+
+## Run or stop a column
+
+Computed columns can be run from the column menu. Use **Run column** when only one computed step needs updating. If a column is already queued, dispatched, or running, the menu can show **Stop column**.
+
+Use column-level runs when you change one prompt, assertion, source mapping, or helper configuration and want to update only that output column.
+
+## Use composition columns
+
+Composition columns reference another sheet or table and pull values from a chosen source column. Use composition when multiple sheets should share a reusable intermediate result instead of copying logic into every sheet.
+
+<Frame>
+  <img src="/images/tables/polished/12-composition.png" alt="Composition column configuration that copies values from a source column in another sheet" />
+</Frame>
+
+## API references
+
+<CardGroup cols={2}>
+  <Card title="Create column" icon="plus" href="/reference/table-sheet-columns-create">
+    Add a text or computed column to a sheet.
+  </Card>
+  <Card title="Update column" icon="pen" href="/reference/table-sheet-columns-update">
+    Update a column title, config, or dependencies.
+  </Card>
+  <Card title="List columns" icon="list" href="/reference/table-sheet-columns-list">
+    List columns for a sheet.
+  </Card>
+  <Card title="Run operation" icon="play" href="/reference/table-sheet-operations-create">
+    Queue work for a column, row, cell selection, or stale cells.
+  </Card>
+</CardGroup>

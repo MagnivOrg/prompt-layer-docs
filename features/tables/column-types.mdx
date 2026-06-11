@@ -1,0 +1,261 @@
+---
+title: "Column Types"
+description: "Reference for text columns, computed columns, evaluation columns, helper columns, and composition in Tables."
+icon: "brackets-curly"
+---
+
+Tables use the same core building blocks as PromptLayer evaluation columns and workflow nodes, plus the Tables-specific **Composition** column type.
+
+<Note>
+  Legacy docs may call these **nodes** in Workflows or **columns** in Evaluations. In Tables, they are **column types**. The configuration concepts are the same: choose a type, map source columns, run the column, then inspect the computed cells.
+</Note>
+
+## How sources work
+
+Computed columns read from source columns in the sheet. Source mappings tell the column which input values to use for each row.
+
+For example:
+
+1. A `Customer message` text column stores the input.
+2. A `Prompt output` Prompt Template column maps its prompt variable to `Customer message`.
+3. A `Quality score` LLM Assertion column reads from `Prompt output`.
+4. If `Customer message` changes, dependent computed cells can become stale.
+
+<Frame>
+  <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template column configuration showing input variables mapped to source columns" />
+</Frame>
+
+## Column type overview
+
+| UI label | Type value | Category | Use when |
+| --- | --- | --- | --- |
+| Text | `TEXT` | Text | You need editable input data, expected answers, labels, metadata, or notes. |
+| Prompt Template | `PROMPT_TEMPLATE` | Data source / execution | You want to run a Prompt Registry template or inline prompt for each row. |
+| Workflow | `WORKFLOW` | Data source / execution | You want a row to execute a PromptLayer workflow. |
+| Code Execution | `CODE_EXECUTION` | Data source / execution | You need Python or JavaScript logic per row. |
+| Endpoint | `ENDPOINT` | Data source / execution | You want to send row data to an external URL endpoint. |
+| MCP | `MCP` | Data source / execution | You want to call Model Context Protocol server functions. |
+| Conversation Simulator | `CONVERSATION_SIMULATOR` | Data source / execution | You want to simulate a multi-turn user and assistant conversation. |
+| Static | `VARIABLE` | Data source / execution | You need a static value available as an input. |
+| Human | `HUMAN` | Data source / execution | You need a human to fill in or approve data. |
+| While Loop | `WHILE_LOOP` | Data source / execution | You need repeated execution while a condition remains true. |
+| For Loop | `FOR_LOOP` | Data source / execution | You need to iterate over a collection or array. |
+| Composition | `COMPOSITION` | Data source / execution | You want to reference data from another sheet or table. |
+| Compare | `COMPARE` | Simple eval | You want to compare values and generate a diff or comparison result. |
+| Contains | `CONTAINS` | Simple eval | You want to check whether text contains a substring. |
+| Regex | `REGEX` | Simple eval | You want to validate text against a regular expression. |
+| Absolute Numeric Distance | `ABSOLUTE_NUMERIC_DISTANCE` | Simple eval | You want the absolute distance between numeric values. |
+| Assert Valid | `ASSERT_VALID` | Simple eval | You want to validate data types or formats. |
+| Math Operator | `MATH_OPERATOR` | Simple eval | You want mathematical comparisons such as greater than or less than. |
+| LLM Assertion | `LLM_ASSERTION` | LLM eval | You want an LLM to judge whether an assertion is true. |
+| AI Data Extraction | `AI_DATA_EXTRACTION` | LLM eval | You want an LLM to extract specific information from text. |
+| Cosine Similarity | `COSINE_SIMILARITY` | LLM eval | You want semantic similarity between vectors or text embeddings. |
+| JSON Extraction | `JSON_PATH` | Helper | You want to extract values from JSON with JSONPath. |
+| XML Path | `XML_PATH` | Helper | You want to extract values from XML with XPath. |
+| Regex Extraction | `REGEX_EXTRACTION` | Helper | You want to extract capture groups from text. |
+| Parse Value | `PARSE_VALUE` | Helper | You want to parse a specific value from structured or unstructured data. |
+| Count | `COUNT` | Helper | You want counts of elements, characters, or occurrences. |
+| Min Max | `MIN_MAX` | Helper | You want the minimum or maximum value from numeric inputs. |
+| Coalesce | `COALESCE` | Helper | You want the first non-null value from several sources. |
+| Combine Columns | `COMBINE_COLUMNS` | Helper | You want to merge values from multiple sources into one output. |
+| Apply Diff | `APPLY_DIFF` | Helper | You want to apply a unified diff patch to text. |
+
+<Warning>
+  **Condition** appears in Workflow node selectors, but it is not a Table column type. Use Table-supported comparison, assertion, or helper columns for row-level checks.
+</Warning>
+
+## Text columns
+
+Text columns store editable values. Use them for:
+
+- Inputs to prompts or workflows.
+- Expected answers or ground truth.
+- Labels, tags, metadata, and categories.
+- Notes for reviewers.
+- Intermediate values that you want to type or paste manually.
+
+Text columns do not run. Computed columns can depend on text columns.
+
+## Data source and execution columns
+
+<AccordionGroup>
+  <Accordion title="Prompt Template">
+    Runs a Prompt Registry template or inline prompt against each row.
+
+    Use **Prompt Template** for prompt regression tests, model comparisons, and batch prompt runs. Map each prompt input variable to a source column.
+
+    Common configuration:
+
+    - Prompt template reference or inline prompt.
+    - Input variable mappings.
+    - Optional model or engine overrides.
+    - Optional chat history source for chat-style prompts.
+  </Accordion>
+
+  <Accordion title="Workflow">
+    Runs a PromptLayer workflow for each row.
+
+    Use **Workflow** when the logic is already modeled as a workflow or when a row should execute multiple nested steps behind one column.
+  </Accordion>
+
+  <Accordion title="Code Execution">
+    Runs custom code for each row.
+
+    Use **Code Execution** for deterministic transforms, custom validation, external library logic, or calculations that do not need an LLM. The code reads row data and returns the cell output.
+  </Accordion>
+
+  <Accordion title="Endpoint">
+    Sends row data to an external HTTP endpoint.
+
+    Use **Endpoint** when scoring or transformation logic lives in your own service and should be called from the Table.
+  </Accordion>
+
+  <Accordion title="MCP">
+    Calls functions on a Model Context Protocol server.
+
+    Use **MCP** when your row-level work depends on tools exposed through an MCP server.
+  </Accordion>
+
+  <Accordion title="Conversation Simulator">
+    Simulates a multi-turn conversation between a user and an assistant.
+
+    Use **Conversation Simulator** for testing chatbots, agents, support workflows, and other conversational systems across many rows.
+  </Accordion>
+
+  <Accordion title="Static">
+    Provides a static value as a reusable input.
+
+    Use **Static** for constants, fixed configuration, or values that multiple computed columns should read.
+  </Accordion>
+
+  <Accordion title="Human">
+    Lets a human fill in data.
+
+    Use **Human** for review, manual labels, approvals, or fields that should be supplied by a person instead of code.
+  </Accordion>
+
+  <Accordion title="For Loop and While Loop">
+    Runs repeated work.
+
+    Use **For Loop** to iterate over a collection or array. Use **While Loop** to continue execution while an end condition remains true.
+  </Accordion>
+
+  <Accordion title="Composition">
+    References data from another sheet or table.
+
+    Use **Composition** when multiple sheets should share a reusable source value. The column binds to a source table, sheet, and column, then pulls the chosen value into the current sheet.
+
+    <Frame>
+      <img src="/images/tables/polished/12-composition.png" alt="Composition column configuration that references a source column from another sheet" />
+    </Frame>
+  </Accordion>
+</AccordionGroup>
+
+## Simple eval columns
+
+Use simple eval columns for deterministic checks.
+
+<AccordionGroup>
+  <Accordion title="Compare">
+    Compares two values and returns a comparison or diff result. Use this for expected versus actual output checks.
+  </Accordion>
+
+  <Accordion title="Contains">
+    Checks whether text contains a substring. Use this for keyword, phrase, or marker checks.
+  </Accordion>
+
+  <Accordion title="Regex">
+    Matches text against a regular expression. Use this when the expected format can be expressed as a pattern.
+  </Accordion>
+
+  <Accordion title="Absolute Numeric Distance">
+    Calculates the absolute difference between numeric values. Use this when small numeric deviations are acceptable but large deviations should fail.
+  </Accordion>
+
+  <Accordion title="Assert Valid">
+    Validates data types and formats. Use this for JSON shape, type, and format checks.
+  </Accordion>
+
+  <Accordion title="Math Operator">
+    Applies mathematical comparison operators. Use this for checks such as greater than, less than, equals, greater than or equal, less than or equal, or not equal.
+  </Accordion>
+</AccordionGroup>
+
+## LLM eval columns
+
+Use LLM eval columns when the check needs semantic judgment.
+
+<AccordionGroup>
+  <Accordion title="LLM Assertion">
+    Uses an LLM to evaluate an assertion about a source value.
+
+    Use this for quality, tone, safety, instruction-following, factuality, or rubric-style checks. LLM Assertion outputs are common score columns.
+  </Accordion>
+
+  <Accordion title="AI Data Extraction">
+    Extracts information from text using an LLM.
+
+    Use this when the value you need is not easy to capture with JSONPath, regex, or deterministic parsing.
+  </Accordion>
+
+  <Accordion title="Cosine Similarity">
+    Calculates similarity between vectors or text embeddings.
+
+    Use this when semantic closeness matters more than exact string equality.
+  </Accordion>
+</AccordionGroup>
+
+## Helper columns
+
+Use helper columns to transform or normalize outputs before scoring or inspection.
+
+<AccordionGroup>
+  <Accordion title="JSON Extraction">
+    Extracts values from JSON with JSONPath. Use this after prompt, endpoint, or code outputs that return JSON.
+  </Accordion>
+
+  <Accordion title="XML Path">
+    Extracts values from XML with XPath.
+  </Accordion>
+
+  <Accordion title="Regex Extraction">
+    Extracts capture groups from text using a regular expression.
+  </Accordion>
+
+  <Accordion title="Parse Value">
+    Parses a specific value from structured or unstructured data.
+  </Accordion>
+
+  <Accordion title="Count">
+    Counts elements, characters, or occurrences.
+  </Accordion>
+
+  <Accordion title="Min Max">
+    Finds the minimum or maximum value from numeric inputs.
+  </Accordion>
+
+  <Accordion title="Coalesce">
+    Returns the first non-null value from a list of sources.
+  </Accordion>
+
+  <Accordion title="Combine Columns">
+    Merges values from multiple source columns into one structured output.
+  </Accordion>
+
+  <Accordion title="Apply Diff">
+    Applies a unified diff patch to text. Use this for text or code editing workflows where the output is a diff.
+  </Accordion>
+</AccordionGroup>
+
+## API note
+
+The Tables API uses generated reference pages for the exact request schema. Use these when creating, updating, or running columns programmatically.
+
+<CardGroup cols={2}>
+  <Card title="Create column" icon="plus" href="/reference/table-sheet-columns-create">
+    Create text or computed columns.
+  </Card>
+  <Card title="Update column" icon="pen" href="/reference/table-sheet-columns-update">
+    Update title, config, and dependencies.
+  </Card>
+</CardGroup>
