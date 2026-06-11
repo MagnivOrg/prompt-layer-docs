@@ -169,6 +169,19 @@ tracer_provider.shutdown()
 
 Once configured, PromptLayer will capture OpenAI Agents traces with spans automatically labeled by type: agent spans appear as **LLM session**, response and generation spans appear as **LLM call**, and function/tool spans appear as **Tool: \<function name\>**. Token usage, model metadata, prompts, and completions are captured from LLM call spans.
 
+## OpenClaw
+
+PromptLayer supports OpenClaw through the `@promptlayer/openclaw-promptlayer` plugin. To enable tracing, you need to explicitly install and enable the `openclaw-promptlayer` plugin in OpenClaw.
+
+```bash
+openclaw plugins install @promptlayer/openclaw-promptlayer
+openclaw plugins enable openclaw-promptlayer
+```
+
+Set `PROMPTLAYER_API_KEY` in the environment that OpenClaw runs with, then include the plugin in `openclaw.json` using the `openclaw-promptlayer` plugin id.
+
+Once configured, PromptLayer will capture OpenClaw agent runs, LLM calls, tool calls, prompts, completions, token usage when available, and model metadata.
+
 ## Vercel AI SDK
 
 PromptLayer supports integration with the [Vercel AI SDK](https://ai-sdk.dev/docs), allowing you to export OpenTelemetry traces from your application directly to PromptLayer.
