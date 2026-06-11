@@ -1,0 +1,75 @@
+---
+title: "Column Types"
+description: "Reference for text columns, computed columns, evaluation columns, helper columns, and composition in Tables."
+icon: "brackets-curly"
+---
+
+Table column types reuse PromptLayer's evaluation and workflow building blocks, plus the Tables-specific **Composition** type.
+
+## How sources work
+
+Computed columns read from source columns in the sheet. For example, a `Prompt output` column can map a prompt variable to `Customer message`, and a `Quality score` column can read from `Prompt output`. If a source changes, dependent computed cells can become stale.
+
+<Frame>
+  <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template column configuration showing input variables mapped to source columns" />
+</Frame>
+
+## Column type overview
+
+| UI label | Type value | Category | Use when |
+| --- | --- | --- | --- |
+| Text | `TEXT` | Text | You need editable input data, expected answers, labels, metadata, or notes. |
+| Prompt Template | `PROMPT_TEMPLATE` | Data source / execution | You want to run a Prompt Registry template or inline prompt for each row. |
+| Workflow | `WORKFLOW` | Data source / execution | You want a row to execute a PromptLayer workflow. |
+| Code Execution | `CODE_EXECUTION` | Data source / execution | You need Python or JavaScript logic per row. |
+| Endpoint | `ENDPOINT` | Data source / execution | You want to send row data to an external URL endpoint. |
+| MCP | `MCP` | Data source / execution | You want to call Model Context Protocol server functions. |
+| Conversation Simulator | `CONVERSATION_SIMULATOR` | Data source / execution | You want to simulate a multi-turn user and assistant conversation. |
+| Static | `VARIABLE` | Data source / execution | You need a static value available as an input. |
+| Human | `HUMAN` | Data source / execution | You need a human to fill in or approve data. |
+| While Loop | `WHILE_LOOP` | Data source / execution | You need repeated execution while a condition remains true. |
+| For Loop | `FOR_LOOP` | Data source / execution | You need to iterate over a collection or array. |
+| Composition | `COMPOSITION` | Data source / execution | You want to reference data from another sheet or table. |
+| Compare | `COMPARE` | Simple eval | You want to compare values and generate a diff or comparison result. |
+| Contains | `CONTAINS` | Simple eval | You want to check whether text contains a substring. |
+| Regex | `REGEX` | Simple eval | You want to validate text against a regular expression. |
+| Absolute Numeric Distance | `ABSOLUTE_NUMERIC_DISTANCE` | Simple eval | You want the absolute distance between numeric values. |
+| Assert Valid | `ASSERT_VALID` | Simple eval | You want to validate data types or formats. |
+| Math Operator | `MATH_OPERATOR` | Simple eval | You want mathematical comparisons such as greater than or less than. |
+| LLM Assertion | `LLM_ASSERTION` | LLM eval | You want an LLM to judge whether an assertion is true. |
+| AI Data Extraction | `AI_DATA_EXTRACTION` | LLM eval | You want an LLM to extract specific information from text. |
+| Cosine Similarity | `COSINE_SIMILARITY` | LLM eval | You want semantic similarity between vectors or text embeddings. |
+| JSON Extraction | `JSON_PATH` | Helper | You want to extract values from JSON with JSONPath. |
+| XML Path | `XML_PATH` | Helper | You want to extract values from XML with XPath. |
+| Regex Extraction | `REGEX_EXTRACTION` | Helper | You want to extract capture groups from text. |
+| Parse Value | `PARSE_VALUE` | Helper | You want to parse a specific value from structured or unstructured data. |
+| Count | `COUNT` | Helper | You want counts of elements, characters, or occurrences. |
+| Min Max | `MIN_MAX` | Helper | You want the minimum or maximum value from numeric inputs. |
+| Coalesce | `COALESCE` | Helper | You want the first non-null value from several sources. |
+| Combine Columns | `COMBINE_COLUMNS` | Helper | You want to merge values from multiple sources into one output. |
+| Apply Diff | `APPLY_DIFF` | Helper | You want to apply a unified diff patch to text. |
+
+<Warning>
+  **Condition** appears in Workflow node selectors, but it is not a Table column type. Use Table-supported comparison, assertion, or helper columns for row-level checks.
+</Warning>
+
+## Composition
+
+Composition references a source table, sheet, and column, then pulls that value into the current sheet. Use it when multiple sheets should share a reusable intermediate result instead of copying logic.
+
+<Frame>
+  <img src="/images/tables/polished/12-composition.png" alt="Composition column configuration that references a source column from another sheet" />
+</Frame>
+
+## API references
+
+Use the generated API reference for exact request schemas when creating or updating columns programmatically.
+
+<CardGroup cols={2}>
+  <Card title="Create column" icon="plus" href="/reference/table-sheet-columns-create">
+    Create text or computed columns.
+  </Card>
+  <Card title="Update column" icon="pen" href="/reference/table-sheet-columns-update">
+    Update title, config, and dependencies.
+  </Card>
+</CardGroup>

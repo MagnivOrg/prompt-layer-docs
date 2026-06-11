@@ -3,6 +3,10 @@ title: "Create Draft Dataset Version"
 openapi: "POST /api/public/v2/dataset-versions/create-draft"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 Create a mutable draft dataset version for a dataset group. Drafts use `version_number = -1` until they are saved as a published version.
 
 ## Behavior Notes

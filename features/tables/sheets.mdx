@@ -1,0 +1,97 @@
+---
+title: "Sheets"
+description: "Import data, manage sheet tabs, add rows, and scope Table work by sheet."
+icon: "table-cells"
+---
+
+A sheet is a tab inside a Table. Each sheet has its own rows, columns, scoring, version history, and analytics.
+
+Use multiple sheets when related workflows belong together but need different inputs, columns, or test cases. For example, keep a main regression sheet, edge cases, and migration work in the same Table.
+
+## Sheet anatomy
+
+A sheet contains:
+
+| Part | Purpose |
+| --- | --- |
+| **Rows** | Examples, request logs, test cases, or batch items. |
+| **Text columns** | Editable inputs, labels, expected outputs, metadata, and notes. |
+| **Computed columns** | Prompt, code, assertion, extraction, comparison, composition, or helper work. |
+| **Score configuration** | The scoring rules for the current sheet. |
+| **History** | Saved versions and score history for the sheet. |
+| **Analytics** | Request-level analytics scoped to the current Table and sheet. |
+
+<Frame>
+  <img src="/images/tables/polished/18-base-table-no-tour.png" alt="A Table sheet with rows, columns, toolbar actions, and sheet tabs" />
+</Frame>
+
+## Add rows manually
+
+Each row is one item to run through the sheet. Use the row control at the bottom of the grid to add rows, then fill the input text columns.
+
+<Frame>
+  <img src="/images/tables/polished/10-add-rows.png" alt="Add row control in a Table sheet" />
+</Frame>
+
+Manual rows are useful for small test sets, edge cases, and examples you want to type or paste directly into the sheet.
+
+## Upload data
+
+Use **Upload** when your rows already exist outside PromptLayer. Upload a CSV from your computer or import logged requests from request history.
+
+<Frame>
+  <img src="/images/tables/polished/02-upload-menu.png" alt="Upload menu with CSV upload and request history import options" />
+</Frame>
+
+After import, add computed columns and scoring in the same sheet.
+
+## Import request history
+
+Choose **Upload** then **From request history** to open the request import dialog.
+
+<Frame>
+  <img src="/images/tables/polished/03-request-history-import-full.png" alt="Add from Request History dialog with date range, search, filters, request grid, pagination, selectable rows, and Add to Sheet action" />
+</Frame>
+
+Each selected request becomes a row. Use request-history imports to evaluate real traffic, build datasets from production behavior, or replay previous requests through new columns.
+
+## Download a sheet
+
+Click **Download** in the toolbar to export the current sheet for external review, offline analysis, or a point-in-time snapshot.
+
+<Frame>
+  <img src="/images/tables/polished/04-tour-import-export.png" alt="Table toolbar with Upload, Download, Score, Analytics, History, and Tour controls" />
+</Frame>
+
+## Use multiple sheets
+
+Use the sheet tabs at the bottom of the Table to move between sheets. Each sheet can have different rows, columns, scoring, and history.
+
+<Frame>
+  <img src="/images/tables/polished/11-multiple-sheets.png" alt="Multiple sheet tabs in a Table with a plus control for adding another sheet" />
+</Frame>
+
+Use separate sheets for:
+
+- Main regression set versus edge cases.
+- Different task families in the same product area.
+- Prompt variants that need different inputs.
+- Migration work where the old and new workflows should stay near each other.
+- Intermediate sheets that feed composition columns.
+
+## API references
+
+<CardGroup cols={2}>
+  <Card title="Create sheet" icon="plus" href="/reference/table-sheets-create">
+    Add a sheet to a Table.
+  </Card>
+  <Card title="List sheets" icon="list" href="/reference/table-sheets-list">
+    List the sheets in a Table.
+  </Card>
+  <Card title="Add rows" icon="rows-3" href="/reference/table-sheet-rows-add">
+    Add rows to a sheet programmatically.
+  </Card>
+  <Card title="Import request logs" icon="history" href="/reference/table-sheet-imports-request-logs-create">
+    Add logged requests to a sheet.
+  </Card>
+</CardGroup>

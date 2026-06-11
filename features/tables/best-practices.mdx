@@ -1,0 +1,18 @@
+---
+title: "Table Design Patterns"
+description: "Design patterns for building reliable Table workflows."
+icon: "diagram-project"
+---
+
+Use this pattern to keep Table workflows readable, rerunnable, and easy to debug.
+
+## Recommended pattern
+
+1. Put source data in text columns.
+2. Add one computed column per logical step.
+3. Map every computed column to explicit source columns.
+4. Keep checks and score columns close to the outputs they evaluate.
+5. Rerun stale cells before reading the score.
+6. Save versions at meaningful checkpoints.
+7. Use Analytics when you need request-level debugging.
+

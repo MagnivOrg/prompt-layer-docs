@@ -5,465 +5,245 @@ mode: custom
 ---
 
 <div className="promptlayer-landing">
-  <section className="promptlayer-hero">
+  <section className="promptlayer-hero" aria-labelledby="promptlayer-home-title">
     <div className="promptlayer-hero-copy">
-      <div className="promptlayer-hero-logo-wrap">
-        <img
-          src="/images/promptlayer/promptlayer-cake.png"
-          alt=""
-          aria-hidden="true"
-          width="173"
-          height="150"
-          className="promptlayer-hero-logo"
-        />
+      <div className="promptlayer-hero-kicker">
+        <span className="promptlayer-kicker-dot" aria-hidden="true"></span>
+        Observability and evaluations for AI teams
       </div>
-      <h1 className="promptlayer-hero-title">PromptLayer</h1>
+
+
+      <h1 id="promptlayer-home-title" className="promptlayer-hero-title">
+        See what happened. Prove what improved.
+      </h1>
       <p className="promptlayer-hero-description">
-        Version, test, and monitor every prompt and workflow.
+        Connect observability first to trace production requests and understand quality,
+        cost, and latency. Then use Tables to monitor results and run evaluations, with
+        Prompt Registry keeping approved versions clear for engineers and reviewers.
       </p>
-      <a href="/quickstart" className="promptlayer-quickstart-button">
-        Go to Quickstart
-        <span aria-hidden="true">→</span>
-      </a>
+
+      <div className="promptlayer-hero-actions">
+        <a href="/features/observability" className="promptlayer-primary-button">
+          Connect observability
+          <span aria-hidden="true">→</span>
+        </a>
+        <a href="/features/tables/overview" className="promptlayer-secondary-button">
+          Explore Tables
+        </a>
+      </div>
+
+      <div className="promptlayer-hero-proof" aria-label="Popular documentation paths">
+        <span className="promptlayer-hero-proof-label">Explore</span>
+        <a href="/features/observability">Observability</a>
+        <a href="/features/tables/overview">Tables</a>
+        <a href="/features/prompt-registry/new-overview">Prompt Registry</a>
+        <a href="/reference/introduction">API</a>
+      </div>
     </div>
 
-    <div className="promptlayer-feature-grid">
-      <a
-        href="/features/prompt-registry/new-overview"
-        className="promptlayer-feature-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-feature-badge">
-          <img
-            src="/images/promptlayer/icon-prompt-management.png"
-            alt=""
-            aria-hidden="true"
-            width="188"
-            height="197"
-            className="promptlayer-feature-icon"
-          />
-        </div>
-        <h3 className="promptlayer-feature-title">Prompt Registry</h3>
-        <p className="promptlayer-feature-description">
-          Give teams a dedicated place to experiment with prompts and manage versions, separate from your application code.
-        </p>
-      </a>
+    <div className="promptlayer-hero-panel" aria-label="PromptLayer workflow preview">
+      <div className="promptlayer-window-bar" aria-hidden="true">
+        <span></span>
+        <span></span>
+        <span></span>
+      </div>
 
-      <a
-        href="/features/evaluations/overview"
-        className="promptlayer-feature-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-feature-badge">
-          <img
-            src="/images/promptlayer/icon-evaluations-v2.png"
-            alt=""
-            aria-hidden="true"
-            width="160"
-            height="158"
-            className="promptlayer-feature-icon"
-          />
+      <div className="promptlayer-product-preview">
+        <div className="promptlayer-preview-header">
+          <div>
+            <span className="promptlayer-preview-label">Quality loop</span>
+            <h2>Trace, evaluate, release</h2>
+          </div>
+          <span className="promptlayer-status-pill">Passing</span>
         </div>
-        <h3 className="promptlayer-feature-title">Evaluations</h3>
-        <p className="promptlayer-feature-description">
-          Test prompts, define quality dimensions and scoring logic, and track scores across time.
-        </p>
-      </a>
 
-      <a
-        href="/features/evaluations/datasets-overview"
-        className="promptlayer-feature-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-feature-badge">
-          <img
-            src="/images/promptlayer/icon-dataset-management-v2.png"
-            alt=""
-            aria-hidden="true"
-            width="160"
-            height="158"
-            className="promptlayer-feature-icon"
-          />
+        <div className="promptlayer-preview-grid">
+          <div className="promptlayer-preview-tile promptlayer-preview-tile-main">
+            <span className="promptlayer-mini-label">Evaluation</span>
+            <strong>support-agent run</strong>
+            <p>Compare changes against real examples before they reach users.</p>
+            <div className="promptlayer-version-stack" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="promptlayer-preview-tile">
+            <span className="promptlayer-mini-label">Eval score</span>
+            <strong>94.8%</strong>
+            <div className="promptlayer-meter" aria-hidden="true">
+              <span></span>
+            </div>
+          </div>
+
+          <div className="promptlayer-preview-tile">
+            <span className="promptlayer-mini-label">Latency</span>
+            <strong>812ms</strong>
+            <div className="promptlayer-sparkline" aria-hidden="true">
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+              <span></span>
+            </div>
+          </div>
+
+          <div className="promptlayer-preview-tile promptlayer-preview-tile-wide">
+            <span className="promptlayer-mini-label">Loop</span>
+            <div className="promptlayer-trace-list" aria-hidden="true">
+              <span>Connect observability</span>
+              <span>Monitor with Tables</span>
+              <span>Release from Registry</span>
+            </div>
+          </div>
         </div>
-        <h3 className="promptlayer-feature-title">Dataset Management</h3>
-        <p className="promptlayer-feature-description">
-          Build, organize, and reuse datasets for evaluation, regression testing, and iteration.
-        </p>
-      </a>
+      </div>
+    </div>
+  </section>
 
-      <a
-        href="/features/observability"
-        className="promptlayer-feature-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-feature-badge">
+
+
+  <section className="promptlayer-section" aria-labelledby="promptlayer-core-title">
+    <div className="promptlayer-section-heading promptlayer-section-heading-split">
+      <div>
+        <p className="promptlayer-section-kicker">Core surfaces</p>
+        <h2 id="promptlayer-core-title" className="promptlayer-section-title">
+          See what happened. Measure quality. Control what ships.
+        </h2>
+      </div>
+      <p className="promptlayer-section-description">
+        Connect observability, monitor quality in Tables, and use Prompt Registry when
+        approved versions are ready to ship.
+      </p>
+    </div>
+
+    <div className="promptlayer-bento-grid">
+      <a href="/features/observability" className="promptlayer-bento-card promptlayer-card-interactive promptlayer-bento-card-large">
+        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
+        <div className="promptlayer-card-icon promptlayer-card-icon-blue">
           <img
             src="/images/promptlayer/icon-monitor-usage.png"
             alt=""
             aria-hidden="true"
             width="160"
             height="158"
-            className="promptlayer-feature-icon"
           />
         </div>
-        <h3 className="promptlayer-feature-title">Observability</h3>
-        <p className="promptlayer-feature-description">
-          Review inference usage, cost, and latency. Inspect individual request/response pairs alongside full AI-application traces.
+        <div>
+          <span className="promptlayer-card-pill">Observability</span>
+          <h3>Connect production signals first.</h3>
+          <p>
+            Trace requests, responses, metadata, cost, latency, and model behavior from one
+            place so your team can see what is actually happening.
+          </p>
+        </div>
+      </a>
+
+      <a href="/features/tables/overview" className="promptlayer-bento-card promptlayer-card-interactive">
+        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
+        <div className="promptlayer-card-icon">
+          <img
+            src="/images/promptlayer/icon-evaluations-v2.png"
+            alt=""
+            aria-hidden="true"
+            width="160"
+            height="158"
+          />
+        </div>
+        <span className="promptlayer-card-pill">Tables</span>
+        <h3>Monitor quality with evals.</h3>
+        <p>
+          Turn observed behavior into datasets, experiments, scores, and version comparisons.
         </p>
       </a>
 
-      <a
-        href="/why-promptlayer/workflows"
-        className="promptlayer-feature-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-feature-badge">
+      <a href="/features/prompt-registry/new-overview" className="promptlayer-bento-card promptlayer-card-interactive">
+        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
+        <div className="promptlayer-card-icon promptlayer-card-icon-gold">
+          <img
+            src="/images/promptlayer/icon-prompt-management.png"
+            alt=""
+            aria-hidden="true"
+            width="188"
+            height="197"
+          />
+        </div>
+        <span className="promptlayer-card-pill">Prompt Registry</span>
+        <h3>Keep prompt versions under control.</h3>
+        <p>
+          Manage versions, labels, and releases while giving reviewers a clean place to weigh in.
+        </p>
+      </a>
+
+      <a href="/why-promptlayer/workflows" className="promptlayer-bento-card promptlayer-card-interactive promptlayer-bento-card-wide">
+        <span className="promptlayer-card-arrow" aria-hidden="true">→</span>
+        <div className="promptlayer-card-icon promptlayer-card-icon-green">
           <img
             src="/images/promptlayer/icon-agents.png"
             alt=""
             aria-hidden="true"
             width="160"
             height="158"
-            className="promptlayer-feature-icon"
           />
         </div>
-        <h3 className="promptlayer-feature-title">Workflows</h3>
-        <p className="promptlayer-feature-description">
-          Build complex, multi-step processes by chaining prompts and logical operations together.
-        </p>
+        <div>
+          <span className="promptlayer-card-pill">Workflows</span>
+          <h3>Connect observability and evaluation loops.</h3>
+          <p>
+            Chain prompts and logic when your application needs more than a single request.
+          </p>
+        </div>
       </a>
 
     </div>
   </section>
 
-  <section className="promptlayer-section">
-    <h2 className="promptlayer-section-title">Features</h2>
-    <div className="promptlayer-info-grid">
-      <a
-        href="/features/prompt-registry/release-labels#release-labels"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M9.568 3H5.25A2.25 2.25 0 0 0 3 5.25v4.318c0 .597.237 1.17.659 1.591l9.581 9.581c.699.699 1.78.872 2.607.33a18.095 18.095 0 0 0 5.223-5.223c.542-.827.369-1.908-.33-2.607L11.16 3.66A2.25 2.25 0 0 0 9.568 3Z" />
-            <path d="M6 6h.008v.008H6V6Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Release Labels</h3>
-        <p className="promptlayer-info-description">
-          Promote tested prompt versions across environments without changing application code.
-        </p>
-      </a>
-
-      <a
-        href="/why-promptlayer/ab-releases"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M7.5 21 3 16.5m0 0L7.5 12M3 16.5h13.5m0-13.5L21 7.5m0 0L16.5 12M21 7.5H7.5" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">AB Testing</h3>
-        <p className="promptlayer-info-description">
-          Compare prompt variants in production and route traffic based on measured performance.
-        </p>
-      </a>
-
-      <a
-        href="/why-promptlayer/analytics"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M7.5 14.25v2.25m3-4.5v4.5m3-6.75v6.75m3-9v9M6 20.25h12A2.25 2.25 0 0 0 20.25 18V6A2.25 2.25 0 0 0 18 3.75H6A2.25 2.25 0 0 0 3.75 6v12A2.25 2.25 0 0 0 6 20.25Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Analytics</h3>
-        <p className="promptlayer-info-description">
-          Track usage, quality, and outcome trends as prompts and workflows evolve over time.
-        </p>
-      </a>
-
-      <a
-        href="/why-promptlayer/rbac"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M9 12.75 11.25 15 15 9.75m-3-7.036A11.959 11.959 0 0 1 3.598 6 11.99 11.99 0 0 0 3 9.749c0 5.592 3.824 10.29 9 11.623 5.176-1.332 9-6.03 9-11.622 0-1.31-.21-2.571-.598-3.751h-.152c-3.196 0-6.1-1.248-8.25-3.285Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Role-Based Access Control</h3>
-        <p className="promptlayer-info-description">
-          Manage workspace permissions with granular roles for engineers, operators, and reviewers.
-        </p>
-      </a>
-
-      <a
-        href="/self-hosted#security-&-authentication"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M15.75 5.25a3 3 0 0 1 3 3m3 0a6 6 0 0 1-7.029 5.912c-.563-.097-1.159.026-1.563.43L10.5 17.25H8.25v2.25H6v2.25H2.25v-2.818c0-.597.237-1.17.659-1.591l6.499-6.499c.404-.404.527-1 .43-1.563A6 6 0 1 1 21.75 8.25Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Single Sign-On</h3>
-        <p className="promptlayer-info-description">
-          Enable secure team access with enterprise identity providers and centralized login flows.
-        </p>
-      </a>
-
-      <a href="/self-hosted" className="promptlayer-info-card promptlayer-card-interactive">
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M5.25 14.25h13.5m-13.5 0a3 3 0 0 1-3-3m3 3a3 3 0 1 0 0 6h13.5a3 3 0 1 0 0-6m-16.5-3a3 3 0 0 1 3-3h13.5a3 3 0 0 1 3 3m-19.5 0a4.5 4.5 0 0 1 .9-2.7L5.737 5.1a3.375 3.375 0 0 1 2.7-1.35h7.126c1.062 0 2.062.5 2.7 1.35l2.587 3.45a4.5 4.5 0 0 1 .9 2.7m0 0a3 3 0 0 1-3 3m0 3h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Zm-3 6h.008v.008h-.008v-.008Zm0-6h.008v.008h-.008v-.008Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Self-Hosting</h3>
-        <p className="promptlayer-info-description">
-          Deploy PromptLayer in your own environment when security or compliance requires it.
-        </p>
-      </a>
+  <section className="promptlayer-section promptlayer-resource-section" aria-labelledby="promptlayer-resources-title">
+    <div className="promptlayer-section-heading promptlayer-section-heading-split">
+      <div>
+        <p className="promptlayer-section-kicker">Reference shortcuts</p>
+        <h2 id="promptlayer-resources-title" className="promptlayer-section-title">
+          Go deeper when you need it.
+        </h2>
+      </div>
+      <p className="promptlayer-section-description">
+        Focused docs for implementation details, release controls, integrations, and updates.
+      </p>
     </div>
-  </section>
 
-  <section className="promptlayer-section">
-    <h2 className="promptlayer-section-title">Resources</h2>
-    <div className="promptlayer-info-grid">
-      <a
-        href="/reference/introduction"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M17.25 6.75 22.5 12l-5.25 5.25m-10.5 0L1.5 12l5.25-5.25m7.5-3-4.5 16.5" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">API Reference</h3>
-        <p className="promptlayer-info-description">
-          Explore the REST API surface for prompt execution, datasets, and workflows.
-        </p>
+    <div className="promptlayer-resource-grid">
+      <a href="/sdks/python" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>SDKs</span>
+        <strong>Client libraries and package guides</strong>
       </a>
-
-      <a href="/agents/overview" className="promptlayer-info-card promptlayer-card-interactive">
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M21.75 6.75a4.5 4.5 0 0 1-4.884 4.484c-1.076-.091-2.264.071-2.95.904l-7.152 8.684a2.548 2.548 0 1 1-3.586-3.586l8.684-7.152c.833-.686.995-1.874.904-2.95a4.5 4.5 0 0 1 6.336-4.486l-3.276 3.276a3.004 3.004 0 0 0 2.25 2.25l3.276-3.276c.256.565.398 1.192.398 1.852Z" />
-            <path d="M4.867 19.125h.008v.008h-.008v-.008Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">MCP</h3>
-        <p className="promptlayer-info-description">
-          Documentation for model context protocol integrations, tools, and connected workflows.
-        </p>
+      <a href="/features/prompt-registry/release-labels#release-labels" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>Release Labels</span>
+        <strong>Promote versions without code changes</strong>
       </a>
-
-      <a href="/onboarding-guides/deployment-strategies" className="promptlayer-info-card promptlayer-card-interactive">
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M16.023 9.348h4.992v-.001M2.985 19.644v-4.992m0 0h4.992m-4.993 0 3.181 3.183a8.25 8.25 0 0 0 13.803-3.7M4.031 9.865a8.25 8.25 0 0 1 13.803-3.7l3.181 3.182m0-4.991v4.99" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Migration Guides</h3>
-        <p className="promptlayer-info-description">
-          Choose the right PromptLayer deployment pattern for your stack.
-        </p>
+      <a href="/why-promptlayer/ab-releases" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>AB Testing</span>
+        <strong>Route production traffic by performance</strong>
       </a>
-
-      <a
-        href="/features/prompt-registry/webhook-events"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M12 3.75v9m0 0 3.75-3.75M12 12.75 8.25 9" />
-            <path d="M4.5 13.5 6.75 6h10.5l2.25 7.5" />
-            <path d="M3.75 13.5h5.063a3.375 3.375 0 0 0 6.374 0h5.063v4.5a2.25 2.25 0 0 1-2.25 2.25H6A2.25 2.25 0 0 1 3.75 18v-4.5Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Webhooks</h3>
-        <p className="promptlayer-info-description">
-          Explore supported events and payload details.
-        </p>
+      <a href="/features/prompt-registry/webhook-events" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>Webhooks</span>
+        <strong>React to PromptLayer events</strong>
       </a>
-
-      <a href="/sdks/python" className="promptlayer-info-card promptlayer-card-interactive">
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="m21 7.5-9-5.25L3 7.5m18 0-9 5.25m9-5.25v9l-9 5.25M3 7.5l9 5.25M3 7.5v9l9 5.25m0-9v9" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">SDKs</h3>
-        <p className="promptlayer-info-description">
-          Official client libraries, examples, and package references for supported runtimes.
-        </p>
+      <a href="/features/opentelemetry" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>OpenTelemetry</span>
+        <strong>Connect tracing pipelines and providers</strong>
       </a>
-
-      <a
-        href="/features/opentelemetry"
-        className="promptlayer-info-card promptlayer-card-interactive"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M14.25 6.087c0-.355.186-.676.401-.959.221-.29.349-.634.349-1.003 0-1.036-1.007-1.875-2.25-1.875s-2.25.84-2.25 1.875c0 .369.128.713.349 1.003.215.283.401.604.401.959v0a.64.64 0 0 1-.657.643 48.39 48.39 0 0 1-4.163-.3c.186 1.613.293 3.25.315 4.907a.656.656 0 0 1-.658.663v0c-.355 0-.676-.186-.959-.401a1.647 1.647 0 0 0-1.003-.349c-1.036 0-1.875 1.007-1.875 2.25s.84 2.25 1.875 2.25c.369 0 .713-.128 1.003-.349.283-.215.604-.401.959-.401v0c.31 0 .555.26.532.57a48.039 48.039 0 0 1-.642 5.056c1.518.19 3.058.309 4.616.354a.64.64 0 0 0 .657-.643v0c0-.355-.186-.676-.401-.959a1.647 1.647 0 0 1-.349-1.003c0-1.035 1.008-1.875 2.25-1.875 1.243 0 2.25.84 2.25 1.875 0 .369-.128.713-.349 1.003-.215.283-.4.604-.4.959v0c0 .333.277.599.61.58a48.1 48.1 0 0 0 5.427-.63 48.05 48.05 0 0 0 .582-4.717.532.532 0 0 0-.533-.57v0c-.355 0-.676.186-.959.401-.29.221-.634.349-1.003.349-1.035 0-1.875-1.007-1.875-2.25s.84-2.25 1.875-2.25c.37 0 .713.128 1.003.349.283.215.604.401.96.401v0a.656.656 0 0 0 .658-.663 48.422 48.422 0 0 0-.37-5.36c-1.886.342-3.81.574-5.766.689a.578.578 0 0 1-.61-.58v0Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">OpenTelemetry Integrations</h3>
-        <p className="promptlayer-info-description">
-          Connect PromptLayer with model providers, tracing pipelines, and internal tooling.
-        </p>
+      <a href="/self-hosted" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>Self-hosting</span>
+        <strong>Deploy PromptLayer in your environment</strong>
       </a>
-
-      <a href="/changelog" className="promptlayer-info-card promptlayer-card-interactive">
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="M15.59 14.37a6 6 0 0 1-5.84 7.38v-4.8m5.84-2.58a14.98 14.98 0 0 0 6.16-12.12A14.98 14.98 0 0 0 9.631 8.41m5.96 5.96a14.926 14.926 0 0 1-5.841 2.58m-.119-8.54a6 6 0 0 0-7.381 5.84h4.8m2.581-5.84a14.927 14.927 0 0 0-2.58 5.84m2.699 2.7c-.103.021-.207.041-.311.06a15.09 15.09 0 0 1-2.448-2.448 14.9 14.9 0 0 1 .06-.312m-2.24 2.39a4.493 4.493 0 0 0-1.757 4.306 4.493 4.493 0 0 0 4.306-1.758M16.5 9a1.5 1.5 0 1 1-3 0 1.5 1.5 0 0 1 3 0Z" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Changelog</h3>
-        <p className="promptlayer-info-description">
-          Product updates covering PromptLayer platform improvements and launches.
-        </p>
+      <a href="/agents/overview" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>MCP</span>
+        <strong>Connect assistants and tools</strong>
       </a>
-
-      <a
-        href="https://www.promptlayer.com/blog/"
-        className="promptlayer-info-card promptlayer-card-interactive"
-        target="_blank"
-        rel="noreferrer"
-      >
-        <div className="promptlayer-info-icon">
-          <svg
-            viewBox="0 0 24 24"
-            fill="none"
-            stroke="currentColor"
-            strokeWidth="1.5"
-            strokeLinecap="round"
-            strokeLinejoin="round"
-            className="promptlayer-heroicon"
-            aria-hidden="true"
-          >
-            <path d="m16.862 4.487 1.687-1.688a1.875 1.875 0 1 1 2.652 2.652L10.582 16.07a4.5 4.5 0 0 1-1.897 1.13L6 18l.8-2.685a4.5 4.5 0 0 1 1.13-1.897l8.932-8.931Zm0 0L19.5 7.125M18 14v4.75A2.25 2.25 0 0 1 15.75 21H5.25A2.25 2.25 0 0 1 3 18.75V8.25A2.25 2.25 0 0 1 5.25 6H10" />
-          </svg>
-        </div>
-        <h3 className="promptlayer-info-title">Blog</h3>
-        <p className="promptlayer-info-description">
-          Engineering and product insights from the PromptLayer team.
-        </p>
+      <a href="/changelog" className="promptlayer-resource-card promptlayer-card-interactive">
+        <span>Changelog</span>
+        <strong>Follow product updates and launches</strong>
       </a>
     </div>
   </section>

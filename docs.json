@@ -15,10 +15,7 @@
     "groups": [
       {
         "group": "Get Started",
-        "pages": [
-          "quickstart",
-          "tutorial-videos"
-        ]
+        "pages": ["quickstart", "tutorial-videos"]
       },
       {
         "group": "Core Concepts",
@@ -44,29 +41,21 @@
             ]
           },
           {
-            "group": "Evaluations",
-            "icon": "vial-circle-check",
+            "group": "Tables",
+            "tag": "New",
+            "icon": "table",
             "pages": [
-              "features/evaluations/overview",
-              "features/evaluations/building-pipelines",
-              "features/evaluations/eval-types",
-              "features/evaluations/column-types",
-              "features/evaluations/score-card",
-              "features/evaluations/continuous-integration",
-              "features/evaluations/programmatic",
-              "features/evaluations/examples",
-              "why-promptlayer/voice-agents"
+              "features/tables/overview",
+              "features/tables/sheets",
+              "features/tables/columns",
+              "features/tables/column-types",
+              "features/tables/cells-and-runs",
+              "features/tables/scoring",
+              "features/tables/history-and-analytics",
+              "features/tables/migrate-from-evaluations-and-datasets"
             ]
           },
-          {
-            "group": "Datasets",
-            "icon": "database",
-            "pages": [
-              "features/evaluations/datasets-overview",
-              "features/evaluations/datasets-create-from-file",
-              "features/evaluations/datasets-create-from-history"
-            ]
-          },
+
           {
             "group": "Observability",
             "icon": "chart-column",
@@ -160,20 +149,9 @@
           {
             "group": "Self-Hosted PromptLayer",
             "icon": "server",
-            "pages": [
-              "self-hosted",
-              "enterprise-deployments/aws"
-            ]
+            "pages": ["self-hosted", "enterprise-deployments/aws"]
           },
-          {
-            "group": "Eval Strategies",
-            "icon": "vial-circle-check",
-            "pages": [
-              "onboarding-guides/compare-models",
-              "onboarding-guides/backtesting-prompt-changes",
-              "onboarding-guides/batch-runs"
-            ]
-          },
+
           {
             "group": "Additional Use Cases",
             "icon": "lightbulb",
@@ -187,19 +165,14 @@
       },
       {
         "group": "AI Tools",
-        "pages": [
-          "agents/overview"
-        ]
+        "pages": ["agents/overview"]
       },
       {
         "group": "Reference",
         "pages": [
           {
             "group": "SDKs",
-            "pages": [
-              "sdks/python",
-              "sdks/javascript"
-            ]
+            "pages": ["sdks/python", "sdks/javascript"]
           },
           {
             "group": "REST API",
@@ -243,41 +216,40 @@
                 ]
               },
               {
-                "group": "Datasets",
+                "group": "Tables",
+                "tag": "New",
                 "pages": [
-                  "reference/list-datasets",
-                  "reference/get-dataset-rows",
-                  "reference/create-dataset-group",
-                  "reference/create-dataset-version-from-file",
-                  "reference/create-dataset-version-from-filter-params",
-                  "reference/create-draft-dataset-version",
-                  "reference/add-request-log-to-dataset",
-                  "reference/add-trace-to-dataset",
-                  "reference/save-draft-dataset-version",
-                  "reference/external-ids-dataset-groups-attach",
-                  "reference/external-ids-dataset-groups-list",
-                  "reference/external-ids-dataset-groups-delete"
-                ]
-              },
-              {
-                "group": "Evaluations",
-                "pages": [
-                  "reference/list-evaluations",
-                  "reference/get-evaluation-rows",
-                  "reference/create-reports",
-                  "reference/run-report",
-                  "reference/get-report",
-                  "reference/get-report-score",
-                  "reference/add-report-columns",
-                  "reference/edit-report-column",
-                  "reference/delete-report-column",
-                  "reference/update-report-score-card",
-                  "reference/rename-report",
-                  "reference/delete-report",
-                  "reference/delete-reports-by-name",
-                  "reference/external-ids-reports-attach",
-                  "reference/external-ids-reports-list",
-                  "reference/external-ids-reports-delete"
+                  "reference/tables-create",
+                  "reference/tables-list",
+                  "reference/tables-get",
+                  "reference/tables-update",
+                  "reference/table-sheets-list",
+                  "reference/table-sheets-create",
+                  "reference/table-sheets-get-operation",
+                  "reference/table-sheets-get",
+                  "reference/table-sheets-update",
+                  "reference/table-sheet-columns-list",
+                  "reference/table-sheet-columns-create",
+                  "reference/table-sheet-columns-update",
+                  "reference/table-sheet-rows-list",
+                  "reference/table-sheet-rows-add",
+                  "reference/table-sheet-cells-get",
+                  "reference/table-sheet-cells-update",
+                  "reference/table-sheet-cells-recalculate",
+                  "reference/table-sheet-cells-recalculate-batch",
+                  "reference/table-sheet-imports-file-create",
+                  "reference/table-sheet-imports-request-logs-create",
+                  "reference/table-sheet-operations-list",
+                  "reference/table-sheet-operations-create",
+                  "reference/table-sheet-operations-get",
+                  "reference/table-sheet-operations-cancel",
+                  "reference/table-sheet-score-get",
+                  "reference/table-sheet-score-configure",
+                  "reference/table-sheet-score-recalculate",
+                  "reference/table-sheet-versions-list",
+                  "reference/table-sheet-versions-create",
+                  "reference/table-sheet-versions-get",
+                  "reference/table-sheet-score-history-get"
                 ]
               },
               {
@@ -336,43 +308,6 @@
                 ]
               },
               {
-                "group": "Tables",
-                "tag": "New",
-                "pages": [
-                  "reference/tables-create",
-                  "reference/tables-list",
-                  "reference/tables-get",
-                  "reference/tables-update",
-                  "reference/table-sheets-list",
-                  "reference/table-sheets-create",
-                  "reference/table-sheets-get-operation",
-                  "reference/table-sheets-get",
-                  "reference/table-sheets-update",
-                  "reference/table-sheet-columns-list",
-                  "reference/table-sheet-columns-create",
-                  "reference/table-sheet-columns-update",
-                  "reference/table-sheet-rows-list",
-                  "reference/table-sheet-rows-add",
-                  "reference/table-sheet-cells-get",
-                  "reference/table-sheet-cells-update",
-                  "reference/table-sheet-cells-recalculate",
-                  "reference/table-sheet-cells-recalculate-batch",
-                  "reference/table-sheet-imports-file-create",
-                  "reference/table-sheet-imports-request-logs-create",
-                  "reference/table-sheet-operations-list",
-                  "reference/table-sheet-operations-create",
-                  "reference/table-sheet-operations-get",
-                  "reference/table-sheet-operations-cancel",
-                  "reference/table-sheet-score-get",
-                  "reference/table-sheet-score-configure",
-                  "reference/table-sheet-score-recalculate",
-                  "reference/table-sheet-versions-list",
-                  "reference/table-sheet-versions-create",
-                  "reference/table-sheet-versions-get",
-                  "reference/table-sheet-score-history-get"
-                ]
-              },
-              {
                 "group": "Unified Registry",
                 "pages": [
                   "reference/create-folder",
@@ -397,15 +332,87 @@
             ]
           }
         ]
+      },
+      {
+        "group": "Deprecated",
+        "pages": [
+          {
+            "group": "Evaluations",
+            "icon": "vial-circle-check",
+            "pages": [
+              "features/evaluations/overview",
+              "features/evaluations/building-pipelines",
+              "features/evaluations/eval-types",
+              "features/evaluations/column-types",
+              "features/evaluations/score-card",
+              "features/evaluations/continuous-integration",
+              "features/evaluations/programmatic",
+              "features/evaluations/examples",
+              "why-promptlayer/voice-agents"
+            ]
+          },
+          {
+            "group": "Datasets",
+            "icon": "database",
+            "pages": [
+              "features/evaluations/datasets-overview",
+              "features/evaluations/datasets-create-from-file",
+              "features/evaluations/datasets-create-from-history"
+            ]
+          },
+          {
+            "group": "Eval Strategies",
+            "icon": "vial-circle-check",
+            "pages": [
+              "onboarding-guides/compare-models",
+              "onboarding-guides/backtesting-prompt-changes",
+              "onboarding-guides/batch-runs"
+            ]
+          },
+          {
+            "group": "Datasets API",
+            "pages": [
+              "reference/list-datasets",
+              "reference/get-dataset-rows",
+              "reference/create-dataset-group",
+              "reference/create-dataset-version-from-file",
+              "reference/create-dataset-version-from-filter-params",
+              "reference/create-draft-dataset-version",
+              "reference/add-request-log-to-dataset",
+              "reference/add-trace-to-dataset",
+              "reference/save-draft-dataset-version",
+              "reference/external-ids-dataset-groups-attach",
+              "reference/external-ids-dataset-groups-list",
+              "reference/external-ids-dataset-groups-delete"
+            ]
+          },
+          {
+            "group": "Evaluations & Reports API",
+            "pages": [
+              "reference/list-evaluations",
+              "reference/get-evaluation-rows",
+              "reference/create-reports",
+              "reference/run-report",
+              "reference/get-report",
+              "reference/get-report-score",
+              "reference/add-report-columns",
+              "reference/edit-report-column",
+              "reference/delete-report-column",
+              "reference/update-report-score-card",
+              "reference/rename-report",
+              "reference/delete-report",
+              "reference/delete-reports-by-name",
+              "reference/external-ids-reports-attach",
+              "reference/external-ids-reports-list",
+              "reference/external-ids-reports-delete"
+            ]
+          }
+        ]
       }
     ]
   },
   "contextual": {
-    "options": [
-      "copy",
-      "view",
-      "mcp"
-    ]
+    "options": ["copy", "view", "mcp"]
   },
   "logo": {
     "light": "/logo/logo.png",
@@ -449,17 +456,17 @@
       "source": "/",
       "destination": "/overview"
     },
-        {
-          "source": "/introduction",
-          "destination": "/overview"
-        },
-        {
-          "source": "/quickstart-part-two",
-          "destination": "/quickstart"
-        },
-        {
-          "source": "/languages/python",
-          "destination": "/sdks/python"
+    {
+      "source": "/introduction",
+      "destination": "/overview"
+    },
+    {
+      "source": "/quickstart-part-two",
+      "destination": "/quickstart"
+    },
+    {
+      "source": "/languages/python",
+      "destination": "/sdks/python"
     },
     {
       "source": "/languages/javascript",

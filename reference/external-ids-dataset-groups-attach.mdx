@@ -3,6 +3,10 @@ title: "Attach Dataset Group External ID"
 openapi: "POST /api/public/v2/dataset-groups/{dataset_group_id}/external-ids"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 Attach a `{source, external_id}` mapping to an existing dataset group.
 
 Attaching the same mapping to the same dataset group is idempotent. Reusing the mapping on another entity returns `409 Conflict`. See [External IDs](/reference/external-ids-overview).

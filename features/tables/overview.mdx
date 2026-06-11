@@ -1,0 +1,93 @@
+---
+title: "Overview"
+description: "Understand the Table model and the main Tables workflow in PromptLayer."
+icon: "table"
+---
+
+Tables are the workspace for dataset, evaluation, backtesting, report, and batch workflows in PromptLayer. They keep inputs, computed outputs, scoring, history, and analytics together so a workflow can be built, run, and reviewed in one place.
+
+A Table has four parts:
+
+| Object | What it does |
+| --- | --- |
+| **Table** | The top-level workspace for a related evaluation or batch workflow. |
+| **Sheet** | A tab with its own rows, columns, score configuration, history, and analytics. |
+| **Column** | A field in the sheet. Text columns store data; computed columns run prompts, code, checks, extraction, composition, or other work. |
+| **Cell** | A row-column value. Computed cells track status, including queued, running, completed, failed, and stale. |
+
+<Frame>
+  <img src="/images/tables/polished/01-start-table.png" alt="A new Table with options to create from a prompt, import request history, or start blank" />
+</Frame>
+
+## Start a Table
+
+A new Table opens with one sheet, one text column, and one row. The empty state gives three starting points:
+
+1. **Create from a prompt**: set up prompt inputs, an output column, and evaluation checks.
+2. **Import request history**: select logged requests and add them as rows.
+3. **Start blank**: build the sheet manually from rows and columns.
+
+Use **Create from a prompt** when the workflow starts from a Prompt Registry template. Use **Import request history** when production or test traffic is already logged. Use **Start blank** when you want to model the sheet yourself.
+
+## Main workflow
+
+Most Tables follow a simple loop:
+
+1. Add rows from CSV, request history, or manual entry.
+2. Add text columns for inputs, labels, expected answers, or metadata.
+3. Add computed columns for prompts, code, assertions, extraction, comparisons, composition, or helper functions.
+4. Map computed columns to their sources.
+5. Run the sheet, a column, a row, or selected cells.
+6. Review cell status, configure scoring, and use history or analytics to compare changes.
+
+<Frame>
+  <img src="/images/tables/polished/04-tour-import-export.png" alt="Table toolbar showing import, export, score, analytics, history, upload, download, and tour controls" />
+</Frame>
+
+## Product sections
+
+<CardGroup cols={2}>
+  <Card title="Sheets" icon="table-cells" href="/features/tables/sheets">
+    Import data, manage sheet tabs, add rows, upload CSVs, and import request history.
+  </Card>
+  <Card title="Columns" icon="columns-3" href="/features/tables/columns">
+    Add, configure, filter, sort, pin, duplicate, run, and map source columns.
+  </Card>
+  <Card title="Column Types" icon="brackets-curly" href="/features/tables/column-types">
+    Reference text columns, computed columns, evaluation columns, helper columns, and composition.
+  </Card>
+  <Card title="Cells and Runs" icon="play" href="/features/tables/cells-and-runs">
+    Understand cell statuses, stale cells, reruns, selected runs, and cancellation.
+  </Card>
+  <Card title="Scoring" icon="gauge" href="/features/tables/scoring">
+    Configure score columns, Boolean scoring, numeric scoring, custom code, and winner aggregation.
+  </Card>
+  <Card title="History and Analytics" icon="chart-line" href="/features/tables/history-and-analytics">
+    Review saved versions, score history, diffs, request analytics, and request-level debugging.
+  </Card>
+</CardGroup>
+
+## When to use Tables
+
+Use Tables when you need a repeatable workflow over rows of examples: prompt regression tests, request-log replay, dataset creation, model comparisons, multi-step evaluations, human review queues, or batch jobs.
+
+Use legacy Evaluations and Datasets only for existing legacy workflows. For new work, start in Tables.
+
+## API references
+
+Use the Tables API when you want to automate the same actions from code.
+
+<CardGroup cols={2}>
+  <Card title="Create a Table" icon="plus" href="/reference/tables-create">
+    Create a Table programmatically.
+  </Card>
+  <Card title="Create a sheet" icon="table-cells" href="/reference/table-sheets-create">
+    Add a new sheet to an existing Table.
+  </Card>
+  <Card title="Create a column" icon="columns-3" href="/reference/table-sheet-columns-create">
+    Add text or computed columns to a sheet.
+  </Card>
+  <Card title="Run an operation" icon="rotate" href="/reference/table-sheet-operations-create">
+    Queue recalculation work for rows, columns, cells, or stale work.
+  </Card>
+</CardGroup>

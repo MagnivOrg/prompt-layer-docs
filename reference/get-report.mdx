@@ -3,6 +3,10 @@ title: "Get Evaluation"
 openapi: "GET /reports/{report_id}"
 ---
 
+<Warning>
+  Legacy Dataset, Evaluation, and Report endpoints are deprecated for new workflows. Use the [Tables API](/reference/tables-create) for new dataset import, evaluation, scoring, recalculation, and reporting workflows.
+</Warning>
+
 This endpoint allows you to retrieve the info about a report.
 
 Please note that if you want to get the score of a report, you should use the `GET /reports/{report_id}/score` endpoint instead ([link](/reference/get-report-score)).

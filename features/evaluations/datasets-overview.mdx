@@ -4,6 +4,10 @@ description: "Use Datasets as the versioned system of record for evaluation inpu
 icon: "book"
 ---
 
+<Warning>
+  Legacy Evaluations, Reports, and Datasets are deprecated for new workflows. Use [Tables](/features/tables/overview) for new evaluation, dataset, report, backtesting, and batch workflows. See [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets).
+</Warning>
+
 Datasets are PromptLayer's versioned system of record for evaluation inputs and historical examples. Use them when you want a reusable set of test cases for evaluations, backtests, regression checks, or batch workflows.
 
 A **Dataset Group** is the container for one dataset over time. Inside that group, you edit a **draft** dataset, save numbered versions, and reuse those versions across evaluations. You can create data by uploading a CSV or JSON file, building from request history, adding individual rows from observability traces, or turning evaluation outputs back into a dataset for the next iteration.
