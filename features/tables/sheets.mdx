@@ -4,9 +4,9 @@ description: "Import data, manage sheet tabs, add rows, and scope Table work by 
 icon: "table-cells"
 ---
 
-A sheet is a tab inside a Table. Each sheet has its own rows, columns, score configuration, version history, and analytics scope.
+A sheet is a tab inside a Table. Each sheet has its own rows, columns, scoring, version history, and analytics.
 
-Use multiple sheets when related workflows should live together but need different inputs, columns, or test cases. For example, keep a main regression sheet, an edge-case sheet, and a migration sheet in the same Table.
+Use multiple sheets when related workflows belong together but need different inputs, columns, or test cases. For example, keep a main regression sheet, edge cases, and migration work in the same Table.
 
 ## Sheet anatomy
 
@@ -35,43 +35,29 @@ Each row is one item to run through the sheet. Use the row control at the bottom
 
 Manual rows are useful for small test sets, edge cases, and examples you want to type or paste directly into the sheet.
 
-## Upload a CSV
+## Upload data
 
-Use **Upload** when your rows already exist outside PromptLayer.
-
-The upload menu supports:
-
-- **From computer**: upload a CSV file into the sheet.
-- **From request history**: select existing logged requests and add them as rows.
+Use **Upload** when your rows already exist outside PromptLayer. Upload a CSV from your computer or import logged requests from request history.
 
 <Frame>
   <img src="/images/tables/polished/02-upload-menu.png" alt="Upload menu with CSV upload and request history import options" />
 </Frame>
 
-A CSV import is the Table replacement for the legacy Dataset upload flow. After the import, add computed columns and scoring in the same sheet.
+After import, add computed columns and scoring in the same sheet.
 
 ## Import request history
 
 Choose **Upload** then **From request history** to open the request import dialog.
 
-The dialog includes:
-
-- Date range controls.
-- Structured search and filters.
-- A request grid.
-- Pagination.
-- Row selection.
-- **Add to Sheet** after you select requests.
-
 <Frame>
   <img src="/images/tables/polished/03-request-history-import-full.png" alt="Add from Request History dialog with date range, search, filters, request grid, pagination, selectable rows, and Add to Sheet action" />
 </Frame>
 
-Each selected request becomes a row. Use this when you want to evaluate real logged traffic, build a dataset from production behavior, or replay previous requests through new columns.
+Each selected request becomes a row. Use request-history imports to evaluate real traffic, build datasets from production behavior, or replay previous requests through new columns.
 
 ## Download a sheet
 
-Click **Download** in the toolbar to export the current sheet. Use downloads for external review, offline analysis, or sharing a point-in-time copy of the sheet contents.
+Click **Download** in the toolbar to export the current sheet for external review, offline analysis, or a point-in-time snapshot.
 
 <Frame>
   <img src="/images/tables/polished/04-tour-import-export.png" alt="Table toolbar with Upload, Download, Score, Analytics, History, and Tour controls" />
@@ -79,7 +65,7 @@ Click **Download** in the toolbar to export the current sheet. Use downloads for
 
 ## Use multiple sheets
 
-Use the sheet tabs at the bottom of the Table to move between sheets. A Table can contain multiple sheets, and each sheet can have different rows, columns, scoring, and history.
+Use the sheet tabs at the bottom of the Table to move between sheets. Each sheet can have different rows, columns, scoring, and history.
 
 <Frame>
   <img src="/images/tables/polished/11-multiple-sheets.png" alt="Multiple sheet tabs in a Table with a plus control for adding another sheet" />

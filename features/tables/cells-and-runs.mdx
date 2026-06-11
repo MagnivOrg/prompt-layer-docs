@@ -4,7 +4,7 @@ description: "Understand Table cells, statuses, stale values, reruns, and cancel
 icon: "play"
 ---
 
-A cell is the value at one row and one column. Text cells are editable values. Computed cells are produced by running their column's configuration against the row.
+A cell is the value at one row and one column. Text cells are editable; computed cells are produced by running a column's configuration against the row.
 
 ## Cell types
 
@@ -13,7 +13,7 @@ A cell is the value at one row and one column. Text cells are editable values. C
 | **Text cell** | Text columns | Stores editable input, labels, metadata, expected output, or notes. |
 | **Computed cell** | Prompt, code, assertion, extraction, comparison, helper, composition, and other computed columns | Stores an output and a run status. |
 
-Computed cells track whether their output is ready, running, failed, or stale.
+Computed cells track whether their output is ready, pending, failed, or stale.
 
 ## Cell statuses
 
@@ -30,15 +30,9 @@ Computed cells track whether their output is ready, running, failed, or stale.
 
 ## Stale cells
 
-A computed cell can become stale when a dependency changes. Common causes:
+A computed cell becomes stale when a dependency changes, such as a source value, source mapping, column configuration, rerun output, or composition source.
 
-- A source text cell changed.
-- A source computed cell was rerun and produced a new output.
-- A computed column's configuration changed.
-- A source mapping changed.
-- A composition source changed.
-
-Stale cells are highlighted so you can see what needs a rerun.
+Stale cells are highlighted so you can rerun only the work that needs refreshing.
 
 <Frame>
   <img src="/images/tables/polished/13-stale-rerun.png" alt="A stale computed Table cell highlighted in amber after a dependency changed" />
@@ -46,7 +40,7 @@ Stale cells are highlighted so you can see what needs a rerun.
 
 ## Run scopes
 
-You can run work at different scopes depending on what changed.
+Run the smallest scope that matches what changed.
 
 | Scope | Use when |
 | --- | --- |
@@ -60,44 +54,17 @@ You can run work at different scopes depending on what changed.
   <img src="/images/tables/polished/14-run-table.png" alt="Run controls for refreshing Table work" />
 </Frame>
 
-## Run a column
-
-Open a computed column menu and choose **Run column**. Column runs are useful when:
-
-- You changed a prompt template mapping.
-- You updated code.
-- You changed an assertion prompt.
-- You fixed an endpoint or MCP configuration.
-- You want to regenerate one output column without rerunning the whole sheet.
-
-If the column is already pending or running, the column menu can show **Stop column**.
-
 ## Run selected rows or cells
 
 Select rows or computed cells to run a smaller slice of work. This is useful when only a subset of inputs changed or when you are debugging a few failing examples.
 
-Selection action bars can expose **Run**, **Cancel**, and delete actions depending on what is selected.
-
 ## Stop or cancel work
 
-Stop or cancel work when a run was started by mistake, the configuration is wrong, or a long-running column should be interrupted before it completes.
-
-Cancellation is most useful while cells are queued, dispatched, or running. Completed cells do not need cancellation. Failed or stale cells should be fixed and rerun.
+Stop or cancel work when a run was started by mistake, the configuration is wrong, or a long-running column should be interrupted. Cancellation is only useful while cells are queued, dispatched, or running.
 
 ## Inspect cells
 
-Open computed cells to inspect their value. Depending on the column type, cell content can include:
-
-- Plain text.
-- JSON.
-- Markdown.
-- Links or media previews.
-- Assertion results.
-- Errors.
-- Execution metrics.
-- Prompt request details.
-
-Use failed cells to debug column configuration or source data. Use stale cells to decide what needs rerunning before scoring.
+Open computed cells to inspect outputs, errors, execution details, or prompt request details. Use failed cells to debug configuration or source data, and use stale cells to decide what needs rerunning before scoring.
 
 ## Update cells through the API
 

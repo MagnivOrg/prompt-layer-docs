@@ -8,19 +8,13 @@ icon: "arrows-rotate"
   Legacy Evaluations, Reports, and Datasets remain available for existing projects. Use Tables for new workflows.
 </Warning>
 
-Tables combine the pieces that legacy workflows split across Datasets, Evaluations, and Reports.
+Tables bring legacy Dataset, Evaluation, and Report workflows into one place: rows, computed steps, runs, scoring, history, and analytics.
 
 ## Convert a legacy view to a Table
 
-Legacy Dataset and Evaluation pages include a migration banner. Click **Convert to Table** to migrate the current legacy view into a Table.
+When a legacy Dataset or Evaluation page shows a migration banner, click **Convert to Table**. PromptLayer creates the Table from the legacy object and opens it so you can review sheets, rows, columns, scoring, and run status before moving production workflows.
 
-The conversion uses the legacy object you are viewing:
-
-- On a legacy Dataset page, PromptLayer converts the Dataset Group into a Table.
-- On a legacy Evaluation page, PromptLayer converts the Evaluation or Report into a Table.
-- After conversion succeeds, PromptLayer opens the new Table so you can review sheets, columns, rows, score configuration, and run status before moving production workflows.
-
-Use this button first when it appears. Use the manual CSV, request-history, and column rebuild steps below when you are rebuilding from exports, logs, or a workflow that does not show the conversion banner.
+Use the conversion button first when it appears. Rebuild manually only when you are working from exports, logs, or a legacy workflow without the banner.
 
 <Frame>
   <img src="/images/tables/polished/23-legacy-evaluation-convert-to-table.png" alt="Legacy Evaluation page showing the Convert to Table migration button" />
@@ -43,105 +37,26 @@ Use this button first when it appears. Use the manual CSV, request-history, and 
 
 ## Migration checklist
 
-1. Open the legacy Dataset, Evaluation, or Report you want to move.
-2. If the page shows the migration banner, click **Convert to Table**.
-3. Review the generated Table, including sheets, rows, columns, scoring, and run status.
-4. If you are rebuilding manually, create a Table and import the legacy dataset with CSV upload, or import request history directly.
-5. Recreate each evaluation step as a computed column when the conversion does not already create it for you.
-6. Map Prompt Template variables to source columns.
-7. Add comparison, assertion, extraction, or code columns as needed.
-8. Configure the sheet score.
-9. Rerun stale or pending cells.
-10. Review the score, history, and analytics.
-11. Move automation to the Tables API.
+1. Convert from the legacy page when the banner is available.
+2. Review generated sheets, rows, columns, scoring, and run status.
+3. For manual rebuilds, import rows from CSV or request history.
+4. Recreate missing evaluation steps as computed columns.
+5. Map sources, configure scoring, and rerun stale or pending cells.
+6. Compare outputs, score, history, and analytics before moving automation to the Tables API.
 
-## Dataset from CSV
+## Manual rebuild shortcuts
 
-Old flow:
+Use these paths when conversion is not available.
 
-1. Create a Dataset Group.
-2. Upload a CSV or JSON file.
-3. Save a Dataset Version.
-4. Attach the Dataset Version to an Evaluation pipeline.
-
-Table flow:
-
-1. Click **Convert to Table** from the legacy Dataset page when the banner appears.
-2. If you are rebuilding from a file instead, create a Table.
-3. Click **Upload**.
-4. Choose **From computer**.
-5. Upload the CSV into the sheet.
-6. Add computed columns and scoring in the same sheet.
-
-<Frame>
-  <img src="/images/tables/polished/02-upload-menu.png" alt="Upload menu for importing a CSV file into a Table" />
-</Frame>
-
-## Dataset from request history
-
-Old flow:
-
-1. Filter request logs.
-2. Save results into a Dataset Version.
-3. Attach the Dataset Version to an Evaluation pipeline.
-
-Table flow:
-
-1. Create a Table.
-2. Click **Upload**.
-3. Choose **From request history**.
-4. Filter and select requests.
-5. Click **Add to Sheet**.
-6. Add prompt, comparison, assertion, and score columns in the same sheet.
+| Legacy workflow | Table workflow |
+| --- | --- |
+| Dataset from CSV or JSON | Create a Table, click **Upload**, choose **From computer**, then add computed columns and scoring in the same sheet. |
+| Dataset from request history | Create a Table, click **Upload**, choose **From request history**, select requests, then click **Add to Sheet**. |
+| Evaluation pipeline | Put inputs in text columns, add one computed column for each evaluation step, map Prompt Template variables to source columns, run the computed columns, and configure scoring. |
+| Report run | Run the Table, a computed column, or selected stale work. Inspect cells in place, then use **Score**, **Analytics**, and **History** to review results. |
 
 <Frame>
   <img src="/images/tables/polished/03-request-history-import-full.png" alt="Import request history directly into a Table sheet" />
-</Frame>
-
-## Evaluation pipeline
-
-Old flow:
-
-1. Define an Evaluation pipeline.
-2. Attach a Dataset Version.
-3. Add evaluation steps.
-4. Run a Report.
-5. Review outputs and score cards.
-
-Table flow:
-
-1. Click **Convert to Table** from the legacy Evaluation page when the banner appears.
-2. Review the generated sheet and columns.
-3. If you are rebuilding manually, put inputs in text columns.
-4. Add a computed column for each step.
-5. Configure source mappings for Prompt Template columns.
-6. Run the computed columns.
-7. Use stale-cell indicators to decide what needs rerunning.
-8. Configure the sheet score.
-
-<Frame>
-  <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template source mappings used to replace legacy evaluation step inputs" />
-</Frame>
-
-## Report run
-
-Old flow:
-
-1. Start a Report run.
-2. Wait for row outputs.
-3. Review failures.
-4. Open a score card.
-
-Table flow:
-
-1. Run the Table, a computed column, or selected stale work.
-2. Inspect completed, failed, pending, or stale cells in place.
-3. Open **Score** for aggregate results.
-4. Open **Analytics** to debug request-level behavior.
-5. Open **History** to compare versions.
-
-<Frame>
-  <img src="/images/tables/polished/16-score-configuration.png" alt="Score configuration replacing a legacy report score card" />
 </Frame>
 
 ## Automation mapping
@@ -159,11 +74,4 @@ Table flow:
 
 ## Recommended order
 
-Migrate one workflow at a time:
-
-1. Start with the **Convert to Table** button when it is available on the legacy view.
-2. Review the generated Table before changing automation.
-3. For workflows without the conversion banner, rebuild the workflow manually in a Table.
-4. Confirm the outputs and score match the old workflow.
-5. Move the automation to Tables APIs.
-6. Keep the legacy workflow read-only until the Table is trusted.
+Migrate one workflow at a time. Review the generated Table before changing automation, confirm outputs and scores match the old workflow, then move automation to the Tables API. Keep the legacy workflow read-only until the Table is trusted.

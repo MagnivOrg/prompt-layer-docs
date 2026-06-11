@@ -4,9 +4,9 @@ description: "Configure sheet scores with score columns, Boolean and numeric sco
 icon: "gauge"
 ---
 
-Scoring turns a sheet into one summary signal. Use it after computed columns produce the outputs or checks you care about.
+Scoring turns a sheet into a summary signal you can compare across runs, prompt versions, and workflow changes.
 
-Click **Score** in the Table toolbar to open the score panel.
+Click **Score** in the Table toolbar to open the score panel after computed columns produce the outputs or checks you care about.
 
 <Frame>
   <img src="/images/tables/polished/15-open-scoring.png" alt="Score button in the Table toolbar" />
@@ -14,13 +14,7 @@ Click **Score** in the Table toolbar to open the score panel.
 
 ## Score panel
 
-The score panel shows:
-
-- The current average score or aggregate result.
-- Column and sub-score breakdowns.
-- Score configuration.
-- Recalculation status.
-- A **Recalculate** button.
+The score panel shows the current result, column and sub-score breakdowns, configuration, and recalculation status.
 
 <Frame>
   <img src="/images/tables/polished/19-score-panel.png" alt="Score panel showing average score, column breakdown, and score configuration" />
@@ -34,9 +28,7 @@ In **Scoring configuration**, choose a scoring mode and the columns that count t
   <img src="/images/tables/polished/16-score-configuration.png" alt="Score configuration panel with scoring mode, score columns, Boolean token settings, assertion aggregation, and Recalculate" />
 </Frame>
 
-For non-custom, non-aggregate modes, choose **Score columns**. Use **Use default** to reset the selection to default score columns.
-
-Changes save automatically. Use **Recalculate** after changing score settings.
+For non-custom, non-aggregate modes, choose **Score columns**. Changes save automatically; use **Recalculate** after changing score settings.
 
 ## Scoring modes
 
@@ -50,24 +42,15 @@ Changes save automatically. Use **Recalculate** after changing score settings.
 
 ## Boolean scoring
 
-Boolean mode converts selected column values into pass/fail results.
-
-Configure:
-
-- **True tokens**: comma-separated or newline-separated values such as `pass`, `yes`, or `true`.
-- **False tokens**: comma-separated or newline-separated values such as `fail`, `no`, or `false`.
-- **Assertion aggregation**:
-  - **Mean**: average the assertion results.
-  - **All**: the row passes only when all assertions pass.
-  - **Any**: the row passes when any assertion passes.
+Boolean mode converts selected column values into pass/fail results. Configure true tokens, false tokens, and assertion aggregation (`Mean`, `All`, or `Any`).
 
 Use Boolean scoring for assertion columns, quality checks, moderation checks, format checks, and other pass/fail evaluations.
 
 ## Numeric scoring
 
-Numeric mode averages selected numeric outputs. Use it when columns already return scores, distances, similarity values, ratings, or normalized metrics.
+Numeric mode averages selected numeric outputs. Use it when columns return scores, distances, similarity values, ratings, or normalized metrics.
 
-For numeric scoring, make sure higher values mean better quality if you want the average score to be directly comparable across versions.
+For comparable version history, make sure higher values consistently mean better quality.
 
 ## Auto detect scoring
 
@@ -75,9 +58,7 @@ Auto detect chooses boolean or numeric handling based on the selected score colu
 
 ## Custom code scoring
 
-Custom code mode lets you score the whole sheet with Python or JavaScript.
-
-The scorer receives sheet data and must return a deterministic object with a numeric `score`.
+Custom code mode scores the whole sheet with Python or JavaScript. The scorer receives sheet data and must return a deterministic object with a numeric `score`.
 
 Required key:
 
@@ -105,12 +86,7 @@ Supported `score_matrix` shapes:
 - 2D matrix: `list[list[cell]]`.
 - Single-table 3D matrix: `list[list[list[cell]]]` where the top-level length is `1`.
 
-A matrix cell can be:
-
-- A number.
-- A string.
-- `null`.
-- An object like `{ "value": 0.92, "positive_metric": true }`.
+Matrix cells can be numbers, strings, `null`, or objects like `{ "value": 0.92, "positive_metric": true }`.
 
 Use custom code when score logic depends on multiple columns, row-level weighting, custom sub-scores, or a custom matrix display.
 
@@ -132,16 +108,7 @@ Use aggregate scoring for model bakeoffs, latency comparisons, cost comparisons,
 
 ## Read the score
 
-The score summary can show:
-
-- **Average score** for boolean, numeric, auto, or custom scoring.
-- **Result** for aggregate scoring.
-- Status labels such as recalculating or error.
-- Column and sub-score breakdowns.
-- Skipped counts for columns with missing or unusable values.
-- Top values for aggregate results.
-
-Use breakdowns to see which columns contribute most to the score and which columns are skipped.
+Use the score summary to compare the average score or aggregate result, inspect column and sub-score breakdowns, and see skipped values or recalculation errors.
 
 ## Recalculate after changes
 

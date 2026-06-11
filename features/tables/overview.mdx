@@ -4,16 +4,16 @@ description: "Understand the Table model and the main Tables workflow in PromptL
 icon: "table"
 ---
 
-Tables are PromptLayer's workspace for dataset, evaluation, report, backtesting, and batch workflows. A Table keeps the input data, computed work, score, history, and analytics in one place instead of splitting them across legacy Datasets, Evaluations, and Reports.
+Tables are the workspace for dataset, evaluation, backtesting, report, and batch workflows in PromptLayer. They keep inputs, computed outputs, scoring, history, and analytics together so a workflow can be built, run, and reviewed in one place.
 
-A Table has four core objects:
+A Table has four parts:
 
 | Object | What it does |
 | --- | --- |
-| **Table** | The top-level workspace object. Use one Table for a related evaluation or batch workflow. |
-| **Sheet** | A tab inside a Table. Each sheet has its own rows, columns, score configuration, history, and analytics scope. |
-| **Column** | A field in the sheet. Text columns store input data. Computed columns run prompts, code, checks, extraction, composition, or other work. |
-| **Cell** | A row-column value. Text cells are editable inputs. Computed cells have statuses such as queued, running, completed, failed, or stale. |
+| **Table** | The top-level workspace for a related evaluation or batch workflow. |
+| **Sheet** | A tab with its own rows, columns, score configuration, history, and analytics. |
+| **Column** | A field in the sheet. Text columns store data; computed columns run prompts, code, checks, extraction, composition, or other work. |
+| **Cell** | A row-column value. Computed cells track status, including queued, running, completed, failed, and stale. |
 
 <Frame>
   <img src="/images/tables/polished/01-start-table.png" alt="A new Table with options to create from a prompt, import request history, or start blank" />
@@ -31,17 +31,14 @@ Use **Create from a prompt** when the workflow starts from a Prompt Registry tem
 
 ## Main workflow
 
-Most Tables follow the same loop:
+Most Tables follow a simple loop:
 
-1. Create or open a Table.
-2. Add rows from CSV, request history, or manual entry.
-3. Add text columns for inputs, labels, expected answers, or metadata.
-4. Add computed columns for prompts, code, assertions, extraction, comparisons, composition, or helper functions.
-5. Map each computed column to its source columns.
-6. Run the Table, a column, a row, or selected cells.
-7. Inspect completed, failed, pending, and stale cells.
-8. Configure scoring.
-9. Use history and analytics to compare versions and debug requests.
+1. Add rows from CSV, request history, or manual entry.
+2. Add text columns for inputs, labels, expected answers, or metadata.
+3. Add computed columns for prompts, code, assertions, extraction, comparisons, composition, or helper functions.
+4. Map computed columns to their sources.
+5. Run the sheet, a column, a row, or selected cells.
+6. Review cell status, configure scoring, and use history or analytics to compare changes.
 
 <Frame>
   <img src="/images/tables/polished/04-tour-import-export.png" alt="Table toolbar showing import, export, score, analytics, history, upload, download, and tour controls" />
@@ -72,18 +69,9 @@ Most Tables follow the same loop:
 
 ## When to use Tables
 
-Use Tables for:
+Use Tables when you need a repeatable workflow over rows of examples: prompt regression tests, request-log replay, dataset creation, model comparisons, multi-step evaluations, human review queues, or batch jobs.
 
-- Prompt regression tests.
-- Batch runs over rows of examples.
-- Request-log review and replay.
-- Dataset creation from CSV or request history.
-- Evaluation pipelines with multiple computed steps.
-- Model, prompt, or workflow comparisons.
-- Human review queues.
-- Scorecards, version history, and analytics for a sheet.
-
-Use the legacy Evaluation and Dataset pages only for existing legacy workflows. For new work, build the workflow in Tables.
+Use legacy Evaluations and Datasets only for existing legacy workflows. For new work, start in Tables.
 
 ## API references
 

@@ -4,33 +4,15 @@ description: "Design patterns for building reliable Table workflows."
 icon: "diagram-project"
 ---
 
-<Note>
-  Tables docs are now organized by product concept. Start with [Overview](/features/tables/overview), then use [Sheets](/features/tables/sheets), [Columns](/features/tables/columns), [Column Types](/features/tables/column-types), [Cells and Runs](/features/tables/cells-and-runs), [Scoring](/features/tables/scoring), and [History and Analytics](/features/tables/history-and-analytics).
-</Note>
+Use this pattern to keep Table workflows readable, rerunnable, and easy to debug.
 
-## Recommended design pattern
+## Recommended pattern
 
 1. Put source data in text columns.
 2. Add one computed column per logical step.
 3. Map every computed column to explicit source columns.
-4. Keep assertions and score columns close to the outputs they evaluate.
+4. Keep checks and score columns close to the outputs they evaluate.
 5. Rerun stale cells before reading the score.
 6. Save versions at meaningful checkpoints.
-7. Use Analytics to debug request-level behavior.
+7. Use Analytics when you need request-level debugging.
 
-## Page map
-
-<CardGroup cols={2}>
-  <Card title="Sheets" icon="table-cells" href="/features/tables/sheets">
-    Import data, add rows, manage sheets, and scope work by sheet.
-  </Card>
-  <Card title="Columns" icon="columns-3" href="/features/tables/columns">
-    Configure columns, mappings, filters, sorting, composition, and column runs.
-  </Card>
-  <Card title="Column Types" icon="brackets-curly" href="/features/tables/column-types">
-    Reference the supported Table column types.
-  </Card>
-  <Card title="Scoring" icon="gauge" href="/features/tables/scoring">
-    Configure and recalculate sheet scores.
-  </Card>
-</CardGroup>
