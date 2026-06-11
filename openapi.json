@@ -14057,7 +14057,7 @@
         }
       }
     },
-    "/api/public/v2/requests/analytics/custom-charts": {
+    "/api/public/v2/requests/analytics/custom-analytics": {
       "post": {
         "summary": "Request Analytics Custom Queries",
         "operationId": "getRequestAnalyticsCustomQueries",

@@ -206,7 +206,7 @@
                   "reference/search-request-logs",
                   "reference/search-request-suggestions",
                   "reference/request-analytics",
-                  "reference/request-analytics-custom-charts",
+                  "reference/request-analytics-custom-analytics",
                   "reference/log-request",
                   "reference/track-prompt",
                   "reference/track-score",
