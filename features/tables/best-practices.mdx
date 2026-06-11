@@ -1,158 +1,157 @@
 ---
-title: "Best Practices"
-description: "Recommended patterns for building reliable Tables for prompt evaluation, backtesting, scoring, and batch workflows."
+title: "Table Design Patterns"
+description: "Practical patterns for structuring rows, columns, sources, scoring, and reruns in Tables."
 icon: "sparkles"
 ---
 
-Use Tables as the primary surface for new evaluation and dataset workflows. A good Table is easy to scan, cheap to rerun, and explicit about what each column represents.
+This page is a checklist for building Tables that are easy to run, review, and maintain.
 
-<Frame>
-  <img src="/images/tables/polished/05-table-start.jpg" alt="Table workspace with rows, columns, score, import, export, analytics, history, and sheet controls" />
-</Frame>
+## Table shape
 
-## Start with a clear Table shape
-
-Name the Table after the decision it supports, not the mechanism that created it.
+Name the Table after the workflow or decision it supports.
 
 Good names:
 
 - `Support Bot Regression Set`
-- `Model Comparison: Billing Assistant`
+- `Billing Assistant Prompt Backtest`
 - `RAG Ground Truth QA`
-- `Prod Backtest: Refund Policy Prompt`
+- `Refund Policy Request Import`
 
-Avoid names like `Untitled Table`, `June test`, or `eval v2`. Those do not tell a teammate what the Table proves.
+A useful Table has one clear purpose. If the rows need different inputs, different scoring, or different owners, split the work into another sheet or another Table.
 
-## Organize columns left to right
+## Row pattern
 
-Put stable inputs on the left and computed outputs on the right.
+Each row should be one runnable example.
 
-1. **Input columns**: user message, context, expected answer, labels, metadata, or scenario tags.
-2. **Prompt output columns**: outputs from prompt templates, direct LLM calls, or model variants.
-3. **Transformation columns**: code, extraction, parsing, or normalization.
-4. **Evaluation columns**: comparisons, LLM-as-judge checks, boolean assertions, or numeric scores.
-5. **Notes columns**: reviewer comments, triage status, owner, or next action.
-
-This keeps dependencies predictable. If a computed column depends on another computed column, place the dependency earlier in the sheet.
-
-## Use presets when they match the job
-
-Start from a preset when the workflow is already clear. Presets reduce setup work and help teammates understand the intent of the Table.
-
-<Frame>
-  <img src="/images/tables/polished/03-table-presets.jpg" alt="Table creation presets for model comparison, ground truth checks, structure checks, custom prompt flows, and blank tables" />
-</Frame>
-
-Use **Blank table** only when you need a custom shape or you are exploring the right workflow.
-
-## Import data where it already lives
-
-Use CSV upload for curated test sets and request-history import for real production or staging traffic.
-
-<Frame>
-  <img src="/images/tables/polished/06-upload-menu.jpg" alt="Upload menu for importing CSV files or request history into Tables" />
-</Frame>
-
-For request-history imports:
-
-- Filter before importing so the Table is focused.
-- Include metadata fields that explain the row, such as environment, route, user segment, or experiment tag.
-- Import enough examples to catch regressions, but keep the Table small enough that reruns stay fast.
-- Preserve the request or trace context when you need to debug failures later.
-
-<Frame>
-  <img src="/images/tables/polished/07-request-history-import.jpg" alt="Request history import dialog for Tables" />
-</Frame>
-
-## Keep rows meaningful
-
-Each row should represent one test case, request, scenario, or batch item. Add columns that make the row self-explanatory:
-
-| Column | Why it helps |
+| Row source | Use it for |
 | --- | --- |
-| `scenario` | Groups rows by user intent or behavior class. |
-| `expected_answer` | Makes ground-truth checks explicit. |
-| `source_request_id` | Links imported cases back to observability. |
-| `severity` | Prioritizes regressions and known edge cases. |
-| `owner` | Makes follow-up work actionable. |
+| CSV upload | Curated test sets, benchmark rows, manually labeled examples. |
+| Request history import | Production or staging traffic, real user prompts, regressions from observability. |
+| Manual entry | Small experiments, edge cases, reviewer-created examples. |
 
-## Make scoring explicit
-
-Configure a score for the sheet before using a Table as a release gate or regression signal.
+For imported request history, filter first. A focused Table is easier to rerun and review than a broad import of unrelated traffic.
 
 <Frame>
-  <img src="/images/tables/polished/08-score-details.jpg" alt="Score details panel for a Table sheet" />
+  <img src="/images/tables/polished/03-request-history-import-full.png" alt="Request-history import dialog used to filter and select requests before adding rows to a Table" />
 </Frame>
 
-Recommended scoring patterns:
+## Column pattern
 
-- Use boolean scoring for pass/fail checks, assertions, and exact-match style tests.
-- Use numeric scoring when multiple quality dimensions should contribute to an aggregate score.
-- Use custom scoring only when the default column-based score cannot represent the decision you need.
-- Keep score columns separate from reviewer notes so the score can be recalculated reliably.
+Keep the sheet readable from left to right.
 
-## Rerun intentionally
+1. **Inputs**: user message, context, expected answer, labels, metadata.
+2. **Prompt outputs**: Prompt Template columns, model variants, generated responses.
+3. **Transformations**: code, parsing, extraction, normalization.
+4. **Checks**: comparisons, assertions, boolean checks, numeric scores.
+5. **Review fields**: notes, owner, status, next action.
 
-Editing an input, prompt, or computed-column configuration can make dependent cells stale. Recalculate only the rows and columns you need while iterating, then rerun the full sheet before using the result for a release decision.
-
-For API-driven workflows, use Table operations to queue recalculation, poll progress, and cancel long-running work when needed.
-
-## Use versions as checkpoints
-
-A Table sheet version is a checkpoint of the sheet's structure and data. Save or inspect versions around important changes:
-
-- After importing a new dataset or request-history slice.
-- Before changing prompt versions or model settings.
-- After a large recalculation completes.
-- Before using a score in CI, release review, or reporting.
+Computed columns should sit after the columns they depend on.
 
 <Frame>
-  <img src="/images/tables/polished/09-version-history.jpg" alt="Version history for a Table sheet" />
+  <img src="/images/tables/polished/06-column-types.png" alt="A Table with input columns followed by computed prompt, code, and quality columns" />
 </Frame>
 
-## Use analytics for execution debugging
+## Source-mapping pattern
 
-Tables connect generated cells back to request metrics. Use analytics when you need to understand cost, latency, token usage, model behavior, or request-level failures.
+Prompt Template columns should map every template variable to a source column.
+
+When configuring a Prompt Template column:
+
+1. Open **Configure column**.
+2. Review the input variables from the prompt.
+3. Map each variable to a source column.
+4. Leave no required input unmapped before running the column.
 
 <Frame>
-  <img src="/images/tables/polished/10-analytics.jpg" alt="Analytics view opened from a Table" />
+  <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template source mappings in a Table column configuration panel" />
 </Frame>
 
-## Prefer Tables over legacy Datasets and Reports
+Use source mappings instead of copying values into prompts manually. Mappings make dependencies explicit and let Tables mark stale cells when inputs change.
 
-For new work, do not create a separate Dataset, Evaluation pipeline, and Report unless you are maintaining an existing legacy workflow. Tables combine those concepts into one versioned surface:
+## Composition pattern
 
-- Table rows replace dataset rows.
-- Text columns replace dataset fields.
-- Computed columns replace evaluation steps.
-- Recalculation replaces report runs.
-- Sheet scoring replaces report score cards.
-- Sheet versions replace separate dataset and report histories.
+Use **Composition** when a workflow should reuse another sheet, source column, or intermediate result.
 
-See [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets) for a detailed mapping.
+Composition is useful when:
 
-## API best practices
+- Multiple sheets need the same upstream output.
+- You want to isolate edge-case generation from evaluation.
+- You need a reusable workflow step without duplicating columns.
+- A downstream column should copy values from a stable source.
 
-When automating Tables through the REST API:
+<Frame>
+  <img src="/images/tables/polished/12-composition.png" alt="Composition column configuration that reuses source values in a Table workflow" />
+</Frame>
 
-- Create Tables in the right folder with `folder_id` so they are discoverable.
-- Treat cursor values as opaque when listing tables, sheets, columns, rows, and operations.
-- Use CSV import for prepared data and request-log import for historical traffic.
-- Add rows in small batches instead of building one very large request.
-- Poll operation endpoints for imports and recalculations before reading final results.
-- Store Table, sheet, column, operation, and version IDs in your own system when you need stable automation.
+## Rerun pattern
+
+Treat amber stale cells as work that needs to be refreshed.
+
+A cell can become stale when you change:
+
+- An input value.
+- A Prompt Template configuration.
+- A source mapping.
+- A dependency column.
+- A scoring configuration.
+
+During iteration, rerun the smallest useful scope: one cell, one computed column, or stale cells only. Before using a Table for a release or report, rerun the full workflow that matters.
+
+<Frame>
+  <img src="/images/tables/polished/13-stale-rerun.png" alt="A stale Table cell showing that dependent work should be rerun" />
+</Frame>
+
+## Scoring pattern
+
+Configure scoring around the columns that answer the decision you care about.
+
+| Scoring mode | Use it when |
+| --- | --- |
+| **Auto detect** | Score columns already produce obvious boolean or numeric values. |
+| **Boolean** | Checks pass or fail. |
+| **Numeric** | Scores are numbers and should be averaged or compared. |
+| **Custom code** | The score needs custom aggregation logic. |
+
+Keep score columns separate from reviewer notes. Notes are useful for humans, but score columns should be predictable enough to recalculate.
+
+<Frame>
+  <img src="/images/tables/polished/16-score-configuration.png" alt="Score configuration with score columns and scoring mode" />
+</Frame>
+
+## History and analytics pattern
+
+Use **History** to compare important changes. Check history after imports, prompt changes, scoring changes, and full reruns.
+
+Use **Analytics** when you need request-level debugging: latency, cost, tokens, model behavior, request status, or trace context for Table-generated work.
+
+<Frame>
+  <img src="/images/tables/polished/18-analytics.png" alt="Analytics drawer for request-level debugging from a Table" />
+</Frame>
+
+## API pattern
+
+Use the API for repeatable workflows:
+
+1. Create or find the Table.
+2. Create or find the sheet.
+3. Import CSV data or request logs.
+4. Create columns.
+5. Add rows if needed.
+6. Queue a recalculation operation.
+7. Poll the operation status.
+8. Read the score, rows, cells, or versions.
 
 <CardGroup cols={2}>
-  <Card title="Create Table" icon="plus" href="/reference/tables-create">
-    Create a new Table from the public API.
-  </Card>
-  <Card title="Import file" icon="file-arrow-up" href="/reference/table-sheet-imports-file-create">
-    Import a CSV into an existing Table sheet.
+  <Card title="Import a CSV" icon="file-arrow-up" href="/reference/table-sheet-imports-file-create">
+    Import prepared data into a sheet.
   </Card>
   <Card title="Import request logs" icon="history" href="/reference/table-sheet-imports-request-logs-create">
-    Import request history into a Table sheet.
+    Build rows from request history.
   </Card>
-  <Card title="Create operation" icon="rotate" href="/reference/table-sheet-operations-create">
-    Queue recalculation for selected rows, columns, or cell statuses.
+  <Card title="Recalculate cells" icon="rotate" href="/reference/table-sheet-cells-recalculate-batch">
+    Rerun selected cells programmatically.
+  </Card>
+  <Card title="Read sheet score" icon="chart-line" href="/reference/table-sheet-score-get">
+    Fetch the current score for automation or CI.
   </Card>
 </CardGroup>

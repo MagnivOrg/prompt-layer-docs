@@ -1,132 +1,207 @@
 ---
 title: "Overview"
-description: "Use Tables to build datasets, run prompt experiments, evaluate outputs, score results, and preserve versions in one workspace-native surface."
+description: "Build, import, configure, run, score, and inspect Tables in PromptLayer."
 icon: "table"
 ---
 
-Tables are PromptLayer's workspace-native way to build, run, and evaluate prompt workflows at scale. A Table combines dataset rows, prompt outputs, scoring columns, request history imports, analytics, and version history in one spreadsheet-like interface.
+Tables are the workspace surface for running prompt workflows over rows of examples. A Table sheet has:
 
-Use Tables for new evaluation, report, dataset, backtesting, and batch workflows. Legacy Evaluations, Reports, and Datasets are still documented for existing projects, but new work should start in Tables.
+- **Rows**: examples, requests, test cases, or batch items.
+- **Text columns**: editable inputs, labels, expected answers, metadata, or notes.
+- **Computed columns**: prompt templates, code, comparisons, assertions, extraction steps, composition, and other runnable work.
+- **Sheet controls**: import, export, scoring, analytics, history, row controls, and sheet tabs.
 
-<Frame>
-  <img src="/images/tables/polished/01-tables-home.jpg" alt="Tables in a PromptLayer workspace" />
-</Frame>
+Use this page as the product walkthrough for the Table UI.
 
-## What you can do
+## 1. Start a Table
 
-- Create a Table from a preset, a prompt, a CSV file, request history, or a blank sheet.
-- Use text columns for inputs, expected outputs, labels, metadata, or notes.
-- Add computed columns that run prompt templates, LLM calls, code, comparisons, composition logic, or scoring.
-- Import production and staging traffic from request history to backtest against real examples.
-- Recalculate stale cells after editing inputs, prompts, or column configuration.
-- Track request metrics such as cost, latency, tokens, request IDs, and trace IDs for prompt-generated cells.
-- Configure a score for the sheet and compare quality across versions.
-- Save and inspect sheet versions as your data, columns, scoring configuration, imports, and execution outputs change.
+A new Table opens with one sheet, one text column, and one row. The empty state gives you three starting points:
 
-## Create a Table
-
-From the workspace home page, click **New** and choose **Table**.
+1. **Create from a prompt**: set up prompt inputs, an output column, and evaluation checks.
+2. **Import request history**: select logged requests and add them as rows.
+3. **Start blank**: build the sheet manually from rows and columns.
 
 <Frame>
-  <img src="/images/tables/polished/02-new-table-menu.jpg" alt="Create a new Table from the New menu" />
+  <img src="/images/tables/polished/01-start-table.png" alt="A new Table with options to create from a prompt, import request history, or start blank" />
 </Frame>
 
-The creation dialog gives you a few starting points:
+## 2. Bring data into the sheet
 
-| Preset | Use it when |
-| --- | --- |
-| **Model comparison** | You want to run one prompt across multiple models and compare outputs. |
-| **Ground truth check** | You have trusted answers and want to validate model outputs against them. |
-| **Structure check** | You need to verify that outputs follow the requested format. |
-| **Custom** | You want prompt inputs, a connected prompt output column, and evaluation checks that you configure yourself. |
-| **Blank table** | You want to build the sheet manually from rows and columns. |
+Use **Upload** when your rows already exist outside the Table.
+
+The upload menu supports:
+
+- **From computer**: upload a CSV file.
+- **From request history**: select existing logged requests.
 
 <Frame>
-  <img src="/images/tables/polished/03-table-presets.jpg" alt="Table creation presets" />
+  <img src="/images/tables/polished/02-upload-menu.png" alt="Upload menu with CSV upload and request history import options" />
 </Frame>
 
-## Build from a prompt
+### Import request history
 
-For most prompt-evaluation workflows, start with **Create from a prompt** or choose the **Custom** preset. This sets up prompt inputs, output columns, and evaluation checks together so you can iterate without stitching together separate datasets and reports.
+Choose **From request history** to open the request-history import dialog. Use the date range, search bar, filters, and request grid to narrow the requests before adding them to the sheet.
 
 <Frame>
-  <img src="/images/tables/polished/04-custom-preset.jpg" alt="Custom prompt-based Table preset" />
+  <img src="/images/tables/polished/03-request-history-import-full.png" alt="Add from Request History dialog with search, filters, date range, request grid, pagination, and selectable rows" />
 </Frame>
 
-## Build manually
+After selecting rows, click **Add to Sheet**. Each selected request becomes a row in the Table.
 
-A blank Table starts with a sheet, one text column, and one row. Use text columns for source data, then add computed columns for the work you want PromptLayer to run.
+## 3. Export or continue editing
+
+The Table toolbar keeps import and export close to the sheet:
+
+- **Upload** brings in CSV files or request history.
+- **Download** exports the current sheet.
+- **Tour** opens an in-product walkthrough.
+- **Score**, **Analytics**, and **History** open the right-side review tools.
 
 <Frame>
-  <img src="/images/tables/polished/05-table-start.jpg" alt="Blank Table with rows, columns, and sheet controls" />
+  <img src="/images/tables/polished/04-tour-import-export.png" alt="Table toolbar showing import, export, score, analytics, and history controls" />
 </Frame>
 
-## Import data
+## 4. Add columns
 
-Tables replace most dataset setup flows. Upload a CSV when you already have a prepared test set, or import request history when you want to backtest against real logged traffic.
+Columns define what each row stores or produces. Click **Add Column** to add a new field to the sheet.
+
+Use columns in this order when possible:
+
+1. Input text columns.
+2. Prompt or workflow output columns.
+3. Comparison, assertion, parsing, extraction, or scoring columns.
+4. Notes or reviewer columns.
 
 <Frame>
-  <img src="/images/tables/polished/06-upload-menu.jpg" alt="Upload menu for importing CSV files or request history into a Table" />
+  <img src="/images/tables/polished/05-add-columns.png" alt="Add Column control in a Table sheet" />
 </Frame>
 
-Request history import lets you filter, search, and select existing requests before adding them as rows.
+## 5. Use text and computed columns
+
+Text columns hold editable values. Computed columns run work for each row and show an icon for the type of step.
+
+Common computed column types include:
+
+- **Prompt Template** for running a PromptLayer prompt over each row.
+- **Code Execution** for custom row-level logic.
+- **Composition** for pulling reusable work from another sheet or source column.
+- **Comparison**, **Condition**, **Contains**, **Regex**, and numeric distance checks.
+- **LLM Assertion** and **AI Data Extraction** for model-judged checks.
+- **JSON Path**, **XML Path**, **Regex Extraction**, parsing, count, min/max, coalesce, combine, and diff helpers.
 
 <Frame>
-  <img src="/images/tables/polished/07-request-history-import.jpg" alt="Import request history into a Table" />
+  <img src="/images/tables/polished/06-column-types.png" alt="Table columns showing text inputs and computed prompt, code, quality, and edge-case columns" />
 </Frame>
 
-## Score results
+## 6. Configure a computed column
 
-Use the score panel to configure how a sheet is scored. Tables can auto-detect boolean or numeric scores, use selected columns, and recalculate score data as cells update.
+Open a column's menu and choose **Configure column** to edit its settings. Prompt Template columns expose input variables that must be mapped to source columns.
+
+In this example, the Prompt Template column reads values from the `Customer message` column. Source mappings become dependencies, so each row knows which input values to use when the column runs.
 
 <Frame>
-  <img src="/images/tables/polished/08-score-details.jpg" alt="Score configuration panel in a Table" />
+  <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template column configuration showing input variables mapped to source columns" />
 </Frame>
 
-## Review history and analytics
-
-Tables preserve version history as your sheet changes. Use this to compare changes over time, restore confidence in edits, and audit what changed during an experiment.
+If a variable is unmapped, open the source selector.
 
 <Frame>
-  <img src="/images/tables/polished/09-version-history.jpg" alt="Table version history" />
+  <img src="/images/tables/polished/08-source-selector.png" alt="Source selector for an unmapped Prompt Template input variable" />
 </Frame>
 
-The actions menu gives you quick access to import, export, analytics, history, and tour controls.
+Choose the source column for the variable. The mapping is saved as a dependency for that computed column.
 
 <Frame>
-  <img src="/images/tables/polished/11-actions-menu.jpg" alt="More actions menu for Tables" />
+  <img src="/images/tables/polished/09-source-assignment.png" alt="Assigning a source column to a Prompt Template input variable" />
 </Frame>
 
-Analytics is available directly from the Table so you can inspect requests associated with table execution.
+## 7. Add rows
+
+Each row is one example to run through the Table. Add rows from the row control at the bottom of the sheet, then fill the input columns.
 
 <Frame>
-  <img src="/images/tables/polished/10-analytics.jpg" alt="Analytics modal opened from a Table" />
+  <img src="/images/tables/polished/10-add-rows.png" alt="Add row control in a Table sheet" />
 </Frame>
 
-## How Tables map to legacy workflows
+## 8. Use multiple sheets
 
-| Legacy workflow | Tables replacement |
-| --- | --- |
-| Dataset from CSV | Upload the CSV directly into a Table sheet. |
-| Dataset from request history | Import request history into a Table sheet. |
-| Evaluation pipeline | Add prompt, code, comparison, and score columns to a Table. |
-| Report run | Recalculate the Table cells or queue a sheet operation. |
-| Report score card | Configure the sheet score in the score panel or Tables API. |
-| Batch run | Add rows to a Table and recalculate the output columns. |
+A Table can contain multiple sheets. Use sheets when related workflows need different inputs, columns, or test sets but should live in the same Table.
 
-## Next steps
+<Frame>
+  <img src="/images/tables/polished/11-multiple-sheets.png" alt="Multiple sheet tabs in a Table" />
+</Frame>
+
+## 9. Compose a workflow
+
+Composition columns let one sheet reuse work from another sheet or source column. Use them when you want a workflow to share a reusable intermediate step instead of copying its logic into every sheet.
+
+<Frame>
+  <img src="/images/tables/polished/12-composition.png" alt="Composition column configuration that copies values from another source column" />
+</Frame>
+
+## 10. Rerun stale work
+
+When an input value or column configuration changes, dependent outputs can become stale. Stale cells are highlighted in amber so you can see what should be rerun before trusting the result.
+
+<Frame>
+  <img src="/images/tables/polished/13-stale-rerun.png" alt="A stale computed cell highlighted in amber" />
+</Frame>
+
+Use the run controls to update work:
+
+- Run the table to refresh stale or pending work across the sheet.
+- Run a computed column from its header to update one output column.
+- Stop a running column from the column menu if needed.
+
+<Frame>
+  <img src="/images/tables/polished/14-run-table.png" alt="Run controls for refreshing Table work" />
+</Frame>
+
+## 11. Score the sheet
+
+Click **Score** when you want one summary signal for the sheet.
+
+<Frame>
+  <img src="/images/tables/polished/15-open-scoring.png" alt="Score button in the Table toolbar" />
+</Frame>
+
+In the score panel, choose the score columns and scoring mode. Supported modes include **Auto detect**, **Boolean**, **Numeric**, and **Custom code**. Use **Recalculate** after changing the scoring configuration.
+
+<Frame>
+  <img src="/images/tables/polished/16-score-configuration.png" alt="Score configuration panel with score columns, scoring mode, and average score" />
+</Frame>
+
+## 12. Review history
+
+Click **History** to inspect saved versions and score changes. Use history before and after meaningful edits: imports, prompt changes, column configuration changes, or full reruns.
+
+<Frame>
+  <img src="/images/tables/polished/17-open-history.png" alt="History button and version-history walkthrough in a Table" />
+</Frame>
+
+## 13. Open analytics
+
+Click **Analytics** to inspect request-level data for Table-generated work. The analytics view includes locked Table and sheet filters, so you can review the requests tied to the current sheet.
+
+<Frame>
+  <img src="/images/tables/polished/18-analytics.png" alt="Analytics drawer opened from a Table with locked Table and sheet filters" />
+</Frame>
+
+## API references
+
+Use the Tables API when you want to automate these same actions.
 
 <CardGroup cols={2}>
-  <Card title="Tables best practices" icon="sparkles" href="/features/tables/best-practices">
-    Learn how to structure Tables for prompt evaluation, backtesting, and production-quality iteration.
-  </Card>
-  <Card title="Migrate from Evaluations and Datasets" icon="arrows-rotate" href="/features/tables/migrate-from-evaluations-and-datasets">
-    Move legacy Dataset, Evaluation, and Report workflows into Tables.
-  </Card>
-  <Card title="Create Table API" icon="code" href="/reference/tables-create">
-    Create Tables programmatically from your workspace API key.
+  <Card title="Create a Table" icon="plus" href="/reference/tables-create">
+    Create a Table programmatically.
   </Card>
   <Card title="Import request logs" icon="history" href="/reference/table-sheet-imports-request-logs-create">
-    Import production or staging traffic into an existing Table sheet.
+    Add request history to a Table sheet.
+  </Card>
+  <Card title="Create a column" icon="columns-3" href="/reference/table-sheet-columns-create">
+    Add text or computed columns to a sheet.
+  </Card>
+  <Card title="Run an operation" icon="rotate" href="/reference/table-sheet-operations-create">
+    Queue recalculation work for rows, columns, or stale cells.
   </Card>
 </CardGroup>
