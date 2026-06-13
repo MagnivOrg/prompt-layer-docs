@@ -4,6 +4,30 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## June 13, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Trace Search API**
+New structured search endpoint for querying traces with flexible AND/OR filter combinations across trace-level and span-level attributes.
+- Supports both page-based and cursor-based pagination for large result sets
+- Available via dashboard (`/api/dashboard/v2/workspaces/<workspace_id>/traces/search`) and public API (`/api/public/v2/traces/search`)
+- Query traces by metadata, tags, duration, timestamps, and nested span properties
+- Filter groups support complex nested logic with `AND`, `OR`, `SPAN_AND`, and `SPAN_OR` operators
+
+#### Improvements
+
+- Concurrent object retrieval significantly speeds up request log data fetches when importing to Smart Tables
+- Bulk span creation endpoint now triggers trace ingestion pipeline when `close_after` flag is set
+- Trace closure records now track full ingestion lifecycle with new status transitions
+- JSON string attributes containing nested objects are automatically parsed and indexed for structured search
+- Deep parsing of serialized dictionaries in trace attributes enables filtering on nested fields
+
+---
+
+
 ## June 12, 2026
 
 ### Deployment 1
