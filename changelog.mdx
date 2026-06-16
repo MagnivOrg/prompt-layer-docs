@@ -34,6 +34,33 @@ General performance and stability improvements
 
 ---
 
+
+### Deployment 4
+
+#### New Features
+
+**Tools and A/B Tests in @-mentions**
+You can now @-mention `Tools` and `A/B Tests` directly in the PromptLayer dashboard when creating content or annotations.
+- Quickly reference tools and experiments without switching contexts
+- Streamlines workflow when documenting test configurations
+
+**OpenClaw Integration**
+Added native support for OpenClaw framework traces and spans in the observability platform.
+- Tool executions from OpenClaw appear as `CODE_EXECUTION` nodes
+- Agent sessions display as `LLM Session` spans
+- Automatic extraction of tool names and LLM call metadata
+
+#### Improvements
+
+- Request logs structured search filters now correctly apply to the grid view
+- Tool definitions are now properly persisted when saving configurations
+- Request history header checkbox selects only the current page instead of all results
+- Recent tool call results (up to 4) are now included in chat history for better context
+- Custom analytics charts with percentile metrics now sort correctly by the selected percentile value
+- Analytics charts with distinct count metrics display proper ordering in grouped views
+
+---
+
 ## June 15, 2026
 
 ### Deployment 1
