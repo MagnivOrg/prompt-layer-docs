@@ -13,6 +13,17 @@ General performance and stability improvements
 ---
 
 
+
+### Deployment 2
+
+#### Improvements
+- Slack account linking now includes a browser-based fallback flow when email addresses don't match between Slack and PromptLayer
+- Smart Tables cell execution is now more resilient to worker failures, automatically restoring previous values when requeuing interrupted cells
+- Smart Tables cells now send periodic heartbeat signals during long-running executions to maintain execution locks
+- Improved handling of blocked Smart Tables executions with automatic reconciliation of stale blocker relationships
+
+---
+
 ## June 23, 2026
 
 ### Deployment 1
