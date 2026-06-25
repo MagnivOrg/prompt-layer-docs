@@ -4,6 +4,341 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## June 25, 2026
+
+### Deployment 1
+
+#### Improvements
+
+- Updated model lifecycle dates across multiple providers to reflect current availability windows
+- Removed deprecated Gemini 2.0 and Claude 4.0 model variants that reached end of life
+- Streamlined trace processing for faster request log ingestion
+- Enhanced Smart Table workflow with improved sheet selection interface
+- Added Wrangler Slack integration announcement to product updates modal
+
+---
+
+
+## June 24, 2026
+
+### Deployment 1
+
+General performance and stability improvements
+
+---
+
+
+
+### Deployment 2
+
+#### Improvements
+- Slack account linking now includes a browser-based fallback flow when email addresses don't match between Slack and PromptLayer
+- Smart Tables cell execution is now more resilient to worker failures, automatically restoring previous values when requeuing interrupted cells
+- Smart Tables cells now send periodic heartbeat signals during long-running executions to maintain execution locks
+- Improved handling of blocked Smart Tables executions with automatic reconciliation of stale blocker relationships
+
+---
+
+
+### Deployment 3
+
+General performance and stability improvements
+
+---
+
+
+### Deployment 4
+
+#### Improvements
+- Analytics charts now display large numbers with uppercase suffixes (K, M, B, T) for improved readability
+- Reduced memory usage when restoring previously computed cells in Smart Tables
+
+---
+
+## June 23, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Slack Integration for Wrangler AI**
+Connect your organization's Slack workspace to run Wrangler AI conversations directly in Slack channels and threads.
+- Mention the bot in any channel or reply in existing threads to interact with your PromptLayer workspace
+- View charts, search prompts, and execute workflows without leaving Slack
+- Organization owners can connect/disconnect Slack from workspace settings
+
+**Screenshot Previews in Registry**
+Entity cards in the unified registry now display visual previews of prompts, workflows, datasets, and other resources.
+- Automatically generated screenshots show a preview of each entity's content
+- Previews update when entities are modified
+- Hover over cards to see full previews before opening
+
+#### Improvements
+
+- Added breadcrumb navigation to smart table headers for easier workspace navigation
+- Enhanced tool call widget rendering in Wrangler AI conversations
+- Improved custom model parameter validation and editor controls
+- Fixed smart table cell state synchronization during batch operations
+- Optimized entity preview generation timeouts
+
+---
+
+
+
+### Deployment 2
+
+General performance and stability improvements
+
+---
+
+
+### Deployment 3
+
+#### Improvements
+- Entity preview images in registries now load asynchronously to prevent blocking the list from rendering
+- AI analytics tool can now return exact metric values for specific aggregations like counts and averages
+- Preview generation for registry entities is now opt-in via query parameter to improve initial load performance
+
+---
+
+## June 22, 2026
+
+### Deployment 1
+
+#### Improvements
+- Media variables in prompt templates are now optional and will be omitted from requests when not provided, instead of causing template execution to fail
+- Analytics table scrolling performance has been improved for smoother navigation through large datasets
+
+---
+
+
+
+### Deployment 2
+
+General performance and stability improvements
+
+---
+
+## June 21, 2026
+
+### Deployment 1
+
+General performance and stability improvements
+
+---
+
+
+## June 19, 2026
+
+### Deployment 1
+
+General performance and stability improvements
+
+---
+
+
+
+### Deployment 2
+
+#### Improvements
+- Analyze similar logs button now correctly applies all active filters from the request logs view
+
+---
+
+## June 18, 2026
+
+### Deployment 1
+
+#### Improvements
+
+- Fixed prompt version comparison to correctly show added/removed lines in diff view
+- Improved chart rendering stability when resizing or switching between floating and fullscreen layouts
+- Enhanced analytics chart memory management to prevent resource leaks during layout transitions
+
+---
+
+
+## June 17, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Vibe Chat Tool History Search**
+Vibe Chat can now search and retrieve data from previously executed tools within a conversation, enabling more contextual responses based on past actions.
+- Search across current session or recent sessions for specific tool executions
+- Filter by tool name, query text, or presence of chart data
+- Automatically includes relevant past tool results when generating responses
+
+#### Improvements
+
+- Analytics graphs in Vibe Chat now include full chart data for easier reference and reuse
+- Tool execution results are better organized and preserved across conversation turns
+- Improved reliability of analytics chart data retrieval in Vibe Chat
+
+---
+
+
+## June 16, 2026
+
+### Deployment 1
+
+#### Improvements
+- Fixed false-positive "missing or empty input variables" errors in the `Playground` when using template variables
+- Resolved chart rendering issues in analytics dashboards
+
+---
+
+
+
+### Deployment 2
+
+General performance and stability improvements
+
+---
+
+
+### Deployment 3
+
+#### Improvements
+
+- Fixed prompt version diff view to correctly show added and removed lines
+- Improved error messages in `Smart Tables` to be more clear and actionable
+- Enhanced `Analytics` chart support to include histogram, heatmap, and hierarchy visualizations for live queries
+- Better error handling for `Smart Tables` cell execution failures
+
+---
+
+
+### Deployment 4
+
+#### New Features
+
+**Tools and A/B Tests in @-mentions**
+You can now @-mention `Tools` and `A/B Tests` directly in the PromptLayer dashboard when creating content or annotations.
+- Quickly reference tools and experiments without switching contexts
+- Streamlines workflow when documenting test configurations
+
+**OpenClaw Integration**
+Added native support for OpenClaw framework traces and spans in the observability platform.
+- Tool executions from OpenClaw appear as `CODE_EXECUTION` nodes
+- Agent sessions display as `LLM Session` spans
+- Automatic extraction of tool names and LLM call metadata
+
+#### Improvements
+
+- Request logs structured search filters now correctly apply to the grid view
+- Tool definitions are now properly persisted when saving configurations
+- Request history header checkbox selects only the current page instead of all results
+- Recent tool call results (up to 4) are now included in chat history for better context
+- Custom analytics charts with percentile metrics now sort correctly by the selected percentile value
+- Analytics charts with distinct count metrics display proper ordering in grouped views
+
+---
+
+## June 15, 2026
+
+### Deployment 1
+
+General performance and stability improvements
+
+---
+
+
+
+### Deployment 2
+
+#### New Features
+
+**Analytics Custom Charts**
+Custom analytics charts now support multiple metrics per chart, allowing you to visualize several data series simultaneously for richer insights.
+- Create charts with multiple metrics (sum, avg, min, max, percentile) in a single view
+- Combine time-series data with multi-metric analysis
+- Export multi-series charts with full metric labels
+
+**Enhanced Wrangler Chat Experience**
+The Wrangler chat interface now supports fullscreen mode and multi-chat sessions for improved productivity.
+- Switch between multiple chat sessions without losing context
+- Expand chat to fullscreen for focused analysis
+- Create custom analytics charts directly from chat conversations
+
+#### Improvements
+
+- Smart Table row deletion now handles sparse rows correctly
+- Analytics chart export includes proper metric-specific units for each series
+- Trace-to-dataset imports now preserve consistent column ordering
+- Smart Table composition column staleness detection improved for virtual rows
+- Chat session history properly syncs when switching between conversations
+
+---
+
+
+### Deployment 3
+
+#### Improvements
+- Faster Smart Table imports from request history with improved bulk data loading
+- Enhanced Smart Table request import reliability with automatic retry logic for temporary data availability issues
+
+---
+
+
+### Deployment 4
+
+#### Improvements
+- Analytics charts now support distinct count metrics for tracking unique metadata values (e.g., unique sessions or user IDs)
+- Custom analytics charts can now use weekly or monthly time buckets for long-range trend analysis
+- Chart view selection is now preserved when switching between different analytics artifacts
+- Analytics date range handling improved for weekly and monthly bucket intervals
+
+---
+
+## June 13, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Trace Search API**
+New structured search endpoint for querying traces with flexible AND/OR filter combinations across trace-level and span-level attributes.
+- Supports both page-based and cursor-based pagination for large result sets
+- Available via dashboard (`/api/dashboard/v2/workspaces/<workspace_id>/traces/search`) and public API (`/api/public/v2/traces/search`)
+- Query traces by metadata, tags, duration, timestamps, and nested span properties
+- Filter groups support complex nested logic with `AND`, `OR`, `SPAN_AND`, and `SPAN_OR` operators
+
+#### Improvements
+
+- Concurrent object retrieval significantly speeds up request log data fetches when importing to Smart Tables
+- Bulk span creation endpoint now triggers trace ingestion pipeline when `close_after` flag is set
+- Trace closure records now track full ingestion lifecycle with new status transitions
+- JSON string attributes containing nested objects are automatically parsed and indexed for structured search
+- Deep parsing of serialized dictionaries in trace attributes enables filtering on nested fields
+
+---
+
+
+## June 12, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Brand Visibility Preset**
+A new evaluation preset that tests whether LLM responses include mentions of your brand or domain across multiple queries and models.
+- Create brand visibility tables by specifying a target domain and test queries
+- Compare how different models mention your brand in their responses
+- Automatically generates AI-powered test queries based on your topic and audience
+- Results are scored based on whether each model's response contains your target domain
+
+#### Improvements
+
+- Skip button added to onboarding flow for faster workspace setup
+- Smart table creation dialog now matches the simplified new item workflow
+- Improved display of aggregate score winners in tables
+- Enhanced aggregate value visualization when viewing score details
+
+---
+
+
 ## June 11, 2026
 
 ### Deployment 1
@@ -16,6 +351,16 @@ icon: "rocket"
 
 ---
 
+
+
+### Deployment 2
+
+#### Improvements
+- Smart Tables default score calculation now intelligently selects quality-focused columns (like evaluations and assertions) while excluding telemetry metrics (latency, cost, tokens)
+- Score sidebar displays helpful guidance when no score is configured instead of showing zero
+- `Static` block now available only in workflows to streamline evaluation builder interface
+
+---
 
 ## June 10, 2026
 
