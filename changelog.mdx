@@ -4,6 +4,41 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## July 01, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Trace Analytics Custom Charts**
+Custom analytics charts are now available for traces, matching the functionality previously available for request logs.
+- Create time-series and breakdown charts for trace-level metrics
+- Group by trace properties like models used, tool names, and prompt IDs
+- Analyze trace costs, tokens, and duration alongside request-level data
+
+**Advanced Filtering for Nested Data**
+The search interface now supports "does not include" operators for nested field filters.
+- Exclude traces or requests based on metadata, attributes, or input variable values
+- Combine inclusion and exclusion logic for more precise queries
+- Available in both the dashboard and API search endpoints
+
+**Span Output Field Filtering**
+Filter traces by span output fields using the new `span_output_keys` and `span_output_values` search fields.
+- Search for specific output keys returned by function calls
+- Filter by output values to identify patterns in agent responses
+- Works with the structured search query builder in the dashboard
+
+#### Improvements
+
+- Search suggestions now fall back to indexed data when real-time results are unavailable
+- Trace filtering suggestions include additional fields like user ID and trace status
+- Chart aggregations support trace-specific duration and token metrics
+- Improved handling of prefix queries for nested attribute keys
+- Better error messaging for trace search failures
+
+---
+
+
 ## June 30, 2026
 
 ### Deployment 1
