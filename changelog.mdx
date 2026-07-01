@@ -70,6 +70,25 @@ Filter traces by span output fields using the new `span_output_keys` and `span_o
 
 ---
 
+
+### Deployment 5
+
+#### New Features
+
+**Public API DELETE Endpoints for Tables**
+Added new DELETE endpoints to the Public API for programmatic management of tables, sheets, and columns.
+- Delete entire tables with `DELETE /api/public/v2/tables/{table_id}`
+- Delete individual sheets with `DELETE /api/public/v2/tables/{table_id}/sheets/{sheet_id}`
+- Delete specific columns with `DELETE /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns/{column_id}`
+- All deletion operations respect workspace permissions and create audit trail entries
+
+#### Improvements
+
+- Improved search suggestion filtering to better match partial text across nested field values
+- Enhanced `Structured Search` to preserve context when editing nested field keys in filter builder
+
+---
+
 ## June 30, 2026
 
 ### Deployment 1
