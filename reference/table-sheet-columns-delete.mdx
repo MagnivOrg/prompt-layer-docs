@@ -1,0 +1,8 @@
+---
+title: "Delete Column"
+openapi: "DELETE /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns/{column_id}"
+---
+
+Delete a column and its cells.
+
+Deleting a column creates a new sheet version. If other columns depend on the deleted column, PromptLayer marks affected downstream cells as stale and returns `stale_count` with the new `version`.
