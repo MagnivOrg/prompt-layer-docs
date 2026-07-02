@@ -139,6 +139,10 @@ RBAC is enabled per organization. When RBAC is disabled, all workspace members r
 
 This secure-by-default approach ensures that when RBAC is enabled, users only get the permissions they need, following the principle of least privilege.
 
+<Note>
+[Enterprise Identity](/why-promptlayer/enterprise-identity/overview) automatically enables RBAC when turned on for an organization (and disables it when Enterprise Identity is turned off). IdP group mappings assign the default roles documented above—custom roles cannot be assigned through Directory Sync in the current release.
+</Note>
+
 ## Managing Roles
 
 Users with the `ADMIN` permission in a workspace can assign roles to members of that workspace. Organization owners can assign roles to members in any workspace within their organization.

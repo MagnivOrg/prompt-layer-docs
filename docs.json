@@ -113,7 +113,18 @@
               "why-promptlayer/shared-workspaces",
               "why-promptlayer/organizations",
               "why-promptlayer/workspaces",
-              "why-promptlayer/rbac"
+              "why-promptlayer/rbac",
+              {
+                "group": "Enterprise Identity",
+                "icon": "id-card",
+                "pages": [
+                  "why-promptlayer/enterprise-identity/overview",
+                  "why-promptlayer/enterprise-identity/setup",
+                  "why-promptlayer/enterprise-identity/provisioning",
+                  "why-promptlayer/enterprise-identity/sign-in-security",
+                  "why-promptlayer/enterprise-identity/audit-log"
+                ]
+              }
             ]
           }
         ]

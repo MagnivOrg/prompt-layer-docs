@@ -1,0 +1,121 @@
+---
+title: "Setup"
+description: "Connect your identity provider to PromptLayer through WorkOS SSO and Directory Sync."
+icon: "plug"
+---
+
+After [Enterprise Identity is enabled](/why-promptlayer/enterprise-identity/overview) for your organization, Owners configure connections from **Organization Settings → Enterprise Identity**.
+
+![Enterprise Identity settings overview](/images/enterprise-identity/ei-org-settings-overview.png)
+
+## WorkOS organization
+
+Each PromptLayer organization maps to one **WorkOS organization**. When Enterprise Identity is enabled, PromptLayer creates or links this automatically in most environments.
+
+<Note>
+**Self-hosted / multi-tenant WorkOS environments:** If multiple WorkOS organizations exist and none is linked yet, Owners see a **Link WorkOS organization** section at the top of Enterprise Identity settings. Select the correct WorkOS org before configuring SSO—linking the wrong one will break sign-in for your IdP.
+</Note>
+
+## Connection section
+
+The **Connection** section shows:
+
+- **SSO connection status** — whether a SAML or OIDC connection is configured and active
+- **Directory Sync status** — whether SCIM provisioning is connected
+- **Protocol** — `saml` or `oidc`, detected after SSO setup
+- Read-only WorkOS identifiers (organization ID, connection ID, directory ID)
+
+### Open the WorkOS Admin Portal
+
+Use the buttons in the Connection section:
+
+| Button | Purpose |
+|--------|---------|
+| **Configure SSO** | Opens WorkOS Admin Portal to set up SAML or OIDC with your IdP |
+| **Configure Directory Sync** | Opens WorkOS Admin Portal to enable SCIM / Directory Sync |
+| **Refresh from WorkOS** | Pulls latest connection and directory status into PromptLayer |
+| **Test SSO** | Starts an SSO test flow in a new tab and reports success or failure |
+
+The Admin Portal is the supported place to upload IdP metadata, configure redirect URLs, set allowed email domains, and enable SCIM. PromptLayer embeds WorkOS Admin Portal links— you do not configure raw SAML endpoints inside PromptLayer itself.
+
+### Protocol reference values
+
+After SSO is configured, PromptLayer displays IdP-facing values based on your protocol.
+
+**SAML**
+
+| Field | Value |
+|-------|-------|
+| ACS URL | `https://api.workos.com/sso/saml/acs` |
+| Entity ID | Your WorkOS organization ID |
+| Metadata URL | `https://api.workos.com/sso/metadata/{connection_id}` |
+
+**OIDC**
+
+| Field | Value |
+|-------|-------|
+| Redirect URI | `https://api.workos.com/sso/oidc/callback` |
+| Client ID | Your WorkOS organization ID |
+| Discovery URL | `https://api.workos.com/sso/oidc/.well-known/openid-configuration` |
+
+<Info>
+PromptLayer SSO runs through WorkOS. Your IdP integrates with WorkOS using standard SAML or OIDC—there is no separate native OIDC integration outside WorkOS.
+</Info>
+
+## Configure SSO with common IdPs
+
+WorkOS supports Okta, Microsoft Entra ID, Google Workspace, OneLogin, and other enterprise IdPs. Follow the in-portal checklist for your provider:
+
+1. Click **Configure SSO** in PromptLayer.
+2. In WorkOS Admin Portal, choose your IdP and complete the setup wizard.
+3. Copy WorkOS-provided values into your IdP (ACS URL, Entity ID, or OIDC redirect URI as applicable).
+4. Upload IdP metadata or enter client credentials in WorkOS.
+5. Return to PromptLayer and click **Refresh from WorkOS**.
+6. Click **Test SSO** and sign in with a test user.
+
+Successful Test SSO writes an audit event and updates connection status to **active**.
+
+![Test SSO success](/images/enterprise-identity/ei-sso-test-success.png)
+
+## Configure Directory Sync (SCIM)
+
+Directory Sync provisions users and groups from your IdP into WorkOS, which forwards events to PromptLayer:
+
+1. Click **Configure Directory Sync** in PromptLayer.
+2. In WorkOS Admin Portal, enable Directory Sync for your IdP (Okta SCIM, Entra provisioning, etc.).
+3. Assign users and **groups** in your IdP to the PromptLayer application.
+4. Return to PromptLayer and click **Refresh from WorkOS**.
+
+Directory status should show **active** when SCIM is connected.
+
+<Warning>
+Group membership drives [group-to-role mappings](/why-promptlayer/enterprise-identity/provisioning#group-mappings). Users provisioned without group assignments may sign in via SSO but have no workspace access until mappings exist or a [default workspace](/why-promptlayer/enterprise-identity/provisioning#default-workspace) is configured.
+</Warning>
+
+## Sign-in policy toggles
+
+The **Sign-in policy** section (documented in [Sign-in policy & break-glass](/why-promptlayer/enterprise-identity/sign-in-security)) controls:
+
+- **SSO enabled** — Allow SSO sign-in for org members
+- **Require SSO** — Block email/password for regular members
+- **JIT provisioning** — Auto-create PromptLayer accounts on first successful SSO login
+
+Recommended order:
+
+1. Complete SSO setup and Test SSO.
+2. Enable **SSO enabled**.
+3. Configure group mappings and default workspace.
+4. Designate **emergency access** Owner and complete MFA setup.
+5. Enable **Require SSO** when ready to enforce.
+
+## Troubleshooting setup
+
+| Symptom | Check |
+|---------|-------|
+| Test SSO fails | IdP metadata, clock skew, allowed email domains in WorkOS, user assigned to app in IdP |
+| Connection stays inactive | **Refresh from WorkOS**; verify WorkOS connection state in Admin Portal |
+| Users sign in but have no workspaces | [Group mappings](/why-promptlayer/enterprise-identity/provisioning#group-mappings) or [default workspace](/why-promptlayer/enterprise-identity/provisioning#default-workspace) |
+| SCIM users not appearing | Directory Sync status, group assignments in IdP, audit log for directory events |
+| Wrong org after SSO | WorkOS organization link (self-hosted multi-org environments) |
+
+Review the [audit log](/why-promptlayer/enterprise-identity/audit-log) for `sso_test_failed`, `sso_login_failed`, and directory sync events when triaging.
