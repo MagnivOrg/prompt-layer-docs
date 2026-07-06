@@ -1,0 +1,133 @@
+---
+title: "Audit log"
+description: "Review SSO, SCIM, mapping, and access events for your enterprise-managed organization."
+icon: "list"
+---
+
+The **Audit log** under **Organization Settings → Enterprise Identity** is an append-only, organization-scoped record of identity and access changes. Use it to troubleshoot sign-in failures, verify SCIM behavior, and review administrative actions.
+
+<Note>
+The audit log stores operational metadata only—never SAML assertions, bearer tokens, or full SCIM payloads.
+</Note>
+
+## Viewing events
+
+![Audit log](/images/enterprise-identity/ei-audit-log.png)
+
+Owners can:
+
+- Browse events in reverse chronological order
+- Filter by **event type**, **date range**, and **free-text search**
+- Open an event for full detail (actor, target user, workspace, WorkOS event ID, connection ID)
+- Export filtered results to CSV
+
+Events include a **source** field indicating whether the action came from SSO, Directory Sync, the dashboard, CLI, or another internal path.
+
+## Event categories
+
+### SSO sign-in
+
+| Event type | Meaning |
+|------------|---------|
+| `sso_login_success` | User completed SSO and signed in |
+| `sso_login_failed` | SSO authentication failed |
+| `sso_enforcement_blocked` | Email/password or social login blocked because Require SSO is on |
+| `sso_rejected_deactivated_identity` | SSO rejected for a previously deprovisioned IdP identity |
+
+### SSO setup and testing
+
+| Event type | Meaning |
+|------------|---------|
+| `sso_setup_started` | SSO configuration flow started |
+| `sso_setup_saved` | SSO configuration saved |
+| `sso_test_started` | Test SSO initiated from dashboard |
+| `sso_test_succeeded` | Test SSO completed successfully |
+| `sso_test_failed` | Test SSO failed |
+| `sso_connection_activated` | SSO connection became active |
+
+### JIT provisioning
+
+| Event type | Meaning |
+|------------|---------|
+| `jit_user_provisioned` | New user created on first SSO login |
+| `jit_user_denied` | JIT blocked (e.g. email domain not allowed) |
+
+### Directory Sync (users)
+
+| Event type | Meaning |
+|------------|---------|
+| `directory_user_created` | SCIM user provisioned |
+| `directory_user_updated` | SCIM user profile updated |
+| `directory_user_deactivated` | SCIM user deactivated / deprovisioned |
+| `reactivation_attempt_rejected` | Blocked attempt to restore a deprovisioned identity |
+
+### Directory Sync (groups)
+
+| Event type | Meaning |
+|------------|---------|
+| `directory_group_created` | IdP group synced |
+| `directory_group_updated` | IdP group updated |
+| `directory_group_deleted` | IdP group removed |
+| `directory_group_user_added` | User added to synced group |
+| `directory_group_user_removed` | User removed from synced group |
+
+### Group mappings
+
+| Event type | Meaning |
+|------------|---------|
+| `group_role_mapping_created` | IdP group mapped to workspace role |
+| `group_role_mapping_updated` | Mapping changed |
+| `group_role_mapping_deleted` | Mapping removed |
+| `group_mapping_blocked_last_admin` | Change blocked to preserve last workspace Admin |
+| `scim_role_grant_blocked` | Role grant blocked (e.g. disallowed role name) |
+
+### Workspace access
+
+| Event type | Meaning |
+|------------|---------|
+| `workspace_membership_granted` | User added to workspace |
+| `workspace_membership_revoked` | User removed from workspace |
+| `workspace_role_changed` | Identity-managed role updated |
+| `workspace_role_downgrade_blocked` | Downgrade blocked by last-Admin rules |
+| `ownership_transferred` | Workspace Admin ownership moved on deprovision |
+| `workspace_orphaned` | No Admin candidate after deprovision |
+
+### Policy and settings
+
+| Event type | Meaning |
+|------------|---------|
+| `identity_settings_updated` | Sign-in policy or default workspace changed |
+| `identity_policy_version_bumped` | Sessions invalidated for policy change |
+| `require_sso_enabled` | Require SSO turned on |
+| `require_sso_disabled` | Require SSO turned off |
+| `enterprise_identity_enabled` | Feature enabled for org |
+| `enterprise_identity_disabled` | Feature disabled for org |
+| `directory_sync_activated` | Directory Sync connection active |
+
+### Break-glass and MFA
+
+| Event type | Meaning |
+|------------|---------|
+| `break_glass_login_used` | Emergency access Owner signed in with email/password |
+| `break_glass_login_blocked` | Emergency login attempt blocked |
+| `break_glass_guardrail_blocked` | Action blocked by break-glass safety rules |
+| `mfa_disabled_for_managed_user` | MFA change blocked for SSO-managed member |
+
+## Operational triage
+
+| Problem | Events to check |
+|---------|-----------------|
+| User cannot sign in with SSO | `sso_login_failed`, `sso_rejected_deactivated_identity`, `jit_user_denied` |
+| User stuck after SSO | `jit_user_provisioned` without `workspace_membership_granted` — check mappings |
+| Access removed unexpectedly | `directory_user_deactivated`, `directory_group_user_removed`, `workspace_membership_revoked` |
+| Require SSO lockout | `sso_enforcement_blocked`, `break_glass_login_used` |
+| Mapping change did not apply | `group_mapping_blocked_last_admin`, `scim_role_grant_blocked` |
+| Workspace has no Admin | `workspace_orphaned`, `ownership_transferred` |
+
+## Retention and export
+
+Audit events are stored in the `identity_audit_events` table in your organization's PostgreSQL database.
+
+**Cloud (PromptLayer-hosted):** Events persist for the life of your organization unless PromptLayer applies a platform retention policy. Use **Export to CSV** in the dashboard for ad-hoc exports. Contact [PromptLayer support](mailto:hello@promptlayer.com) for long-term retention or compliance questions.
+
+**Self-hosted:** You operate the database. Audit data lives in your PostgreSQL instance alongside the rest of PromptLayer metadata—you control backup, retention, and archival policies. Export from the dashboard UI or query `identity_audit_events` directly for compliance reporting.

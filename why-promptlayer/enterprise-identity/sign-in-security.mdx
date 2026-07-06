@@ -1,0 +1,119 @@
+---
+title: "Sign-in policy & break-glass"
+description: "Require SSO, configure JIT provisioning, emergency Owner access, and MFA expectations."
+icon: "shield"
+---
+
+The **Sign-in policy** section under **Organization Settings → Enterprise Identity** controls how org members authenticate. This page explains each toggle, emergency access, and MFA behavior.
+
+## Sign-in policy toggles
+
+### SSO enabled
+
+Allows org members to sign in through the configured SAML/OIDC connection. When off, SSO is disabled for the org even if the IdP connection exists.
+
+### Require SSO
+
+When enabled:
+
+- **Regular org members** must use SSO—email/password sign-in is blocked for users in this organization.
+- **Social login** (Google, GitHub, etc.) is also blocked for managed members when SSO is required.
+- Existing sessions for affected users are invalidated on their **next request** (JWT carries an identity policy version that bumps when Require SSO changes).
+
+<Warning>
+Turn on **Require SSO** only after SSO is tested, group mappings are in place, and emergency access is configured. Members locked out of SSO will be unable to sign in with email/password.
+</Warning>
+
+### JIT provisioning
+
+Auto-creates PromptLayer accounts on first successful SSO login. Email domain allowlisting is enforced by WorkOS on the SSO connection.
+
+When JIT is off, users must already exist in PromptLayer (invited or created manually) before SSO can link their account.
+
+## MFA
+
+MFA behavior depends on how the user signs in:
+
+| Sign-in method | Who enforces MFA |
+|----------------|------------------|
+| SSO (regular members) | **Your IdP** (Okta, Entra Conditional Access, etc.) |
+| Email/password (emergency Owner) | **PromptLayer MFA** in Account Settings |
+
+PromptLayer does **not** prompt SSO users for a second factor—your IdP handles step-up authentication during SSO.
+
+For regular members in Require SSO orgs, the Account Settings MFA toggle is hidden with a message that authentication is managed by the organization.
+
+## Emergency access (break-glass)
+
+**Require SSO** blocks email/password for almost everyone—but every enterprise-managed org must keep **exactly one Owner** with **emergency access** who can still sign in with email/password if SSO is unavailable.
+
+### Designating emergency access
+
+Under **Enterprise Identity → Emergency access**:
+
+![Emergency access owners](/images/enterprise-identity/ei-break-glass-owners.png)
+
+- All active **Owners** are listed.
+- Exactly one Owner holds emergency access at a time (radio selection).
+- Reassigning emergency access requires confirmation.
+- If none is designated when Enterprise Identity is enabled, PromptLayer auto-selects an Owner.
+
+### Requirements before Require SSO
+
+The emergency access Owner must complete **both** before Require SSO can be enabled:
+
+1. **PromptLayer MFA** enrolled in **Account Settings → Security**
+2. **Emergency password** set in Account Settings (separate from their normal password when SSO is primary)
+
+These apply only to the emergency email/password path—not to SSO sign-in through the IdP.
+
+<Note>
+Organization Owners **without** emergency access must use SSO when Require SSO is on. Only the designated emergency access Owner retains native login.
+</Note>
+
+### When emergency access is used
+
+Successful emergency logins are recorded in the [audit log](/why-promptlayer/enterprise-identity/audit-log) as `break_glass_login_used`. Blocked attempts (wrong user, missing MFA, etc.) log `break_glass_login_blocked`.
+
+## Session invalidation
+
+PromptLayer embeds an **identity policy version** in auth tokens for enterprise-managed orgs. These actions bump the version and sign users out on next request:
+
+- Enabling or disabling Enterprise Identity
+- Enabling or disabling **Require SSO**
+- Other identity policy changes that affect authentication
+
+Plan changes during a maintenance window and warn members before toggling Require SSO.
+
+## Recommended enforcement sequence
+
+<Steps>
+  <Step title="Test SSO">
+    Use **Test SSO** in Connection settings until sign-in succeeds reliably.
+  </Step>
+  <Step title="Enable SSO enabled">
+    Allow members to use SSO alongside existing login methods.
+  </Step>
+  <Step title="Provision access">
+    Configure [group mappings](/why-promptlayer/enterprise-identity/provisioning#group-mappings) and [default workspace](/why-promptlayer/enterprise-identity/provisioning#default-workspace).
+  </Step>
+  <Step title="Prepare emergency access">
+    Designate one Owner, enroll MFA, and set emergency password in Account Settings.
+  </Step>
+  <Step title="Enable Require SSO">
+    Enforce SSO for all members except the emergency access Owner.
+  </Step>
+  <Step title="Enable JIT (if desired)">
+    Turn on JIT provisioning once email domains and access paths are verified.
+  </Step>
+</Steps>
+
+## What stays unchanged
+
+Enterprise Identity does **not** alter authentication for:
+
+- Users who are not members of an enterprise-managed organization
+- Organizations without Enterprise Identity enabled
+- API key authentication to the PromptLayer REST API
+
+Email/password and social login continue to work globally; Require SSO only affects members of orgs where it is enabled.
