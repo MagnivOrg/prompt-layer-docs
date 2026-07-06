@@ -23,6 +23,7 @@ The **Connection** section shows:
 - **SSO connection status** — whether a SAML or OIDC connection is configured and active
 - **Directory Sync status** — whether SCIM provisioning is connected
 - **Protocol** — `saml` or `oidc`, detected after SSO setup
+- **Service provider details** — copy-ready SAML or OIDC values to paste into your IdP (see below)
 - Read-only WorkOS identifiers (organization ID, connection ID, directory ID)
 
 ### Open the WorkOS Admin Portal
@@ -31,31 +32,43 @@ Use the buttons in the Connection section:
 
 | Button | Purpose |
 |--------|---------|
-| **Configure SSO** | Opens WorkOS Admin Portal to set up SAML or OIDC with your IdP |
-| **Configure Directory Sync** | Opens WorkOS Admin Portal to enable SCIM / Directory Sync |
+| **Open SSO Admin Portal** | Opens WorkOS Admin Portal to set up SAML or OIDC with your IdP |
+| **Open Directory Sync Admin Portal** | Opens WorkOS Admin Portal to enable SCIM / Directory Sync |
 | **Refresh from WorkOS** | Pulls latest connection and directory status into PromptLayer |
 | **Test SSO** | Starts an SSO test flow in a new tab and reports success or failure |
 
-The Admin Portal is the supported place to upload IdP metadata, configure redirect URLs, set allowed email domains, and enable SCIM. PromptLayer embeds WorkOS Admin Portal links— you do not configure raw SAML endpoints inside PromptLayer itself.
+The Admin Portal is the supported place to upload IdP metadata, configure allowed email domains, and enable SCIM. PromptLayer embeds WorkOS Admin Portal links—you do not configure raw SAML endpoints inside PromptLayer itself.
 
-### Protocol reference values
+### Service provider details (SAML / OIDC)
 
-After SSO is configured, PromptLayer displays IdP-facing values based on your protocol.
+Your IdP application needs **service provider (SP)** values—ACS URL, SP Entity ID, redirect URI, and so on. WorkOS generates these per SSO connection.
 
-**SAML**
+<Warning>
+After an SSO connection is **active**, the WorkOS Admin Portal shows **IdP metadata** (Entity ID, SSO URL, certificate) but **does not** keep showing SP Entity ID / ACS URL. Do not look under **Metadata configuration** in WorkOS for SP values—that section is IdP-side, not PromptLayer/WorkOS SP-side.
+</Warning>
 
-| Field | Value |
-|-------|-------|
-| ACS URL | `https://api.workos.com/sso/saml/acs` |
-| Entity ID | Your WorkOS organization ID |
-| Metadata URL | `https://api.workos.com/sso/metadata/{connection_id}` |
+PromptLayer displays a **Service provider details** block in the Connection section once an SSO connection is linked. Open **Organization Settings → Enterprise Identity**, then click **Refresh from WorkOS** (or reload the page) to populate it. Each field has a copy button.
+
+**SAML (paste into your IdP, e.g. Entra ID / Okta)**
+
+| Field | Where to find it |
+|-------|------------------|
+| SP Entity ID (Audience / Identifier) | PromptLayer → **Enterprise Identity → Connection → Service provider details** |
+| ACS URL (Reply URL) | Same block |
+| SP Metadata URL | Same block (when your IdP supports metadata import) |
+
+For SAML, PromptLayer derives these values from the live SSO connection. They match what PromptLayer operators see under **Service Provider Details** in the WorkOS dashboard.
+
+<Warning>
+The **SP Entity ID** is a connection-specific identifier (for example `idCeTTkgO0MTyctK22SMgESd7` or `https://auth.workos.com/...`), **not** the WorkOS organization ID (`org_...`). Do not paste the IdP Entity ID from WorkOS **Metadata configuration** as the audience.
+</Warning>
 
 **OIDC**
 
 | Field | Value |
 |-------|-------|
 | Redirect URI | `https://api.workos.com/sso/oidc/callback` |
-| Client ID | Your WorkOS organization ID |
+| Client ID | Your WorkOS organization ID (shown in Service provider details) |
 | Discovery URL | `https://api.workos.com/sso/oidc/.well-known/openid-configuration` |
 
 <Info>
@@ -66,11 +79,11 @@ PromptLayer SSO runs through WorkOS. Your IdP integrates with WorkOS using stand
 
 WorkOS supports Okta, Microsoft Entra ID, Google Workspace, OneLogin, and other enterprise IdPs. Follow the in-portal checklist for your provider:
 
-1. Click **Configure SSO** in PromptLayer.
+1. Click **Open SSO Admin Portal** in PromptLayer.
 2. In WorkOS Admin Portal, choose your IdP and complete the setup wizard.
-3. Copy WorkOS-provided values into your IdP (ACS URL, Entity ID, or OIDC redirect URI as applicable).
+3. Copy **Service provider details** from PromptLayer into your IdP (ACS URL, **SP Entity ID**, or OIDC redirect URI as applicable). During first-time setup, WorkOS may also show SP values in the wizard; after the connection is active, use PromptLayer's Connection section.
 4. Upload IdP metadata or enter client credentials in WorkOS.
-5. Return to PromptLayer and click **Refresh from WorkOS**.
+5. Return to PromptLayer and click **Refresh from WorkOS** so connection status and Service provider details update.
 6. Click **Test SSO** and sign in with a test user.
 
 Successful Test SSO writes an audit event and updates connection status to **active**.
@@ -81,7 +94,7 @@ Successful Test SSO writes an audit event and updates connection status to **act
 
 Directory Sync provisions users and groups from your IdP into WorkOS, which forwards events to PromptLayer:
 
-1. Click **Configure Directory Sync** in PromptLayer.
+1. Click **Open Directory Sync Admin Portal** in PromptLayer.
 2. In WorkOS Admin Portal, enable Directory Sync for your IdP (Okta SCIM, Entra provisioning, etc.).
 3. Assign users and **groups** in your IdP to the PromptLayer application.
 4. Return to PromptLayer and click **Refresh from WorkOS**.
@@ -112,8 +125,9 @@ Recommended order:
 
 | Symptom | Check |
 |---------|-------|
-| Test SSO fails | IdP metadata, clock skew, allowed email domains in WorkOS, user assigned to app in IdP |
+| Test SSO fails | IdP metadata, **SP Entity ID / audience mismatch** (must not be the WorkOS org ID), clock skew, allowed email domains in WorkOS, user assigned to app in IdP |
 | Connection stays inactive | **Refresh from WorkOS**; verify WorkOS connection state in Admin Portal |
+| Service provider details missing | SSO connection must be linked; click **Refresh from WorkOS**; confirm SSO status is **active** |
 | Users sign in but have no workspaces | [Group mappings](/why-promptlayer/enterprise-identity/provisioning#group-mappings) or [default workspace](/why-promptlayer/enterprise-identity/provisioning#default-workspace) |
 | SCIM users not appearing | Directory Sync status, group assignments in IdP, audit log for directory events |
 | Wrong org after SSO | WorkOS organization link (self-hosted multi-org environments) |
