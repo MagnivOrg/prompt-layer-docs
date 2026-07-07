@@ -1,8 +1,9 @@
 {
   "openapi": "3.1.0",
   "info": {
-    "title": "FastAPI",
-    "version": "0.1.0"
+    "title": "PromptLayer API",
+    "description": "REST API for PromptLayer: prompt template management, request logging, observability, evaluations, and workflows.",
+    "version": "1.0.0"
   },
   "paths": {
     "/prompt-templates/{identifier}": {

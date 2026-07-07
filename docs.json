@@ -24,7 +24,7 @@
             "group": "Prompt Registry",
             "icon": "notebook",
             "pages": [
-              "features/prompt-registry/new-overview",
+              "features/prompt-registry/overview",
               "features/prompt-registry/prompt-editor-versioning",
               "features/prompt-registry/template-variables",
               "features/prompt-registry/input-variable-sets",
@@ -497,6 +497,14 @@
     {
       "source": "/running-requests/promptlayer-run-agent",
       "destination": "/sdks/python#running-workflows"
+    },
+    {
+      "source": "/features/prompt-registry/new-overview",
+      "destination": "/features/prompt-registry/overview"
+    },
+    {
+      "source": "/features/prompt-registry",
+      "destination": "/features/prompt-registry/overview"
     }
   ]
 }
