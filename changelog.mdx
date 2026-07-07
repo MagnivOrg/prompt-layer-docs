@@ -40,6 +40,26 @@ General performance and stability improvements
 
 ---
 
+
+### Deployment 3
+
+#### New Features
+
+**Large CSV Import Support**
+Smart Tables now supports importing CSV files up to the configured workspace limit through an optimized direct upload flow.
+- Large files are uploaded directly to cloud storage before processing begins
+- Import progress is tracked in real-time with status updates visible in the dashboard
+- Failed or incomplete uploads can be cancelled and retried without blocking other operations
+
+#### Improvements
+
+- Added CSV operation history view showing all recent imports and exports for each sheet
+- Improved import conflict detection to prevent multiple simultaneous CSV operations on the same sheet
+- Enhanced upload validation to verify file size and format before processing begins
+- Added detailed error messages when CSV imports fail due to size limits or format issues
+
+---
+
 ## July 06, 2026
 
 ### Deployment 1
