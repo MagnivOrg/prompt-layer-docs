@@ -70,6 +70,26 @@ Smart Tables now supports importing CSV files up to the configured workspace lim
 
 ---
 
+
+### Deployment 5
+
+#### New Features
+
+**Custom Model Pricing**
+Workspaces can now define custom pricing for models not natively priced by PromptLayer.
+- Set per-token input and output rates for any model name used in your workspace
+- System automatically suggests models from recent requests that lack pricing
+- Custom prices apply when native pricing is unavailable, ensuring accurate cost tracking across all models
+
+#### Improvements
+
+- Trace detail pages now display custom trace names when set
+- Model configuration pricing display updated to handle multimodal pricing structures
+- Enhanced pricing calculation to support audio and image token rates alongside text
+- Request log cost calculation now falls back to workspace-defined custom pricing when native pricing is unavailable
+
+---
+
 ## July 06, 2026
 
 ### Deployment 1
