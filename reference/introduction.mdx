@@ -5,6 +5,10 @@ description: "Use the PromptLayer REST API to manage prompts, workflows, evaluat
 
 The PromptLayer REST API lets you interact with your workspace directly over HTTP so you can automate updates, run workflows, log activity, and export or organize data from your own systems.
 
+<Note>
+  Prefer a client library? See the [Python SDK](/sdks/python) and [JavaScript SDK](/sdks/javascript). The complete machine-readable spec is available at [openapi.json](https://docs.promptlayer.com/openapi.json).
+</Note>
+
 ## Authentication
 
 Authenticate API requests with a PromptLayer API key using the `X-API-Key` header.
@@ -19,6 +23,7 @@ Generate API keys from the API keys page in your PromptLayer dashboard. Each wor
 - [Get Prompt Template (Raw)](/reference/templates-get-raw)
 - [List Prompt Templates](/reference/list-prompt-templates)
 - [Publish Prompt Template](/reference/templates-publish)
+- [Patch Prompt Template Version](/reference/templates-patch)
 - [List Prompt Template Labels](/reference/templates-labels-get)
 - [Create Prompt Template Label](/reference/prompt-labels-create)
 - [Move Prompt Template Label](/reference/prompt-labels-patch)
@@ -35,6 +40,11 @@ Generate API keys from the API keys page in your PromptLayer dashboard. Each wor
 - [Track Metadata](/reference/track-metadata)
 - [Create Spans Bulk](/reference/spans-bulk)
 - [Ingest Traces (OTLP)](/reference/otlp-ingest-traces)
+- [Get Trace](/reference/get-trace)
+- [Close Trace](/reference/close-trace)
+- [Request Analytics](/reference/request-analytics)
+- [Request Analytics — Custom Queries](/reference/request-analytics-custom-analytics)
+- [Search Request Suggestions](/reference/search-request-suggestions)
 
 ### Datasets
 
@@ -47,6 +57,10 @@ Generate API keys from the API keys page in your PromptLayer dashboard. Each wor
 - [Create Dataset Group](/reference/create-dataset-group)
 - [Create Dataset Version from File](/reference/create-dataset-version-from-file)
 - [Create Dataset Version from Filter Params](/reference/create-dataset-version-from-filter-params)
+- [Create Draft Dataset Version](/reference/create-draft-dataset-version)
+- [Save Draft Dataset Version](/reference/save-draft-dataset-version)
+- [Add Request Log to Dataset](/reference/add-request-log-to-dataset)
+- [Add Trace to Dataset](/reference/add-trace-to-dataset)
 
 ### Evaluations
 
@@ -114,6 +128,8 @@ Pass `folder_id` on `Create Evaluation Pipeline`, [Create Table](/reference/tabl
 ### Workflows
 
 - [List Workflows](/reference/list-workflows)
+- [Get Workflow](/reference/get-workflow)
+- [Get Workflow Labels](/reference/get-workflow-labels)
 - [Create Workflow](/reference/create-workflow)
 - [Update Workflow](/reference/patch-workflow)
 - [Run Workflow](/reference/run-workflow)
@@ -126,6 +142,37 @@ Pass `folder_id` on `Create Evaluation Pipeline`, [Create Table](/reference/tabl
 - [Get Skill Collection](/reference/get-skill-collection)
 - [Update Skill Collection](/reference/update-skill-collection)
 - [Save Skill Collection Version](/reference/save-skill-collection-version)
+
+### Tool Registry
+
+- [List Tool Registries](/reference/tool-registry-list)
+- [Get Tool Registry](/reference/tool-registry-get)
+- [Create Tool Registry](/reference/tool-registry-create)
+- [Create Tool Version](/reference/tool-registry-create-version)
+- [Test Execute Tool](/reference/tool-registry-test-execute)
+
+### Environment Variables
+
+- [List Workspace Env Vars](/reference/env-vars-workspace-list)
+- [Create Workspace Env Var](/reference/env-vars-workspace-create)
+- [Update Workspace Env Var](/reference/env-vars-workspace-update)
+- [Delete Workspace Env Var](/reference/env-vars-workspace-delete)
+- [List Tool Env Vars](/reference/env-vars-tool-list)
+- [Create Tool Env Var](/reference/env-vars-tool-create)
+- [Update Tool Env Var](/reference/env-vars-tool-update)
+- [Delete Tool Env Var](/reference/env-vars-tool-delete)
+
+### External IDs
+
+Attach your own identifiers to PromptLayer resources so you can reference them by external ID. See the [External IDs overview](/reference/external-ids-overview) for details. Attach, list, and delete operations are available for:
+
+- [Prompt Templates](/reference/external-ids-prompt-templates-list) (plus [upsert](/reference/external-ids-prompt-templates-upsert))
+- [Workflows](/reference/external-ids-workflows-list)
+- [Folders](/reference/external-ids-folders-list)
+- [Reports](/reference/external-ids-reports-list)
+- [Dataset Groups](/reference/external-ids-dataset-groups-list)
+- [Skill Collections](/reference/external-ids-skill-collections-list)
+- [Tool Registries](/reference/external-ids-tool-registry-list)
 
 ### Unified Registry
 
