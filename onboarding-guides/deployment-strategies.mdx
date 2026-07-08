@@ -163,6 +163,8 @@ curl -X POST https://api.promptlayer.com/prompt-templates \
 
 </CodeGroup>
 
+If your prompts use [snippets](/features/prompt-registry/snippets), publish snippet dependencies before parent templates. See [Snippet Dependency Ordering](/features/prompt-registry/snippet-dependency-ordering) for the required publish order and a multi-pass CI workflow.
+
 ### Closing the loop with eval results
 
 If your CI/CD pipeline runs evaluations as part of the deploy process, you can push those results back to PromptLayer so everything is visible in one place. This means your team doesn't lose observability just because the deploy happened outside of PromptLayer.
