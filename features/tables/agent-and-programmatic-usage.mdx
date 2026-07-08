@@ -7,7 +7,7 @@ icon: "terminal"
 Use the Tables REST API or PromptLayer MCP server when scripts, CI jobs, or coding agents should create Tables, add sheets and columns, import data, or queue recalculation work. Read these warnings before automating in a production workspace.
 
 <Warning>
-  **Creates are hard to undo through agents.** The PromptLayer MCP server does not yet expose delete tools for Tables, sheets, or columns. Resources created through MCP or automation remain in the workspace until you remove them in the dashboard or call the REST API [Delete Table](/reference/tables-delete), [Delete Sheet](/reference/table-sheets-delete), or [Delete Column](/reference/table-sheet-columns-delete) endpoints. Treat every create, import, and column configuration as permanent until you have validated it in a non-production workspace.
+  **Creates are hard to undo through agents.** The PromptLayer MCP server does not yet expose Table create, update, or delete tools. When you automate through the REST API, [Delete Table](/reference/tables-delete), [Delete Sheet](/reference/table-sheets-delete), and [Delete Column](/reference/table-sheet-columns-delete) soft-delete resources, but agent workflows rarely call them. Treat every create, import, and column configuration as permanent until you have validated it in a non-production workspace.
 </Warning>
 
 <Warning>
@@ -18,7 +18,7 @@ Use the Tables REST API or PromptLayer MCP server when scripts, CI jobs, or codi
 
 Run new automation against a development or staging workspace before pointing agents at production data. Create a small Table with a few rows, confirm column mappings and scores, then scale up imports and recalculation scopes.
 
-When moving a workflow from legacy Evaluations or Datasets, follow [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets). To replicate a Table in another workspace, export the sheet from the dashboard, rebuild columns in the target workspace, and compare outputs before switching automation.
+When moving a workflow from legacy Evaluations or Datasets, follow [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets). To copy or migrate a Table to another workspace, follow [Copying and Migrating Tables](/features/tables/copying-and-migrating).
 
 ## Provider API keys
 

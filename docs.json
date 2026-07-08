@@ -53,7 +53,8 @@
               "features/tables/agent-and-programmatic-usage",
               "features/tables/scoring",
               "features/tables/history-and-analytics",
-              "features/tables/migrate-from-evaluations-and-datasets"
+              "features/tables/migrate-from-evaluations-and-datasets",
+              "features/tables/copying-and-migrating"
             ]
           },
 
