@@ -34,8 +34,9 @@ The confirmation dialog shows your current period alongside the new one so you c
 ![Confirm retention period change dialog](/images/retention-policy-confirm.png)
 
 <Warning color="yellow">
-  Reducing the retention period may permanently delete request data older than
-  the new period. This action cannot be undone.
+  Setting a finite period means data logged from that point on is permanently
+  deleted once it passes the window. Records already logged keep the retention
+  they were assigned and are not affected. Deletion cannot be undone.
 </Warning>
 
 <Note>
@@ -73,7 +74,7 @@ The badge indicates that the record was logged before this workspace set a reten
 ## Best Practices
 
 - **Match retention to your needs**: Use a finite period for high-volume or sensitive workspaces where you don't need long-lived history, and keep Forever where you rely on long-term analytics.
-- **Change deliberately**: Because shortening the period can permanently delete older data, confirm the new period is correct before applying it.
+- **Change deliberately**: A finite period permanently deletes data once it ages out, so confirm the new period is correct before applying it.
 - **Use separate workspaces**: If different projects have different retention requirements, isolate them in separate workspaces so each can carry its own policy.
 
 ## FAQ
@@ -84,7 +85,7 @@ The badge indicates that the record was logged before this workspace set a reten
   </Accordion>
 
   <Accordion title="Does changing the policy delete data I've already logged?">
-    Retention is applied to each record when it is logged, based on the workspace's period at that time. Changing the policy only affects **newly ingested** data — records already logged keep the retention they were assigned. The one exception is reducing the period: data logged *after* the change that then exceeds the shorter window will age out and be permanently deleted.
+    No. Retention is assigned to each record when it is logged, based on the workspace's period at that time, and changing the policy never rewrites it. Records already logged keep the retention window they were assigned — even if you later switch to a shorter period. Lowering the period (for example 90 days → 14 days) therefore does **not** delete your existing logs; it only means data logged *after* the change expires on the shorter window.
   </Accordion>
 
   <Accordion title="What happens to data when it exceeds the retention window?">
