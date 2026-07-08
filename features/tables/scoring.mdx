@@ -58,7 +58,41 @@ Auto detect chooses boolean or numeric handling based on the selected score colu
 
 ## Custom code scoring
 
-Custom code mode scores the whole sheet with Python or JavaScript. The scorer receives sheet data and must return a deterministic object with a numeric `score`.
+Custom code mode scores the whole sheet with Python or JavaScript. The scorer receives a `data` variable and must return a deterministic object with a numeric `score`.
+
+### Input data shape
+
+`data` is a list of row dictionaries. Each dictionary maps **column titles** to that row's structured cell payload—the same values [Code Execution](/features/tables/column-types) columns receive per row.
+
+```python
+data = [
+    {
+        "Question": "What is 2+2?",
+        "Prompt output": "The answer is 4",
+        "Exact match": {"comparison_result": True},
+        "Safety check": True,
+    },
+    # ... more rows
+]
+```
+
+Values are not normalized to scalars. They may be raw booleans or numbers, wrapped as `{"value": ...}`, single-element lists, or type-specific objects such as `{"comparison_result": true}` on Compare columns. Use a defensive reader when the sheet mixes column types.
+
+```python
+def read_cell(value):
+    if isinstance(value, list):
+        value = value[0] if value else None
+    if isinstance(value, dict):
+        if "comparison_result" in value:
+            return value["comparison_result"]
+        if "value" in value:
+            return value["value"]
+    return value
+```
+
+See [Tables Data Model — Custom score and code execution input data](/features/tables/data-model#custom-score-and-code-execution-input-data) for per-column-type examples and a full scoring example.
+
+### Return shape
 
 Required key:
 

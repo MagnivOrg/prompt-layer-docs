@@ -21754,7 +21754,7 @@
       "ScoreConfiguration": {
         "type": "object",
         "title": "ScoreConfiguration",
-        "description": "Custom scoring configuration. The code receives a data variable containing row dictionaries and must return an object with at least a score key from 0 to 100.",
+        "description": "Custom scoring configuration. The code receives a `data` list of row dictionaries keyed by column title. Each value is the structured cell payload for that row and column—the same shape code execution columns receive. Values may be scalars, `{\"value\": ...}` wrappers, single-element lists, or type-specific objects such as `{\"comparison_result\": true}` on Compare columns. The code must return an object with at least a `score` key from 0 to 100.",
         "required": [
           "code"
         ],
@@ -21774,7 +21774,7 @@
           }
         },
         "example": {
-          "code": "score = sum(1 for row in data if row.get(\"Accuracy Check\") is True) / len(data) * 100 if data else 0\nreturn {\"score\": score}",
+          "code": "def read_cell(value):\n    if isinstance(value, list):\n        value = value[0] if value else None\n    if isinstance(value, dict):\n        if \"comparison_result\" in value:\n            return value[\"comparison_result\"]\n        if \"value\" in value:\n            return value[\"value\"]\n    return value\n\ncheck_columns = [\"Accuracy Check\", \"Safety Check\", \"Format Check\"]\npassed_rows = sum(1 for row in data if all(read_cell(row.get(col)) is True for col in check_columns if col in row))\nscore = (passed_rows / len(data) * 100) if data else 0\nreturn {\"score\": score}",
           "code_language": "PYTHON"
         }
       },
@@ -23689,7 +23689,7 @@
             "minLength": 1,
             "maxLength": 50000,
             "nullable": true,
-            "description": "Custom scoring code."
+            "description": "Custom scoring code. Receives a `data` list of row dicts keyed by column title; each value is the structured cell payload (same shape as code execution input). Must return an object with a `score` key."
           },
           "code_language": {
             "type": "string",

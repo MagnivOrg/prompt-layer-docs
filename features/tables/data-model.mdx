@@ -1,0 +1,341 @@
+---
+title: "Tables Data Model"
+description: "Reference for Tables entities, resolver strings, dependencies, cells, score configuration, and custom score input data."
+icon: "diagram-project"
+---
+
+Use this page when you copy, transform, or automate Tables programmatically. It describes the shapes agents and API clients rely on when reading or writing sheet data.
+
+The REST API uses the `smart-tables` tag and lowercase column type values such as `text` and `prompt_template`. The PromptLayer MCP server uses uppercase backend enum values such as `TEXT` and `PROMPT_TEMPLATE` for the same column types. See [Column Types](/features/tables/column-types) for the full UI and backend type catalog.
+
+## Entity hierarchy
+
+A Table is the top-level workspace. Each Table contains one or more sheets. Each sheet has columns, rows, and cells at every row-column intersection.
+
+| Entity | ID format | Key fields |
+| --- | --- | --- |
+| **Table** | UUID | `title`, `workspace_id`, `folder_id` |
+| **Sheet** | UUID | `table_id`, `title`, `index`, `row_count`, `version_count` |
+| **Column** | UUID | `sheet_id`, `title`, `type`, `config`, `position_rank`, `is_output_column` |
+| **Cell** | UUID or virtual ID | `sheet_id`, `column_id`, `row_index`, `status`, `value`, `display_value`, `last_computed_version` |
+
+`version_count` on a sheet increments when sheet data, layout, score configuration, imports, or execution output changes. Many mutation endpoints return `version`, the current `version_count` after the change.
+
+## Column types
+
+| Kind | API `type` | Behavior |
+| --- | --- | --- |
+| **Input** | `text` | Stores editable row data. Cells are written directly and do not run computation. |
+| **Computed** | `prompt_template`, `llm`, `code`, `score`, `comparison`, `composition`, and other non-text backend types | Runs per-row work from `config` and declared `dependencies`. Cells track execution status and can become stale when upstream values change. |
+
+Text columns are the only columns whose cells you can edit with [Update Cell](/reference/table-sheet-cells-update). Computed cells are produced by [recalculation operations](/reference/table-sheet-operations-create).
+
+## Resolver format
+
+Column configurations reference source columns with a **resolver string**:
+
+```text
+{table_id}.{sheet_id}.{column_id}
+```
+
+Each segment is a UUID. The three-part form uniquely identifies a column, including columns in other sheets or tables (for example, composition columns).
+
+Resolver strings appear in column `config` fields that wire inputs to sources:
+
+| Config field | Use |
+| --- | --- |
+| `source` | Single source column for checks, extraction, assertions, and similar column types. |
+| `sources` | Multiple source columns, such as comparison inputs or helper transforms. |
+| `prompt_template_variable_mappings` | Maps a prompt template input variable to a source column. |
+| `variable_mappings` | Maps template variables in assertions, loops, or other configurable text to source columns. |
+| Other `*_variable_mappings` fields | Same mapping pattern for type-specific configuration keys. |
+
+### Examples
+
+Map a prompt variable to an input text column in the same sheet:
+
+```json
+{
+  "prompt_template_variable_mappings": {
+    "question": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.b2c3d4e5-f6a7-8901-bcde-f12345678901.c3d4e5f6-a7b8-9012-cdef-123456789012"
+  }
+}
+```
+
+Point a composition column at a column in another sheet:
+
+```json
+{
+  "source": "d4e5f6a7-b8c9-0123-def0-234567890123.e5f6a7b8-c9d0-1234-ef01-345678901234.f6a7b8c9-d0e1-2345-f012-456789012345"
+}
+```
+
+Map assertion variables to prior computed columns:
+
+```json
+{
+  "variable_mappings": {
+    "response": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.b2c3d4e5-f6a7-8901-bcde-f12345678901.d4e5f6a7-b8c9-0123-def0-234567890123",
+    "expected": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.b2c3d4e5-f6a7-8901-bcde-f12345678901.e5f6a7b8-c9d0-1234-ef01-345678901234"
+  }
+}
+```
+
+When all referenced columns live in the current sheet, you can often omit `table_id` and `sheet_id` in UI-driven workflows. For API and MCP automation—especially when copying tables or referencing other sheets—use the full three-part resolver.
+
+## Dependency graph
+
+Computed columns form a directed acyclic graph (DAG). Declare edges with the `dependencies` array on [Create Column](/reference/table-sheet-columns-create) and [Update Column](/reference/table-sheet-columns-update). PromptLayer rejects cycles with a `400` response.
+
+Each dependency object describes how a source column feeds the computed column:
+
+| Field | Required | Description |
+| --- | --- | --- |
+| `column_id` | Yes | UUID of the source column. |
+| `reference_type` | No | How the dependency is consumed. Defaults to `value` (the cell output). |
+| `config_key` | No | Config field this dependency feeds, such as a variable name or `source` key. |
+| `config_meta` | No | Extra metadata for the mapping. Shape depends on the column type. |
+| `source_resolver` | No | Full `{table_id}.{sheet_id}.{column_id}` string for the source. Present on read payloads and useful when copying column definitions between sheets. |
+| `source_label` | No | Human-readable label for the source column, such as the column title. Present on read payloads. |
+
+### Write example
+
+```json
+{
+  "title": "Quality check",
+  "type": "prompt_template",
+  "config": {
+    "template": { "name": "qa_grader" },
+    "prompt_template_variable_mappings": {
+      "answer": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.b2c3d4e5-f6a7-8901-bcde-f12345678901.c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "question": "a1b2c3d4-e5f6-7890-abcd-ef1234567890.b2c3d4e5-f6a7-8901-bcde-f12345678901.b2c3d4e5-f6a7-8901-bcde-f123456789012"
+    }
+  },
+  "dependencies": [
+    {
+      "column_id": "b2c3d4e5-f6a7-8901-bcde-f123456789012",
+      "reference_type": "value",
+      "config_key": "question"
+    },
+    {
+      "column_id": "c3d4e5f6-a7b8-9012-cdef-123456789012",
+      "reference_type": "value",
+      "config_key": "answer"
+    }
+  ]
+}
+```
+
+When a source cell value, resolver mapping, or upstream column config changes, dependent computed cells become `STALE`. See [Cells and Runs](/features/tables/cells-and-runs) for rerun scopes.
+
+## Cell shape
+
+Each cell stores a structured `value`, an optional `display_value` string for the grid, and execution metadata for computed columns.
+
+### Read response fields
+
+| Field | Input (`text`) cell | Computed cell |
+| --- | --- | --- |
+| `id` | Cell UUID | Cell UUID, or a virtual cell ID for not-yet-computed output cells |
+| `status` | Usually `COMPLETED` | `STALE`, `QUEUED`, `DISPATCHED`, `RUNNING`, `COMPLETED`, or `FAILED` |
+| `value` | Stored input (string, number, object, etc.) | Structured output from the column type |
+| `display_value` | Rendered text shown in the grid | Rendered text shown in the grid |
+| `last_computed_version` | `null` | Sheet `version_count` when the cell last completed computation; `null` until the first successful run |
+| `input_hash` | `null` | Hash of inputs used for cache invalidation |
+| `execution_id` | `null` | Execution ID for the current or most recent computed value |
+| `request_metrics` | `null` | Price, latency, and token usage for prompt-template cells |
+
+Some internal responses use lowercase statuses (`completed`, `stale`, `running`, `queued`, `error`, `cancelled`). Public table endpoints return uppercase statuses in the `TableCell` schema.
+
+### Structured `value` shapes
+
+The `value` field is type-specific:
+
+- **Text columns**: Often a plain string or JSON-compatible scalar. Cell read responses commonly wrap the payload as `{ "value": <raw> }`.
+- **Computed columns**: Structured output from the column runner—plain text, JSON, booleans, numbers, or nested objects depending on the column type. Many computed cells also use a `{ "value": <payload> }` wrapper in API responses.
+
+Check `display_value` for the grid-friendly rendering. Use `value` when you need the full structured result in code.
+
+### Write shapes
+
+Update text cells with [Update Cell](/reference/table-sheet-cells-update):
+
+```json
+{
+  "display_value": "What is the refund policy?",
+  "value": {
+    "value": "What is the refund policy?"
+  }
+}
+```
+
+Set initial text values when adding rows via [Add Rows](/reference/table-sheet-rows-add):
+
+```json
+{
+  "count": 1,
+  "values": [
+    {
+      "b2c3d4e5-f6a7-8901-bcde-f123456789012": "What is the refund policy?"
+    }
+  ]
+}
+```
+
+Each key in `values` is a `column_id` UUID. Write raw scalars when seeding rows; cell read endpoints return the nested `value.value` wrapper. Do not write computed cells directly—queue [recalculation](/reference/table-sheet-cells-recalculate) instead.
+
+### Distinguish input vs computed cells
+
+| Signal | Input cell | Computed cell |
+| --- | --- | --- |
+| Parent column `type` | `text` | Any non-text type |
+| `last_computed_version` | `null` | Set after a successful run |
+| `status` | `COMPLETED` after write | Tracks queue, run, completion, failure, or staleness |
+| Writable via PATCH | Yes | No—recalculate instead |
+
+## Custom score and code execution input data
+
+Custom score code and [Code Execution](/features/tables/column-types) columns read the same per-column cell payloads. Smart table custom score inputs align with code execution behavior, so a value you read in a code column is shaped the same way in custom score `data`.
+
+| Context | `data` shape | Scope |
+| --- | --- | --- |
+| **Custom score** | `list[dict]` | One dict per sheet row |
+| **Code execution column** | `dict` | The current row only |
+
+### Dictionary keys
+
+Keys are **column titles** (the column `title` field), not column IDs. Titles must be unique in the sheet.
+
+```python
+# Custom score: data is a list of row dicts
+row = data[0]
+accuracy = row["Accuracy Check"]
+
+# Code execution: data is a single row dict
+response = data["Prompt output"]
+```
+
+### Dictionary values
+
+Each `data[row][column_title]` entry is the structured cell payload for that row and column—the same object stored in the cell's `value` field, not the grid `display_value`. PromptLayer does not normalize these values to scalars before running your code.
+
+Values may appear as:
+
+| Form | Example | When it appears |
+| --- | --- | --- |
+| Raw scalar | `true`, `42`, `"answer text"` | Simple text, boolean, or numeric outputs |
+| Wrapped object | `{"value": true}` | Common wrapper for text and computed outputs |
+| Single-element list | `[true]` or `[{"value": true}]` | Some column runners return a one-item list |
+| Type-specific object | `{"comparison_result": true}` | Structured outputs such as comparison columns |
+
+Because of this variability, read column values defensively when the sheet mixes text inputs, prompt outputs, assertions, and comparisons.
+
+### Read a column value safely
+
+Use a small helper when custom score logic must handle multiple column types:
+
+```python
+def read_cell(value):
+    if isinstance(value, list):
+        value = value[0] if value else None
+    if isinstance(value, dict):
+        if "comparison_result" in value:
+            return value["comparison_result"]
+        if "value" in value:
+            return value["value"]
+    return value
+```
+
+### Per-column-type examples
+
+These examples show typical `data[row][column_title]` shapes for completed cells. Failed or stale cells may be omitted from `data` or passed as `null`.
+
+| Column type | Example value | How to read it |
+| --- | --- | --- |
+| **Text** (`TEXT`) | `"What is 2+2?"` or `{"value": "What is 2+2?"}` | `read_cell(row["Question"])` |
+| **Prompt Template** (`PROMPT_TEMPLATE`) | `"The answer is 4"` or `{"value": "The answer is 4"}` | `read_cell(row["Prompt output"])` |
+| **Code Execution** (`CODE_EXECUTION`) | `12` or `{"value": 12}` | `read_cell(row["Word count"])` |
+| **Compare** (`COMPARE`) | `true`, `{"comparison_result": true}`, or `{"comparison_result": true, "value": true}` | `read_cell(row["Exact match"])` for pass/fail |
+| **LLM Assertion** (single prompt) | `true` or `{"value": true}` | `read_cell(row["Quality check"]) is True` |
+| **LLM Assertion** (multiple prompts) | `{"Is it safe?": true, "Is it concise?": false}` | `row["Compliance checks"]["Is it safe?"]` |
+| **Contains / Regex / Assert Valid / Math Operator** | `true` or `{"value": false}` | `read_cell(row["Has keyword"]) is True` |
+| **Absolute Numeric Distance / Cosine Similarity** | `0.12` or `{"value": 0.12}` | `float(read_cell(row["Distance"]))` |
+| **JSON Path / XML Path / Regex Extraction / Parse Value** | `"approved"`, `["a", "b"]`, or `{"status": "ok"}` | Depends on extraction config |
+| **Human** (`HUMAN`) | `"Looks good"` or `8` | `read_cell(row["Reviewer score"])` |
+| **Composition** (`COMPOSITION`) | Same shape as the referenced source column | `read_cell(row["Shared label"])` |
+| **Workflow / Endpoint / MCP** | String, number, or nested JSON object | `read_cell(row["Workflow output"])` |
+
+### Custom score example
+
+```python
+check_columns = ["Exact match", "Safety check", "Format check"]
+passed_rows = 0
+
+for row in data:
+    if all(read_cell(row.get(col)) is True for col in check_columns if col in row):
+        passed_rows += 1
+
+score = (passed_rows / len(data) * 100) if data else 0
+return {"score": score}
+```
+
+See [Scoring](/features/tables/scoring) for return-shape requirements (`score`, `sub_scores`, `score_matrix`).
+
+## Score configuration
+
+Sheet scoring is configured per sheet and returned on [Get Score](/reference/table-sheet-score-get) and [Configure Score](/reference/table-sheet-score-configure).
+
+### Configure request
+
+| Field | Description |
+| --- | --- |
+| `score_type` | `auto`, `boolean`, `numeric`, or `custom`. Required when you pass `score_config`. |
+| `score_config` | Explicit scoring configuration object. Shape depends on `score_type`. |
+| `column_ids` | Column UUIDs to include in scoring. |
+| `column_names` | Column titles to include. Titles must be unique in the sheet. |
+| `code` / `code_language` | Custom scorer source (`PYTHON` or `JAVASCRIPT`) for `custom` mode. |
+| `true_values` / `false_values` | Token lists for boolean scoring. |
+| `assertion_aggregation` | `all`, `any`, or `mean` for assertion-style boolean scoring. |
+
+### Score configuration object
+
+Stored and returned as:
+
+```json
+{
+  "score_type": "boolean",
+  "score_config": {
+    "column_ids": ["c3d4e5f6-a7b8-9012-cdef-123456789012"],
+    "true_values": ["pass", "true", "yes"],
+    "false_values": ["fail", "false", "no"],
+    "assertion_aggregation": "mean"
+  }
+}
+```
+
+Custom scorers must return a deterministic object with a numeric `score` key. Optional keys include `sub_scores` and `score_matrix`. See [Scoring](/features/tables/scoring) for UI modes, input data, and return-shape examples.
+
+### Score response highlights
+
+[Get Score](/reference/table-sheet-score-get) returns aggregate results plus per-column breakdowns:
+
+| Field | Description |
+| --- | --- |
+| `scoring_type` / `score_type` | Active scoring mode |
+| `score_configuration` | Current `score_type` and `score_config` |
+| `aggregate_score` / `overall_score` | Sheet-level score |
+| `columns` | Per-column scores with `included_count` and `excluded_count` |
+| `score_matrix` | Optional matrix display for custom scoring |
+| `status` | `queued`, `running`, `completed`, or `failed` while recalculating |
+
+Changing score configuration creates a new sheet version and sets `requires_recalculation: true`. Call [Recalculate Score](/reference/table-sheet-score-recalculate) to queue calculation.
+
+## Related
+
+- [Tables overview](/features/tables/overview)
+- [Columns](/features/tables/columns)
+- [Cells and Runs](/features/tables/cells-and-runs)
+- [Scoring](/features/tables/scoring)
+- [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets)
+- [Tables REST API](/reference/introduction#tables)
+- [PromptLayer MCP — Smart Tables tools](/agents/overview#available-tools)
