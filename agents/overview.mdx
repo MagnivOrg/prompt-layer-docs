@@ -73,7 +73,7 @@ Authorization: Bearer pl_your_key_here
 
 ### Available tools
 
-The PromptLayer MCP server exposes 61 tools covering all major PromptLayer features:
+The PromptLayer MCP server exposes 79 tools covering all major PromptLayer features:
 
 | Category | Tools |
 | --- | --- |
@@ -82,10 +82,13 @@ The PromptLayer MCP server exposes 61 tools covering all major PromptLayer featu
 | **Tracking** | `log-request`, `create-spans-bulk` |
 | **Datasets** `Deprecated` | `list-datasets`, `get-dataset-rows`, `create-dataset-group`, `create-dataset-version-from-file`, `create-dataset-version-from-filter-params`, `create-draft-dataset-version`, `add-request-log-to-dataset`, `save-draft-dataset-version` |
 | **Evaluations / Reports** `Deprecated` | `list-evaluations`, `get-evaluation-rows`, `create-report`, `run-report`, `get-report`, `get-report-score`, `add-report-column`, `edit-report-column`, `delete-report-column`, `update-report-score-card`, `rename-report`, `delete-report`, `delete-reports-by-name` |
+| **Smart Tables** | `list-smart-tables`, `create-smart-table`, `get-smart-table`, `update-smart-table`, `list-smart-table-sheets`, `create-smart-table-sheet`, `get-smart-table-sheet`, `update-smart-table-sheet`, `get-smart-table-sheet-import-operation`, `import-smart-table-sheet-file`, `import-smart-table-sheet-request-logs`, `list-smart-table-columns`, `create-smart-table-column`, `update-smart-table-column`, `list-smart-table-rows`, `add-smart-table-rows`, `get-smart-table-cell`, `update-smart-table-cell`, `recalculate-smart-table-cell`, `recalculate-smart-table-cells`, `list-smart-table-operations`, `create-smart-table-operation`, `get-smart-table-operation`, `cancel-smart-table-operation`, `get-smart-table-score`, `configure-smart-table-score`, `recalculate-smart-table-score`, `list-smart-table-versions`, `get-smart-table-version`, `create-smart-table-version`, `get-smart-table-score-history`, `list-legacy-smart-table-migrations`, `preview-legacy-smart-table-migration`, `migrate-legacy-to-smart-table`, `get-legacy-smart-table-migration-job` |
 | **Agents** | `list-workflows`, `get-workflow`, `get-workflow-labels`, `create-workflow`, `patch-workflow`, `run-workflow`, `get-workflow-version-execution-results` |
 | **Tool Registry** | `list-tool-registries`, `get-tool-registry`, `create-tool-registry`, `create-tool-version` |
 | **Skill Collections** | `list-skill-collections`, `create-skill-collection`, `get-skill-collection`, `update-skill-collection`, `save-skill-collection-version` |
 | **Folders** | `create-folder`, `edit-folder`, `get-folder-entities`, `move-folder-entities`, `delete-folder-entities`, `resolve-folder-id` |
+
+Smart Tables are the recommended replacement for legacy datasets and evaluations. Column configs use `{table_id}.{sheet_id}.{column_id}` resolver strings, and computed columns declare a `dependencies` array. See [Tables Data Model](/features/tables/data-model) for resolver format, dependency objects, cell shapes, and score configuration.
 
 ### Local server
 

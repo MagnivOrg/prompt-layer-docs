@@ -15,6 +15,8 @@ A Table has four parts:
 | **Column** | A field in the sheet. Text columns store data; computed columns run prompts, code, checks, extraction, composition, or other work. |
 | **Cell** | A row-column value. Computed cells track status, including queued, running, completed, failed, and stale. |
 
+For resolver strings, dependency edges, cell read/write shapes, and score configuration objects, see [Tables Data Model](/features/tables/data-model).
+
 <Frame>
   <img src="/images/tables/polished/01-start-table.png" alt="A new Table with options to create from a prompt, import request history, or start blank" />
 </Frame>
@@ -58,6 +60,9 @@ Most Tables follow a simple loop:
   </Card>
   <Card title="Cells and Runs" icon="play" href="/features/tables/cells-and-runs">
     Understand cell statuses, stale cells, reruns, selected runs, and cancellation.
+  </Card>
+  <Card title="Tables Data Model" icon="diagram-project" href="/features/tables/data-model">
+    Reference resolver strings, dependencies, cell shapes, and score configuration.
   </Card>
   <Card title="Scoring" icon="gauge" href="/features/tables/scoring">
     Configure score columns, Boolean scoring, numeric scoring, custom code, and winner aggregation.

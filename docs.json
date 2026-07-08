@@ -46,6 +46,7 @@
             "icon": "table",
             "pages": [
               "features/tables/overview",
+              "features/tables/data-model",
               "features/tables/sheets",
               "features/tables/columns",
               "features/tables/column-types",
