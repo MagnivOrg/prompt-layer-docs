@@ -1,0 +1,71 @@
+---
+title: "Agent and Programmatic Usage"
+description: "Use Tables safely from the REST API, MCP, and coding agents."
+icon: "terminal"
+---
+
+Use the Tables REST API or PromptLayer MCP server when scripts, CI jobs, or coding agents should create Tables, add sheets and columns, import data, or queue recalculation work. Read these warnings before automating in a production workspace.
+
+<Warning>
+  **Creates are hard to undo through agents.** The PromptLayer MCP server does not yet expose delete tools for Tables, sheets, or columns. Resources created through MCP or automation remain in the workspace until you remove them in the dashboard or call the REST API [Delete Table](/reference/tables-delete), [Delete Sheet](/reference/table-sheets-delete), or [Delete Column](/reference/table-sheet-columns-delete) endpoints. Treat every create, import, and column configuration as permanent until you have validated it in a non-production workspace.
+</Warning>
+
+<Warning>
+  **Computed columns incur provider costs.** Recalculating prompt, workflow, LLM assertion, AI extraction, and conversation simulator columns sends real requests to LLM providers. Each run uses your workspace provider credentials and counts toward usage and billing. Configure provider API keys under **Settings → Custom Providers and Models** before queueing large runs.
+</Warning>
+
+## Test in a non-production workspace first
+
+Run new automation against a development or staging workspace before pointing agents at production data. Create a small Table with a few rows, confirm column mappings and scores, then scale up imports and recalculation scopes.
+
+When moving a workflow from legacy Evaluations or Datasets, follow [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets). To replicate a Table in another workspace, export the sheet from the dashboard, rebuild columns in the target workspace, and compare outputs before switching automation.
+
+## Provider API keys
+
+Computed columns that call LLM providers require workspace provider credentials. Without them, prompt and LLM evaluation columns fail at runtime.
+
+Configure keys in **Settings → Custom Providers and Models** for each provider your columns use. See [Supported Providers](/features/supported-providers) for provider-specific setup.
+
+When running code locally with the PromptLayer SDK, set provider keys as environment variables (for example, `OPENAI_API_KEY`). Table recalculation runs on PromptLayer infrastructure and uses workspace provider settings instead.
+
+## Compute cost and large runs
+
+Recalculation operations can target a single cell, selected rows, a column, stale cells, or an entire sheet. Wider scopes execute more computed columns and may trigger many provider requests.
+
+When an operation affects many cells, [Create operation](/reference/table-sheet-operations-create) may return `requires_confirmation` with a `confirmation_token` and `affected_cell_count`. Pass the token in a follow-up request only after you intend to proceed. Agents should respect this confirmation step instead of blindly retrying.
+
+Prompt columns also record per-cell cost and latency metrics. Use [History and Analytics](/features/tables/history-and-analytics) to review spend after large runs.
+
+## REST API and MCP
+
+Use the REST API for full Tables lifecycle management, including delete endpoints for Tables, sheets, and columns. Use the PromptLayer MCP server when a coding agent should work with PromptLayer workspace resources from an MCP-compatible client.
+
+Before connecting an agent, install the PromptLayer skill and MCP servers from [MCP & Skills](/agents/overview).
+
+## Recommended workflow
+
+1. Create a Table and sheet in a non-production workspace.
+2. Import a small sample of rows.
+3. Add one computed column at a time and map sources explicitly.
+4. Run stale or selected cells before queueing sheet-wide recalculation.
+5. Confirm scores and outputs, then save a [sheet version](/reference/table-sheet-versions-create).
+6. Move automation to production only after outputs match expectations.
+
+For design guidance, see [Table Design Patterns](/features/tables/best-practices).
+
+## API references
+
+<CardGroup cols={2}>
+  <Card title="Create a Table" icon="plus" href="/reference/tables-create">
+    Create a Table programmatically.
+  </Card>
+  <Card title="Create a column" icon="columns-3" href="/reference/table-sheet-columns-create">
+    Add text or computed columns to a sheet.
+  </Card>
+  <Card title="Create operation" icon="play" href="/reference/table-sheet-operations-create">
+    Queue recalculation work for rows, columns, cells, or stale work.
+  </Card>
+  <Card title="Get operation" icon="magnifying-glass" href="/reference/table-sheet-operations-get">
+    Poll operation status after queueing work.
+  </Card>
+</CardGroup>

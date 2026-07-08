@@ -87,6 +87,10 @@ The PromptLayer MCP server exposes 61 tools covering all major PromptLayer featu
 | **Skill Collections** | `list-skill-collections`, `create-skill-collection`, `get-skill-collection`, `update-skill-collection`, `save-skill-collection-version` |
 | **Folders** | `create-folder`, `edit-folder`, `get-folder-entities`, `move-folder-entities`, `delete-folder-entities`, `resolve-folder-id` |
 
+### Tables
+
+When you automate Tables through the REST API or PromptLayer MCP server, read [Agent and Programmatic Usage](/features/tables/agent-and-programmatic-usage) first. Table creates through MCP are hard to undo, computed column recalculation incurs provider costs, and your workspace must have provider API keys configured before queueing large runs.
+
 ### Local server
 
 Install the server from npm: [@promptlayer/mcp-server](https://www.npmjs.com/package/@promptlayer/mcp-server)

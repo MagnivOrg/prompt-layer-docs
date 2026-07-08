@@ -50,6 +50,7 @@
               "features/tables/columns",
               "features/tables/column-types",
               "features/tables/cells-and-runs",
+              "features/tables/agent-and-programmatic-usage",
               "features/tables/scoring",
               "features/tables/history-and-analytics",
               "features/tables/migrate-from-evaluations-and-datasets"
