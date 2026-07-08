@@ -107,9 +107,21 @@ For clients that support stdio transport, such as Claude Desktop and Cursor, you
 }
 ```
 
+## Tables and cross-workspace migration
+
+The PromptLayer MCP server does not yet expose Table create, update, or delete tools. For cross-workspace Table migration, use the [Tables REST API](/reference/introduction#tables) in a script and use MCP for dependency lookup:
+
+- `resolve-folder-id` to resolve folder paths in the destination workspace.
+- External ID tools such as `list-prompt-templates`, `get-prompt-template`, and `get-workflow` to match dependencies across workspaces.
+
+See [Copying and Migrating Tables](/features/tables/copying-and-migrating) for the full prod-to-local and cross-workspace workflow, including column dependency remapping and known limitations.
+
 ## Next steps
 
 <CardGroup cols={2}>
+  <Card title="Copying and Migrating Tables" icon="copy" href="/features/tables/copying-and-migrating">
+    Migrate Tables across workspaces with ID remapping and API workflows.
+  </Card>
   <Card title="PromptLayer MCP source" icon="github" href="https://github.com/MagnivOrg/promptlayer-mcp">
     Review the open-source MCP server implementation.
   </Card>

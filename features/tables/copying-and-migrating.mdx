@@ -1,0 +1,199 @@
+---
+title: "Copying and Migrating Tables"
+description: "Copy or migrate a Table to another workspace, including prod-to-local and cross-workspace workflows."
+icon: "copy"
+---
+
+Tables are workspace-scoped. Table, sheet, column, cell, and operation IDs from one workspace cannot be reused in another. When you copy or migrate a Table across workspaces, you must recreate the Table structure and remap every workspace-specific reference.
+
+Use this guide when you need to move a Table from production to staging, from a shared workspace to a local or self-hosted environment, or from one team workspace to another.
+
+## When to use each path
+
+| Goal | Recommended path |
+| --- | --- |
+| Move input rows only | Export the sheet as CSV, then [upload](/features/tables/sheets#upload-data) into a new Table in the destination workspace. |
+| Recreate a full Table with computed columns | Use the API workflow below. Migrate dependencies first, then recreate sheets, columns, and rows. |
+| Copy a legacy Evaluation or Dataset | Use [Migrate from Evaluations and Datasets](/features/tables/migrate-from-evaluations-and-datasets) when the source is still a legacy object. |
+
+## Prerequisites
+
+Before you recreate a Table in the destination workspace, make sure the resources it depends on already exist there.
+
+1. **Prompt templates** referenced by `Prompt Template` columns.
+2. **Workflows** referenced by `Workflow` columns.
+3. **Tools** referenced by prompt tool-calling or `MCP` columns.
+4. **Workspace environment variables** and provider API keys required for prompt, code, and tool execution.
+5. **Folder paths** if you want the new Table in the same registry location. Use [Resolve Folder ID by Path](/reference/resolve-folder-id) in the destination workspace.
+
+<Warning>
+  Provider keys and workspace env vars are not copied with a Table. Computed columns fail at recalculation time if the destination workspace is missing the keys they need.
+</Warning>
+
+## Step-by-step: prod to local or cross-workspace
+
+### 1. Export the source Table
+
+In the source workspace, read the Table structure and row data.
+
+**In the UI**
+
+1. Open the Table and review each sheet's columns, source mappings, and score configuration.
+2. Click **Download** to export text-column values as CSV. See [Download a sheet](/features/tables/sheets#download-a-sheet).
+
+**With the API**
+
+Use the workspace API key for the source environment.
+
+1. [Get Table](/reference/tables-get) and [List Sheets](/reference/table-sheets-list).
+2. [List Columns](/reference/table-sheet-columns-list) for each sheet. Save each column's `type`, `config`, and `dependencies`.
+3. [List Rows](/reference/table-sheet-rows-list) for text-column values.
+4. [Get Score](/reference/table-sheet-score-get) and score-history settings if you need to recreate scoring.
+
+### 2. Migrate dependencies
+
+Copy or publish the resources referenced inside column `config` values before you recreate columns.
+
+| Dependency | How to resolve in the destination workspace |
+| --- | --- |
+| Prompt template | Publish the template with the same name, or use [Upsert Prompt Template by External ID](/reference/external-ids-prompt-templates-upsert) so agents and scripts can resolve it by a stable `{source, external_id}` pair. |
+| Workflow | [Create Workflow](/reference/create-workflow) in the destination workspace, or match by name with [List Workflows](/reference/list-workflows). |
+| Tool registry entry | [Create Tool Registry](/reference/tool-registry-create) in the destination workspace. |
+| Registry folder | [Resolve Folder ID by Path](/reference/resolve-folder-id) with the destination workspace API key. Folder IDs from the source workspace are not valid in another workspace. |
+| Composition source | Recreate the source sheet in the destination Table first, or update composition config to point at the new sheet and column IDs. |
+
+<Tip>
+  Attach [External IDs](/reference/external-ids-overview) to prompt templates, workflows, and tools in both workspaces before migration. External IDs give you a stable lookup key that does not change when you recreate resources in a new workspace.
+</Tip>
+
+### 3. Create the destination Table
+
+Switch to the destination workspace API key, then recreate the Table shell.
+
+1. [Create Table](/reference/tables-create). Pass `folder_id` when you resolved a destination folder.
+2. For each sheet, either keep the default sheet or [Create Sheet](/reference/table-sheets-create).
+3. Import text-column data with [Import File](/reference/table-sheet-imports-file-create), [Import Request Logs](/reference/table-sheet-imports-request-logs-create), or [Add Rows](/reference/table-sheet-rows-add).
+
+Create text columns before computed columns so row data and dependency targets exist.
+
+### 4. Remap IDs and recreate computed columns
+
+Every workspace-specific ID in the exported column definitions must be replaced with the destination workspace IDs.
+
+Build two lookup maps while you recreate the sheet:
+
+| Map | Purpose |
+| --- | --- |
+| `column_id_map` | Maps each source `column_id` to the new column ID in the destination sheet. |
+| `resource_id_map` | Maps source prompt template, workflow, tool, sheet, and table IDs to their destination equivalents. |
+
+Recreate columns in dependency order: text columns first, then computed columns whose sources already exist.
+
+When you [Create Column](/reference/table-sheet-columns-create) or [Update Column](/reference/table-sheet-columns-update):
+
+1. Copy the source column `config`, then replace workspace-scoped resource IDs using `resource_id_map`.
+2. Rewrite each `dependencies[].column_id` using `column_id_map`.
+3. For composition columns, update the source table, sheet, and column references to the recreated resources in the destination workspace.
+
+#### Example: remap column dependencies
+
+Source sheet in workspace A:
+
+```json
+{
+  "columns": [
+    { "id": "11111111-1111-1111-1111-111111111111", "title": "Question", "type": "text" },
+    {
+      "id": "22222222-2222-2222-2222-222222222222",
+      "title": "Answer",
+      "type": "prompt_template",
+      "dependencies": [
+        { "column_id": "11111111-1111-1111-1111-111111111111", "config_key": "question" }
+      ]
+    }
+  ]
+}
+```
+
+After recreating the sheet in workspace B:
+
+```json
+{
+  "columns": [
+    { "id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "title": "Question", "type": "text" },
+    {
+      "id": "bbbbbbbb-bbbb-bbbb-bbbb-bbbbbbbbbbbb",
+      "title": "Answer",
+      "type": "prompt_template",
+      "dependencies": [
+        { "column_id": "aaaaaaaa-aaaa-aaaa-aaaa-aaaaaaaaaaaa", "config_key": "question" }
+      ]
+    }
+  ]
+}
+```
+
+The prompt template reference inside `config` must also point at the template that exists in workspace B, not the source `prompt_template_id`.
+
+#### Example: resolve a prompt template with External IDs
+
+If the source template is attached to `{ "source": "acme_cms", "external_id": "qa_template" }`, publish or upsert the same mapping in the destination workspace before creating the column:
+
+```bash
+curl -X PUT "https://api.promptlayer.com/prompt-templates/by-external-id/acme_cms/qa_template" \
+  -H "X-API-Key: $DESTINATION_API_KEY" \
+  -H "Content-Type: application/json" \
+  -d @qa_template.json
+```
+
+Then reference the template by name or resolved ID in the column `config` when you create the column in the destination sheet.
+
+### 5. Recreate scoring and run the sheet
+
+1. [Configure Score](/reference/table-sheet-score-configure) to match the source sheet.
+2. [Create Operation](/reference/table-sheet-operations-create) to recalculate computed columns. New computed cells start as `stale` until recalculation completes.
+3. Poll [Get Operation](/reference/table-sheet-operations-get) until work finishes. Large sheets may return `requires_confirmation` with a `confirmation_token` — pass that token in a follow-up request to proceed.
+4. Compare destination outputs and scores against the source Table before switching automation.
+
+## Known limitations and mitigations
+
+| Limitation | Impact | Mitigation |
+| --- | --- | --- |
+| Workspace-scoped IDs | Table, sheet, column, and cell IDs cannot be copied directly. | Build `column_id_map` and `resource_id_map` while recreating the Table. |
+| Computed cell values are not importable | [Update Cell](/reference/table-sheet-cells-update) only edits `text` columns. You cannot paste completed computed outputs into the destination sheet through the API today. | Recalculate computed columns in the destination workspace, or keep source exports for offline comparison until computed-cell import is available. |
+| Recalculation cost | Rebuilding a large Table reruns every prompt, workflow, code, and LLM eval column. | Recalculate in stages with `column_ids` and `row_ids`. Start with a small row sample to validate remapping before running the full sheet. |
+| Provider keys required | Prompt, workflow, MCP, and code columns need working provider and env-var configuration in the destination workspace. | Copy workspace env vars and confirm provider keys before recalculation. |
+| Composition across workspaces | Composition columns point at table, sheet, and column IDs in one workspace. | Recreate source sheets in the destination Table first, then update composition config. |
+| MCP agent coverage | The [PromptLayer MCP server](/agents/overview) does not yet expose Table create, update, or delete tools. Agents cannot fully automate cross-workspace migration through MCP alone. | Use the [Tables REST API](/reference/introduction#tables) for migration scripts. Use `resolve-folder-id` and External ID tools for dependency lookup. |
+| Partial delete support | The REST API supports [Delete Table](/reference/tables-delete), [Delete Sheet](/reference/table-sheets-delete), and [Delete Column](/reference/table-sheet-columns-delete), but iterative agent workflows may still lack matching MCP delete tools. | Use the REST API to clean up mistaken migration attempts. |
+
+## Recommended order
+
+Migrate one sheet at a time.
+
+1. Export and review the source Table.
+2. Migrate prompt templates, workflows, tools, folders, and env vars.
+3. Recreate text columns and import row data.
+4. Recreate computed columns with remapped `config` and `dependencies`.
+5. Recalculate a small row sample and compare outputs.
+6. Recreate scoring, run the full sheet, and validate score history.
+7. Point automation at the destination Table.
+
+Keep the source Table read-only until the destination Table matches expected outputs and scores.
+
+## API references
+
+<CardGroup cols={2}>
+  <Card title="Create Table" icon="plus" href="/reference/tables-create">
+    Create the destination Table.
+  </Card>
+  <Card title="Create Column" icon="columns-3" href="/reference/table-sheet-columns-create">
+    Recreate computed columns with remapped dependencies.
+  </Card>
+  <Card title="External IDs" icon="link" href="/reference/external-ids-overview">
+    Resolve prompt templates, workflows, and tools across workspaces.
+  </Card>
+  <Card title="Create Operation" icon="play" href="/reference/table-sheet-operations-create">
+    Recalculate computed cells after migration.
+  </Card>
+</CardGroup>
