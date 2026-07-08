@@ -1,10 +1,21 @@
 ---
 title: "Column Types"
-description: "Reference for text columns, computed columns, evaluation columns, helper columns, and composition in Tables."
+description: "Reference for input and computed Table column types, including evaluation columns, helper columns, and composition."
 icon: "brackets-curly"
 ---
 
-Table column types reuse PromptLayer's evaluation and workflow building blocks, plus the Tables-specific **Composition** type.
+Table column types reuse PromptLayer's evaluation and workflow building blocks, plus the Tables-specific **Composition** type. Each type has a canonical **type value** (for example, `COMPARE` or `COMPOSITION`) that matches the evaluation pipeline and workflow node enums.
+
+## Input vs computed columns
+
+Table columns fall into two groups:
+
+| Group | Type value | Behavior |
+| --- | --- | --- |
+| **Input** | `TEXT` | Stores editable values you set manually, paste, or import. Text cells do not run. |
+| **Computed** | All other type values below | Runs per row, tracks cell status (`QUEUED`, `RUNNING`, `COMPLETED`, `FAILED`, `STALE`), and can become stale when dependencies change. |
+
+Put source data in input columns, then add computed columns left to right for each workflow step. See [Cells and Runs](/features/tables/cells-and-runs) for status and rerun behavior.
 
 ## How sources work
 
@@ -14,43 +25,64 @@ Computed columns read from source columns in the sheet. For example, a `Prompt o
   <img src="/images/tables/polished/07-source-mapping.png" alt="Prompt Template column configuration showing input variables mapped to source columns" />
 </Frame>
 
-## Column type overview
+## Column type reference
 
-| UI label | Type value | Category | Use when |
-| --- | --- | --- | --- |
-| Text | `TEXT` | Text | You need editable input data, expected answers, labels, metadata, or notes. |
-| Prompt Template | `PROMPT_TEMPLATE` | Data source / execution | You want to run a Prompt Registry template or inline prompt for each row. |
-| Workflow | `WORKFLOW` | Data source / execution | You want a row to execute a PromptLayer workflow. |
-| Code Execution | `CODE_EXECUTION` | Data source / execution | You need Python or JavaScript logic per row. |
-| Endpoint | `ENDPOINT` | Data source / execution | You want to send row data to an external URL endpoint. |
-| MCP | `MCP` | Data source / execution | You want to call Model Context Protocol server functions. |
-| Conversation Simulator | `CONVERSATION_SIMULATOR` | Data source / execution | You want to simulate a multi-turn user and assistant conversation. |
-| Human | `HUMAN` | Data source / execution | You need a human to fill in or approve data. |
-| While Loop | `WHILE_LOOP` | Data source / execution | You need repeated execution while a condition remains true. |
-| For Loop | `FOR_LOOP` | Data source / execution | You need to iterate over a collection or array. |
-| Composition | `COMPOSITION` | Data source / execution | You want to reference data from another sheet or table. |
-| Compare | `COMPARE` | Simple eval | You want to compare values and generate a diff or comparison result. |
-| Contains | `CONTAINS` | Simple eval | You want to check whether text contains a substring. |
-| Regex | `REGEX` | Simple eval | You want to validate text against a regular expression. |
-| Absolute Numeric Distance | `ABSOLUTE_NUMERIC_DISTANCE` | Simple eval | You want the absolute distance between numeric values. |
-| Assert Valid | `ASSERT_VALID` | Simple eval | You want to validate data types or formats. |
-| Math Operator | `MATH_OPERATOR` | Simple eval | You want mathematical comparisons such as greater than or less than. |
-| LLM Assertion | `LLM_ASSERTION` | LLM eval | You want an LLM to judge whether an assertion is true. |
-| AI Data Extraction | `AI_DATA_EXTRACTION` | LLM eval | You want an LLM to extract specific information from text. |
-| Cosine Similarity | `COSINE_SIMILARITY` | LLM eval | You want semantic similarity between vectors or text embeddings. |
-| JSON Extraction | `JSON_PATH` | Helper | You want to extract values from JSON with JSONPath. |
-| XML Path | `XML_PATH` | Helper | You want to extract values from XML with XPath. |
-| Regex Extraction | `REGEX_EXTRACTION` | Helper | You want to extract capture groups from text. |
-| Parse Value | `PARSE_VALUE` | Helper | You want to parse a specific value from structured or unstructured data. |
-| Count | `COUNT` | Helper | You want counts of elements, characters, or occurrences. |
-| Min Max | `MIN_MAX` | Helper | You want the minimum or maximum value from numeric inputs. |
-| Coalesce | `COALESCE` | Helper | You want the first non-null value from several sources. |
-| Combine Columns | `COMBINE_COLUMNS` | Helper | You want to merge values from multiple sources into one output. |
-| Apply Diff | `APPLY_DIFF` | Helper | You want to apply a unified diff patch to text. |
+Type values use UPPERCASE enum strings. The UI label is what you see in the column picker.
+
+### Input column
+
+| UI label | Type value | Use when |
+| --- | --- | --- |
+| Text | `TEXT` | You need editable input data, expected answers, labels, metadata, or notes. |
+
+### Computed columns
+
+| UI label | Type value | Category | Compute cost | Use when |
+| --- | --- | --- | --- | --- |
+| Prompt Template | `PROMPT_TEMPLATE` | Data source / execution | LLM — one or more model requests per row | You want to run a Prompt Registry template or inline prompt for each row. |
+| Workflow | `WORKFLOW` | Data source / execution | Variable — depends on the workflow's nodes | You want a row to execute a PromptLayer workflow. |
+| Code Execution | `CODE_EXECUTION` | Data source / execution | Compute — server-side code per row | You need Python or JavaScript logic per row. |
+| Endpoint | `ENDPOINT` | Data source / execution | External — outbound HTTP per row | You want to send row data to an external URL endpoint. |
+| MCP | `MCP` | Data source / execution | External — MCP server calls per row | You want to call Model Context Protocol server functions. |
+| Conversation Simulator | `CONVERSATION_SIMULATOR` | Data source / execution | LLM — multiple model turns per row | You want to simulate a multi-turn user and assistant conversation. |
+| Human | `HUMAN` | Data source / execution | None — waits for manual input | You need a human to fill in or approve data. |
+| While Loop | `WHILE_LOOP` | Data source / execution | Variable — multiplies inner step cost | You need repeated execution while a condition remains true. |
+| For Loop | `FOR_LOOP` | Data source / execution | Variable — multiplies inner step cost | You need to iterate over a collection or array. |
+| Composition | `COMPOSITION` | Data source / execution | None — copies a value from another sheet | You want to reference data from another sheet or table. |
+| Compare | `COMPARE` | Simple eval | None — deterministic check | You want to compare values and generate a diff or comparison result. |
+| Contains | `CONTAINS` | Simple eval | None — deterministic check | You want to check whether text contains a substring. |
+| Regex | `REGEX` | Simple eval | None — deterministic check | You want to validate text against a regular expression. |
+| Absolute Numeric Distance | `ABSOLUTE_NUMERIC_DISTANCE` | Simple eval | None — deterministic check | You want the absolute distance between numeric values. |
+| Assert Valid | `ASSERT_VALID` | Simple eval | None — deterministic check | You want to validate data types or formats. |
+| Math Operator | `MATH_OPERATOR` | Simple eval | None — deterministic check | You want mathematical comparisons such as greater than or less than. |
+| LLM Assertion | `LLM_ASSERTION` | LLM eval | LLM — one or more model requests per row | You want an LLM to judge whether an assertion is true. |
+| AI Data Extraction | `AI_DATA_EXTRACTION` | LLM eval | LLM — one or more model requests per row | You want an LLM to extract specific information from text. |
+| Cosine Similarity | `COSINE_SIMILARITY` | LLM eval | LLM — embedding or similarity requests per row | You want semantic similarity between vectors or text embeddings. |
+| JSON Extraction | `JSON_PATH` | Helper | None — deterministic transform | You want to extract values from JSON with JSONPath. |
+| XML Path | `XML_PATH` | Helper | None — deterministic transform | You want to extract values from XML with XPath. |
+| Regex Extraction | `REGEX_EXTRACTION` | Helper | None — deterministic transform | You want to extract capture groups from text. |
+| Parse Value | `PARSE_VALUE` | Helper | None — deterministic transform | You want to parse a specific value from structured or unstructured data. |
+| Count | `COUNT` | Helper | None — deterministic transform | You want counts of elements, characters, or occurrences. |
+| Min Max | `MIN_MAX` | Helper | None — deterministic transform | You want the minimum or maximum value from numeric inputs. |
+| Coalesce | `COALESCE` | Helper | None — deterministic transform | You want the first non-null value from several sources. |
+| Combine Columns | `COMBINE_COLUMNS` | Helper | None — deterministic transform | You want to merge values from multiple sources into one output. |
+| Apply Diff | `APPLY_DIFF` | Helper | None — deterministic transform | You want to apply a unified diff patch to text. |
 
 <Warning>
   **Condition** appears in Workflow node selectors, but it is not a Table column type. Use Table-supported comparison, assertion, or helper columns for row-level checks.
 </Warning>
+
+## Compute cost notes
+
+Computed columns run once per row (and again on reruns). Cost depends on the column type:
+
+- **None** — Helper columns, simple eval columns, `HUMAN`, and `COMPOSITION` do not call models or external services on their own.
+- **LLM** — `PROMPT_TEMPLATE`, `LLM_ASSERTION`, `AI_DATA_EXTRACTION`, `COSINE_SIMILARITY`, and `CONVERSATION_SIMULATOR` make model requests. Prompt Template columns expose per-cell cost, latency, and token metrics. Use [History and Analytics](/features/tables/history-and-analytics) to inspect request-level details.
+- **External** — `ENDPOINT` and `MCP` call services outside PromptLayer. Cost depends on your endpoint or MCP server.
+- **Compute** — `CODE_EXECUTION` runs server-side code per row.
+- **Variable** — `WORKFLOW`, `FOR_LOOP`, and `WHILE_LOOP` cost depends on the nested steps they execute.
+
+Running a sheet across many rows multiplies cost for LLM and external columns. Prefer deterministic helper and simple eval columns when checks do not need a model. Use stale-cell reruns instead of full-sheet reruns when only some inputs changed.
 
 ## Composition
 
@@ -59,6 +91,12 @@ Composition references a source table, sheet, and column, then pulls that value 
 <Frame>
   <img src="/images/tables/polished/12-composition.png" alt="Composition column configuration that references a source column from another sheet" />
 </Frame>
+
+## Tables API type values
+
+The [Tables REST API](/reference/table-sheet-columns-list) uses a smaller set of lowercase `type` values: `text`, `prompt_template`, `llm`, `code`, `score`, `comparison`, and `composition`. Set the specific column behavior in `config`. The UI type values above (`COMPARE`, `COMPOSITION`, `PROMPT_TEMPLATE`, and so on) match the evaluation pipeline enum and appear in column configuration.
+
+For detailed configuration schemas for each type value, see [Node & Column Types](/features/evaluations/column-types) (shared with Workflows and legacy Evaluations).
 
 ## API references
 
