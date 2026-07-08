@@ -5,8 +5,12 @@ openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/rows"
 
 List rows in a sheet. Each row contains a map of `column_id → cell`.
 
+Text column cells return `display_value` and a nested `value.value` payload. Computed column cells add `last_computed_version` (the sheet version that produced the output) and may include `request_metrics` for prompt-template columns.
+
 Pass `include_columns=true` (the default on the first page) to receive column metadata alongside rows — useful for building column headers.
 
 Use cursor-based pagination for large sheets.
 
 The response includes `version`, the current sheet version count for the returned rows.
+
+See also [Add Rows](/reference/table-sheet-rows-add) for the write-side `values` shape and [Get Cell](/reference/table-sheet-cells-get) for single-cell examples.

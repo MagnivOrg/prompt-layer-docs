@@ -11440,6 +11440,76 @@
                       "description": "Sheet-level and per-column aggregates for price and latency metrics. Only present when `include_execution_metadata_aggregates=true`."
                     }
                   }
+                },
+                "examples": {
+                  "textAndComputedCells": {
+                    "summary": "Row with text and computed cells",
+                    "value": {
+                      "data": [
+                        {
+                          "row_index": 0,
+                          "cells": {
+                            "a1111111-1111-4111-8111-111111111101": {
+                              "id": "e5555555-5555-4555-8555-555555555501",
+                              "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                              "column_id": "a1111111-1111-4111-8111-111111111101",
+                              "row_index": 0,
+                              "status": "completed",
+                              "display_value": "What is PromptLayer?",
+                              "value": {
+                                "value": "What is PromptLayer?"
+                              },
+                              "last_computed_version": null,
+                              "updated_at": "2026-07-08T12:00:00Z"
+                            },
+                            "b2222222-2222-4222-8222-222222222202": {
+                              "id": "f6666666-6666-4666-8666-666666666601",
+                              "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                              "column_id": "b2222222-2222-4222-8222-222222222202",
+                              "row_index": 0,
+                              "status": "completed",
+                              "display_value": "PromptLayer is a platform for managing and evaluating LLM prompts.",
+                              "value": {
+                                "value": "PromptLayer is a platform for managing and evaluating LLM prompts."
+                              },
+                              "last_computed_version": 3,
+                              "request_metrics": {
+                                "request_count": 1,
+                                "request_ids": [
+                                  12345
+                                ],
+                                "latency_ms": 1250,
+                                "price": 0.0023,
+                                "input_tokens": 42,
+                                "output_tokens": 18
+                              },
+                              "updated_at": "2026-07-08T12:05:00Z"
+                            }
+                          }
+                        }
+                      ],
+                      "next_cursor": null,
+                      "has_more": false,
+                      "row_count": 1,
+                      "columns": [
+                        {
+                          "id": "a1111111-1111-4111-8111-111111111101",
+                          "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                          "title": "Question",
+                          "type": "text",
+                          "position_rank": 1
+                        },
+                        {
+                          "id": "b2222222-2222-4222-8222-222222222202",
+                          "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                          "title": "Answer",
+                          "type": "prompt_template",
+                          "position_rank": 2
+                        }
+                      ],
+                      "version": 3
+                    }
+                  }
                 }
               }
             }
@@ -11503,10 +11573,26 @@
                   "values": {
                     "type": "array",
                     "nullable": true,
-                    "description": "Per-row initial values for text columns. Each element is a map of column_id \u2192 value.",
+                    "description": "Per-row initial values for text columns. Each element is a map of column_id \u2192 raw value (string, number, boolean, or JSON). Values are not wrapped in the nested cell `value.value` shape used in cell read responses.",
                     "items": {
                       "type": "object",
                       "additionalProperties": true
+                    }
+                  }
+                },
+                "examples": {
+                  "withTextValues": {
+                    "summary": "Add rows with text column values",
+                    "value": {
+                      "count": 2,
+                      "values": [
+                        {
+                          "a1111111-1111-4111-8111-111111111101": "What is PromptLayer?"
+                        },
+                        {
+                          "a1111111-1111-4111-8111-111111111101": "How do I log a request?"
+                        }
+                      ]
                     }
                   }
                 }
@@ -11563,6 +11649,54 @@
                     "version": {
                       "type": "integer",
                       "description": "Current sheet version_count for this response. It matches the sheet's version_count after any committed changes."
+                    }
+                  }
+                },
+                "examples": {
+                  "rowsAdded": {
+                    "summary": "Rows added with text and stale computed cells",
+                    "value": {
+                      "success": true,
+                      "rows_created": 2,
+                      "start_row_index": 1,
+                      "row_indices": [
+                        1,
+                        2
+                      ],
+                      "rows": [
+                        {
+                          "row_index": 1,
+                          "cells": {
+                            "a1111111-1111-4111-8111-111111111101": {
+                              "id": "e5555555-5555-4555-8555-555555555501",
+                              "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                              "column_id": "a1111111-1111-4111-8111-111111111101",
+                              "row_index": 1,
+                              "status": "completed",
+                              "display_value": "What is PromptLayer?",
+                              "value": {
+                                "value": "What is PromptLayer?"
+                              },
+                              "last_computed_version": null,
+                              "updated_at": "2026-07-08T12:00:00Z"
+                            },
+                            "b2222222-2222-4222-8222-222222222202": {
+                              "id": "f6666666-6666-4666-8666-666666666602",
+                              "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                              "column_id": "b2222222-2222-4222-8222-222222222202",
+                              "row_index": 1,
+                              "status": "stale",
+                              "display_value": null,
+                              "value": null,
+                              "last_computed_version": null,
+                              "updated_at": "2026-07-08T12:00:00Z"
+                            }
+                          }
+                        }
+                      ],
+                      "cell_count": 4,
+                      "row_count": 3,
+                      "version": 4
                     }
                   }
                 }
@@ -11649,6 +11783,56 @@
                       "$ref": "#/components/schemas/Cell"
                     }
                   }
+                },
+                "examples": {
+                  "textCell": {
+                    "summary": "Text column cell",
+                    "value": {
+                      "success": true,
+                      "cell": {
+                        "id": "e5555555-5555-4555-8555-555555555501",
+                        "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                        "column_id": "a1111111-1111-4111-8111-111111111101",
+                        "row_index": 0,
+                        "status": "completed",
+                        "display_value": "What is PromptLayer?",
+                        "value": {
+                          "value": "What is PromptLayer?"
+                        },
+                        "last_computed_version": null,
+                        "updated_at": "2026-07-08T12:00:00Z"
+                      }
+                    }
+                  },
+                  "computedCell": {
+                    "summary": "Computed prompt-template column cell",
+                    "value": {
+                      "success": true,
+                      "cell": {
+                        "id": "f6666666-6666-4666-8666-666666666601",
+                        "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                        "column_id": "b2222222-2222-4222-8222-222222222202",
+                        "row_index": 0,
+                        "status": "completed",
+                        "display_value": "PromptLayer is a platform for managing and evaluating LLM prompts.",
+                        "value": {
+                          "value": "PromptLayer is a platform for managing and evaluating LLM prompts."
+                        },
+                        "last_computed_version": 3,
+                        "request_metrics": {
+                          "request_count": 1,
+                          "request_ids": [
+                            12345
+                          ],
+                          "latency_ms": 1250,
+                          "price": 0.0023,
+                          "input_tokens": 42,
+                          "output_tokens": 18
+                        },
+                        "updated_at": "2026-07-08T12:05:00Z"
+                      }
+                    }
+                  }
                 }
               }
             }
@@ -11718,7 +11902,18 @@
                     "description": "Human-readable display value."
                   },
                   "value": {
-                    "description": "Structured value to store."
+                    "description": "Structured value to store. For text cells, use the same `{ \"value\": <raw> }` wrapper returned by cell read endpoints."
+                  }
+                },
+                "examples": {
+                  "updateTextCell": {
+                    "summary": "Update a text cell",
+                    "value": {
+                      "display_value": "Updated question text",
+                      "value": {
+                        "value": "Updated question text"
+                      }
+                    }
                   }
                 }
               }
@@ -11746,6 +11941,29 @@
                     "stale_count": {
                       "type": "integer",
                       "description": "Number of downstream cells marked stale due to this edit."
+                    }
+                  }
+                },
+                "examples": {
+                  "cellUpdated": {
+                    "summary": "Text cell updated",
+                    "value": {
+                      "success": true,
+                      "cell": {
+                        "id": "e5555555-5555-4555-8555-555555555501",
+                        "sheet_id": "c3333333-3333-4333-8333-333333333303",
+                        "column_id": "a1111111-1111-4111-8111-111111111101",
+                        "row_index": 0,
+                        "status": "completed",
+                        "display_value": "Updated question text",
+                        "value": {
+                          "value": "Updated question text"
+                        },
+                        "last_computed_version": null,
+                        "updated_at": "2026-07-08T12:10:00Z"
+                      },
+                      "version": 5,
+                      "stale_count": 1
                     }
                   }
                 }
@@ -23095,7 +23313,7 @@
             "nullable": true
           },
           "value": {
-            "description": "Structured cell value (type depends on column type)."
+            "description": "Structured cell value. Text and computed cells store the payload in `value.value`. Use `display_value` for the human-readable string and `last_computed_version` to see which sheet version produced a computed output (null for text cells)."
           },
           "error": {
             "type": "string",

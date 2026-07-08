@@ -5,4 +5,8 @@ openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/cells/{cell_id}
 
 Retrieve a single cell by ID, including its current status, display value, and structured value.
 
+Read the stored payload from `value.value`. Use `display_value` for the human-readable string. Computed cells include `last_computed_version` (null on text cells) and may include `request_metrics` on prompt-template columns.
+
 Cell statuses: `completed`, `stale`, `running`, `queued`, `error`, `cancelled`.
+
+See also [Update Cell](/reference/table-sheet-cells-update), [List Rows](/reference/table-sheet-rows-list), and [Add Rows](/reference/table-sheet-rows-add).
