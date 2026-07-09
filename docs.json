@@ -113,6 +113,7 @@
               "why-promptlayer/shared-workspaces",
               "why-promptlayer/organizations",
               "why-promptlayer/workspaces",
+              "why-promptlayer/data-retention",
               "why-promptlayer/rbac",
               {
                 "group": "Enterprise Identity",
