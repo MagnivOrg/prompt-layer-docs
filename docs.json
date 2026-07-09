@@ -50,7 +50,7 @@
               "features/tables/columns",
               "features/tables/column-types",
               "features/tables/cells-and-runs",
-              "features/tables/scoring",
+              "features/tables/scorecards",
               "features/tables/history-and-analytics",
               "features/tables/migrate-from-evaluations-and-datasets"
             ]
@@ -261,6 +261,15 @@
                   "reference/table-sheet-score-get",
                   "reference/table-sheet-score-configure",
                   "reference/table-sheet-score-recalculate",
+                  "reference/table-sheet-scorecard-get",
+                  "reference/table-sheet-scorecard-configure",
+                  "reference/table-sheet-scorecard-delete",
+                  "reference/table-sheet-scorecard-migrate-legacy-score",
+                  "reference/table-sheet-scorecard-recalculate",
+                  "reference/table-sheet-scorecard-cancel",
+                  "reference/table-sheet-scorecard-calculation-get",
+                  "reference/table-sheet-scorecard-rows-list",
+                  "reference/table-sheet-scorecard-row-get",
                   "reference/table-sheet-versions-list",
                   "reference/table-sheet-versions-create",
                   "reference/table-sheet-versions-get",
@@ -383,6 +392,11 @@
               "onboarding-guides/backtesting-prompt-changes",
               "onboarding-guides/batch-runs"
             ]
+          },
+          {
+            "group": "Tables",
+            "icon": "table",
+            "pages": ["features/tables/scoring"]
           },
           {
             "group": "Datasets API",

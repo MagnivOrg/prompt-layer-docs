@@ -5,4 +5,6 @@ openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/score"
 
 Retrieve the current score payload for a sheet.
 
-When explicit scoring is not configured, PromptLayer returns the default score it can infer from output columns. Configured scoring responses include status and configuration metadata.
+If a legacy score configuration exists, this endpoint returns legacy score behavior.
+
+If no legacy score configuration exists and the sheet has an active scorecard with a completed calculation, this endpoint can return a scorecard-compatible payload (`score_type: "scorecard"`). Use `/scorecard` endpoints for full scorecard state, runs, and row breakdowns.

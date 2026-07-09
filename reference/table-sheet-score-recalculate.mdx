@@ -5,4 +5,6 @@ openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/score"
 
 Queue recalculation for an existing sheet score configuration.
 
-This endpoint requires scoring to already be configured on the sheet. The response returns the `score_configuration_id` and score calculation `status` (`queued`, `running`, `completed`, `failed`, or `null`).
+If a legacy score configuration exists, this endpoint queues legacy score recalculation.
+
+If no legacy score configuration exists and an active scorecard exists, this endpoint can queue scorecard recalculation and return `score_source: "scorecard"`.

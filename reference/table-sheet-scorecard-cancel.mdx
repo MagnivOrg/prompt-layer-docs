@@ -1,0 +1,8 @@
+---
+title: "Cancel Scorecard"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/cancel"
+---
+
+Cancel active queued or running scorecard work for a sheet.
+
+The endpoint targets the latest active run. It does not take `calculation_id`.

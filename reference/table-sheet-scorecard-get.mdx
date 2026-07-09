@@ -1,0 +1,8 @@
+---
+title: "Get Scorecard"
+openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard"
+---
+
+Get the active scorecard for a sheet, plus the latest run metadata.
+
+`display_calculation` can differ from `latest_calculation`. When the latest run is queued, running, or failed, PromptLayer can return the previous completed run as `display_calculation`.

@@ -1,0 +1,8 @@
+---
+title: "Migrate Legacy Score to Scorecard"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/migrate-legacy-score"
+---
+
+Convert legacy sheet scoring into scorecard criteria.
+
+Use `delete_legacy_score: false` during migration. Turn on `delete_legacy_score` only after all `/score` consumers have moved.
