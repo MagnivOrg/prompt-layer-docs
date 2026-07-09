@@ -10923,16 +10923,7 @@
                     "type": "string"
                   },
                   "type": {
-                    "type": "string",
-                    "enum": [
-                      "text",
-                      "prompt_template",
-                      "llm",
-                      "code",
-                      "score",
-                      "comparison",
-                      "composition"
-                    ]
+                    "$ref": "#/components/schemas/TableColumnType"
                   },
                   "config": {
                     "type": "object",
@@ -21718,7 +21709,7 @@
               "MATH_OPERATOR",
               "MIN_MAX"
             ],
-            "description": "Type of evaluation column to create."
+            "description": "Type of evaluation column to create. Does not include COMPOSITION, which is Tables-only."
           },
           "name": {
             "type": "string",
@@ -23011,6 +23002,43 @@
           }
         }
       },
+      "TableColumnType": {
+        "type": "string",
+        "description": "Smart Table column type. Use uppercase backend enum values. Input: TEXT. Reference (Tables only, not in legacy evaluation/workflow enums): COMPOSITION. Computed: all other listed values. Create requests also accept lowercase aliases (text, prompt_template, llm, code, score, comparison, composition), which are normalized to uppercase. Legacy DATASET columns are not creatable.",
+        "enum": [
+          "TEXT",
+          "ABSOLUTE_NUMERIC_DISTANCE",
+          "AI_DATA_EXTRACTION",
+          "APPLY_DIFF",
+          "ASSERT_VALID",
+          "COALESCE",
+          "CONDITION",
+          "CODE_EXECUTION",
+          "COMBINE_COLUMNS",
+          "COMPARE",
+          "COMPOSITION",
+          "CONTAINS",
+          "CONVERSATION_SIMULATOR",
+          "COSINE_SIMILARITY",
+          "COUNT",
+          "ENDPOINT",
+          "FOR_LOOP",
+          "HUMAN",
+          "JSON_PATH",
+          "LLM_ASSERTION",
+          "MATH_OPERATOR",
+          "MCP",
+          "MIN_MAX",
+          "PARSE_VALUE",
+          "PROMPT_TEMPLATE",
+          "REGEX",
+          "REGEX_EXTRACTION",
+          "VARIABLE",
+          "WHILE_LOOP",
+          "WORKFLOW",
+          "XML_PATH"
+        ]
+      },
       "Column": {
         "type": "object",
         "description": "A column within a Table sheet.",
@@ -23033,17 +23061,7 @@
             "description": "Display title of the column."
           },
           "type": {
-            "type": "string",
-            "description": "Column type. 'text' columns store free-text; 'prompt_template', 'llm', 'code', 'score', 'comparison', and 'composition' columns run automated computations.",
-            "enum": [
-              "text",
-              "prompt_template",
-              "llm",
-              "code",
-              "score",
-              "comparison",
-              "composition"
-            ]
+            "$ref": "#/components/schemas/TableColumnType"
           },
           "config": {
             "type": "object",

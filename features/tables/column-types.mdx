@@ -4,18 +4,23 @@ description: "Reference for input and computed Table column types, including eva
 icon: "brackets-curly"
 ---
 
-Table column types reuse PromptLayer's evaluation and workflow building blocks, plus the Tables-specific **Composition** type. Each type has a canonical **type value** (for example, `COMPARE` or `COMPOSITION`) that matches the evaluation pipeline and workflow node enums.
+Table column types reuse PromptLayer's evaluation and workflow building blocks, plus the Tables-specific **Composition** reference type.
 
-## Input vs computed columns
+Most type values (`COMPARE`, `PROMPT_TEMPLATE`, `LLM_ASSERTION`, `CODE_EXECUTION`, and the helper/eval types below) match the evaluation pipeline and workflow node enums documented in [Node & Column Types](/features/evaluations/column-types).
 
-Table columns fall into two groups:
+**Tables-only:** `COMPOSITION` is not part of the legacy evaluation or workflow node enum. Use it only in Tables to mirror a column from another sheet or table.
+
+## Input, reference, and computed columns
+
+Table columns fall into three groups:
 
 | Group | Type value | Behavior |
 | --- | --- | --- |
 | **Input** | `TEXT` | Stores editable values you set manually, paste, or import. Text cells do not run. |
+| **Reference** | `COMPOSITION` | Mirrors a value from another sheet or table. Does not execute per row. |
 | **Computed** | All other type values below | Runs per row, tracks cell status (`QUEUED`, `RUNNING`, `COMPLETED`, `FAILED`, `STALE`), and can become stale when dependencies change. |
 
-Put source data in input columns, then add computed columns left to right for each workflow step. See [Cells and Runs](/features/tables/cells-and-runs) for status and rerun behavior.
+Put source data in input columns, then add computed columns left to right for each workflow step. Use composition when multiple sheets should share the same upstream result. See [Cells and Runs](/features/tables/cells-and-runs) for status and rerun behavior.
 
 ## How sources work
 
@@ -35,6 +40,12 @@ Type values use UPPERCASE enum strings. The UI label is what you see in the colu
 | --- | --- | --- |
 | Text | `TEXT` | You need editable input data, expected answers, labels, metadata, or notes. |
 
+### Reference column
+
+| UI label | Type value | Use when |
+| --- | --- | --- |
+| Composition | `COMPOSITION` | You want to reference data from another sheet or table without re-running upstream logic. |
+
 ### Computed columns
 
 | UI label | Type value | Category | Compute cost | Use when |
@@ -48,7 +59,6 @@ Type values use UPPERCASE enum strings. The UI label is what you see in the colu
 | Human | `HUMAN` | Data source / execution | None — waits for manual input | You need a human to fill in or approve data. |
 | While Loop | `WHILE_LOOP` | Data source / execution | Variable — multiplies inner step cost | You need repeated execution while a condition remains true. |
 | For Loop | `FOR_LOOP` | Data source / execution | Variable — multiplies inner step cost | You need to iterate over a collection or array. |
-| Composition | `COMPOSITION` | Data source / execution | None — copies a value from another sheet | You want to reference data from another sheet or table. |
 | Compare | `COMPARE` | Simple eval | None — deterministic check | You want to compare values and generate a diff or comparison result. |
 | Contains | `CONTAINS` | Simple eval | None — deterministic check | You want to check whether text contains a substring. |
 | Regex | `REGEX` | Simple eval | None — deterministic check | You want to validate text against a regular expression. |
@@ -94,9 +104,13 @@ Composition references a source table, sheet, and column, then pulls that value 
 
 ## Tables API type values
 
-The [Tables REST API](/reference/table-sheet-columns-list) uses a smaller set of lowercase `type` values: `text`, `prompt_template`, `llm`, `code`, `score`, `comparison`, and `composition`. Set the specific column behavior in `config`. The UI type values above (`COMPARE`, `COMPOSITION`, `PROMPT_TEMPLATE`, and so on) match the evaluation pipeline enum and appear in column configuration.
+The [Tables REST API](/reference/table-sheet-columns-list) uses the same uppercase enum strings as the UI (`TEXT`, `COMPARE`, `PROMPT_TEMPLATE`, `COMPOSITION`, and so on). Set the specific column behavior in `config`.
 
-For detailed configuration schemas for each type value, see [Node & Column Types](/features/evaluations/column-types) (shared with Workflows and legacy Evaluations).
+For backwards compatibility, create-column requests also accept lowercase aliases such as `text`, `prompt_template`, `llm`, `code`, `score`, `comparison`, and `composition`. PromptLayer normalizes these to the uppercase enum before storing the column.
+
+Shared computed types (`COMPARE`, `PROMPT_TEMPLATE`, `LLM_ASSERTION`, `CODE_EXECUTION`, helper columns, and the rest except `TEXT` and `COMPOSITION`) use the same configuration schemas as Workflows and legacy Evaluations. See [Node & Column Types](/features/evaluations/column-types) for those schemas.
+
+`COMPOSITION` is Tables-only. Do not use it in legacy evaluation or workflow column definitions.
 
 ## API references
 
