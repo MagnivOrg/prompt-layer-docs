@@ -23,6 +23,12 @@ Import trace history directly into Smart Tables for analysis and evaluation work
 - Customize sort order and limit the number of imported traces
 - Imported trace data populates as rows in your Smart Table for scoring and review
 
+**Blank Smart Table Sheet Creation**
+Create empty sheets via the public API and build them incrementally.
+- Omit `source` on `POST /api/public/v2/tables/{table_id}/sheets` to create a blank sheet synchronously (`201`)
+- Add columns and rows with the existing column and row endpoints after creation
+- File and request-log imports still return `202` and run asynchronously
+
 ---
 
 

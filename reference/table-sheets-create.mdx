@@ -3,7 +3,16 @@ title: "Create Sheet"
 openapi: "POST /api/public/v2/tables/{table_id}/sheets"
 ---
 
-Create a new sheet in a table by importing data. Two source types are supported:
+Create a new sheet in a table. Omit `source` to create an empty sheet synchronously, then add columns and rows with the column and row endpoints. Provide `source` to import data from a file or request logs asynchronously.
 
-- **file** — Upload a CSV or JSON file (base64-encoded, max 100 MB). The import runs asynchronously; poll the operation endpoint to track progress.
-- **request_logs** — Import from your PromptLayer request history. Filter by prompt, version, label, or date range.
+## Behavior Notes
+
+- Without `source`, PromptLayer creates an empty sheet and returns `201`.
+- With `source.type=file` or `source.type=request_logs`, the import runs asynchronously and the endpoint returns `202`. Poll [Get Sheet Import Operation](/reference/table-sheets-get-operation) until the operation reaches `succeeded` or `failed`.
+
+## Related
+
+- [Create Column](/reference/table-sheet-columns-create)
+- [Add Rows](/reference/table-sheet-rows-add)
+- [Import File](/reference/table-sheet-imports-file-create)
+- [Import Request Logs](/reference/table-sheet-imports-request-logs-create)

@@ -35,6 +35,18 @@ Each row is one item to run through the sheet. Use the row control at the bottom
 
 Manual rows are useful for small test sets, edge cases, and examples you want to type or paste directly into the sheet.
 
+## Create a blank sheet programmatically
+
+Use [Create Sheet](/reference/table-sheets-create) without `source` to add an empty tab to an existing Table. The endpoint returns `201` with the new sheet metadata.
+
+Build the sheet incrementally:
+
+1. Add text or computed columns with [Create Column](/reference/table-sheet-columns-create).
+2. Append rows with [Add Rows](/reference/table-sheet-rows-add).
+3. Optionally import more data later with [Import File](/reference/table-sheet-imports-file-create) or [Import Request Logs](/reference/table-sheet-imports-request-logs-create).
+
+This mirrors the dashboard flow of adding a sheet tab and modeling rows and columns yourself instead of starting from an upload.
+
 ## Upload data
 
 Use **Upload** when your rows already exist outside PromptLayer. Upload a CSV from your computer or import logged requests from request history.

@@ -10313,7 +10313,7 @@
           "smart-tables"
         ],
         "summary": "Create Sheet",
-        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "description": "Create a new sheet in a table. Omit source to create an empty sheet synchronously. Provide source to import data from a file (CSV or JSON, base64-encoded) or from request log history asynchronously. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet",
         "parameters": [
           {
@@ -10332,14 +10332,11 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "source"
-                ],
                 "properties": {
                   "title": {
                     "type": "string",
                     "nullable": true,
-                    "description": "Sheet title. Defaults to the source file name or 'Request Logs'."
+                    "description": "Sheet title. Defaults to the source file name or 'Request Logs' when source is provided."
                   },
                   "index": {
                     "type": "integer",
@@ -10427,11 +10424,79 @@
                     ]
                   }
                 }
+              },
+              "examples": {
+                "emptySheet": {
+                  "summary": "Create an empty sheet",
+                  "value": {
+                    "title": "Edge cases"
+                  }
+                },
+                "fileImport": {
+                  "summary": "Create a sheet from a CSV file",
+                  "value": {
+                    "source": {
+                      "type": "file",
+                      "file_name": "examples.csv",
+                      "file_content_base64": "aW5wdXQsb3V0cHV0CmhleGxlc3dvcmxkLGhlbGxv"
+                    }
+                  }
+                },
+                "requestLogsImport": {
+                  "summary": "Create a sheet from request logs",
+                  "value": {
+                    "source": {
+                      "type": "request_logs",
+                      "prompt_id": 123
+                    }
+                  }
+                }
               }
             }
           }
         },
         "responses": {
+          "201": {
+            "description": "Empty sheet created.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "message": {
+                      "type": "string"
+                    },
+                    "sheet": {
+                      "$ref": "#/components/schemas/Sheet"
+                    }
+                  }
+                },
+                "examples": {
+                  "created": {
+                    "summary": "Empty sheet created",
+                    "value": {
+                      "success": true,
+                      "message": "Sheet created",
+                      "sheet": {
+                        "id": "550e8400-e29b-41d4-a716-446655440000",
+                        "table_id": "660e8400-e29b-41d4-a716-446655440001",
+                        "workspace_id": 42,
+                        "title": "Edge cases",
+                        "index": 1,
+                        "row_count": 0,
+                        "version_count": 1,
+                        "created_at": "2026-07-10T12:00:00Z",
+                        "updated_at": "2026-07-10T12:00:00Z"
+                      }
+                    }
+                  }
+                }
+              }
+            }
+          },
           "202": {
             "description": "Import started. Poll the operation endpoint to track progress.",
             "content": {
