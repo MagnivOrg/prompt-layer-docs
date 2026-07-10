@@ -17,11 +17,11 @@ The latest generation of OpenAI models is now available with three tiers optimiz
 - `gpt-5.6-luna` — fast, cost-efficient model for everyday tasks and high-volume workloads
 - All three models support a new "Max" reasoning effort level for extended thinking on complex problems
 
-**Smart Table Trace Import**
-Import trace history directly into Smart Tables for analysis and evaluation workflows.
-- Filter traces by date range, metadata, or other criteria before importing
-- Customize sort order and limit the number of imported traces
-- Imported trace data populates as rows in your Smart Table for scoring and review
+**Empty Smart Table Sheet Creation**
+Create blank sheets via the public API without importing a file or request logs first.
+- `POST /api/public/v2/tables/{table_id}/sheets` accepts requests with no `source` field
+- Returns **201** with a default Column A scaffold and one empty row
+- Add columns and rows incrementally after creation
 
 ---
 
