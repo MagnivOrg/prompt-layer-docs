@@ -81,17 +81,18 @@ def extract_snippet_refs(prompt_template: str) -> set[str]:
     return refs
 
 response = requests.get(
-    "https://api.promptlayer.com/prompt-templates/customer-support",
-    headers={"X-API-KEY": "pl_your_key_here"},
-    params={"resolve_snippets": False},
+    "https://api.promptlayer.com/prompt-templates/your-prompt-name",
+    headers={"X-Api-Key": "pl_your_key_here"},
+    params={"resolve_snippets": "false"},
 )
 raw = response.json()
 refs = extract_snippet_refs(str(raw["prompt_template"]))
 ```
 
 ```bash REST API
-curl "https://api.promptlayer.com/prompt-templates/customer-support?resolve_snippets=false" \
-  -H "X-API-KEY: $PROMPTLAYER_API_KEY"
+curl -G "https://api.promptlayer.com/prompt-templates/your-prompt-name" \
+  --data-urlencode "resolve_snippets=false" \
+  -H "X-Api-Key: $PROMPTLAYER_API_KEY"
 ```
 
 </CodeGroup>
