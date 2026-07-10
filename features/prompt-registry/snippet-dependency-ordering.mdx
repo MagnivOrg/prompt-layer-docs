@@ -134,10 +134,6 @@ See [Publish Prompt Template](/reference/templates-publish) for the full request
 
 If a publish fails because a dependency is not yet available, skip that template and retry it on the next pass after its dependencies are published. Stop when all templates succeed or a pass makes no progress (which indicates a circular reference or a missing external dependency).
 
-<Warning>
-Circular snippet references are not supported. If template A references B and B references A, publishing will fail. Break the cycle before publishing.
-</Warning>
-
 ## MCP agent workflow
 
 When using the [PromptLayer MCP server](/agents/overview), the same dependency-first ordering applies to `publish-prompt-template`.
