@@ -4,6 +4,105 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## July 10, 2026
+
+### Deployment 1
+
+#### New Features
+
+**OpenAI GPT-5.6 Model Family**
+The latest generation of OpenAI models is now available with three tiers optimized for different use cases.
+- `gpt-5.6-sol` — flagship model for complex professional work, coding, and agentic tasks with 1M+ token context
+- `gpt-5.6-terra` — high-capability model balancing performance and cost for demanding workflows
+- `gpt-5.6-luna` — fast, cost-efficient model for everyday tasks and high-volume workloads
+- All three models support a new "Max" reasoning effort level for extended thinking on complex problems
+
+**Smart Table Trace Import**
+Import trace history directly into Smart Tables for analysis and evaluation workflows.
+- Filter traces by date range, metadata, or other criteria before importing
+- Customize sort order and limit the number of imported traces
+- Imported trace data populates as rows in your Smart Table for scoring and review
+
+---
+
+
+
+### Deployment 2
+
+General performance and stability improvements
+
+---
+
+## July 09, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Smart Table CSV Direct Upload**
+Large CSV files can now be uploaded directly to cloud storage for faster, more reliable imports.
+- Supports files up to 500 MB with progress tracking
+- Automatic retry and recovery for interrupted uploads
+- Real-time upload status updates in the UI
+
+**Public API for Input Variable Sets**
+Create and manage input variable sets programmatically via the REST API.
+- POST endpoint for creating new variable sets
+- Support for external IDs for integration workflows
+- Full CRUD operations available through API
+
+#### Improvements
+
+- Smart Table CSV import operations now include better conflict detection and user-friendly error messages
+- Improved search accuracy for multi-word queries in request logs
+- Request log sidebar now correctly handles workspace-scoped prompt version navigation
+- Smart Table column types are now validated and normalized consistently across dashboard and public API
+- Last selected workspace is remembered across sessions for faster navigation
+- Prompt version log filters now persist correctly when navigating between views
+- Editor focus is preserved when toggling "show more/less" in message content
+
+---
+
+
+
+### Deployment 2
+
+#### Improvements
+- Request log search now supports partial data loading for faster initial page loads
+- Database indexes optimized for improved query performance in large workspaces
+
+---
+
+## July 08, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Configurable Data Retention Policies**
+Workspace administrators can now set custom data retention periods for request logs and traces directly from workspace settings.
+- Choose from 14-day, 30-day, 90-day, or forever retention options
+- Retention policy applies to newly ingested data going forward
+- A badge on the history page indicates when logs were created before the current retention policy took effect
+- Administrators can view retention policy history and expiry status for individual requests and traces
+
+#### Improvements
+
+- Metadata filters applied in the request log details popover now correctly filter the main search results
+- X-ray mode selection now persists correctly when switching between prompt template versions
+- Search bar metadata filtering improved for nested metadata keys in both request logs and traces
+- Trace detail view now shows a retention policy indicator when applicable
+
+---
+
+
+
+### Deployment 2
+
+General performance and stability improvements
+
+---
+
 ## July 07, 2026
 
 ### Deployment 1

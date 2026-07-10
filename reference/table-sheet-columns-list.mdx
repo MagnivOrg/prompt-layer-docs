@@ -6,5 +6,9 @@ openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/columns"
 List all columns in a sheet, ordered by their position rank.
 
 Each column has a `type` that determines how its cells are populated:
-- `text` — Free-text cells, editable directly.
-- `prompt_template`, `llm`, `code`, `score`, `comparison`, `composition` — Computed columns that run automatically.
+
+- `TEXT` — Input column with editable free-text cells.
+- `COMPOSITION` — Reference column that mirrors a value from another sheet or table.
+- All other supported enum values — Computed columns that run per row (for example `PROMPT_TEMPLATE`, `CODE_EXECUTION`, `COMPARE`, `LLM_ASSERTION`).
+
+Responses use uppercase enum strings. Create-column requests also accept lowercase aliases such as `text`, `comparison`, and `composition`, which are normalized to the uppercase enum.
