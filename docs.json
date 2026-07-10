@@ -29,6 +29,7 @@
               "features/prompt-registry/template-variables",
               "features/prompt-registry/input-variable-sets",
               "features/prompt-registry/snippets",
+              "features/prompt-registry/snippet-dependency-ordering",
               "features/prompt-registry/placeholder-messages",
               "features/prompt-registry/structured-outputs",
               "features/prompt-registry/tool-calling",

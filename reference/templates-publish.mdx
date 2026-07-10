@@ -4,3 +4,7 @@ openapi: "POST /rest/prompt-templates"
 ---
 
 Publish Prompt Template allows you to programmatically create a new version of a prompt template and make it available for use in the application.
+
+## Behavior Notes
+
+- Templates that reference snippets with `@@@snippet_name@@@` must be published after their dependencies. See [Snippet Dependency Ordering](/features/prompt-registry/snippet-dependency-ordering).
