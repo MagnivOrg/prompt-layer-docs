@@ -3,7 +3,10 @@ title: "Create Sheet"
 openapi: "POST /api/public/v2/tables/{table_id}/sheets"
 ---
 
-Create a new sheet in a table by importing data. Two source types are supported:
+Create a new sheet in a table. Three creation modes are supported:
 
-- **file** — Upload a CSV or JSON file (base64-encoded, max 100 MB). The import runs asynchronously; poll the operation endpoint to track progress.
-- **request_logs** — Import from your PromptLayer request history. Filter by prompt, version, label, or date range.
+- **Empty sheet** — Omit `source` to create a blank sheet with a default `Column A` text column and one empty row. Returns **201** immediately. Use this when you want to add columns and rows incrementally via the [Create Column](/reference/table-sheet-columns-create) and [Add Rows](/reference/table-sheet-rows-add) endpoints.
+- **file** — Upload a CSV or JSON file (base64-encoded, max 100 MB). The import runs asynchronously; poll the operation endpoint to track progress. Returns **202**.
+- **request_logs** — Import from your PromptLayer request history. Filter by prompt, version, label, or date range. Returns **202**.
+
+When `source` is omitted, `operation_id` is not allowed. When importing from a file or request logs, `operation_id` is optional for idempotency and status tracking.

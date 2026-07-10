@@ -39,6 +39,12 @@ Manual rows are useful for small test sets, edge cases, and examples you want to
 
 Use **Upload** when your rows already exist outside PromptLayer. Upload a CSV from your computer or import logged requests from request history.
 
+## Create a blank sheet via API
+
+When building a table programmatically, you can create an empty sheet without importing data first. Call `POST /api/public/v2/tables/{table_id}/sheets` with an optional `title` and omit `source`. The response includes a sheet with a default text column and one empty row. Then add columns and rows incrementally.
+
+This is useful when you want to define the column structure first, then populate rows, without seeding a throwaway file.
+
 <Frame>
   <img src="/images/tables/polished/02-upload-menu.png" alt="Upload menu with CSV upload and request history import options" />
 </Frame>
