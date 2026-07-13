@@ -15,6 +15,25 @@ icon: "rocket"
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Span-Level Analytics for Traces**
+Custom analytics charts now support span-level metrics, enabling deeper analysis of individual operations within traces.
+- Group and filter by span attributes like `span_tool_name`, `span_name`, `span_type`, and `span_kind`
+- Aggregate span-level metrics including duration, cost, and token usage
+- Available via the new `/api/public/v2/traces/analytics/custom-analytics` endpoint
+
+#### Improvements
+
+- Trace count aggregations now correctly labeled as "Spans" when aggregating over span-level fields
+- Custom analytics histograms for span metrics automatically use appropriate default intervals
+- Analytics API responses now include both prompt registry names and workflow names for better context
+
+---
+
 ## July 12, 2026
 
 ### Deployment 1
