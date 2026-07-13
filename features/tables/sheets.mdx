@@ -41,7 +41,7 @@ Use **Upload** when your rows already exist outside PromptLayer. Upload a CSV fr
 
 ## Create a blank sheet via API
 
-When building a table programmatically, you can create an empty sheet without importing data first. Call `POST /api/public/v2/tables/{table_id}/sheets` with an optional `title` and omit `source`. The response includes a sheet with a default text column and one empty row. Then add columns and rows incrementally.
+When building a table programmatically, you can create an empty sheet without importing data first. If you do not want a default `Sheet 1` when creating the table, pass `create_default_sheet: false` to [Create Table](/reference/tables-create), then call `POST /api/public/v2/tables/{table_id}/sheets` with an optional `title` and omit `source`. The response includes a sheet with a default text column and one empty row. Then add columns and rows incrementally.
 
 This is useful when you want to define the column structure first, then populate rows, without seeding a throwaway file.
 

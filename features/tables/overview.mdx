@@ -77,6 +77,8 @@ Use legacy Evaluations and Datasets only for existing legacy workflows. For new 
 
 Use the Tables API when you want to automate the same actions from code.
 
+By default, [Create a Table](/reference/tables-create) also creates `Sheet 1` with a `Column A` text column and one empty row. Pass `create_default_sheet: false` to create an empty table, then add sheets with [Create a sheet](/reference/table-sheets-create).
+
 <CardGroup cols={2}>
   <Card title="Create a Table" icon="plus" href="/reference/tables-create">
     Create a Table programmatically.
