@@ -1,0 +1,46 @@
+---
+title: "Trace Analytics — Custom Queries"
+openapi: "POST /api/public/v2/traces/analytics/custom-analytics"
+---
+
+Run custom aggregations over your traces. Same chart engine as [Request Analytics — Custom Queries](/reference/request-analytics-custom-analytics), but each query aggregates at one of two levels:
+
+- **Trace-level** (`trace_*` fields) — measure whole traces: durations, cost, tokens, span counts.
+- **Span-level** (`span_*` fields) — measure the individual spans *inside* matching traces: e.g. the slowest tools, tool call counts, span duration distributions.
+
+`filter_group` selects which traces participate (by `trace_name`, a `trace_start` range, span conditions, etc.); span-level charts then aggregate across every span of those traces.
+
+## Metrics
+
+`count`, `sum`, `avg`, `min`, `max`, `percentile` (with `percentile` 0–100).
+
+## Metric fields (`metricField`)
+
+| Level | Fields |
+|---|---|
+| Trace | `trace_duration_ms`, `trace_total_cost_usd`, `trace_total_tokens`, `trace_input_tokens`, `trace_output_tokens`, `trace_span_count`, `trace_depth` |
+| Span | `span_duration_ms`, `span_cost_usd`, `span_tokens`, `span_input_tokens`, `span_output_tokens` |
+
+> Duration values are returned in **seconds** (converted from milliseconds internally).
+
+## Group-by fields (`groupByField`)
+
+| Level | Fields |
+|---|---|
+| Trace | `trace_status`, `trace_name`, `trace_models_used`, `trace_prompt_ids`, `trace_workflow_ids`, `trace_tool_names` |
+| Span | `span_tool_name`, `span_name`, `span_type`, `span_kind`, `span_status` |
+
+## Constraints
+
+- A chart must stay at one level: span-level fields cannot be mixed with trace-level fields in the same chart.
+- Span-level charts do not support `timeSeries` or metadata-key breakdowns.
+- Chart shapes beyond bar/line/area are supported: `pie`, `donut`, `histogram` (with `histogramField`), `heatmap` (with `secondaryGroupByField`), `treemap`/`sunburst` (with `hierarchyFields`).
+
+## Response shape
+
+Identical to [Request Analytics — Custom Queries](/reference/request-analytics-custom-analytics): each entry in `customCharts` has `id`, `series` descriptors (`{ key, label, unit }`), and `data` rows. Count series are labeled "Traces" for trace-level charts and "Spans" for span-level charts.
+
+## Related
+
+- [Traces](/running-requests/traces)
+- [Request Analytics — Custom Queries](/reference/request-analytics-custom-analytics)
