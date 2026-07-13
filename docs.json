@@ -219,6 +219,7 @@
                   "reference/search-request-suggestions",
                   "reference/request-analytics",
                   "reference/request-analytics-custom-analytics",
+                  "reference/trace-analytics-custom-analytics",
                   "reference/log-request",
                   "reference/track-prompt",
                   "reference/track-score",
