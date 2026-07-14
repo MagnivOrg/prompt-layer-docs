@@ -9788,24 +9788,27 @@
           "smart-tables"
         ],
         "summary": "Create Table",
-        "description": "Create a new Table. A default sheet with one text column is created automatically. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "description": "Create a new Table. By default, an empty Sheet 1 with a Column A text column and one empty row is created. Pass create_default_sheet: false to create a table without a default sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table",
         "requestBody": {
           "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string",
-                    "description": "Table title. Defaults to a unique 'Untitled Table' name if omitted.",
-                    "nullable": true
-                  },
-                  "folder_id": {
-                    "type": "integer",
-                    "description": "Folder to place the table in.",
-                    "nullable": true
+                "$ref": "#/components/schemas/CreateTableRequest"
+              },
+              "examples": {
+                "withDefaultSheet": {
+                  "summary": "Create with default Sheet 1",
+                  "value": {
+                    "title": "Regression suite"
+                  }
+                },
+                "withoutDefaultSheet": {
+                  "summary": "Create without a default sheet",
+                  "value": {
+                    "title": "Regression suite",
+                    "create_default_sheet": false
                   }
                 }
               }
@@ -9814,22 +9817,11 @@
         },
         "responses": {
           "201": {
-            "description": "Table created",
+            "description": "Table created. When create_default_sheet is true (default), the response includes default_sheet and table.sheet_count is 1. When create_default_sheet is false, default_sheet is omitted and table.sheet_count is 0.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "table": {
-                      "$ref": "#/components/schemas/TableDetail"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateTableResponse"
                 }
               }
             }
@@ -23506,6 +23498,54 @@
           }
         },
         "additionalProperties": false
+      },
+      "CreateTableRequest": {
+        "type": "object",
+        "title": "CreateTableRequest",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Table title. Defaults to a unique 'Untitled Table' name if omitted.",
+            "nullable": true
+          },
+          "folder_id": {
+            "type": "integer",
+            "description": "Folder to place the table in.",
+            "nullable": true
+          },
+          "create_default_sheet": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true (default), creates Sheet 1 with a Column A text column and one empty row. When false, creates an empty table with no sheets."
+          }
+        }
+      },
+      "CreateTableResponse": {
+        "type": "object",
+        "title": "CreateTableResponse",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "table": {
+            "$ref": "#/components/schemas/TableDetail"
+          },
+          "default_sheet": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Sheet"
+              }
+            ],
+            "description": "The default sheet created when create_default_sheet is true. Omitted when create_default_sheet is false."
+          }
+        },
+        "required": [
+          "success",
+          "table"
+        ]
       },
       "CreateTableSheetOperationRequest": {
         "type": "object",
