@@ -26,6 +26,34 @@ New step-by-step setup experience guides users through initial configuration wit
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Human Input Controls in Smart Tables**
+Smart Tables now support interactive human input cells directly at the cell level, enabling users to provide structured feedback (ratings, sliders, text, or choices) within table workflows.
+- Configure human input controls when creating or editing a column
+- Cells automatically adapt to the configured input type (rating scale, slider, text input, or multiple choice)
+- Input values flow into downstream columns and scoring functions
+- Schema changes (e.g., switching from 5-point to 10-point scale) automatically reset existing answers to maintain data consistency
+
+**Workflow Error Propagation in Smart Tables**
+Smart Tables can now validate and propagate workflow execution errors when source mappings are invalid or unavailable.
+- Enable error propagation in column settings to catch misconfigured source references before execution
+- Invalid source mappings are flagged immediately with clear error messages
+- Prevents execution on rows where required sources are unmapped or unavailable
+
+#### Improvements
+
+- Playground messages now display inline variable suggestions with improved markdown styling
+- Smart Table variable sets can be selected and managed directly from the table interface
+- Improved cell status indicators and save state visibility across Smart Tables
+- Enhanced test case editing in Playground with better variable configuration support
+- Playground mode switcher and control bar layout improvements for clearer navigation
+
+---
+
 ## July 13, 2026
 
 ### Deployment 1
