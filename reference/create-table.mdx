@@ -4,7 +4,9 @@ openapi: "POST /api/public/v2/tables"
 description: "Create a Table from the public API."
 ---
 
-Create a Table with a default `Sheet 1`, a `Column A` text column, and one empty row.
+Create a Table with a default `Sheet 1`, a `Column A` text column, and one empty row when `create_default_sheet` is `true` (default).
+
+Pass `create_default_sheet: false` to create a table without a default sheet. The response omits `default_sheet` and `sheet_count` is `0`.
 
 ### Workspace and folders
 

@@ -9788,24 +9788,27 @@
           "smart-tables"
         ],
         "summary": "Create Table",
-        "description": "Create a new Table. A default sheet with one text column is created automatically. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "description": "Create a new Table. By default, an empty Sheet 1 with a Column A text column and one empty row is created. Pass create_default_sheet: false to create a table without a default sheet. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table",
         "requestBody": {
           "required": false,
           "content": {
             "application/json": {
               "schema": {
-                "type": "object",
-                "properties": {
-                  "title": {
-                    "type": "string",
-                    "description": "Table title. Defaults to a unique 'Untitled Table' name if omitted.",
-                    "nullable": true
-                  },
-                  "folder_id": {
-                    "type": "integer",
-                    "description": "Folder to place the table in.",
-                    "nullable": true
+                "$ref": "#/components/schemas/CreateTableRequest"
+              },
+              "examples": {
+                "withDefaultSheet": {
+                  "summary": "Create with default Sheet 1",
+                  "value": {
+                    "title": "Regression suite"
+                  }
+                },
+                "withoutDefaultSheet": {
+                  "summary": "Create without a default sheet",
+                  "value": {
+                    "title": "Regression suite",
+                    "create_default_sheet": false
                   }
                 }
               }
@@ -9814,22 +9817,11 @@
         },
         "responses": {
           "201": {
-            "description": "Table created",
+            "description": "Table created. When create_default_sheet is true (default), the response includes default_sheet and table.sheet_count is 1. When create_default_sheet is false, default_sheet is omitted and table.sheet_count is 0.",
             "content": {
               "application/json": {
                 "schema": {
-                  "type": "object",
-                  "properties": {
-                    "success": {
-                      "type": "boolean"
-                    },
-                    "message": {
-                      "type": "string"
-                    },
-                    "table": {
-                      "$ref": "#/components/schemas/TableDetail"
-                    }
-                  }
+                  "$ref": "#/components/schemas/CreateTableResponse"
                 }
               }
             }
@@ -10313,7 +10305,7 @@
           "smart-tables"
         ],
         "summary": "Create Sheet",
-        "description": "Create a new sheet in a table by importing data from a file (CSV or JSON, base64-encoded) or from request log history. Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
+        "description": "Create a new sheet in a table. Omit source to create a blank sheet with a default Column A scaffold (returns 201), or import data from a file (CSV or JSON, base64-encoded) or from request log history (returns 202). Requests are scoped to the workspace associated with the API key; table, sheet, column, cell, operation, and version IDs must belong to that workspace.",
         "operationId": "create_table_sheet",
         "parameters": [
           {
@@ -10332,14 +10324,11 @@
             "application/json": {
               "schema": {
                 "type": "object",
-                "required": [
-                  "source"
-                ],
                 "properties": {
                   "title": {
                     "type": "string",
                     "nullable": true,
-                    "description": "Sheet title. Defaults to the source file name or 'Request Logs'."
+                    "description": "Sheet title. Defaults to 'Sheet N' when source is omitted, or to the source file name / 'Request Logs' for imports."
                   },
                   "index": {
                     "type": "integer",
@@ -10349,10 +10338,10 @@
                   "operation_id": {
                     "type": "string",
                     "nullable": true,
-                    "description": "Optional idempotency key for the import operation."
+                    "description": "Optional idempotency key for import operations. Not allowed when source is omitted."
                   },
                   "source": {
-                    "description": "Data source for the sheet.",
+                    "description": "Optional data source for the sheet. Omit to create a blank sheet with a default Column A scaffold.",
                     "oneOf": [
                       {
                         "type": "object",
@@ -10432,6 +10421,24 @@
           }
         },
         "responses": {
+          "201": {
+            "description": "Blank sheet created. Returns the sheet with a default Column A scaffold and one empty row.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "object",
+                  "properties": {
+                    "success": {
+                      "type": "boolean"
+                    },
+                    "sheet": {
+                      "$ref": "#/components/schemas/Sheet"
+                    }
+                  }
+                }
+              }
+            }
+          },
           "202": {
             "description": "Import started. Poll the operation endpoint to track progress.",
             "content": {
@@ -10923,16 +10930,7 @@
                     "type": "string"
                   },
                   "type": {
-                    "type": "string",
-                    "enum": [
-                      "text",
-                      "prompt_template",
-                      "llm",
-                      "code",
-                      "score",
-                      "comparison",
-                      "composition"
-                    ]
+                    "$ref": "#/components/schemas/TableColumnType"
                   },
                   "config": {
                     "type": "object",
@@ -15282,6 +15280,105 @@
           },
           "422": {
             "$ref": "#/components/responses/ValidationError"
+          }
+        }
+      }
+    },
+    "/api/public/v2/traces/analytics/custom-analytics": {
+      "post": {
+        "summary": "Trace Analytics Custom Queries",
+        "operationId": "getTraceAnalyticsCustomAnalytics",
+        "tags": [
+          "tracking"
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/TraceAnalyticsCustomAnalyticsQuery"
+              },
+              "examples": {
+                "slowest_tools": {
+                  "summary": "Slowest tools across agent traces",
+                  "value": {
+                    "filter_group": {
+                      "logic": "AND",
+                      "filters": [
+                        {
+                          "field": "trace_name",
+                          "operator": "is",
+                          "value": "agent-turn"
+                        },
+                        {
+                          "field": "trace_start",
+                          "operator": "between",
+                          "value": [
+                            "2026-07-01T00:00:00Z",
+                            "2026-07-08T00:00:00Z"
+                          ]
+                        }
+                      ]
+                    },
+                    "customCharts": [
+                      {
+                        "id": "slowest_tools",
+                        "title": "Slowest Tools",
+                        "chartType": "bar",
+                        "metric": "max",
+                        "metricField": "span_duration_ms",
+                        "groupByField": "span_tool_name"
+                      }
+                    ]
+                  }
+                },
+                "tool_call_counts": {
+                  "summary": "Tool call counts",
+                  "value": {
+                    "customCharts": [
+                      {
+                        "id": "tool_calls",
+                        "chartType": "bar",
+                        "metric": "count",
+                        "groupByField": "span_tool_name"
+                      }
+                    ]
+                  }
+                },
+                "trace_cost_by_name": {
+                  "summary": "Trace cost grouped by trace name",
+                  "value": {
+                    "customCharts": [
+                      {
+                        "id": "cost_by_trace",
+                        "chartType": "bar",
+                        "metric": "sum",
+                        "metricField": "trace_total_cost_usd",
+                        "groupByField": "trace_name"
+                      }
+                    ]
+                  }
+                }
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Custom chart results in the order requested.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RequestAnalyticsCustomAnalyticsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid chart spec or filter (e.g. mixed trace- and span-level fields in one chart)."
+          },
+          "401": {
+            "description": "Authentication failed."
           }
         }
       }
@@ -22499,7 +22596,7 @@
               "MATH_OPERATOR",
               "MIN_MAX"
             ],
-            "description": "Type of evaluation column to create."
+            "description": "Type of evaluation column to create. Does not include COMPOSITION, which is Tables-only."
           },
           "name": {
             "type": "string",
@@ -23792,6 +23889,43 @@
           }
         }
       },
+      "TableColumnType": {
+        "type": "string",
+        "description": "Smart Table column type. Use uppercase backend enum values. Input: TEXT. Reference (Tables only, not in legacy evaluation/workflow enums): COMPOSITION. Computed: all other listed values. Create requests also accept lowercase aliases (text, prompt_template, llm, code, score, comparison, composition), which are normalized to uppercase. Legacy DATASET columns are not creatable.",
+        "enum": [
+          "TEXT",
+          "ABSOLUTE_NUMERIC_DISTANCE",
+          "AI_DATA_EXTRACTION",
+          "APPLY_DIFF",
+          "ASSERT_VALID",
+          "COALESCE",
+          "CONDITION",
+          "CODE_EXECUTION",
+          "COMBINE_COLUMNS",
+          "COMPARE",
+          "COMPOSITION",
+          "CONTAINS",
+          "CONVERSATION_SIMULATOR",
+          "COSINE_SIMILARITY",
+          "COUNT",
+          "ENDPOINT",
+          "FOR_LOOP",
+          "HUMAN",
+          "JSON_PATH",
+          "LLM_ASSERTION",
+          "MATH_OPERATOR",
+          "MCP",
+          "MIN_MAX",
+          "PARSE_VALUE",
+          "PROMPT_TEMPLATE",
+          "REGEX",
+          "REGEX_EXTRACTION",
+          "VARIABLE",
+          "WHILE_LOOP",
+          "WORKFLOW",
+          "XML_PATH"
+        ]
+      },
       "Column": {
         "type": "object",
         "description": "A column within a Table sheet.",
@@ -23814,17 +23948,7 @@
             "description": "Display title of the column."
           },
           "type": {
-            "type": "string",
-            "description": "Column type. 'text' columns store free-text; 'prompt_template', 'llm', 'code', 'score', 'comparison', and 'composition' columns run automated computations.",
-            "enum": [
-              "text",
-              "prompt_template",
-              "llm",
-              "code",
-              "score",
-              "comparison",
-              "composition"
-            ]
+            "$ref": "#/components/schemas/TableColumnType"
           },
           "config": {
             "type": "object",
@@ -24155,6 +24279,54 @@
           }
         },
         "additionalProperties": false
+      },
+      "CreateTableRequest": {
+        "type": "object",
+        "title": "CreateTableRequest",
+        "properties": {
+          "title": {
+            "type": "string",
+            "description": "Table title. Defaults to a unique 'Untitled Table' name if omitted.",
+            "nullable": true
+          },
+          "folder_id": {
+            "type": "integer",
+            "description": "Folder to place the table in.",
+            "nullable": true
+          },
+          "create_default_sheet": {
+            "type": "boolean",
+            "default": true,
+            "description": "When true (default), creates Sheet 1 with a Column A text column and one empty row. When false, creates an empty table with no sheets."
+          }
+        }
+      },
+      "CreateTableResponse": {
+        "type": "object",
+        "title": "CreateTableResponse",
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "table": {
+            "$ref": "#/components/schemas/TableDetail"
+          },
+          "default_sheet": {
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/Sheet"
+              }
+            ],
+            "description": "The default sheet created when create_default_sheet is true. Omitted when create_default_sheet is false."
+          }
+        },
+        "required": [
+          "success",
+          "table"
+        ]
       },
       "CreateTableSheetOperationRequest": {
         "type": "object",
@@ -26488,6 +26660,297 @@
             "description": "Results in the same order as the input `customCharts` array.",
             "items": {
               "$ref": "#/components/schemas/CustomAnalyticsResult"
+            }
+          }
+        }
+      },
+      "TraceStructuredFilter": {
+        "type": "object",
+        "description": "Trace structured filter. field accepts trace-level (trace_*) and span-level (span_*) names.",
+        "required": [
+          "field",
+          "operator"
+        ],
+        "properties": {
+          "field": {
+            "type": "string",
+            "description": "Trace or span field, e.g. trace_name, trace_start, span_tool_name, span_duration_ms"
+          },
+          "operator": {
+            "type": "string",
+            "description": "Filter operator, e.g. is, in, contains, gt, between, is_not_empty"
+          },
+          "value": {
+            "description": "Filter value (type depends on operator)"
+          },
+          "nested_key": {
+            "type": "string",
+            "description": "Key name for nested span field operators (span_attributes, span_resource, span_input_variables)"
+          }
+        }
+      },
+      "TraceStructuredFilterGroup": {
+        "type": "object",
+        "description": "Nested filter tree. AND/OR are cross-span; SPAN_AND/SPAN_OR require one and the same span to satisfy every/any branch (span-level fields only).",
+        "required": [
+          "filters"
+        ],
+        "properties": {
+          "logic": {
+            "type": "string",
+            "enum": [
+              "AND",
+              "OR",
+              "SPAN_AND",
+              "SPAN_OR"
+            ],
+            "default": "AND"
+          },
+          "filters": {
+            "type": "array",
+            "items": {
+              "oneOf": [
+                {
+                  "$ref": "#/components/schemas/TraceStructuredFilter"
+                },
+                {
+                  "$ref": "#/components/schemas/TraceStructuredFilterGroup"
+                }
+              ]
+            }
+          }
+        }
+      },
+      "TraceCustomChartSpec": {
+        "type": "object",
+        "description": "One analytics query. Each chart must use all trace-level or all span-level fields \u2014 mixed levels are rejected. Span-level charts do not support timeSeries or metadata breakdowns.",
+        "required": [
+          "id",
+          "chartType"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "description": "Stable chart id, unique within the request"
+          },
+          "title": {
+            "type": "string"
+          },
+          "chartType": {
+            "type": "string",
+            "enum": [
+              "bar",
+              "line",
+              "area",
+              "pie",
+              "donut",
+              "histogram",
+              "heatmap",
+              "treemap",
+              "sunburst"
+            ]
+          },
+          "metric": {
+            "type": "string",
+            "enum": [
+              "count",
+              "sum",
+              "avg",
+              "min",
+              "max",
+              "percentile"
+            ]
+          },
+          "metricField": {
+            "type": "string",
+            "enum": [
+              "trace_duration_ms",
+              "trace_total_cost_usd",
+              "trace_total_tokens",
+              "trace_input_tokens",
+              "trace_output_tokens",
+              "trace_span_count",
+              "trace_depth",
+              "span_duration_ms",
+              "span_cost_usd",
+              "span_tokens",
+              "span_input_tokens",
+              "span_output_tokens"
+            ]
+          },
+          "percentile": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 100,
+            "description": "Required when metric is percentile"
+          },
+          "groupByField": {
+            "type": "string",
+            "enum": [
+              "trace_status",
+              "trace_name",
+              "trace_models_used",
+              "trace_prompt_ids",
+              "trace_workflow_ids",
+              "trace_tool_names",
+              "span_tool_name",
+              "span_name",
+              "span_type",
+              "span_kind",
+              "span_status"
+            ]
+          },
+          "secondaryGroupByField": {
+            "type": "string",
+            "enum": [
+              "trace_status",
+              "trace_name",
+              "trace_models_used",
+              "trace_prompt_ids",
+              "trace_workflow_ids",
+              "trace_tool_names",
+              "span_tool_name",
+              "span_name",
+              "span_type",
+              "span_kind",
+              "span_status"
+            ],
+            "description": "Heatmap charts only"
+          },
+          "histogramField": {
+            "type": "string",
+            "enum": [
+              "trace_duration_ms",
+              "trace_total_cost_usd",
+              "trace_total_tokens",
+              "trace_input_tokens",
+              "trace_output_tokens",
+              "trace_span_count",
+              "trace_depth",
+              "span_duration_ms",
+              "span_cost_usd",
+              "span_tokens",
+              "span_input_tokens",
+              "span_output_tokens"
+            ],
+            "description": "Histogram charts only"
+          },
+          "histogramInterval": {
+            "type": "number",
+            "exclusiveMinimum": 0
+          },
+          "hierarchyFields": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "enum": [
+                "trace_status",
+                "trace_name",
+                "trace_models_used",
+                "trace_prompt_ids",
+                "trace_workflow_ids",
+                "trace_tool_names",
+                "span_tool_name",
+                "span_name",
+                "span_type",
+                "span_kind",
+                "span_status"
+              ]
+            },
+            "minItems": 2,
+            "maxItems": 5,
+            "description": "Treemap and sunburst charts only"
+          },
+          "timeSeries": {
+            "type": "boolean",
+            "description": "Not supported with span-level fields"
+          },
+          "timeBucket": {
+            "type": "string",
+            "enum": [
+              "auto",
+              "day",
+              "week",
+              "month"
+            ]
+          },
+          "limit": {
+            "type": "integer",
+            "minimum": 1,
+            "maximum": 100,
+            "default": 25
+          },
+          "series": {
+            "type": "array",
+            "minItems": 2,
+            "description": "Multi-series mode; omit metric/metricField when using this",
+            "items": {
+              "type": "object",
+              "required": [
+                "key",
+                "label",
+                "metric",
+                "metricField"
+              ],
+              "properties": {
+                "key": {
+                  "type": "string"
+                },
+                "label": {
+                  "type": "string"
+                },
+                "metric": {
+                  "type": "string",
+                  "enum": [
+                    "sum",
+                    "avg",
+                    "min",
+                    "max",
+                    "percentile"
+                  ]
+                },
+                "metricField": {
+                  "type": "string",
+                  "enum": [
+                    "trace_duration_ms",
+                    "trace_total_cost_usd",
+                    "trace_total_tokens",
+                    "trace_input_tokens",
+                    "trace_output_tokens",
+                    "trace_span_count",
+                    "trace_depth",
+                    "span_duration_ms",
+                    "span_cost_usd",
+                    "span_tokens",
+                    "span_input_tokens",
+                    "span_output_tokens"
+                  ]
+                },
+                "percentile": {
+                  "type": "number",
+                  "minimum": 0,
+                  "maximum": 100
+                }
+              }
+            }
+          }
+        }
+      },
+      "TraceAnalyticsCustomAnalyticsQuery": {
+        "type": "object",
+        "required": [
+          "customCharts"
+        ],
+        "properties": {
+          "filter_group": {
+            "$ref": "#/components/schemas/TraceStructuredFilterGroup"
+          },
+          "customCharts": {
+            "type": "array",
+            "minItems": 1,
+            "maxItems": 10,
+            "items": {
+              "$ref": "#/components/schemas/TraceCustomChartSpec"
             }
           }
         }

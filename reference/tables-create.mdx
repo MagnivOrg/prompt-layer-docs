@@ -3,7 +3,9 @@ title: "Create Table"
 openapi: "POST /api/public/v2/tables"
 ---
 
-Create a new Table. A default sheet with one text column is created automatically.
+Create a new Table. By default, an empty `Sheet 1` with a `Column A` text column and one empty row is created automatically.
+
+Pass `create_default_sheet: false` to create a table without a default sheet. The response omits `default_sheet` and `table.sheet_count` is `0`. Add sheets later with [Create Sheet](/reference/table-sheets-create).
 
 The table is created in the workspace associated with your API key.
 

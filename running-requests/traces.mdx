@@ -232,3 +232,29 @@ For example, if only a nested LLM call span has `{"environment": "production"}` 
 ### Adding Filters from the Span Detail Panel
 
 When you open a span in the trace detail view, hovering over a scalar metadata or resource value reveals a filter button. Clicking it adds the key-value pair as an active filter on the trace list. The filter button appears only for top-level scalar values (string, number, or boolean). Nested objects and arrays are displayed for inspection but cannot be used as direct filter targets.
+
+## Trace Analytics
+
+Custom analytics charts can aggregate over traces at two levels: whole traces or the individual spans inside them. Charts are available from the analytics dashboard, through the PromptLayer AI assistant (e.g. "show me the slowest tools across my `agent-turn` traces this week"), and via the public API — see [Trace Analytics — Custom Queries](/reference/trace-analytics-custom-analytics).
+
+### Trace-level charts
+
+Group and measure whole traces. Group-by fields: `trace_status`, `trace_name`, `trace_models_used`, `trace_prompt_ids`, `trace_workflow_ids`, `trace_tool_names`. Metric fields: `trace_duration_ms`, `trace_total_cost_usd`, `trace_total_tokens`, `trace_input_tokens`, `trace_output_tokens`, `trace_span_count`, `trace_depth`.
+
+### Span-level charts
+
+Group and measure the individual spans inside matching traces — trace-level filters (like `trace_name` or a time range) select which traces participate, then the aggregation runs across every span within them.
+
+- **Group-by fields:** `span_tool_name`, `span_name`, `span_type`, `span_kind`, `span_status`
+- **Metric fields:** `span_duration_ms`, `span_cost_usd`, `span_tokens`, `span_input_tokens`, `span_output_tokens`
+
+All standard metrics apply (`count`, `sum`, `avg`, `min`, `max`, `percentile`). Span durations are returned in seconds. Example questions this answers:
+
+- Which tool has the highest max/p95 latency across my agent traces? (`groupByField: span_tool_name`, `metric: max`, `metricField: span_duration_ms`)
+- How many times was each tool called? (`groupByField: span_tool_name`, `metric: count`)
+- What's the distribution of span durations? (`chartType: histogram`, `histogramField: span_duration_ms`)
+- Which span types account for the most cost? (`groupByField: span_type`, `metric: sum`, `metricField: span_cost_usd`)
+
+<Note>
+A chart must stay at one level: span-level fields cannot be mixed with trace-level fields in the same chart, and span-level charts do not support `timeSeries` or metadata-key breakdowns.
+</Note>
