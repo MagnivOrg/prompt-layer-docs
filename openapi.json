@@ -12564,6 +12564,787 @@
         }
       }
     },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard": {
+      "get": {
+        "summary": "Get Table Sheet Scorecard",
+        "description": "Get the active scorecard for a table sheet, including latest and display calculation metadata.",
+        "operationId": "getTableSheetScorecard",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/TableSheetScorecardGetResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "patch": {
+        "summary": "Configure Table Sheet Scorecard",
+        "description": "Create or update the active scorecard for a table sheet.",
+        "operationId": "configureTableSheetScorecard",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/ConfigureTableSheetScorecardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Scorecard configured.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ConfigureTableSheetScorecardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid scorecard configuration.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "401": {
+            "description": "Authentication required.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      },
+      "delete": {
+        "summary": "Delete Table Sheet Scorecard",
+        "description": "Soft-delete the active scorecard for a table sheet.",
+        "operationId": "deleteTableSheetScorecard",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Scorecard deleted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DeleteTableSheetScorecardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/migrate-legacy-score": {
+      "post": {
+        "summary": "Migrate Legacy Score to Scorecard",
+        "description": "Convert legacy sheet score configuration into scorecard criteria.",
+        "operationId": "migrateLegacyTableSheetScoreToScorecard",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/MigrateLegacyTableSheetScoreRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Migration completed.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/MigrateLegacyTableSheetScoreResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Migration failed for this sheet.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/recalculate": {
+      "post": {
+        "summary": "Recalculate Table Sheet Scorecard",
+        "description": "Queue scorecard recalculation for a table sheet.",
+        "operationId": "recalculateTableSheetScorecard",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RecalculateTableSheetScorecardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "202": {
+            "description": "Scorecard recalculation queued.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RecalculateTableSheetScorecardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Scorecard is not configured or request is invalid.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/cancel": {
+      "post": {
+        "summary": "Cancel Table Sheet Scorecard",
+        "description": "Cancel active queued or running scorecard work for a table sheet.",
+        "operationId": "cancelTableSheetScorecard",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          }
+        ],
+        "requestBody": {
+          "required": false,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CancelTableSheetScorecardRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Cancellation attempted.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/CancelTableSheetScorecardResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid cancellation request.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/calculations/{calculation_id}": {
+      "get": {
+        "summary": "Get Table Sheet Scorecard Calculation",
+        "description": "Get details for a single scorecard calculation.",
+        "operationId": "getTableSheetScorecardCalculation",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "calculation_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Scorecard calculation ID."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetScorecardCalculationResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid workspace context.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Calculation not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows": {
+      "get": {
+        "summary": "List Table Sheet Scorecard Rows",
+        "description": "List row-level scorecard summaries for a calculation.",
+        "operationId": "listTableSheetScorecardRows",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "calculation_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Calculation ID. Defaults to latest scorecard calculation."
+          },
+          {
+            "name": "verdict",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "enum": [
+                "pass",
+                "warn",
+                "fail",
+                "error",
+                "skipped"
+              ]
+            },
+            "description": "Filter rows by aggregate verdict."
+          },
+          {
+            "name": "cursor",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Row-index cursor. Returns rows where row_index is greater than this value."
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 1,
+              "maximum": 100,
+              "default": 50
+            },
+            "description": "Number of rows to return."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ListTableSheetScorecardRowsResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid query parameters.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Table or sheet not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows/{row_index}": {
+      "get": {
+        "summary": "Get Table Sheet Scorecard Row",
+        "description": "Get row-level scorecard breakdown for a single row index.",
+        "operationId": "getTableSheetScorecardRow",
+        "tags": [
+          "tables"
+        ],
+        "parameters": [
+          {
+            "name": "X-API-KEY",
+            "in": "header",
+            "required": true,
+            "schema": {
+              "type": "string"
+            },
+            "description": "Your PromptLayer API key. The key's workspace scopes table resources for this request."
+          },
+          {
+            "name": "table_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table ID."
+          },
+          {
+            "name": "sheet_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Table sheet ID."
+          },
+          {
+            "name": "row_index",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "integer",
+              "minimum": 0
+            },
+            "description": "Zero-based row index."
+          },
+          {
+            "name": "calculation_id",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "string",
+              "format": "uuid"
+            },
+            "description": "Calculation ID. Defaults to latest scorecard calculation."
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/GetTableSheetScorecardRowResponse"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Invalid row index.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Row result not found.",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ErrorResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
     "/api/public/v2/tables/{table_id}/sheets/{sheet_id}/versions": {
       "get": {
         "summary": "List Table Sheet Versions",
@@ -23964,6 +24745,777 @@
             ]
           }
         }
+      },
+      "TableSheetScorecardStaleState": {
+        "type": "object",
+        "required": [
+          "is_stale",
+          "reasons"
+        ],
+        "properties": {
+          "is_stale": {
+            "type": "boolean"
+          },
+          "reasons": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        }
+      },
+      "TableSheetScorecardAggregation": {
+        "type": "object",
+        "required": [
+          "method",
+          "required_step_failure_behavior",
+          "pass_threshold",
+          "warn_threshold"
+        ],
+        "properties": {
+          "method": {
+            "type": "string"
+          },
+          "required_step_failure_behavior": {
+            "type": "string",
+            "enum": [
+              "fail",
+              "warn",
+              "ignore"
+            ]
+          },
+          "pass_threshold": {
+            "type": "number"
+          },
+          "warn_threshold": {
+            "type": "number"
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScorecardStep": {
+        "type": "object",
+        "required": [
+          "title",
+          "primitive_type"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "title": {
+            "type": "string"
+          },
+          "primitive_type": {
+            "type": "string"
+          },
+          "source_column_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "weight": {
+            "type": "number"
+          },
+          "required": {
+            "type": "boolean"
+          },
+          "thresholds": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "number"
+            }
+          },
+          "primitive_config": {
+            "type": "object",
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScorecard": {
+        "type": "object",
+        "required": [
+          "id",
+          "workspace_id",
+          "smart_table_id",
+          "sheet_id",
+          "name",
+          "evaluated_column_ids",
+          "aggregation",
+          "status",
+          "stale_state",
+          "steps",
+          "created_at",
+          "updated_at"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "smart_table_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "name": {
+            "type": "string"
+          },
+          "evaluated_column_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "aggregation": {
+            "$ref": "#/components/schemas/TableSheetScorecardAggregation"
+          },
+          "display_config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "baseline_config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "needs_setup",
+              "ready",
+              "queued",
+              "running",
+              "completed",
+              "stale",
+              "failed"
+            ]
+          },
+          "stale_state": {
+            "$ref": "#/components/schemas/TableSheetScorecardStaleState"
+          },
+          "latest_calculation_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          },
+          "config_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetScorecardStep"
+            }
+          },
+          "created_at": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "updated_at": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScorecardCalculation": {
+        "type": "object",
+        "required": [
+          "id",
+          "scorecard_id",
+          "workspace_id",
+          "sheet_id",
+          "sheet_revision",
+          "status",
+          "criterion_summaries"
+        ],
+        "properties": {
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scorecard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "workspace_id": {
+            "type": "integer"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_revision": {
+            "type": "string"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "aggregate_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "aggregate_verdict": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "error",
+              "skipped",
+              null
+            ]
+          },
+          "criterion_summaries": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "drift_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "config_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "started_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "completed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          },
+          "error_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScorecardGetResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "scorecard",
+          "latest_calculation",
+          "display_calculation",
+          "criterion_summaries",
+          "drift_summary"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "scorecard": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TableSheetScorecard"
+              }
+            ]
+          },
+          "latest_calculation": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TableSheetScorecardCalculation"
+              }
+            ]
+          },
+          "display_calculation": {
+            "nullable": true,
+            "allOf": [
+              {
+                "$ref": "#/components/schemas/TableSheetScorecardCalculation"
+              }
+            ]
+          },
+          "criterion_summaries": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "drift_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ConfigureTableSheetScorecardRequest": {
+        "type": "object",
+        "required": [
+          "name",
+          "aggregation"
+        ],
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "evaluated_column_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            },
+            "default": []
+          },
+          "steps": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "additionalProperties": true
+            },
+            "default": []
+          },
+          "aggregation": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "display_config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "baseline_config": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "ConfigureTableSheetScorecardResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "scorecard",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "scorecard": {
+            "$ref": "#/components/schemas/TableSheetScorecard"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      },
+      "DeleteTableSheetScorecardResponse": {
+        "type": "object",
+        "required": [
+          "success"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "MigrateLegacyTableSheetScoreRequest": {
+        "type": "object",
+        "properties": {
+          "delete_legacy_score": {
+            "type": "boolean",
+            "default": false
+          }
+        },
+        "additionalProperties": false
+      },
+      "MigrateLegacyTableSheetScoreResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "scorecard",
+          "converted_count",
+          "skipped",
+          "legacy_score_deleted",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "scorecard": {
+            "$ref": "#/components/schemas/TableSheetScorecard"
+          },
+          "converted_count": {
+            "type": "integer"
+          },
+          "skipped": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "reason": {
+                  "type": "string"
+                },
+                "score_type": {
+                  "type": "string",
+                  "nullable": true
+                }
+              },
+              "additionalProperties": true
+            }
+          },
+          "legacy_score_deleted": {
+            "type": "boolean"
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": true
+      },
+      "RecalculateTableSheetScorecardRequest": {
+        "type": "object",
+        "properties": {
+          "row_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "step_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "RecalculateTableSheetScorecardResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "calculation_id",
+          "status",
+          "version"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "calculation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "status": {
+            "type": "string",
+            "enum": [
+              "queued",
+              "running",
+              "completed",
+              "failed",
+              "cancelled"
+            ]
+          },
+          "version": {
+            "type": "integer"
+          }
+        },
+        "additionalProperties": false
+      },
+      "CancelTableSheetScorecardRequest": {
+        "type": "object",
+        "properties": {
+          "row_indices": {
+            "type": "array",
+            "items": {
+              "type": "integer",
+              "minimum": 0
+            }
+          },
+          "step_ids": {
+            "type": "array",
+            "items": {
+              "type": "string",
+              "format": "uuid"
+            }
+          }
+        },
+        "additionalProperties": false
+      },
+      "CancelTableSheetScorecardResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "message",
+          "scorecard",
+          "cancelled_count",
+          "execution_ids",
+          "calculation_id"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "message": {
+            "type": "string"
+          },
+          "scorecard": {
+            "type": "object",
+            "required": [
+              "id"
+            ],
+            "properties": {
+              "id": {
+                "type": "string",
+                "format": "uuid"
+              }
+            },
+            "additionalProperties": true
+          },
+          "cancelled_count": {
+            "type": "integer"
+          },
+          "execution_ids": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          },
+          "calculation_id": {
+            "type": "string",
+            "format": "uuid",
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "GetTableSheetScorecardCalculationResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "calculation",
+          "criterion_summaries",
+          "drift_summary"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "calculation": {
+            "$ref": "#/components/schemas/TableSheetScorecardCalculation"
+          },
+          "criterion_summaries": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "drift_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "TableSheetScorecardRowSummary": {
+        "type": "object",
+        "required": [
+          "row_index",
+          "aggregate_score",
+          "aggregate_verdict",
+          "drift_summary",
+          "stale_state",
+          "error_summary"
+        ],
+        "properties": {
+          "row_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "aggregate_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "aggregate_verdict": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "error",
+              "skipped",
+              null
+            ]
+          },
+          "drift_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "stale_state": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "error_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          }
+        },
+        "additionalProperties": true
+      },
+      "ListTableSheetScorecardRowsResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "calculation_id",
+          "rows",
+          "next_cursor"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "calculation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "rows": {
+            "type": "array",
+            "items": {
+              "$ref": "#/components/schemas/TableSheetScorecardRowSummary"
+            }
+          },
+          "next_cursor": {
+            "type": "integer",
+            "nullable": true
+          }
+        },
+        "additionalProperties": false
+      },
+      "GetTableSheetScorecardRowResponse": {
+        "type": "object",
+        "required": [
+          "success",
+          "id",
+          "calculation_id",
+          "scorecard_id",
+          "sheet_id",
+          "row_index",
+          "aggregate_score",
+          "aggregate_verdict",
+          "step_results",
+          "drift_summary",
+          "stale_state",
+          "error_summary",
+          "config_hash",
+          "input_hash",
+          "computed_at"
+        ],
+        "properties": {
+          "success": {
+            "type": "boolean"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "calculation_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "scorecard_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "sheet_id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "row_index": {
+            "type": "integer",
+            "minimum": 0
+          },
+          "aggregate_score": {
+            "type": "number",
+            "nullable": true
+          },
+          "aggregate_verdict": {
+            "type": "string",
+            "nullable": true,
+            "enum": [
+              "pass",
+              "warn",
+              "fail",
+              "error",
+              "skipped",
+              null
+            ]
+          },
+          "step_results": {
+            "type": "object",
+            "additionalProperties": true
+          },
+          "drift_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "stale_state": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "error_summary": {
+            "type": "object",
+            "nullable": true,
+            "additionalProperties": true
+          },
+          "config_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "input_hash": {
+            "type": "string",
+            "nullable": true
+          },
+          "computed_at": {
+            "type": "string",
+            "format": "date-time",
+            "nullable": true
+          }
+        },
+        "additionalProperties": true
       },
       "ListTableSheetVersionsResponse": {
         "type": "object",

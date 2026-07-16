@@ -51,7 +51,7 @@ body:has(.promptlayer-landing)
     width: min(100%, 72rem);
     max-width: none;
     margin: 0 auto;
-    padding: 2rem 1.25rem 4rem;
+    padding: 0.5rem 1.25rem 4rem;
     color: var(--pl-ink);
 }
 
@@ -1002,7 +1002,7 @@ body:has(.promptlayer-landing)
 
 @media (min-width: 1180px) {
     .promptlayer-landing {
-        padding-top: 2.75rem;
+        padding-top: 0.75rem;
     }
 
     .promptlayer-hero {

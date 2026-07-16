@@ -1,0 +1,8 @@
+---
+title: "Recalculate Scorecard"
+openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/recalculate"
+---
+
+Queue a scorecard recalculation for a sheet.
+
+Send an empty body for a full run, or pass `row_indices` and `step_ids` for a scoped run.

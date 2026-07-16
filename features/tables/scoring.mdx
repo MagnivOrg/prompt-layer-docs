@@ -1,10 +1,16 @@
 ---
-title: "Scoring"
-description: "Configure sheet scores with score columns, Boolean and numeric scoring, custom code, and winner aggregation."
+title: "Legacy Scoring"
+description: "Legacy sheet score configuration with score columns, Boolean and numeric scoring, custom code, and winner aggregation."
 icon: "gauge"
 ---
 
+<Warning>
+  Legacy table scoring is deprecated for new workflows. Use [Scorecards](/features/tables/scorecards) for new evaluation workflows and migration planning.
+</Warning>
+
 Scoring turns a sheet into a summary signal you can compare across runs, prompt versions, and workflow changes.
+
+Use score configuration when you need a single sheet-level score. Use scorecards when you need reusable criteria, row-level evidence, and calculation history.
 
 Click **Score** in the Table toolbar to open the score panel after computed columns produce the outputs or checks you care about.
 
@@ -39,6 +45,7 @@ For non-custom, non-aggregate modes, choose **Score columns**. Changes save auto
 | **Numeric** | Selected columns produce numeric values. | Select score columns and recalculate. |
 | **Custom code** | You need custom scoring logic across the sheet. | Write Python or JavaScript that returns a deterministic scoring object. |
 | **Winner / aggregate** | You want a qualitative result such as most frequent winner, lowest value, or highest value. | Choose an aggregate question, source column, and optional display label column. |
+| **Scorecard** | You need structured evaluation criteria, run history, and row-level evidence for regressions. | Define criteria (`steps`), aggregation, run recalculation, then inspect rows and step results. |
 
 ## Boolean scoring
 
@@ -135,5 +142,11 @@ Recalculate the score after:
   </Card>
   <Card title="Score history" icon="chart-line" href="/reference/table-sheet-score-history-get">
     Read score history for a sheet.
+  </Card>
+  <Card title="Scorecards guide" icon="clipboard-check" href="/features/tables/scorecards">
+    Learn when to use scorecards and how to migrate.
+  </Card>
+  <Card title="Get scorecard" icon="clipboard-check" href="/reference/table-sheet-scorecard-get">
+    Read the active scorecard and calculation state.
   </Card>
 </CardGroup>
