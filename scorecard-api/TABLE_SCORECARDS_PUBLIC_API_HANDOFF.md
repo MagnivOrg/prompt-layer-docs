@@ -23,7 +23,6 @@ Base path:
 
 Authentication is the same as other public table endpoints.
 
-![Table scorecard public API endpoints](screenshots/01-api-endpoints-overview.png)
 
 | Method | Endpoint | Purpose |
 |---|---|---|
@@ -80,15 +79,12 @@ Legacy score migration now preserves the old score configuration by default. Set
 
 A scorecard is a structured evaluation configuration for a table sheet. It contains criteria and aggregation rules for producing row-level and sheet-level scores.
 
-![Scorecard overview in the product UI](screenshots/03-concept-scorecard-overview.png)
 
 ### Criterion / step
 
 A criterion is one scorecard step. Criteria can compare columns, check text, run assertions, summarize columns, and contribute to the aggregate score.
 
-![Add evaluator menu — supported quality evaluators](screenshots/08-criterion-add-menu.png)
 
-![Criterion detail view](screenshots/03-concept-criterion-detail.png)
 
 ### Calculation
 
@@ -98,17 +94,13 @@ A calculation is one scorecard run. It stores aggregate score, verdict, criterio
 
 A row result contains the scorecard outcome for one row, including per-criterion `step_results`.
 
-![All rows list with verdict filters](screenshots/03-concept-all-rows.png)
 
-![Row-level breakdown](screenshots/03-concept-row-breakdown.png)
 
-![Expanded criterion evidence on a row](screenshots/03-concept-criterion-evidence.png)
 
 ### Drift and stale state
 
 Drift compares current results to a previous completed calculation when available. Stale state indicates results may need recalculation after inputs or scorecard configuration changed.
 
-![Scorecard stale state after configuration change](screenshots/03-concept-stale-state.png)
 
 ---
 
@@ -116,7 +108,6 @@ Drift compares current results to a previous completed calculation when availabl
 
 These are the current backend values. The Python SDK should align to these values for table scorecards.
 
-![Backend enums reference](screenshots/04-backend-enums.png)
 
 ### Scorecard status
 
@@ -196,7 +187,6 @@ GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard
 
 Returns the active scorecard for a sheet, if one exists.
 
-![Live GET /scorecard response](screenshots/05-1-get-scorecard.png)
 
 #### Response when no scorecard exists
 
@@ -291,7 +281,6 @@ PATCH /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard
 
 Creates or updates the active scorecard for a sheet.
 
-![Live PATCH /scorecard response](screenshots/05-2-configure-scorecard.png)
 
 #### Request
 
@@ -381,7 +370,6 @@ DELETE /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard
 
 Soft-deletes the active scorecard for the sheet.
 
-![Live DELETE /scorecard response](screenshots/05-3-delete-scorecard.png)
 
 #### Response
 
@@ -403,7 +391,6 @@ POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/migrate-legacy
 
 Converts an existing legacy sheet score configuration into scorecard criteria.
 
-![Live migrate-legacy-score response](screenshots/05-4-migrate-legacy-score.png)
 
 #### Request
 
@@ -464,9 +451,7 @@ POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/recalculate
 
 Queues scorecard recalculation.
 
-![Live full recalculation response](screenshots/05-5-recalculate-scorecard.png)
 
-![Scoped recalculation request shape](screenshots/05-5-recalculate-scoped.png)
 
 #### Request
 
@@ -528,7 +513,6 @@ POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/cancel
 
 Cancels active queued/running scorecard work when possible.
 
-![Live cancel response](screenshots/05-6-cancel-scorecard.png)
 
 #### Request
 
@@ -598,7 +582,6 @@ If nothing was cancellable:
 GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/calculations/{calculation_id}
 ```
 
-![Live GET calculation response](screenshots/05-7-get-calculation.png)
 
 #### Response
 
@@ -634,7 +617,6 @@ GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/calculations/{c
 GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows
 ```
 
-![Live list rows response](screenshots/05-8-list-rows.png)
 
 #### Query parameters
 
@@ -691,7 +673,6 @@ update it to match the backend (`cursor` / `next_cursor`) unless the SDK intenti
 GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows/{row_index}
 ```
 
-![Live row breakdown response](screenshots/05-9-get-row.png)
 
 #### Query parameters
 
@@ -741,9 +722,7 @@ Existing public table scoring endpoints remain supported:
 /api/public/v2/tables/{table_id}/sheets/{sheet_id}/score
 ```
 
-![GET /score scorecard-compatible fallback](screenshots/06-get-score-compatibility.png)
 
-![POST /score scorecard recalculation fallback](screenshots/06-post-score-recalculate.png)
 
 ### GET `/score`
 
@@ -803,7 +782,6 @@ If no legacy score configuration exists but an active scorecard exists, this end
 
 ## 7. Safe migration guide
 
-![Recommended migration flow](screenshots/07-migration-guide.png)
 
 Recommended migration path:
 
@@ -843,9 +821,7 @@ Do not set `delete_legacy_score: true` until every consumer that depends on `/sc
 
 ## 8. Criterion examples
 
-![Edit evaluator form in the product UI](screenshots/08-criterion-edit-form.png)
 
-![Compare criterion configure example](screenshots/08-compare-criterion-example.png)
 
 ### Empty scorecard
 
@@ -945,7 +921,6 @@ client.tables.sheets.scorecards
 
 Use snake_case methods in Python SDK docs.
 
-![Python SDK get scorecard example output](screenshots/09-python-sdk-get-scorecard.png)
 
 ### Get scorecard
 
