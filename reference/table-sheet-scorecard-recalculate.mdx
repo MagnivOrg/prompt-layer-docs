@@ -3,6 +3,6 @@ title: "Recalculate Scorecard"
 openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/recalculate"
 ---
 
-Queue a scorecard recalculation for a sheet.
+Queue a scorecard recalculation for a sheet. Successful requests return `202 Accepted`.
 
-Send an empty body for a full run, or pass `row_indices` and `step_ids` for a scoped run.
+Send an empty body for a full run, or pass `row_indices` and `step_ids` for a scoped run. The request body does not support `force`.

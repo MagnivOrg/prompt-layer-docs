@@ -25,8 +25,8 @@ from promptlayer import PromptLayer
 
 client = PromptLayer(api_key="pl_your_key")
 
-table_id = "table-id"
-sheet_id = "sheet-id"
+table_id = "00000000-0000-0000-0000-000000000000"
+sheet_id = "11111111-1111-1111-1111-111111111111"
 
 client.tables.sheets.scorecards.configure_scorecard(
     table_id,
@@ -39,16 +39,41 @@ client.tables.sheets.scorecards.configure_scorecard(
             "pass_threshold": 0.8,
             "warn_threshold": 0.6,
         },
-        "steps": [],
+        "steps": [
+            {
+                "title": "Output matches expected",
+                "primitive_type": "COMPARE",
+                "source_column_ids": ["output-column-id", "expected-column-id"],
+                "weight": 1,
+                "required": False,
+                "thresholds": {"pass": 0.8, "warn": 0.6},
+                "primitive_config": {
+                    "sources": ["output-column-id", "expected-column-id"],
+                },
+            }
+        ],
     },
 )
 
-run = client.tables.sheets.scorecards.recalculate(table_id, sheet_id)
+run = client.tables.sheets.scorecards.recalculate(
+    table_id,
+    sheet_id,
+    {"row_indices": [0, 1, 2], "step_ids": ["22222222-2222-2222-2222-222222222222"]}
+)
 rows = client.tables.sheets.scorecards.list_rows(
     table_id,
     sheet_id,
-    {"calculation_id": run["calculation_id"], "limit": 50},
+    {"calculation_id": run["calculation_id"], "verdict": "fail", "limit": 50},
 )
+
+if rows["rows"]:
+    row = client.tables.sheets.scorecards.get_row(
+        table_id,
+        sheet_id,
+        rows["rows"][0]["row_index"],
+        {"calculation_id": run["calculation_id"]},
+    )
+    print(row["aggregate_verdict"], row["step_results"])
 ```
 
 Use these methods:
@@ -63,7 +88,7 @@ Use these methods:
 - `list_rows(table_id, sheet_id, options=None)`
 - `get_row(table_id, sheet_id, row_index, options=None)`
 
-See the full API contract in the [table scorecard REST reference](/reference/table-sheet-scorecard-get).
+See the full API contract in the [table scorecard REST reference](/reference/table-sheet-scorecard-get). The REST API uses `PATCH` to configure scorecards, returns `202 Accepted` when recalculation is queued, paginates rows with `cursor` / `next_cursor`, and returns row breakdown fields at the top level.
 
 ## Using the `run` Method (Recommended)
 

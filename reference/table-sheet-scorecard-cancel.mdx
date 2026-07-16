@@ -5,4 +5,4 @@ openapi: "POST /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/canc
 
 Cancel active queued or running scorecard work for a sheet.
 
-The endpoint targets the latest active run. It does not take `calculation_id`.
+The endpoint targets the latest active run. It does not take `calculation_id`; pass optional `row_indices` and `step_ids` to scope cancellation.

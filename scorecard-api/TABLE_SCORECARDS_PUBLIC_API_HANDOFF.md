@@ -318,7 +318,8 @@ Creates or updates the active scorecard for a sheet.
       },
       "primitive_config": {
         "sources": ["output-column-id", "expected-column-id"]
-      }
+      },
+      "score_adapter": null
     }
   ]
 }
@@ -480,7 +481,7 @@ Scoped recalculation:
 ```json
 {
   "row_indices": [0, 1, 2],
-  "step_ids": ["criterion-step-id"]
+  "step_ids": ["22222222-2222-2222-2222-222222222222"]
 }
 ```
 
@@ -534,7 +535,7 @@ Cancels active queued/running scorecard work when possible.
 ```json
 {
   "row_indices": [0, 1],
-  "step_ids": ["criterion-step-id"]
+  "step_ids": ["22222222-2222-2222-2222-222222222222"]
 }
 ```
 
@@ -660,11 +661,14 @@ GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows
       "error_summary": null
     }
   ],
-  "next_cursor": null
+  "next_cursor": null,
+  "verdict_counts": {
+    "fail": 1
+  }
 }
 ```
 
-The current backend uses `cursor` / `next_cursor`, not `offset` / `next_offset`.
+The current backend uses `cursor` / `next_cursor`, not `offset` / `next_offset`. The list response also includes `calculation_id` and `verdict_counts` at the top level.
 
 If the Python SDK currently has:
 
@@ -1011,7 +1015,7 @@ run = client.tables.sheets.scorecards.recalculate(
     sheet_id,
     {
         "row_indices": [0, 1, 2],
-        "step_ids": ["criterion-step-id"],
+        "step_ids": ["22222222-2222-2222-2222-222222222222"],
     },
 )
 ```
@@ -1067,7 +1071,7 @@ client.tables.sheets.scorecards.cancel(
     sheet_id,
     {
         "row_indices": [0, 1],
-        "step_ids": ["criterion-step-id"],
+        "step_ids": ["22222222-2222-2222-2222-222222222222"],
     },
 )
 ```
@@ -1122,7 +1126,7 @@ class CancelScorecardRequest(TypedDict, total=False):
 
 ### ListScorecardRowsOptions
 
-Backend accepts `cursor` and returns `next_cursor`; it does not accept `offset`, `next_offset`, or `stale_state`.
+Backend accepts `cursor` and returns `next_cursor`; it does not accept `offset`, `next_offset`, or `stale_state`. The response includes top-level `calculation_id` and `verdict_counts`.
 
 ```python
 class ListScorecardRowsOptions(TypedDict, total=False):
@@ -1130,6 +1134,15 @@ class ListScorecardRowsOptions(TypedDict, total=False):
     verdict: ScoreVerdict
     cursor: int
     limit: int
+```
+
+```python
+class ListScorecardRowsResponse(TypedDict):
+    success: bool
+    calculation_id: str
+    rows: List[ScorecardRowSummary]
+    next_cursor: int | None
+    verdict_counts: Dict[str, int]
 ```
 
 ### Existing `/score` SDK response types
@@ -1167,7 +1180,7 @@ Final docs should:
 - Explain exactly when `/score` returns legacy behavior vs scorecard fallback behavior.
 - Emphasize safe migration with `delete_legacy_score: false`.
 - Include migration caveats and skipped conversion examples.
-- Keep examples aligned with backend fields, including currently returned fields such as `smart_table_id`, `latest_calculation_id`, `aggregate_score`, `aggregate_verdict`, `criterion_summaries`, and `step_results`.
+- Keep examples aligned with backend fields, including currently returned fields such as `smart_table_id`, `latest_calculation_id`, `aggregate_score`, `aggregate_verdict`, `criterion_summaries`, `step_results`, and `verdict_counts`.
 - If the SDK chooses aliases such as `table_id` instead of raw `smart_table_id`, document that aliasing explicitly.
 
 ---

@@ -5,4 +5,4 @@ openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows"
 
 List row-level scorecard summaries for a calculation.
 
-Pagination uses `cursor` and `next_cursor`. Filtering supports `verdict`.
+Pagination uses `cursor` and `next_cursor`. Filtering supports `calculation_id` and `verdict`; responses include top-level `calculation_id`, `rows`, `next_cursor`, and `verdict_counts`.

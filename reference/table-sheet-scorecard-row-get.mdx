@@ -5,4 +5,4 @@ openapi: "GET /api/public/v2/tables/{table_id}/sheets/{sheet_id}/scorecard/rows/
 
 Get the scorecard breakdown for one row.
 
-The response includes `step_results` with per-criterion verdicts and evidence.
+The response returns row fields at the top level, including `row_index`, `aggregate_score`, `aggregate_verdict`, and `step_results` with per-criterion verdicts and evidence.
