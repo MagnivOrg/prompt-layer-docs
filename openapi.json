@@ -24809,7 +24809,20 @@
             "type": "string"
           },
           "primitive_type": {
-            "type": "string"
+            "type": "string",
+            "enum": [
+              "COLUMN_AGGREGATE",
+              "CONTAINS",
+              "REGEX",
+              "ASSERT_VALID",
+              "COMPARE",
+              "LLM_ASSERTION",
+              "TOOL_EVALUATOR",
+              "CODE_EXECUTION",
+              "STRUCTURE",
+              "MAX_TOOL_CALLS",
+              "NO_INVALID_TOOL_CALLS"
+            ]
           },
           "source_column_ids": {
             "type": "array",
@@ -24831,6 +24844,11 @@
           },
           "primitive_config": {
             "type": "object",
+            "additionalProperties": true
+          },
+          "score_adapter": {
+            "type": "object",
+            "nullable": true,
             "additionalProperties": true
           }
         },
@@ -25089,8 +25107,7 @@
           "steps": {
             "type": "array",
             "items": {
-              "type": "object",
-              "additionalProperties": true
+              "$ref": "#/components/schemas/TableSheetScorecardStep"
             },
             "default": []
           },
@@ -25400,7 +25417,8 @@
           "success",
           "calculation_id",
           "rows",
-          "next_cursor"
+          "next_cursor",
+          "verdict_counts"
         ],
         "properties": {
           "success": {
@@ -25419,6 +25437,12 @@
           "next_cursor": {
             "type": "integer",
             "nullable": true
+          },
+          "verdict_counts": {
+            "type": "object",
+            "additionalProperties": {
+              "type": "integer"
+            }
           }
         },
         "additionalProperties": false
