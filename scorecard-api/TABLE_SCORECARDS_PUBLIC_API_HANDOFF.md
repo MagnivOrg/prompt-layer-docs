@@ -932,7 +932,7 @@ scorecard = response["scorecard"]
 ### Configure scorecard
 
 ```python
-response = client.tables.sheets.scorecards.configure_scorecard(
+response = client.tables.sheets.scorecards.configure(
     table_id,
     sheet_id,
     {
