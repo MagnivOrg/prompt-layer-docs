@@ -34,6 +34,25 @@ Filter organization members by workspace assignment in the Members settings page
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Custom Model Cached Token Pricing**
+You can now set custom pricing rates for cached input tokens on your custom models, enabling accurate cost tracking when using prompt caching with providers like Kimi or other OpenAI-compatible endpoints.
+- Configure separate rates for cached vs. non-cached input tokens
+- Support for both inclusive (OpenAI-style) and exclusive (Anthropic-style) cache token counting
+- Custom cache rates override native provider discounts when set
+
+#### Improvements
+
+- Structured output schemas now preserve variable name bindings when saved
+- Multi-modal token pricing (text, audio, image) now correctly accounts for cached tokens across all modalities
+- Custom model price validation now prevents configuration errors by rejecting invalid rate keys
+
+---
+
 ## July 20, 2026
 
 ### Deployment 1
