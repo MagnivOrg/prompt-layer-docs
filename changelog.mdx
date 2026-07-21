@@ -4,6 +4,36 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## July 21, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Trace Column Type**
+Tables now support a `TRACE` column type that stores structured span/trace data from PromptLayer observability.
+- Import traces directly into Tables to analyze LLM request patterns and performance
+- Trace columns display a compact name in the grid while preserving the full span tree for detailed inspection
+- Automatically creates Cost and Latency metadata columns alongside each Trace column
+- Export CSV files with complete trace payloads for external analysis
+
+**Workspace Member Filtering**
+Filter organization members by workspace assignment in the Members settings page.
+- Quickly view which users have access to specific workspaces
+- Applies to both active members and pending invites
+- Supports multi-workspace filtering for cross-team analysis
+
+#### Improvements
+
+- Custom Model creation flow now properly enables the Continue button after completing step 1
+- Deleting a provider now automatically removes all associated model configurations
+- Trace column cells preserve their structured span payload when updating display labels
+- Tables maintain execution metadata columns when deleting parent Trace columns
+- CSV exports now include full trace span trees instead of display-only names
+
+---
+
+
 ## July 20, 2026
 
 ### Deployment 1
