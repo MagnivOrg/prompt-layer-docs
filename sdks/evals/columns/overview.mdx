@@ -1,0 +1,558 @@
+---
+title: "Columns"
+description: "Processing columns for SDK evaluate(...) — column(title, ColumnType, config)."
+sidebarTitle: "Columns"
+icon: "table-columns"
+---
+
+Processing columns transform row data before scorers run. Build them with `column(title, ColumnType.<TYPE>, config)`.
+
+For scorecard checks, use [typed scorer helpers](/sdks/evals/scorers/overview). Full product catalog: [Tables column types](/features/tables/column-types).
+
+## Prompt Template
+
+Run a Prompt Registry or inline prompt per row (`ColumnType.PROMPT_TEMPLATE`). Provide exactly one of `template` or `inline_template`.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, column, ColumnType, compare_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a support agent. Answer in one short sentence.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "prompt-column-demo",
+    dataset=[{"input": "cats", "expected": "OK"}],
+    runner=run_llm,
+    columns=[
+        column(
+            "Prompt output",
+            ColumnType.PROMPT_TEMPLATE,
+            {
+                "template": {"name": "summarize", "version_number": 1},
+                "prompt_template_variable_mappings": {"topic": "Input"},
+            },
+        )
+    ],
+    scorers=[compare_scorer(sources=["Prompt output", "Expected"])],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, column, ColumnType, compareScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "You are a support agent. Answer in one short sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("prompt-column-demo", {
+  dataset: [{ input: "cats", expected: "OK" }],
+  runner: runLlm,
+  columns: [
+    column("Prompt output", ColumnType.PROMPT_TEMPLATE, {
+      template: { name: "summarize", version_number: 1 },
+      prompt_template_variable_mappings: { topic: "Input" },
+    }),
+  ],
+  scorers: [compareScorer({ sources: ["Prompt output", "Expected"] })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `template` | one of | Registry ref: `name` or `id`; optional `version_number` or `label` (not both) |
+| `inline_template` | one of | Inline prompt content |
+| `prompt_template_variable_mappings` | yes | Variable → column title |
+| `engine` | no | Optional model override |
+| `verbose` | no | Default `false` |
+| `return_template_only` | no | Default `false` |
+| `hydrate_input_variables` | no | Default `true` |
+| `chat_history_source` | no | Optional chat history column |
+
+## JSON Path
+
+Extract a value from a JSON column (`ColumnType.JSON_PATH`).
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, column, ColumnType, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "Reply with JSON only, no markdown. "
+                    'Shape: {"user":{"id":"<id>"}}'
+                ),
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "json-path-demo",
+    dataset=[{"input": "Create a user object with id 42."}],
+    runner=run_llm,
+    columns=[
+        column(
+            "User id",
+            ColumnType.JSON_PATH,
+            {"source": "Output", "json_path": "$.user.id", "return_first_match": True},
+        )
+    ],
+    scorers=[contains_scorer(source="User id", value="42")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, column, ColumnType, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content:
+          'Reply with JSON only, no markdown. Shape: {"user":{"id":"<id>"}}',
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("json-path-demo", {
+  dataset: [{ input: "Create a user object with id 42." }],
+  runner: runLlm,
+  columns: [
+    column("User id", ColumnType.JSON_PATH, {
+      source: "Output",
+      json_path: "$.user.id",
+      return_first_match: true,
+    }),
+  ],
+  scorers: [containsScorer({ source: "User id", value: "42" })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `source` | yes | Column title |
+| `json_path` | yes | JSONPath expression |
+| `return_first_match` | no | Set explicitly; do not rely on defaults |
+
+## Coalesce
+
+Return the first non-null value from two or more sources (`ColumnType.COALESCE`).
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, column, ColumnType, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a support agent. Answer in one short sentence.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "coalesce-demo",
+    dataset=[
+        {
+            "input": "How do I reset my password?",
+            "expected": "primary",
+        }
+    ],
+    runner=run_llm,
+    columns=[
+        column(
+            "Primary or output",
+            ColumnType.COALESCE,
+            {"sources": ["Expected", "Output"]},
+        )
+    ],
+    scorers=[contains_scorer(source="Primary or output", value="primary")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, column, ColumnType, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "You are a support agent. Answer in one short sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("coalesce-demo", {
+  dataset: [
+    {
+      input: "How do I reset my password?",
+      expected: "primary",
+    },
+  ],
+  runner: runLlm,
+  columns: [
+    column("Primary or output", ColumnType.COALESCE, {
+      sources: ["Expected", "Output"],
+    }),
+  ],
+  scorers: [containsScorer({ source: "Primary or output", value: "primary" })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `sources` | yes | At least two column titles |
+
+## Composition
+
+Mirror an upstream column value without re-running upstream logic (`ColumnType.COMPOSITION`).
+
+<CodeGroup>
+```python Python
+from promptlayer import column, ColumnType
+
+column("Mirrored output", ColumnType.COMPOSITION, {"source": "Output"})
+```
+
+```javascript JavaScript
+import { column, ColumnType } from "promptlayer";
+
+column("Mirrored output", ColumnType.COMPOSITION, { source: "Output" });
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `source` | usually | Same-sheet title, or `{table}.{sheet}.{column}` |
+| `sources` | alt | Also accepted by the backend |
+
+## Cosine Similarity
+
+Embedding cosine similarity between exactly two source columns (`ColumnType.COSINE_SIMILARITY`). Threshold the result with a downstream scorer (often [custom code](/sdks/evals/scorers/overview#custom-code)).
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, column, ColumnType, count_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "Reply with a friendly greeting in a few words.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "cosine-demo",
+    dataset=[{"input": "Say hello to the customer.", "expected": "hello there"}],
+    runner=run_llm,
+    columns=[
+        column(
+            "Similarity",
+            ColumnType.COSINE_SIMILARITY,
+            {"sources": ["Output", "Expected"]},
+        )
+    ],
+    scorers=[count_scorer(source="Output", type="words", min_count=1)],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, column, ColumnType, countScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "Reply with a friendly greeting in a few words.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("cosine-demo", {
+  dataset: [{ input: "Say hello to the customer.", expected: "hello there" }],
+  runner: runLlm,
+  columns: [
+    column("Similarity", ColumnType.COSINE_SIMILARITY, {
+      sources: ["Output", "Expected"],
+    }),
+  ],
+  scorers: [countScorer({ source: "Output", type: "words", minCount: 1 })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `sources` | yes | Exactly two column titles |
+
+## AI Data Extraction
+
+Extract information from a source column with an LLM query (`ColumnType.AI_DATA_EXTRACTION`).
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, column, ColumnType, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are a shipping assistant. Mention the order number "
+                    "and when it ships in one short sentence."
+                ),
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "extract-demo",
+    dataset=[{"input": "Customer asks about order 99 shipping tomorrow."}],
+    runner=run_llm,
+    columns=[
+        column(
+            "Order id",
+            ColumnType.AI_DATA_EXTRACTION,
+            {"source": "Output", "query": "Extract the order number only"},
+        )
+    ],
+    scorers=[contains_scorer(source="Order id", value="99")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, column, ColumnType, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are a shipping assistant. Mention the order number and when it ships in one short sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("extract-demo", {
+  dataset: [{ input: "Customer asks about order 99 shipping tomorrow." }],
+  runner: runLlm,
+  columns: [
+    column("Order id", ColumnType.AI_DATA_EXTRACTION, {
+      source: "Output",
+      query: "Extract the order number only",
+    }),
+  ],
+  scorers: [containsScorer({ source: "Order id", value: "99" })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `source` | yes | Column title |
+| `query` | yes | Non-empty extraction query |
+
+## For Loop
+
+Iterate a prompt or workflow over a collection or a fixed count (`ColumnType.FOR_LOOP`). Provide exactly one of `iterator_source` or `max_iterations`.
+
+<CodeGroup>
+```python Python
+from promptlayer import column, ColumnType
+
+column(
+    "Expand items",
+    ColumnType.FOR_LOOP,
+    {
+        "loop_type": "prompt",
+        "iterator_source": "Input",
+        "prompt_config": {
+            "template": {"name": "process-item", "version_number": 1},
+            "prompt_template_variable_mappings": {"item": "_iterator_item"},
+        },
+        "variable_mappings": {},
+        "return_all_outputs": False,
+    },
+)
+```
+
+```javascript JavaScript
+import { column, ColumnType } from "promptlayer";
+
+column("Expand items", ColumnType.FOR_LOOP, {
+  loop_type: "prompt",
+  iterator_source: "Input",
+  prompt_config: {
+    template: { name: "process-item", version_number: 1 },
+    prompt_template_variable_mappings: { item: "_iterator_item" },
+  },
+  variable_mappings: {},
+  return_all_outputs: false,
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `loop_type` | yes | `prompt` \| `workflow` |
+| `prompt_config` | if prompt | Nested prompt config (`version_number`, not `version`) |
+| `workflow_config` | if workflow | Needs `workflow_id` or `workflow_version_id` |
+| `iterator_source` | one of | Source collection column |
+| `max_iterations` | one of | Positive int |
+| `return_all_outputs` | no | Default `false` |
+| `variable_mappings` | no | Default `{}`; avoid `_iterator_source` / `_iterator_item` as keys |
+
+## While Loop
+
+Repeat a prompt or workflow until a condition or max iterations (`ColumnType.WHILE_LOOP`).
+
+<CodeGroup>
+```python Python
+from promptlayer import column, ColumnType
+
+column(
+    "Refine until done",
+    ColumnType.WHILE_LOOP,
+    {
+        "loop_type": "prompt",
+        "max_iterations": 3,
+        "end_condition_json_path": "$.done",
+        "prompt_config": {
+            "template": {"name": "refine", "version_number": 1},
+            "prompt_template_variable_mappings": {"draft": "Input"},
+        },
+        "variable_mappings": {},
+        "return_all_outputs": False,
+    },
+)
+```
+
+```javascript JavaScript
+import { column, ColumnType } from "promptlayer";
+
+column("Refine until done", ColumnType.WHILE_LOOP, {
+  loop_type: "prompt",
+  max_iterations: 3,
+  end_condition_json_path: "$.done",
+  prompt_config: {
+    template: { name: "refine", version_number: 1 },
+    prompt_template_variable_mappings: { draft: "Input" },
+  },
+  variable_mappings: {},
+  return_all_outputs: false,
+});
+```
+</CodeGroup>
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `loop_type` | yes | `prompt` \| `workflow` |
+| `prompt_config` | if prompt | Nested prompt config (`version_number`, not `version`) |
+| `workflow_config` | if workflow | Needs `workflow_id` or `workflow_version_id` |
+| `end_condition_json_path` | no | Stop condition path |
+| `max_iterations` | no | Safety cap |
+| `return_all_outputs` | no | Default `false` |
+| `variable_mappings` | no | Default `{}` |
+
+## Trace
+
+You do not create `ColumnType.TRACE` with `column(...)`. When a scorer references Trace (Trajectory's default is `"Trace"`), the SDK scaffolds a reserved `Trace` column and imports each case's span tree.
+
+Trajectory scores spans named `Tool: <name>`. See [Runner and tracing](/sdks/evals/agent-tracing).
+
+Reserved titles: `Trace`, `Trace.price`, `Trace.latency`, `Trace link`, `total_trace_time`, `total_price`, `Expected Trace`.

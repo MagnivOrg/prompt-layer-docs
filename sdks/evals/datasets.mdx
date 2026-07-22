@@ -1,0 +1,108 @@
+---
+title: "Datasets"
+description: "Pass inline cases or a dashboard Table as the evaluate(...) dataset."
+sidebarTitle: "Datasets"
+icon: "database"
+---
+
+Every case needs `input`. Add `expected` for Compare-style scorers, and `expected_trace` / `expectedTrace` for Trajectory.
+
+## Inline cases
+
+<CodeGroup>
+```python Python
+dataset = [
+    {"input": "What is 2+2?", "expected": "4"},
+    {
+        "input": "What is the weather in Tokyo?",
+        "expected": "72",
+        "expected_trace": {
+            "accepted_scenarios": [
+                {"required_tools": ["get_weather"]}
+            ]
+        },
+    },
+]
+```
+
+```javascript JavaScript
+const dataset = [
+  { input: "What is 2+2?", expected: "4" },
+  {
+    input: "What is the weather in Tokyo?",
+    expected: "72",
+    expectedTrace: {
+      accepted_scenarios: [{ required_tools: ["get_weather"] }],
+    },
+  },
+];
+```
+</CodeGroup>
+
+| Field | Becomes |
+| --- | --- |
+| `input` | `Input` (passed to `runner`) |
+| `expected` | `Expected` |
+| `expected_trace` / `expectedTrace` | `Expected Trace` |
+
+## Use a dashboard Table
+
+Pass a Table id. The SDK reads `Input` / `Expected` / `Expected Trace` from that sheet and writes results to a **new** experiment sheet.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {"role": "system", "content": "Answer in one short sentence."},
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "from-dashboard",
+    dataset={"table_id": "00000000-0000-0000-0000-000000000000"},
+    runner=run_llm,
+    scorers=[contains_scorer(source="Output", value="reset")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      { role: "system", content: "Answer in one short sentence." },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("from-dashboard", {
+  dataset: { tableId: "00000000-0000-0000-0000-000000000000" },
+  runner: runLlm,
+  scorers: [containsScorer({ source: "Output", value: "reset" })],
+});
+```
+</CodeGroup>
+
+Optional `sheet_id` / `sheetId` picks a non-default source sheet. Omit it to use the Table's default sheet.
+
+## Common mistakes
+
+- Empty dataset or a case without `input`
+- Passing a Table title instead of `table_id` / `tableId`
+- Setting top-level `sheet_id` on `evaluate(...)` — that targets the experiment sheet and is rejected

@@ -1,0 +1,87 @@
+---
+title: "Write an eval"
+description: "Define evaluate(...) with a dataset, runner, scorers, and an optional pass bar."
+sidebarTitle: "Write an eval"
+icon: "pen-to-square"
+---
+
+Define `evaluate(...)` in a `*.eval.py` or `*.eval.ts` file, then run:
+
+```bash
+promptlayer eval run path/to/your.eval.py
+```
+
+## Minimal example
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {"role": "system", "content": "Answer in one short sentence."},
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "support-reply-eval",
+    dataset=[{"input": "How do I reset my password?"}],
+    runner=run_llm,
+    scorers=[contains_scorer(source="Output", value="reset")],
+    passing_score=0.8,
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      { role: "system", content: "Answer in one short sentence." },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("support-reply-eval", {
+  dataset: [{ input: "How do I reset my password?" }],
+  runner: runLlm,
+  scorers: [containsScorer({ source: "Output", value: "reset" })],
+  passingScore: 0.8,
+});
+```
+</CodeGroup>
+
+Python async runners use `aevaluate`. JavaScript uses async `evaluate`. Agent examples: [Quickstart](/sdks/evals/quickstart).
+
+## Options you will use most
+
+| Goal | Python | JavaScript |
+| --- | --- | --- |
+| Cases | `dataset` | `dataset` |
+| Function under test | `runner` | `runner` |
+| Scorecard checks | `scorers` | `scorers` |
+| Fail below a bar | `passing_score` | `passingScore` |
+| Run cases in parallel | `max_concurrency` | `maxConcurrency` |
+| Print failing rows | `include_failure_examples` | `includeFailureExamples` |
+
+Also available: `columns`, `table_id` / `tableId`, `folder_id` / `folderId`, `experiment_name` / `experimentName`, and `api_key` / `apiKey` (prefer env vars for CLI).
+
+Do **not** pass top-level `sheet_id` / `sheetId`. Use `dataset.sheet_id` / `dataset.sheetId` only when the dataset comes from a dashboard sheet.
+
+## What you get back
+
+On success, the SDK creates (or reuses) a Table, writes a dedicated experiment sheet, configures your scorecard, and returns an `EvalResult` with a dashboard URL. See [Results and failures](/sdks/evals/results-and-failures).

@@ -1,0 +1,757 @@
+---
+title: "Quickstart"
+description: "Scaffold an SDK eval with AI, or copy an example for a common agent stack."
+sidebarTitle: "Quickstart"
+icon: "rocket"
+---
+
+Get a runnable eval file in your repo, then run `promptlayer eval run <path>`.
+
+The `runner` is any callable that takes case `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — see [Runner and tracing](/sdks/evals/agent-tracing).
+
+## Set up with AI
+
+Pin a **non-Grok** model (for example Composer 2.5), open **Plan mode**, then paste this prompt in the repo that has your agent. Option cards need `AskQuestion`, which Cursor currently disables for Grok 4.5 even in Plan mode. After you select, build / switch to Agent to apply the scaffold.
+
+You need `PROMPTLAYER_API_KEY` and your provider keys.
+
+<Prompt
+  description="Scaffold a PromptLayer SDK eval from this codebase"
+  icon="wand-magic-sparkles"
+  actions={["copy", "cursor"]}
+>
+You are setting up PromptLayer SDK evals in this repository.
+
+## Step 0 — Setup questions before any edits
+
+Do **not** write code, install packages, or edit files until answers are confirmed.
+
+Prefer Cursor’s **AskQuestion** tool (clickable option cards, same UI as Plan-mode clarifying questions). `AskQuestion` is **not deprecated**, but Cursor currently disables it for **Grok 4.5** in every mode (including Plan). It is also not an MCP tool.
+
+### Availability gate
+
+1. If **AskQuestion** is in your tool list → use it (0b). Prefer Plan mode for this step.
+2. If **AskQuestion** is missing → tell the user once, briefly: pin a non-Grok model (e.g. Composer 2.5), then resend. Do **not** claim the tool is removed or that Plan mode alone fixes it.
+3. If they stay on a model without AskQuestion, use the **short prose fallback** in 0b (allowed). Do not hard-block forever.
+
+Hard rules when AskQuestion is available:
+
+- Call **AskQuestion**; do not list A/B/1/2 options only in chat.
+- Wait for the tool result before editing anything.
+
+### 0a — Research first (no questions yet)
+
+Quickly scan the repo for likely agent entrypoints and tool handlers (e.g. `Agent`, `Runner`, `generateText`, `tools/`, `@function_tool`, `traceTool`). Collect 2–6 concrete candidates as `path:symbol`. Do not invent paths. Do not ask the user yet.
+
+### 0b — Ask the four questions
+
+**Preferred — AskQuestion** (one call with multiple `questions` when possible):
+
+```text
+AskQuestion shape:
+- title: "SDK eval setup"
+- questions: [
+    { id, prompt, options: [{ id, label }, ...], allow_multiple? }
+  ]
+```
+
+1. `purpose` (single select) — `What should this eval prove?`
+   - `trajectory` → Tool trajectory (tools called in the right order)
+   - `answer` → Final-answer quality
+   - `gate` → Regression gate (tools + answer) (Recommended)
+
+2. `entrypoint` (single select) — `Which production entrypoint should be the runner?`
+   - One option per researched candidate; label = `path:symbol`
+   - Recommended first with `(Recommended)` in the label
+
+3. `tools` (`allow_multiple: true`) — `Where are tools defined or executed?`
+   - One option per researched candidate (`path:symbol`)
+   - `none` → No tools / N/A
+
+4. `mocks` (single select) — `Should the eval mock tools / side effects?`
+   - `no` → No — real agent + real tools; minimal instrumentation (Recommended)
+   - `yes` → Yes — mock only approved side effects; keep the real agent loop
+
+**Fallback (only if AskQuestion is unavailable):** ask the same four questions in short prose with the researched `path:symbol` options listed once. Keep it compact. Then wait for the user’s reply.
+
+### 0c — Confirm plan
+
+In chat (short bullets only), restate: purpose, chosen entrypoint, tool locations, mock policy, and planned scorers. Proceed unless the user objects.
+
+## Default policy (unless the user says otherwise)
+
+- Reuse the **existing** agent entrypoint as `runner`.
+- Prefer **not** mocking tools.
+- Make the smallest possible instrumentation changes.
+- Keep the eval file thin: import real runner + dataset + `evaluate(...)`.
+
+Allowed without asking again:
+- Thin adapter that only maps case `input` → existing function args.
+- Minimal instrumentation on existing modules (`traceTool`, framework plugin, `experimental_telemetry`).
+
+Forbidden unless the user explicitly approved mocks / a rewrite:
+- Recreating the tool loop in `evals/`.
+- Parallel “evalable slice” agents with in-memory fake tools.
+- Copying production logic into a new demo agent.
+
+## Goals (after quiz)
+
+1. Use the selected entrypoint and tool paths (do not silently switch).
+2. Install only packages this project needs.
+3. Apply minimal instrumentation per the chosen stack and mock policy.
+4. Add `evals/<agent>.eval.py` or `evals/<agent>.eval.ts` with a **10-case** dataset and `evaluate(...)`.
+5. Make it runnable with `promptlayer eval run <path>`.
+
+## Product constraints (do not invent APIs)
+
+Follow current PromptLayer SDK evals docs:
+
+- Primary API: top-level `evaluate(...)` (Python also has `aevaluate` for async runners).
+- Recommended run path: put `evaluate(...)` in a file, then run `promptlayer eval run <path>`.
+- Do **not** use a removed/demoted `client.evals.run` API.
+- The runner can be **any** existing agent entrypoint (any framework or a plain function). Do not rebuild the agent to match an example stack.
+- For Trajectory, tools must appear as Trace spans named `Tool: <name>`. Prefer the lightest path that already fits the repo:
+  - OpenAI Agents (if used): `instrument_openai_agents()` / `instrumentOpenAIAgents()` from `promptlayer.integrations.openai_agents` / `promptlayer/openai-agents`. No `traceTool` needed.
+  - Claude Agents (if used): call `get_claude_config()` / `getClaudeConfig()` **inside** the eval runner and pass `plugin` + `env` into Claude Agent options. No `traceTool` needed.
+  - Vercel AI SDK (JS, if used): enable `experimental_telemetry` on the existing `generateText` / agent calls. No separate NodeSDK needed for the eval path.
+  - LangChain / LangSmith (if used): LangSmith OTEL bridge → `https://api.promptlayer.com/v1/traces` (see Integrations).
+  - Pydantic AI (if used): `logfire.instrument_pydantic_ai()` with OTLP export to PromptLayer `/v1/traces`.
+  - OpenClaw (if used): `@promptlayer/openclaw-promptlayer` plugin enabled; reuse the real OpenClaw entrypoint as `runner`.
+  - LiteLLM (Python, if used): `PromptLayer(enable_tracing=True)`, optional `litellm.success_callback = ["promptlayer"]`, and `traceTool` on **existing** tool handlers.
+  - Anything else / custom tool loop: wrap **existing** handlers with PromptLayer `traceTool` (JS: `pl.traceTool("name", fn)`; Python: `@pl.traceTool(name="name")`).
+- For custom / raw OpenAI client runners: keep the repo’s existing client. Prefer the official OpenAI client over `pl.openai.OpenAI()` / `new pl.OpenAI()` unless the repo already depends on the PromptLayer provider wrapper.
+- Dataset cases use `input` (and `expected` / expected-trace fields when scorers need them).
+- Prefer scorers that match the user’s purpose: Trajectory for tool path, Contains / Compare / LLM assertion for the final answer.
+- Results must land in PromptLayer Tables via the SDK eval runner.
+
+## Step 1 — Deepen after quiz
+
+- Confirm the selected entrypoint and tool execution path.
+- Inventory the real input shape.
+- Note existing PromptLayer / OpenTelemetry / provider instrumentation.
+- Restate the plan in 3–5 bullets if anything changed; proceed unless the user objects.
+
+## Step 2 — Install
+
+- Only install what is missing for the chosen stack.
+- Document required env vars: `PROMPTLAYER_API_KEY`, plus whatever the real agent already needs.
+
+## Step 3 — Instrumentation / mocks per quiz answers
+
+- **Mocks = no:** edit existing tool handlers / agent setup in place only.
+- **Mocks = yes:** mock only approved side effects; keep the real loop/entrypoint; do not rebuild the agent.
+- Use a framework helper only when the repo already uses that stack; otherwise use `traceTool` (or existing OTEL) on real tool handlers.
+- Do not break production paths; keep diffs small and eval-focused.
+
+## Step 4 — Thin eval file
+
+Create `evals/<agent>.eval.py` or `evals/<agent>.eval.ts` that:
+
+1. Imports `evaluate` / scorers.
+2. Imports the **selected** agent entrypoint (or a tiny input adapter).
+3. Avoids redefining the agent/tool loop unless the user approved that approach.
+4. Builds a **dataset of 10 cases** aligned to the stated purpose and input shape.
+5. Chooses scorers from the stated purpose (Trajectory when tools matter; Contains / Compare / LLM assertion for answers). Default `passing_score` / `passingScore` to `0.8`.
+6. Calls top-level `evaluate("<name>", ...)`.
+
+## Step 5 — Verify
+
+- Show how to run: `promptlayer eval run ./evals`
+- Quote the import of the real runner.
+- Summarize the quiz answers used (purpose, locations, mock policy).
+- List files changed, 10 dataset inputs, env vars, and TODOs.
+
+## Output format
+
+- Research → **AskQuestion** when available (else short prose fallback) → confirm plan → then make code changes.
+- End with a short checklist: installs, files added/changed, runner import path, how to run, env vars, remaining TODOs.
+- If AskQuestion is missing, say to pin a non-Grok model for option cards; do not claim the tool is deprecated. Do not silently invent a replacement agent.
+</Prompt>
+
+### After the agent finishes
+
+Review the generated `evals/` file, then:
+
+```bash
+export PROMPTLAYER_API_KEY=pl_...
+export OPENAI_API_KEY=sk-...   # or your provider key
+promptlayer eval run ./evals
+```
+
+## Write an eval yourself
+
+```bash
+export PROMPTLAYER_API_KEY=pl_...
+export OPENAI_API_KEY=sk-...        # if needed
+export ANTHROPIC_API_KEY=sk-ant-... # if needed
+```
+
+Pick a matching example, or use `traceTool` for a custom loop.
+
+<Tabs>
+  <Tab title="OpenAI Agents">
+Install:
+
+<CodeGroup>
+```bash Python
+pip install "promptlayer[openai-agents]"
+```
+
+```bash JavaScript
+npm install promptlayer @openai/agents zod
+```
+</CodeGroup>
+
+Call `instrument_openai_agents` / `instrumentOpenAIAgents` once, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. App-wide setup: [OpenAI Agents SDK](/features/integrations#openai-agents-sdk).
+
+<CodeGroup>
+```python Python
+# evals/weather_agent.eval.py
+from agents import Agent, Runner, function_tool
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+from promptlayer.integrations.openai_agents import instrument_openai_agents
+
+instrument_openai_agents()
+
+@function_tool
+def get_weather(city: str) -> str:
+    """Return demo weather for a city."""
+    return f"{city} is 72F and sunny."
+
+agent = Agent(
+    name="Weather agent",
+    instructions="Use get_weather, then answer in one short sentence.",
+    model="gpt-5.6",
+    tools=[get_weather],
+)
+
+def run_agent(user_message: str) -> str:
+    result = Runner.run_sync(agent, user_message)
+    return str(result.final_output)
+
+evaluate(
+    "weather-agent-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=1.0,
+)
+```
+
+```javascript JavaScript
+// evals/weather_agent.eval.ts
+import { Agent, run, tool } from "@openai/agents";
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { z } from "zod";
+
+await instrumentOpenAIAgents();
+
+const getWeather = tool({
+  name: "get_weather",
+  description: "Return demo weather for a city.",
+  parameters: z.object({
+    city: z.string(),
+  }),
+  execute: async ({ city }) => `${city} is 72F and sunny.`,
+});
+
+const agent = new Agent({
+  name: "Weather agent",
+  instructions: "Use get_weather, then answer in one short sentence.",
+  model: "gpt-5.6",
+  tools: [getWeather],
+});
+
+async function runAgent(userMessage) {
+  const result = await run(agent, userMessage);
+  return String(result.finalOutput);
+}
+
+await evaluate("weather-agent-eval", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["get_weather"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+  passingScore: 1.0,
+});
+```
+</CodeGroup>
+  </Tab>
+
+  <Tab title="Claude Agents">
+Install:
+
+<CodeGroup>
+```bash Python
+pip install "promptlayer[claude-agents]"
+```
+
+```bash JavaScript
+npm install promptlayer @anthropic-ai/claude-agent-sdk
+```
+</CodeGroup>
+
+Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. App-wide setup: [Claude Code](/features/integrations#claude-code).
+
+<CodeGroup>
+```python Python
+# evals/claude_agent.eval.py
+import asyncio
+import os
+from claude_agent_sdk import (
+    AssistantMessage,
+    ClaudeAgentOptions,
+    ResultMessage,
+    TextBlock,
+    query,
+)
+from promptlayer import aevaluate, contains_scorer, trajectory_scorer
+from promptlayer.integrations.claude_agents import get_claude_config
+
+async def run_agent(user_message: str) -> str:
+    pl = get_claude_config()
+    options = ClaudeAgentOptions(
+        model="claude-sonnet-4-6",
+        cwd=".",
+        max_turns=3,
+        allowed_tools=["Bash"],
+        plugins=[pl.plugin],
+        env={**os.environ, **pl.env},
+    )
+
+    parts = []
+    async for message in query(prompt=user_message, options=options):
+        if isinstance(message, AssistantMessage):
+            for block in message.content:
+                if isinstance(block, TextBlock):
+                    parts.append(block.text)
+        elif isinstance(message, ResultMessage) and message.result:
+            parts.append(message.result)
+    return "\n".join(parts)
+
+asyncio.run(
+    aevaluate(
+        "claude-agent-eval",
+        dataset=[{
+            "input": "Run `echo hello` with Bash, then reply with the output in one short sentence.",
+        }],
+        runner=run_agent,
+        scorers=[
+            trajectory_scorer(
+                accepted_scenarios=[["Bash"]],
+                mode="non_strict",
+            ),
+            contains_scorer(source="Output", value="hello"),
+        ],
+        passing_score=1.0,
+    )
+)
+```
+
+```javascript JavaScript
+// evals/claude_agent.eval.ts
+import { query, type Options } from "@anthropic-ai/claude-agent-sdk";
+import { getClaudeConfig } from "promptlayer/claude-agents";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+
+async function runAgent(userMessage) {
+  const pl = getClaudeConfig();
+  const options: Options = {
+    model: "claude-sonnet-4-6",
+    cwd: process.cwd(),
+    maxTurns: 3,
+    allowedTools: ["Bash"],
+    plugins: [pl.plugin],
+    env: { ...process.env, ...pl.env },
+  };
+
+  const parts = [];
+  for await (const message of query({ prompt: userMessage, options })) {
+    const text = extractText(message);
+    if (text) parts.push(text);
+  }
+  return parts.join("\n");
+}
+
+function extractText(message) {
+  if (!message || typeof message !== "object") return "";
+  if (typeof message.result === "string") return message.result;
+  if (!Array.isArray(message.content)) return "";
+  return message.content
+    .filter((block) => block?.type === "text" && typeof block.text === "string")
+    .map((block) => block.text)
+    .join("\n");
+}
+
+await evaluate("claude-agent-eval", {
+  dataset: [{
+    input: "Run `echo hello` with Bash, then reply with the output in one short sentence.",
+  }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["Bash"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "hello" }),
+  ],
+  passingScore: 1.0,
+});
+```
+</CodeGroup>
+  </Tab>
+
+  <Tab title="Vercel AI SDK">
+Install:
+
+```bash
+npm install promptlayer ai @ai-sdk/openai zod
+```
+
+Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. See [Vercel AI SDK integration](/features/integrations#vercel-ai-sdk) for app-wide OTEL setup outside evals.
+
+```typescript
+// evals/vercel_weather.eval.ts
+import { generateText, tool, stepCountIs } from "ai";
+import { openai } from "@ai-sdk/openai";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { z } from "zod";
+
+async function runAgent(userMessage) {
+  const { text } = await generateText({
+    model: openai("gpt-5.6"),
+    prompt: String(userMessage),
+    tools: {
+      get_weather: tool({
+        description: "Return demo weather for a city.",
+        inputSchema: z.object({
+          city: z.string(),
+        }),
+        execute: async ({ city }) => `${city} is 72F and sunny.`,
+      }),
+    },
+    stopWhen: stepCountIs(5),
+    experimental_telemetry: {
+      isEnabled: true,
+      recordInputs: true,
+      recordOutputs: true,
+    },
+  });
+  return text;
+}
+
+await evaluate("vercel-weather-eval", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["get_weather"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+  passingScore: 1.0,
+});
+```
+  </Tab>
+
+  <Tab title="LiteLLM">
+Install:
+
+```bash
+pip install promptlayer litellm
+```
+
+Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with `traceTool` for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — without `enable_tracing=True`, `traceTool` is a no-op.
+
+```python
+# evals/litellm_weather.eval.py
+import json
+import litellm
+from litellm import completion
+from promptlayer import PromptLayer, evaluate, contains_scorer, trajectory_scorer
+
+# Required: PromptLayer tracing for Tool: spans / Trajectory
+pl = PromptLayer(enable_tracing=True)
+
+# Optional: also log LiteLLM LLM requests to PromptLayer
+litellm.success_callback = ["promptlayer"]
+
+@pl.traceTool(name="get_weather")
+def get_weather(city: str) -> str:
+    return f"{city} is 72F and sunny."
+
+TOOLS = [
+    {
+        "type": "function",
+        "function": {
+            "name": "get_weather",
+            "description": "Return demo weather for a city.",
+            "parameters": {
+                "type": "object",
+                "properties": {"city": {"type": "string"}},
+                "required": ["city"],
+            },
+        },
+    }
+]
+
+def run_agent(user_message: str) -> str:
+    messages = [
+        {
+            "role": "system",
+            "content": "Use get_weather, then answer in one short sentence.",
+        },
+        {"role": "user", "content": user_message},
+    ]
+    for _ in range(5):
+        response = completion(
+            model="gpt-5.6",
+            messages=messages,
+            tools=TOOLS,
+        )
+        message = response.choices[0].message
+        messages.append(message)
+        if not message.tool_calls:
+            return (message.content or "").strip()
+        for tool_call in message.tool_calls:
+            args = json.loads(tool_call.function.arguments)
+            result = get_weather(**args)
+            messages.append(
+                {
+                    "role": "tool",
+                    "tool_call_id": tool_call.id,
+                    "content": result,
+                }
+            )
+    return "Agent stopped without a final answer."
+
+evaluate(
+    "litellm-weather-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=1.0,
+)
+```
+
+`evaluate(...)` also always enables tracing on the client it creates, so tool spans nest under each eval case. See [LiteLLM](/features/integrations#litellm) and the [LiteLLM PromptLayer callback docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
+  </Tab>
+
+  <Tab title="LangChain">
+PromptLayer ingests LangChain spans through the [LangSmith OpenTelemetry bridge](/features/integrations#langchain-/-langsmith) to `https://api.promptlayer.com/v1/traces`.
+
+Install (JavaScript):
+
+```bash
+npm install promptlayer @langchain/core @langchain/openai langsmith \
+  @opentelemetry/api @opentelemetry/sdk-trace-base \
+  @opentelemetry/exporter-trace-otlp-proto @opentelemetry/context-async-hooks
+```
+
+Set env before the process starts:
+
+```bash
+LANGSMITH_TRACING=true
+LANGSMITH_TRACING_MODE=otel
+LANGCHAIN_CALLBACKS_BACKGROUND=false
+OTEL_EXPORTER_OTLP_ENDPOINT=https://api.promptlayer.com/v1/traces
+OTEL_EXPORTER_OTLP_HEADERS=X-API-KEY=<PROMPTLAYER_API_KEY>
+```
+
+Register the OTEL provider (same pattern as [Integrations](/features/integrations#langchain-/-langsmith)), then evaluate your agent:
+
+```typescript
+// evals/langchain_weather.eval.ts
+import { tool } from "@langchain/core/tools";
+import { ChatOpenAI } from "@langchain/openai";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { z } from "zod";
+
+const getWeather = tool(
+  async ({ city }) => `${city} is 72F and sunny.`,
+  {
+    name: "get_weather",
+    description: "Return demo weather for a city.",
+    schema: z.object({ city: z.string() }),
+  }
+);
+
+const llm = new ChatOpenAI({ model: "gpt-5.6" }).bindTools([getWeather]);
+
+async function runAgent(userMessage: string) {
+  const ai = await llm.invoke([
+    ["system", "Use get_weather, then answer in one short sentence."],
+    ["human", String(userMessage)],
+  ]);
+  if (!ai.tool_calls?.length) return String(ai.content ?? "");
+  const call = ai.tool_calls[0];
+  const toolResult = await getWeather.invoke(call.args);
+  const final = await llm.invoke([
+    ["system", "Use get_weather, then answer in one short sentence."],
+    ["human", String(userMessage)],
+    ai,
+    {
+      role: "tool",
+      content: String(toolResult),
+      tool_call_id: call.id,
+    },
+  ]);
+  return String(final.content ?? "");
+}
+
+await evaluate("langchain-weather-eval", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["get_weather"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+  passingScore: 1.0,
+});
+```
+
+Reuse your real LangChain entrypoint as `runner` when you have one. Full OTEL registration: [LangChain / LangSmith](/features/integrations#langchain-/-langsmith).
+  </Tab>
+
+  <Tab title="Pydantic AI">
+PromptLayer ingests Pydantic AI OpenTelemetry (via Logfire) at `https://api.promptlayer.com/v1/traces`.
+
+Install:
+
+```bash
+pip install promptlayer "pydantic-ai-slim[logfire,openai]" logfire opentelemetry-exporter-otlp-proto-http
+```
+
+```python
+# evals/pydantic_weather.eval.py
+import os
+
+import logfire
+from pydantic_ai import Agent, RunContext
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+
+os.environ.setdefault(
+    "OTEL_EXPORTER_OTLP_TRACES_ENDPOINT",
+    "https://api.promptlayer.com/v1/traces",
+)
+os.environ.setdefault(
+    "OTEL_EXPORTER_OTLP_HEADERS",
+    f"X-API-KEY={os.environ['PROMPTLAYER_API_KEY']}",
+)
+os.environ.setdefault("OTEL_SERVICE_NAME", "pydantic-ai-eval")
+
+logfire.configure(send_to_logfire=False)
+logfire.instrument_pydantic_ai()
+
+agent = Agent(
+    "openai:gpt-5.6",
+    instructions="Use get_weather, then answer in one short sentence.",
+)
+
+@agent.tool
+def get_weather(_ctx: RunContext[None], city: str) -> str:
+    """Return demo weather for a city."""
+    return f"{city} is 72F and sunny."
+
+def run_agent(user_message: str) -> str:
+    return str(agent.run_sync(user_message).output)
+
+evaluate(
+    "pydantic-weather-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=1.0,
+)
+```
+
+App-wide setup: [Pydantic AI](/features/integrations#pydantic-ai).
+  </Tab>
+
+  <Tab title="OpenClaw">
+PromptLayer ingests OpenClaw runs through `@promptlayer/openclaw-promptlayer` → `/v1/traces`.
+
+```bash
+openclaw plugins install @promptlayer/openclaw-promptlayer
+openclaw plugins enable openclaw-promptlayer
+```
+
+Set `PROMPTLAYER_API_KEY`, enable the plugin in `openclaw.json`, then point `evaluate(...)` at your existing OpenClaw entrypoint as `runner` (do not rebuild the agent in `evals/`).
+
+```python
+# evals/openclaw_agent.eval.py
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+from your_app.openclaw_entry import run_openclaw_agent  # real entrypoint
+
+evaluate(
+    "openclaw-agent-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_openclaw_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],  # your real tool names
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=0.8,
+)
+```
+
+Plugin details: [OpenClaw](/features/integrations#openclaw).
+  </Tab>
+</Tabs>
+
+## Run it
+
+```bash
+promptlayer eval run ./evals
+```
+
+Or a single file:
+
+```bash
+promptlayer eval run ./evals/weather_agent.eval.py
+```
+
+## What you get
+
+Trajectory checks tool names; Contains checks the final answer. The run creates a Table experiment sheet (`Input` / `Output` / `Trace` when needed) and prints a dashboard URL. With `passing_score` / `passingScore`, failures raise `EvaluationFailedError` and the CLI exits non-zero.
+
+## Next
+
+| Goal | Page |
+| --- | --- |
+| Runner / Trace / `Tool:` spans | [Runner and tracing](/sdks/evals/agent-tracing) |
+| Scorers | [Scorers](/sdks/evals/scorers/overview) |
+| Table as dataset | [Datasets](/sdks/evals/datasets) |
+| CI | [CLI and CI](/sdks/evals/cli-and-ci) |
+| App-wide OTEL | [Integrations](/features/integrations) |

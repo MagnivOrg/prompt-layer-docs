@@ -1,0 +1,100 @@
+---
+title: "Results and failures"
+description: "Read EvalResult and fail the run when scores miss your bar."
+sidebarTitle: "Results and failures"
+icon: "circle-check"
+---
+
+`evaluate(...)` returns an `EvalResult` with a dashboard `url`. Open that link to inspect the experiment sheet.
+
+## When the run fails
+
+`EvaluationFailedError` raises when:
+
+- Any scorer cell status is `FAILED`, or
+- You set `passing_score` / `passingScore` and the overall score is missing or below that threshold
+
+Boolean pass bars use a rate in `[0.0, 1.0]` (so `0.8` means 80%).
+
+Set `include_failure_examples` / `includeFailureExamples` to print up to five failing rows after the summary.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, contains_scorer, EvaluationFailedError
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {"role": "system", "content": "Answer in one short sentence."},
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+try:
+    result = evaluate(
+        "support-gate",
+        dataset=[{"input": "How do I reset my password?"}],
+        runner=run_llm,
+        scorers=[contains_scorer(source="Output", value="reset")],
+        passing_score=0.8,
+        include_failure_examples=True,
+    )
+    print(result["url"])
+except EvaluationFailedError as exc:
+    print(exc.failing_row_indices)
+    print(exc.result["url"])
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, containsScorer, EvaluationFailedError } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      { role: "system", content: "Answer in one short sentence." },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+try {
+  const result = await evaluate("support-gate", {
+    dataset: [{ input: "How do I reset my password?" }],
+    runner: runLlm,
+    scorers: [containsScorer({ source: "Output", value: "reset" })],
+    passingScore: 0.8,
+    includeFailureExamples: true,
+  });
+  console.log(result.url);
+} catch (err) {
+  if (err instanceof EvaluationFailedError) {
+    console.log(err.failingRowIndices);
+    console.log(err.result.url);
+  }
+  throw err;
+}
+```
+</CodeGroup>
+
+## What is in the result
+
+| Field | Python | JavaScript |
+| --- | --- | --- |
+| Dashboard link | `url` | `url` |
+| Eval name | `name` | `name` |
+| Failed row indexes | `failed_row_indices` | `failedRowIndices` |
+| Per-scorer totals | `score_cards` | `scoreCards` |
+| Case count | `total_rows` | `totalRows` |
+| Table / sheet ids | `table_id`, `sheet_id` | `tableId`, `sheetId` |
+
+The result does not inline the overall aggregate score — open `url` or use Tables scorecard APIs.

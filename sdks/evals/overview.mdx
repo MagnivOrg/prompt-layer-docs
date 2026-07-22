@@ -1,0 +1,40 @@
+---
+title: "Overview"
+description: "Run evaluate(...) in code with a dataset, runner, and scorers. Results land in PromptLayer Tables."
+sidebarTitle: "Overview"
+icon: "book"
+---
+
+SDK evals measure a function under test from your code. Each eval has three parts:
+
+- **Dataset** — cases with `input` (optional `expected` / expected-trace fields)
+- **Runner** — any callable that takes case `input` and returns a final value
+- **Scorers** — scorecard checks (Contains, Compare, Trajectory, and more)
+
+Call `evaluate(...)`, then run `promptlayer eval run <path>`. Results write to a [Table](/features/tables/overview) experiment sheet with a dashboard URL.
+
+## How a run works
+
+1. Your `runner` runs once per case under an `Eval: <name>` span.
+2. Nested spans attach when they use the active eval tracer.
+3. Rows land on an experiment sheet (`Input` / `Expected` / `Output`, plus `Trace` when needed).
+4. Scorers run as the sheet scorecard. Optional `passing_score` / `passingScore` fails the process on a miss.
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/sdks/evals/quickstart">
+    Scaffold with AI, or copy an example for a common agent stack.
+  </Card>
+  <Card title="Runner and tracing" icon="diagram-project" href="/sdks/evals/agent-tracing">
+    Runner contract, `Tool:` spans, and Trace import.
+  </Card>
+  <Card title="Scorers" icon="clipboard-check" href="/sdks/evals/scorers/overview">
+    Typed helpers: Trajectory, Contains, Compare, and more.
+  </Card>
+  <Card title="CLI and CI" icon="terminal" href="/sdks/evals/cli-and-ci">
+    Run files locally and fail CI on a pass bar.
+  </Card>
+</CardGroup>
+
+Use SDK evals when the system under test lives in code. Use [Tables](/features/tables/overview) in the dashboard when you want to build sheets without a runner — SDK runs still create Table experiment sheets you can open in the UI.

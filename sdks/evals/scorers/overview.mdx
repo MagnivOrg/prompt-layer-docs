@@ -1,0 +1,848 @@
+---
+title: "Scorers"
+description: "Typed scorecard helpers for SDK evaluate(...)."
+sidebarTitle: "Scorers"
+icon: "clipboard-check"
+---
+
+Scorers are scorecard steps on the experiment sheet. Prefer the typed helpers below. You can also pass a named function (custom code) or `column(title, type, config)`.
+
+Reference columns by **title** (`"Output"`, `"Expected"`, `"Trace"`, or a processing column). Built-ins: `Input`, `Expected`, `Output`, and when needed `Trace` / `Expected Trace`.
+
+## Weight, Required, and Thresholds
+
+Every typed helper accepts weight, required, and thresholds. Scorecards aggregate with a weighted mean (defaults: pass `0.8`, warn `0.6`).
+
+<CodeGroup>
+```python Python
+from agents import Agent, Runner, function_tool
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+from promptlayer.integrations.openai_agents import instrument_openai_agents
+
+instrument_openai_agents()
+
+@function_tool
+def lookup_user(email: str) -> str:
+    """Look up a user account by email."""
+    return f"Found user for {email}."
+
+@function_tool
+def send_reset(email: str) -> str:
+    """Send a password reset email."""
+    return f"Reset link sent to {email}."
+
+agent = Agent(
+    name="Support agent",
+    instructions=(
+        "Help with password resets. Call lookup_user, then send_reset, "
+        "then apologize briefly and confirm the reset was sent."
+    ),
+    model="gpt-5.6",
+    tools=[lookup_user, send_reset],
+)
+
+def run_agent(user_message: str) -> str:
+    return str(Runner.run_sync(agent, user_message).final_output)
+
+evaluate(
+    "support-bot",
+    dataset=[{"input": "Please reset my password for user@example.com"}],
+    runner=run_agent,
+    scorers=[
+        contains_scorer(
+            "Has apology",
+            source="Output",
+            value="sorry",
+            weight=1.0,
+        ),
+        trajectory_scorer(
+            accepted_scenarios=[["lookup_user", "send_reset"]],
+            weight=2.5,
+            required=True,
+            pass_threshold=0.9,
+        ),
+    ],
+)
+```
+
+```javascript JavaScript
+import { Agent, run, tool } from "@openai/agents";
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { z } from "zod";
+
+await instrumentOpenAIAgents();
+
+const lookupUser = tool({
+  name: "lookup_user",
+  description: "Look up a user account by email.",
+  parameters: z.object({ email: z.string() }),
+  execute: async ({ email }) => `Found user for ${email}.`,
+});
+
+const sendReset = tool({
+  name: "send_reset",
+  description: "Send a password reset email.",
+  parameters: z.object({ email: z.string() }),
+  execute: async ({ email }) => `Reset link sent to ${email}.`,
+});
+
+const agent = new Agent({
+  name: "Support agent",
+  instructions:
+    "Help with password resets. Call lookup_user, then send_reset, then apologize briefly and confirm the reset was sent.",
+  model: "gpt-5.6",
+  tools: [lookupUser, sendReset],
+});
+
+async function runAgent(userMessage) {
+  return String((await run(agent, userMessage)).finalOutput);
+}
+
+await evaluate("support-bot", {
+  dataset: [{ input: "Please reset my password for user@example.com" }],
+  runner: runAgent,
+  scorers: [
+    containsScorer({
+      title: "Has apology",
+      source: "Output",
+      value: "sorry",
+      weight: 1.0,
+    }),
+    trajectoryScorer({
+      acceptedScenarios: [["lookup_user", "send_reset"]],
+      weight: 2.5,
+      required: true,
+      passThreshold: 0.9,
+    }),
+  ],
+});
+```
+</CodeGroup>
+
+| Option | Python | JavaScript | Meaning |
+| --- | --- | --- | --- |
+| Weight | `weight` | `weight` | How much this step counts (default `1`) |
+| Required | `required` | `required` | If `true`, failing this step can fail the scorecard |
+| Thresholds | `thresholds` | `thresholds` | Per-step pass / warn cutoffs in `[0, 1]` |
+| Pass alias | `pass_threshold` | `passThreshold` | Sets `thresholds.pass` |
+| Warn alias | `failure_threshold` | `failureThreshold` | Sets `thresholds.warn` |
+
+## Compare
+
+Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, compare_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "Reply with exactly one word: hello",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "compare-demo",
+    dataset=[{"input": "Greet the user.", "expected": "hello"}],
+    runner=run_llm,
+    scorers=[
+        compare_scorer(
+            "Exact match",
+            sources=["Output", "Expected"],
+            comparison_type="STRING",
+        )
+    ],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, compareScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      { role: "system", content: "Reply with exactly one word: hello" },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("compare-demo", {
+  dataset: [{ input: "Greet the user.", expected: "hello" }],
+  runner: runLlm,
+  scorers: [
+    compareScorer({
+      title: "Exact match",
+      sources: ["Output", "Expected"],
+      comparisonType: "STRING",
+    }),
+  ],
+});
+```
+</CodeGroup>
+
+Set how they compare with `comparison_type` / `comparisonType`:
+
+| Mode | What it does | Example |
+| --- | --- | --- |
+| `STRING` (default) | Exact string match | `"STRING"` |
+| `JSON` | Compare JSON values; optional path | `{"type": "JSON", "json_path": "$.id"}` |
+| `NUMBER` | Compare numbers with an operator (`EQ` by default) | `{"type": "NUMBER", "operator": "GTE"}` |
+
+Number operators: `EQ`, `NE`, `GT`, `GTE`, `LT`, `LTE`.
+
+## Contains
+
+Check whether a column contains a literal or another column's value. Pass exactly one of `value` or `value_source` / `valueSource`.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a support agent. Apologize and help in one short sentence.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "contains-demo",
+    dataset=[{"input": "I cannot log in to my account."}],
+    runner=run_llm,
+    scorers=[contains_scorer(source="Output", value="sorry")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "You are a support agent. Apologize and help in one short sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("contains-demo", {
+  dataset: [{ input: "I cannot log in to my account." }],
+  runner: runLlm,
+  scorers: [containsScorer({ source: "Output", value: "sorry" })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `source` | yes | `"Output"` |
+| `value` | one of | literal substring |
+| `value_source` / `valueSource` | one of | column title |
+
+## Regex
+
+Match a column against a regular expression.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, regex_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "You are an order lookup bot. Reply with only an order id "
+                    "like order-123."
+                ),
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "regex-demo",
+    dataset=[{"input": "What is the order id for my headphones?"}],
+    runner=run_llm,
+    scorers=[regex_scorer(source="Output", regex_pattern=r"order-\d+")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, regexScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content:
+          "You are an order lookup bot. Reply with only an order id like order-123.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("regex-demo", {
+  dataset: [{ input: "What is the order id for my headphones?" }],
+  runner: runLlm,
+  scorers: [regexScorer({ source: "Output", regexPattern: "order-\\d+" })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `source` | yes | `"Output"` |
+| `regex_pattern` / `regexPattern` | yes | — |
+
+## Count
+
+Score by character, word, sentence, or paragraph count bounds. Require at least one of `min_count` / `minCount` or `max_count` / `maxCount`. Backend `type` values: `chars`, `words`, `sentences`, `paragraphs`.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, count_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "Answer in one short sentence of at most five words.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "count-demo",
+    dataset=[{"input": "How do I reset my password?"}],
+    runner=run_llm,
+    scorers=[count_scorer(source="Output", type="words", min_count=1, max_count=5)],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, countScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "Answer in one short sentence of at most five words.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("count-demo", {
+  dataset: [{ input: "How do I reset my password?" }],
+  runner: runLlm,
+  scorers: [
+    countScorer({ source: "Output", type: "words", minCount: 1, maxCount: 5 }),
+  ],
+});
+```
+</CodeGroup>
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `source` | yes | `"Output"` |
+| `type` | no | `"chars"` |
+| `min_count` / `minCount` | one of min/max | — |
+| `max_count` / `maxCount` | one of min/max | — |
+
+## Assert Valid
+
+Validate a column as object, number, or SQL. There is no `json` / `boolean` / `string` assert type.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, assert_valid_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": (
+                    "Reply with a JSON object only, no markdown. "
+                    'Example: {"status":"ok","ticket_id":101}'
+                ),
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "assert-valid-demo",
+    dataset=[{"input": "Create a support ticket for a billing issue."}],
+    runner=run_llm,
+    scorers=[assert_valid_scorer(source="Output", type="object")],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, assertValidScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content:
+          'Reply with a JSON object only, no markdown. Example: {"status":"ok","ticket_id":101}',
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("assert-valid-demo", {
+  dataset: [{ input: "Create a support ticket for a billing issue." }],
+  runner: runLlm,
+  scorers: [assertValidScorer({ source: "Output", type: "object" })],
+});
+```
+</CodeGroup>
+
+| Key | Required | Default | Allowed |
+| --- | --- | --- | --- |
+| `source` | yes | `"Output"` | column title |
+| `type` | yes | `"object"` | `object` \| `number` \| `sql` |
+
+## LLM Assertion
+
+Score a column with an LLM judge prompt. Pass exactly one of `prompt` or `prompt_source` / `promptSource`.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, llm_assertion_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "Answer the user's question in one short factual sentence.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "llm-assert-demo",
+    dataset=[{"input": "Why is the sky blue?"}],
+    runner=run_llm,
+    scorers=[
+        llm_assertion_scorer(
+            source="Output",
+            prompt="Is this factually reasonable? Reply yes or no.",
+        )
+    ],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, llmAssertionScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "Answer the user's question in one short factual sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("llm-assert-demo", {
+  dataset: [{ input: "Why is the sky blue?" }],
+  runner: runLlm,
+  scorers: [
+    llmAssertionScorer({
+      source: "Output",
+      prompt: "Is this factually reasonable? Reply yes or no.",
+    }),
+  ],
+});
+```
+</CodeGroup>
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `source` | yes | `"Output"` |
+| `prompt` | one of | literal prompt text |
+| `prompt_source` / `promptSource` | one of | column title |
+| `variable_mappings` / `variableMappings` | no | Prompt variable → column title |
+
+## Trajectory
+
+Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — see [Runner and tracing](/sdks/evals/agent-tracing). Stack examples: [quickstart](/sdks/evals/quickstart).
+
+Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `expected_source` / `expectedSource` (usually `"Expected Trace"`).
+
+<CodeGroup>
+```python Python
+from agents import Agent, Runner, function_tool
+from promptlayer import evaluate, trajectory_scorer, contains_scorer
+from promptlayer.integrations.openai_agents import instrument_openai_agents
+
+instrument_openai_agents()
+
+@function_tool
+def get_weather(city: str) -> str:
+    """Return demo weather for a city."""
+    return f"{city} is 72F and sunny."
+
+agent = Agent(
+    name="Weather agent",
+    instructions="Use get_weather, then answer in one short sentence.",
+    model="gpt-5.6",
+    tools=[get_weather],
+)
+
+evaluate(
+    "trajectory-demo",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=lambda message: str(Runner.run_sync(agent, message).final_output),
+    scorers=[
+        trajectory_scorer(accepted_scenarios=[["get_weather"]], mode="non_strict"),
+        contains_scorer(source="Output", value="72"),
+    ],
+)
+```
+
+```javascript JavaScript
+import { Agent, run, tool } from "@openai/agents";
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+import { evaluate, trajectoryScorer, containsScorer } from "promptlayer";
+import { z } from "zod";
+
+await instrumentOpenAIAgents();
+
+const getWeather = tool({
+  name: "get_weather",
+  description: "Return demo weather for a city.",
+  parameters: z.object({ city: z.string() }),
+  execute: async ({ city }) => `${city} is 72F and sunny.`,
+});
+
+const agent = new Agent({
+  name: "Weather agent",
+  instructions: "Use get_weather, then answer in one short sentence.",
+  model: "gpt-5.6",
+  tools: [getWeather],
+});
+
+await evaluate("trajectory-demo", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: async (userMessage) => String((await run(agent, userMessage)).finalOutput),
+  scorers: [
+    trajectoryScorer({ acceptedScenarios: [["get_weather"]], mode: "non_strict" }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+});
+```
+</CodeGroup>
+
+Expected Trace cell JSON:
+
+```json
+{
+  "accepted_scenarios": [
+    { "required_tools": ["get_weather"] }
+  ]
+}
+```
+
+<CodeGroup>
+```python Python
+trajectory_scorer(
+    expected_source="Expected Trace",
+    mode="non_strict",
+)
+```
+
+```javascript JavaScript
+trajectoryScorer({
+  expectedSource: "Expected Trace",
+  mode: "non_strict",
+})
+```
+</CodeGroup>
+
+Put that JSON on each case as `expected_trace` / `expectedTrace` (or on a dashboard dataset sheet).
+
+| Mode | Behavior |
+| --- | --- |
+| `strict` (default) | Observed tools must equal the scenario exactly |
+| `non_strict` | Required tools appear in order as a subsequence |
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `trace_source` / `traceSource` | yes | `"Trace"` |
+| `accepted_scenarios` / `acceptedScenarios` | one of | list of non-empty tool-name lists |
+| `expected_source` / `expectedSource` | one of | column title |
+| `mode` | no | `"strict"` |
+
+Local helpers: `score_trajectory` / `scoreTrajectory`, `diagnose_trajectory_failure` / `diagnoseTrajectoryFailure`, and JS-only `extractTrajectoryToolNames`.
+
+## Custom Code
+
+Prefer passing a **named function by reference** in `scorers`. The SDK serializes it to a `CODE_EXECUTION` scorecard step.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a support agent. Answer in one short sentence.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+def exact_match(output, expected):
+    return 1 if expected.lower() in (output or "").lower() else 0
+
+evaluate(
+    "fn-scorer-demo",
+    dataset=[
+        {
+            "input": "How do I reset my password?",
+            "expected": "password",
+        }
+    ],
+    runner=run_llm,
+    scorers=[exact_match],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "You are a support agent. Answer in one short sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+function exactMatch(output, expected) {
+  return String(output || "")
+    .toLowerCase()
+    .includes(String(expected).toLowerCase())
+    ? 1
+    : 0;
+}
+
+await evaluate("fn-scorer-demo", {
+  dataset: [
+    {
+      input: "How do I reset my password?",
+      expected: "password",
+    },
+  ],
+  runner: runLlm,
+  scorers: [exactMatch],
+});
+```
+</CodeGroup>
+
+Parameter names map to columns:
+
+| Param | Column |
+| --- | --- |
+| `input` | `Input` |
+| `output` | `Output` |
+| `expected` | `Expected` |
+| `trace` | `Trace` |
+
+Any other param name is looked up as a column title of the same name. Return a number (or `{"score": x}`, which is normalized to `x`).
+
+- Use a **named** function — no lambdas / anonymous functions.
+- Sync only — async scorers are rejected.
+- Default title is the function name with `_` → spaces. Override with `scorer_from_function(fn, title=...)` / `scorerFromFunction(fn, { title })` when needed.
+
+### `code_execution_column` / `codeExecutionColumn`
+
+Use this when you want a raw code string instead of a function. `code` is required. Default `language` is `PYTHON` (Python helper) or `JAVASCRIPT` (JS helper). Row values are available as `data`.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, code_execution_column
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {
+                "role": "system",
+                "content": "You are a support agent. Answer in one short sentence.",
+            },
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "code-scorer-demo",
+    dataset=[
+        {
+            "input": "How do I reset my password?",
+            "expected": "password",
+        }
+    ],
+    runner=run_llm,
+    scorers=[
+        code_execution_column(
+            "exact",
+            code=(
+                'return 1 if str(data.get("Expected", "")).lower() '
+                'in str(data.get("Output", "")).lower() else 0'
+            ),
+        )
+    ],
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, codeExecutionColumn } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      {
+        role: "system",
+        content: "You are a support agent. Answer in one short sentence.",
+      },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("code-scorer-demo", {
+  dataset: [
+    {
+      input: "How do I reset my password?",
+      expected: "password",
+    },
+  ],
+  runner: runLlm,
+  scorers: [
+    codeExecutionColumn("exact", {
+      code: 'return String(data["Output"] || "").toLowerCase().includes(String(data["Expected"] || "").toLowerCase()) ? 1 : 0;',
+    }),
+  ],
+});
+```
+</CodeGroup>

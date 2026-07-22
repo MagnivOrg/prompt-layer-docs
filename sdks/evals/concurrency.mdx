@@ -1,0 +1,93 @@
+---
+title: "Concurrency"
+description: "Speed up evaluate(...) by running cases in parallel when it is safe."
+sidebarTitle: "Concurrency"
+icon: "layer-group"
+---
+
+By default, cases run one at a time (`max_concurrency` / `maxConcurrency` = `1`).
+
+Raise concurrency only when parallel `runner` calls are safe (no shared mutable state, rate limits allow it).
+
+<CodeGroup>
+```python Python
+from openai import OpenAI, AsyncOpenAI
+from promptlayer import evaluate, aevaluate, contains_scorer
+
+client = OpenAI()
+async_client = AsyncOpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {"role": "system", "content": "Answer in one short sentence."},
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+async def run_llm_async(user_message: str) -> str:
+    completion = await async_client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {"role": "system", "content": "Answer in one short sentence."},
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+dataset = [
+    {"input": "How do I reset my password?", "expected": "password"},
+    {"input": "Where is my order?", "expected": "order"},
+    {"input": "How do I update billing?", "expected": "billing"},
+]
+
+evaluate(
+    "support-parallel",
+    dataset=dataset,
+    runner=run_llm,
+    scorers=[contains_scorer(source="Output", value_source="Expected")],
+    max_concurrency=4,
+)
+
+await aevaluate(
+    "support-parallel-async",
+    dataset=dataset,
+    runner=run_llm_async,
+    scorers=[contains_scorer(source="Output", value_source="Expected")],
+    max_concurrency=4,
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      { role: "system", content: "Answer in one short sentence." },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("support-parallel", {
+  dataset: [
+    { input: "How do I reset my password?", expected: "password" },
+    { input: "Where is my order?", expected: "order" },
+    { input: "How do I update billing?", expected: "billing" },
+  ],
+  runner: runLlm,
+  scorers: [containsScorer({ source: "Output", valueSource: "Expected" })],
+  maxConcurrency: 4,
+});
+```
+</CodeGroup>
+
+Return a final value from the runner — not a stream or generator. On Python, async runners need `aevaluate`.
