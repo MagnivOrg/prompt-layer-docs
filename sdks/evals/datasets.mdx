@@ -5,7 +5,10 @@ sidebarTitle: "Datasets"
 icon: "database"
 ---
 
-Every case needs `input`. Add `expected` for Compare-style scorers, and `expected_trace` / `expectedTrace` for Trajectory.
+Every case needs `input`.
+
+- `expected` — expected **output** (for Contains, Compare, and similar)
+- `expected_trace` / `expectedTrace` — Trajectory **config** (accepted tool scenarios), not the expected answer text
 
 ## Inline cases
 
@@ -39,11 +42,11 @@ const dataset = [
 ```
 </CodeGroup>
 
-| Field | Becomes |
-| --- | --- |
-| `input` | `Input` (passed to `runner`) |
-| `expected` | `Expected` |
-| `expected_trace` / `expectedTrace` | `Expected Trace` |
+| Field | Becomes | Meaning |
+| --- | --- | --- |
+| `input` | `Input` | Passed to the `runner` |
+| `expected` | `Expected` | Expected output |
+| `expected_trace` / `expectedTrace` | `Expected Trace` | Trajectory config (which tools should run) |
 
 ## Use a dashboard Table
 

@@ -7,11 +7,11 @@ icon: "rocket"
 
 Get a runnable eval file in your repo, then run `promptlayer eval run <path>`.
 
-The `runner` is any callable that takes case `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — see [Runner and tracing](/sdks/evals/agent-tracing).
+The `runner` is any callable that takes in an `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — see [Runner and tracing](/sdks/evals/agent-tracing).
 
 ## Set up with AI
 
-Pin a **non-Grok** model (for example Composer 2.5), open **Plan mode**, then paste this prompt in the repo that has your agent. Option cards need `AskQuestion`, which Cursor currently disables for Grok 4.5 even in Plan mode. After you select, build / switch to Agent to apply the scaffold.
+Paste this prompt into Cursor (or any coding agent) in the repo that has your agent. It scaffolds an eval for you to review and run.
 
 You need `PROMPTLAYER_API_KEY` and your provider keys.
 
@@ -22,61 +22,32 @@ You need `PROMPTLAYER_API_KEY` and your provider keys.
 >
 You are setting up PromptLayer SDK evals in this repository.
 
-## Step 0 — Setup questions before any edits
+## Step 0 — Research, then optional AskQuestion
 
-Do **not** write code, install packages, or edit files until answers are confirmed.
+### 0a — Research first
 
-Prefer Cursor’s **AskQuestion** tool (clickable option cards, same UI as Plan-mode clarifying questions). `AskQuestion` is **not deprecated**, but Cursor currently disables it for **Grok 4.5** in every mode (including Plan). It is also not an MCP tool.
+Quickly scan the repo for likely agent entrypoints and tool handlers (e.g. `Agent`, `Runner`, `generateText`, `tools/`, `@function_tool`, `traceTool`). Collect concrete candidates as `path:symbol`. Do not invent paths.
 
-### Availability gate
+### 0b — AskQuestion only if available
 
-1. If **AskQuestion** is in your tool list → use it (0b). Prefer Plan mode for this step.
-2. If **AskQuestion** is missing → tell the user once, briefly: pin a non-Grok model (e.g. Composer 2.5), then resend. Do **not** claim the tool is removed or that Plan mode alone fixes it.
-3. If they stay on a model without AskQuestion, use the **short prose fallback** in 0b (allowed). Do not hard-block forever.
+If the **AskQuestion** tool is in your tool list, use it once (multiple questions in one call when possible) before editing:
 
-Hard rules when AskQuestion is available:
+1. `purpose` — What should this eval prove?
+   - Tool trajectory / Final-answer quality / Regression gate (tools + answer) (Recommended)
+2. `entrypoint` — Which production entrypoint should be the `runner`? (researched `path:symbol` options; recommended first)
+3. `tools` (`allow_multiple: true`) — Where are tools defined or executed? (researched options, or No tools / N/A)
+4. `mocks` — Mock tools / side effects? No (Recommended) / Yes
 
-- Call **AskQuestion**; do not list A/B/1/2 options only in chat.
-- Wait for the tool result before editing anything.
+If **AskQuestion is not available**, do **not** ask these in chat and do **not** block. Proceed immediately with defaults from research:
 
-### 0a — Research first (no questions yet)
+- Purpose: regression gate if tools exist, otherwise final-answer quality
+- Entrypoint: best researched candidate
+- Tools: researched tool handlers, or none
+- Mocks: no
 
-Quickly scan the repo for likely agent entrypoints and tool handlers (e.g. `Agent`, `Runner`, `generateText`, `tools/`, `@function_tool`, `traceTool`). Collect 2–6 concrete candidates as `path:symbol`. Do not invent paths. Do not ask the user yet.
+### 0c — Brief plan, then build
 
-### 0b — Ask the four questions
-
-**Preferred — AskQuestion** (one call with multiple `questions` when possible):
-
-```text
-AskQuestion shape:
-- title: "SDK eval setup"
-- questions: [
-    { id, prompt, options: [{ id, label }, ...], allow_multiple? }
-  ]
-```
-
-1. `purpose` (single select) — `What should this eval prove?`
-   - `trajectory` → Tool trajectory (tools called in the right order)
-   - `answer` → Final-answer quality
-   - `gate` → Regression gate (tools + answer) (Recommended)
-
-2. `entrypoint` (single select) — `Which production entrypoint should be the runner?`
-   - One option per researched candidate; label = `path:symbol`
-   - Recommended first with `(Recommended)` in the label
-
-3. `tools` (`allow_multiple: true`) — `Where are tools defined or executed?`
-   - One option per researched candidate (`path:symbol`)
-   - `none` → No tools / N/A
-
-4. `mocks` (single select) — `Should the eval mock tools / side effects?`
-   - `no` → No — real agent + real tools; minimal instrumentation (Recommended)
-   - `yes` → Yes — mock only approved side effects; keep the real agent loop
-
-**Fallback (only if AskQuestion is unavailable):** ask the same four questions in short prose with the researched `path:symbol` options listed once. Keep it compact. Then wait for the user’s reply.
-
-### 0c — Confirm plan
-
-In chat (short bullets only), restate: purpose, chosen entrypoint, tool locations, mock policy, and planned scorers. Proceed unless the user objects.
+In chat (short bullets), state the purpose, entrypoint, tools, mock policy, and scorers you will use — then make the changes. Do not wait for approval unless the user already objected.
 
 ## Default policy (unless the user says otherwise)
 
@@ -86,7 +57,7 @@ In chat (short bullets only), restate: purpose, chosen entrypoint, tool location
 - Keep the eval file thin: import real runner + dataset + `evaluate(...)`.
 
 Allowed without asking again:
-- Thin adapter that only maps case `input` → existing function args.
+- Thin adapter that only maps dataset `input` → existing function args.
 - Minimal instrumentation on existing modules (`traceTool`, framework plugin, `experimental_telemetry`).
 
 Forbidden unless the user explicitly approved mocks / a rewrite:
@@ -94,9 +65,9 @@ Forbidden unless the user explicitly approved mocks / a rewrite:
 - Parallel “evalable slice” agents with in-memory fake tools.
 - Copying production logic into a new demo agent.
 
-## Goals (after quiz)
+## Goals
 
-1. Use the selected entrypoint and tool paths (do not silently switch).
+1. Use the chosen entrypoint and tool paths (do not silently switch after asking).
 2. Install only packages this project needs.
 3. Apply minimal instrumentation per the chosen stack and mock policy.
 4. Add `evals/<agent>.eval.py` or `evals/<agent>.eval.ts` with a **10-case** dataset and `evaluate(...)`.
@@ -118,25 +89,24 @@ Follow current PromptLayer SDK evals docs:
   - Pydantic AI (if used): `logfire.instrument_pydantic_ai()` with OTLP export to PromptLayer `/v1/traces`.
   - OpenClaw (if used): `@promptlayer/openclaw-promptlayer` plugin enabled; reuse the real OpenClaw entrypoint as `runner`.
   - LiteLLM (Python, if used): `PromptLayer(enable_tracing=True)`, optional `litellm.success_callback = ["promptlayer"]`, and `traceTool` on **existing** tool handlers.
-  - Anything else / custom tool loop: wrap **existing** handlers with PromptLayer `traceTool` (JS: `pl.traceTool("name", fn)`; Python: `@pl.traceTool(name="name")`).
+  - Anything else / custom agent: wrap **existing** handlers with PromptLayer `traceTool` (JS: `pl.traceTool("name", fn)`; Python: `@pl.traceTool(name="name")`).
 - For custom / raw OpenAI client runners: keep the repo’s existing client. Prefer the official OpenAI client over `pl.openai.OpenAI()` / `new pl.OpenAI()` unless the repo already depends on the PromptLayer provider wrapper.
-- Dataset cases use `input` (and `expected` / expected-trace fields when scorers need them).
-- Prefer scorers that match the user’s purpose: Trajectory for tool path, Contains / Compare / LLM assertion for the final answer.
+- Dataset cases use `input`, plus `expected` (expected output) and/or `expected_trace` / `expectedTrace` (Trajectory config) when scorers need them.
+- Prefer scorers that match the purpose: Trajectory for tool path, Contains / Compare / LLM assertion for the final answer.
 - Results must land in PromptLayer Tables via the SDK eval runner.
 
-## Step 1 — Deepen after quiz
+## Step 1 — Confirm from research
 
-- Confirm the selected entrypoint and tool execution path.
+- Confirm the production agent entrypoint and tool execution path.
 - Inventory the real input shape.
 - Note existing PromptLayer / OpenTelemetry / provider instrumentation.
-- Restate the plan in 3–5 bullets if anything changed; proceed unless the user objects.
 
 ## Step 2 — Install
 
 - Only install what is missing for the chosen stack.
 - Document required env vars: `PROMPTLAYER_API_KEY`, plus whatever the real agent already needs.
 
-## Step 3 — Instrumentation / mocks per quiz answers
+## Step 3 — Instrumentation / mocks
 
 - **Mocks = no:** edit existing tool handlers / agent setup in place only.
 - **Mocks = yes:** mock only approved side effects; keep the real loop/entrypoint; do not rebuild the agent.
@@ -148,24 +118,25 @@ Follow current PromptLayer SDK evals docs:
 Create `evals/<agent>.eval.py` or `evals/<agent>.eval.ts` that:
 
 1. Imports `evaluate` / scorers.
-2. Imports the **selected** agent entrypoint (or a tiny input adapter).
+2. Imports the real agent entrypoint (or a tiny input adapter).
 3. Avoids redefining the agent/tool loop unless the user approved that approach.
-4. Builds a **dataset of 10 cases** aligned to the stated purpose and input shape.
-5. Chooses scorers from the stated purpose (Trajectory when tools matter; Contains / Compare / LLM assertion for answers). Default `passing_score` / `passingScore` to `0.8`.
+4. Builds a **dataset of 10 cases** aligned to the purpose and input shape.
+5. Chooses scorers from the purpose (Trajectory when tools matter; Contains / Compare / LLM assertion for answers). Default `passing_score` / `passingScore` to `0.8`.
 6. Calls top-level `evaluate("<name>", ...)`.
 
 ## Step 5 — Verify
 
 - Show how to run: `promptlayer eval run ./evals`
 - Quote the import of the real runner.
-- Summarize the quiz answers used (purpose, locations, mock policy).
+- Summarize purpose, entrypoint, tools, and mock policy used.
 - List files changed, 10 dataset inputs, env vars, and TODOs.
 
 ## Output format
 
-- Research → **AskQuestion** when available (else short prose fallback) → confirm plan → then make code changes.
+- Research → AskQuestion **only if available** → otherwise proceed with defaults → build.
+- Never dump a chat quiz when AskQuestion is missing.
 - End with a short checklist: installs, files added/changed, runner import path, how to run, env vars, remaining TODOs.
-- If AskQuestion is missing, say to pin a non-Grok model for option cards; do not claim the tool is deprecated. Do not silently invent a replacement agent.
+- Do not silently invent a replacement agent.
 </Prompt>
 
 ### After the agent finishes
@@ -186,7 +157,7 @@ export OPENAI_API_KEY=sk-...        # if needed
 export ANTHROPIC_API_KEY=sk-ant-... # if needed
 ```
 
-Pick a matching example, or use `traceTool` for a custom loop.
+Pick a matching example, or use `traceTool` for a custom agent.
 
 <Tabs>
   <Tab title="OpenAI Agents">

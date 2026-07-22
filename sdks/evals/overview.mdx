@@ -7,18 +7,65 @@ icon: "book"
 
 SDK evals measure a function under test from your code. Each eval has three parts:
 
-- **Dataset** — cases with `input` (optional `expected` / expected-trace fields)
-- **Runner** — any callable that takes case `input` and returns a final value
+- **Dataset** — cases with `input`, plus optional `expected` (expected output) and `expected_trace` / `expectedTrace` (Trajectory config)
+- **Runner** — any callable that takes in an `input` and returns a final value
 - **Scorers** — scorecard checks (Contains, Compare, Trajectory, and more)
-
-Call `evaluate(...)`, then run `promptlayer eval run <path>`. Results write to a [Table](/features/tables/overview) experiment sheet with a dashboard URL.
 
 ## How a run works
 
-1. Your `runner` runs once per case under an `Eval: <name>` span.
-2. Nested spans attach when they use the active eval tracer.
-3. Rows land on an experiment sheet (`Input` / `Expected` / `Output`, plus `Trace` when needed).
-4. Scorers run as the sheet scorecard. Optional `passing_score` / `passingScore` fails the process on a miss.
+Define `evaluate(...)` in a file, then run `promptlayer eval run <path>`. Each case runs under an `Eval: <name>` span; results land on a [Table](/features/tables/overview) experiment sheet.
+
+<CodeGroup>
+```python Python
+from openai import OpenAI
+from promptlayer import evaluate, contains_scorer
+
+client = OpenAI()
+
+def run_llm(user_message: str) -> str:
+    completion = client.chat.completions.create(
+        model="gpt-5.6",
+        messages=[
+            {"role": "system", "content": "Answer in one short sentence."},
+            {"role": "user", "content": str(user_message)},
+        ],
+    )
+    return completion.choices[0].message.content or ""
+
+evaluate(
+    "support-reply-eval",
+    dataset=[{"input": "How do I reset my password?"}],
+    runner=run_llm,
+    scorers=[contains_scorer(source="Output", value="reset")],
+    passing_score=0.8,
+)
+```
+
+```javascript JavaScript
+import OpenAI from "openai";
+import { evaluate, containsScorer } from "promptlayer";
+
+const client = new OpenAI();
+
+async function runLlm(userMessage) {
+  const completion = await client.chat.completions.create({
+    model: "gpt-5.6",
+    messages: [
+      { role: "system", content: "Answer in one short sentence." },
+      { role: "user", content: String(userMessage) },
+    ],
+  });
+  return completion.choices[0].message.content ?? "";
+}
+
+await evaluate("support-reply-eval", {
+  dataset: [{ input: "How do I reset my password?" }],
+  runner: runLlm,
+  scorers: [containsScorer({ source: "Output", value: "reset" })],
+  passingScore: 0.8,
+});
+```
+</CodeGroup>
 
 ## Where to go next
 

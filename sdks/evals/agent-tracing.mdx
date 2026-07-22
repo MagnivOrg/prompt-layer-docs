@@ -5,7 +5,7 @@ sidebarTitle: "Runner and tracing"
 icon: "diagram-project"
 ---
 
-The `runner` is any callable that takes a case's `input` and returns a final value — not a stream. There is no framework allowlist.
+The `runner` is any callable that takes in an `input` and returns a final value — not a stream. There is no framework allowlist.
 
 `evaluate(...)` starts an `Eval: <name>` span per case. PromptLayer clients nest under that span automatically.
 
@@ -30,9 +30,20 @@ Emit those spans with:
 | Pydantic AI | `logfire.instrument_pydantic_ai()` → PromptLayer `/v1/traces` |
 | OpenClaw | `@promptlayer/openclaw-promptlayer` plugin |
 | LiteLLM | `PromptLayer(enable_tracing=True)` + `traceTool` on handlers |
-| Custom / other | `traceTool` (or equivalent OTEL) on the handlers you care about |
+| Custom agent / other | `traceTool` (or equivalent OTEL) on the handlers you care about |
 
 Under `evaluate(...)`, Vercel does not need a separate `NodeSDK`. Full `/v1/traces` setups: [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [LangChain / LangSmith](/features/integrations#langchain-/-langsmith), [Pydantic AI](/features/integrations#pydantic-ai), [OpenClaw](/features/integrations#openclaw).
+
+## What `traceTool` does
+
+`traceTool` wraps a tool handler so PromptLayer records a span named `Tool: <name>` when that handler runs. Trajectory reads those spans from the imported `Trace`.
+
+- Python: `@pl.traceTool(name="get_weather")` on the function
+- JavaScript: `pl.traceTool("get_weather", fn)` returns a wrapped function
+
+Use it for custom agents (and LiteLLM) when the framework does not already emit `Tool:` spans. Enable tracing first with `PromptLayer(enable_tracing=True)` / `new PromptLayer({ enableTracing: true })` — otherwise `traceTool` is a no-op.
+
+It is tool-specific. For general function spans, use [`@traceable` / `wrapWithSpan`](/running-requests/traces) instead. OpenAI Agents, Claude Agents, Vercel, LangChain, Pydantic AI, and OpenClaw usually do not need `traceTool`.
 
 ## Custom runner with `traceTool`
 
