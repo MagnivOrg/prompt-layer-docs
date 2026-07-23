@@ -67,17 +67,11 @@
                 "icon": "screwdriver-wrench",
                 "pages": [
                   "sdks/evals/quickstart",
-                  {
-                    "group": "Building an eval",
-                    "icon": "pen-to-square",
-                    "pages": [
-                      "sdks/evals/building-an-eval",
-                      "sdks/evals/datasets",
-                      "sdks/evals/agent-tracing",
-                      "sdks/evals/columns/overview",
-                      "sdks/evals/scorers/overview"
-                    ]
-                  }
+                  "sdks/evals/building-an-eval",
+                  "sdks/evals/datasets",
+                  "sdks/evals/agent-tracing",
+                  "sdks/evals/columns/overview",
+                  "sdks/evals/scorers/overview"
                 ]
               },
               {
