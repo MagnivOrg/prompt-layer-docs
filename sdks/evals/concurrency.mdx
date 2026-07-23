@@ -11,6 +11,7 @@ Raise concurrency only when parallel `runner` calls are safe (no shared mutable 
 
 <CodeGroup>
 ```python Python
+import asyncio
 from openai import OpenAI, AsyncOpenAI
 from promptlayer import evaluate, aevaluate, contains_scorer
 
@@ -51,12 +52,15 @@ evaluate(
     max_concurrency=4,
 )
 
-await aevaluate(
-    "support-parallel-async",
-    dataset=dataset,
-    runner=run_llm_async,
-    scorers=[contains_scorer(source="Output", value_source="Expected")],
-    max_concurrency=4,
+# Async runners need aevaluate
+asyncio.run(
+    aevaluate(
+        "support-parallel-async",
+        dataset=dataset,
+        runner=run_llm_async,
+        scorers=[contains_scorer(source="Output", value_source="Expected")],
+        max_concurrency=4,
+    )
 )
 ```
 

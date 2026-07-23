@@ -32,7 +32,7 @@ client = PromptLayer(api_key="pl_your_key")
 table_id = "00000000-0000-0000-0000-000000000000"
 sheet_id = "11111111-1111-1111-1111-111111111111"
 
-client.tables.sheets.scorecards.configure_scorecard(
+client.tables.sheets.scorecards.configure(
     table_id,
     sheet_id,
     {
@@ -83,7 +83,7 @@ if rows["rows"]:
 Use these methods:
 
 - `get(table_id, sheet_id)`
-- `configure_scorecard(table_id, sheet_id, body)`
+- `configure(table_id, sheet_id, body)`
 - `delete(table_id, sheet_id)`
 - `migrate_legacy_score(table_id, sheet_id, body)`
 - `recalculate(table_id, sheet_id, body=None)`

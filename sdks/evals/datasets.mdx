@@ -5,10 +5,11 @@ sidebarTitle: "Datasets"
 icon: "database"
 ---
 
-Every case needs `input`. Datasets are one piece of [Building an eval](/sdks/evals/building-an-eval).
+Case fields:
 
-- `expected` — expected **output** (for Contains, Compare, and similar)
-- `expected_trace` / `expectedTrace` — optional; only needed when you use [Trajectory](/sdks/evals/scorers/overview#trajectory). Trajectory **config** (accepted tool scenarios), not the expected answer text
+- `input` — required; passed to the `runner`
+- `expected` — optional; expected **output** (Contains, Compare, and similar)
+- `expected_trace` / `expectedTrace` — optional; only for [Trajectory](/sdks/evals/scorers/overview#trajectory). This is Trajectory config (accepted tool scenarios), not the expected answer text
 
 ## Inline cases
 
@@ -45,8 +46,8 @@ const dataset = [
 | Field | Becomes | Meaning |
 | --- | --- | --- |
 | `input` | `Input` | Passed to the `runner` |
-| `expected` | `Expected` | Expected output |
-| `expected_trace` / `expectedTrace` | `Expected Trace` | Optional. Trajectory config (which tools should run); only needed with Trajectory |
+| `expected` | `Expected` | Optional expected output |
+| `expected_trace` / `expectedTrace` | `Expected Trace` | Optional Trajectory config; only needed with Trajectory |
 
 ## Use a dashboard Table
 

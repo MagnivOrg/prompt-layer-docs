@@ -7,7 +7,7 @@ icon: "table-columns"
 
 Pass columns into `evaluate(...)` to transform row data before scorers run. On the experiment sheet they show up as computed columns (Prompt Template, JSON Path, and the rest).
 
-These use the same computed types as Tables [Column Types](/features/tables/column-types); you can also add them from the [Columns](/features/tables/columns) UI.
+They use the same types as Tables [Column Types](/features/tables/column-types). You can also add them from the [Columns](/features/tables/columns) UI.
 
 ## Prompt Template
 
@@ -286,12 +286,12 @@ column("Mirrored output", ColumnType.COMPOSITION, { source: "Output" });
 
 | Key | Required | Notes |
 | --- | --- | --- |
-| `source` | usually | Same-sheet title, or `{table}.{sheet}.{column}` |
-| `sources` | alt | Also accepted by the backend |
+| `source` | one of | Same-sheet title, or `{table}.{sheet}.{column}` |
+| `sources` | one of | Also accepted by the backend |
 
 ## Cosine Similarity
 
-Embedding cosine similarity between exactly two source columns (`ColumnType.COSINE_SIMILARITY`). Threshold the result with a downstream scorer (often [custom code](/sdks/evals/scorers/overview#custom-code)).
+Embedding cosine similarity between exactly two source columns (`ColumnType.COSINE_SIMILARITY`). The example below computes a `Similarity` column; score that column when you need a pass/fail bar (often [custom code](/sdks/evals/scorers/overview#custom-code)).
 
 <CodeGroup>
 ```python Python

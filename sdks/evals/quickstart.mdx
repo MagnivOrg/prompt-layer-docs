@@ -7,7 +7,7 @@ icon: "rocket"
 
 Get a runnable eval file in your repo, then run `promptlayer eval run <path>`.
 
-The `runner` is any callable that takes in an `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — any harness works as long as you follow [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
+The `runner` is any callable that takes an `input` and returns a final value. The tabs below are copy-paste examples, not an allowlist — any harness works if it follows [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
 
 ## Set up with AI
 
@@ -173,7 +173,7 @@ npm install promptlayer @openai/agents zod
 ```
 </CodeGroup>
 
-Call `instrument_openai_agents` / `instrumentOpenAIAgents` once, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. For non-eval app wiring, use the [OpenAI Agents SDK](/features/integrations#openai-agents-sdk) integration.
+Call `instrument_openai_agents` / `instrumentOpenAIAgents` once, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. The same helper works outside evals via the [OpenAI Agents SDK](/features/integrations#openai-agents-sdk) integration.
 
 <CodeGroup>
 ```python Python
@@ -274,7 +274,7 @@ npm install promptlayer @anthropic-ai/claude-agent-sdk
 ```
 </CodeGroup>
 
-Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. For non-eval app wiring, use the [Claude Code](/features/integrations#claude-code) integration.
+Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. The same helper works outside evals via the [Claude Code](/features/integrations#claude-code) integration.
 
 <CodeGroup>
 ```python Python
@@ -391,7 +391,7 @@ Install:
 npm install promptlayer ai @ai-sdk/openai zod
 ```
 
-Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. Outside evals, register OTEL with the [Vercel AI SDK](/features/integrations#vercel-ai-sdk) integration.
+Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. For app-wide OTEL outside evals, follow the [Vercel AI SDK](/features/integrations#vercel-ai-sdk) integration.
 
 ```typescript
 // evals/vercel_weather.eval.ts
@@ -445,7 +445,7 @@ Install:
 pip install promptlayer litellm
 ```
 
-Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with `traceTool` for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — without `enable_tracing=True`, `traceTool` is a no-op.
+Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with `traceTool` for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — `traceTool` is a no-op unless that `PromptLayer` instance has tracing enabled.
 
 ```python
 # evals/litellm_weather.eval.py
@@ -524,7 +524,7 @@ evaluate(
 )
 ```
 
-`evaluate(...)` also always enables tracing on the client it creates, so tool spans nest under each eval case. More on callbacks in [LiteLLM](/features/integrations#litellm) and the [LiteLLM PromptLayer docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
+`evaluate(...)` enables tracing on its own client for nesting under each eval case, but your separate `PromptLayer(...)` instance still needs `enable_tracing=True` for `@pl.traceTool`. Callbacks: [LiteLLM](/features/integrations#litellm) and the [LiteLLM PromptLayer docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
   </Tab>
 
   <Tab title="LangChain">
@@ -664,7 +664,7 @@ evaluate(
 )
 ```
 
-For non-eval app wiring, use the [Pydantic AI](/features/integrations#pydantic-ai) integration.
+The same Logfire → `/v1/traces` path works outside evals via the [Pydantic AI](/features/integrations#pydantic-ai) integration.
   </Tab>
 
   <Tab title="OpenClaw">
@@ -697,7 +697,7 @@ evaluate(
 )
 ```
 
-Install and configure the plugin with the [OpenClaw](/features/integrations#openclaw) integration.
+Plugin install and config steps are in the [OpenClaw](/features/integrations#openclaw) integration.
   </Tab>
 </Tabs>
 

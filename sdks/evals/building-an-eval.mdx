@@ -13,87 +13,74 @@ promptlayer eval run path/to/your.eval.py
 
 ## Minimal example
 
+Point `runner` at your agent entrypoint, then score tool use and the final answer:
+
 <CodeGroup>
 ```python Python
-from openai import OpenAI
-from promptlayer import evaluate, contains_scorer
-
-client = OpenAI()
-
-def run_llm(user_message: str) -> str:
-    completion = client.chat.completions.create(
-        model="gpt-5.6",
-        messages=[
-            {"role": "system", "content": "Answer in one short sentence."},
-            {"role": "user", "content": str(user_message)},
-        ],
-    )
-    return completion.choices[0].message.content or ""
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+from my_app.agent import run_agent  # your real entrypoint
 
 evaluate(
-    "support-reply-eval",
-    dataset=[{"input": "How do I reset my password?"}],
-    runner=run_llm,
-    scorers=[contains_scorer(source="Output", value="reset")],
-    passing_score=0.8,
+    "weather-agent-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=1.0,
 )
 ```
 
 ```javascript JavaScript
-import OpenAI from "openai";
-import { evaluate, containsScorer } from "promptlayer";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { runAgent } from "./agent.js"; // your real entrypoint
 
-const client = new OpenAI();
-
-async function runLlm(userMessage) {
-  const completion = await client.chat.completions.create({
-    model: "gpt-5.6",
-    messages: [
-      { role: "system", content: "Answer in one short sentence." },
-      { role: "user", content: String(userMessage) },
-    ],
-  });
-  return completion.choices[0].message.content ?? "";
-}
-
-await evaluate("support-reply-eval", {
-  dataset: [{ input: "How do I reset my password?" }],
-  runner: runLlm,
-  scorers: [containsScorer({ source: "Output", value: "reset" })],
-  passingScore: 0.8,
+await evaluate("weather-agent-eval", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["get_weather"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+  passingScore: 1.0,
 });
 ```
 </CodeGroup>
 
-Python async runners use `aevaluate`. JavaScript uses async `evaluate`. For agent-harness examples (OpenAI Agents, Claude, LangChain, and more), start from the [Quickstart](/sdks/evals/quickstart).
+Python async runners use `aevaluate`. JavaScript uses async `evaluate`. Full harness setups (OpenAI Agents, Claude, LangChain, and more) are in the [Quickstart](/sdks/evals/quickstart).
 
 ## Dataset
 
-Cases feed the runner and scorers:
+Cases feed the runner and scorers. [Datasets](/sdks/evals/datasets) covers inline cases and dashboard Tables:
 
 - `input` — required; passed to the `runner`
-- `expected` — expected **output** (Contains, Compare, …)
-- `expected_trace` / `expectedTrace` — optional; only needed when you use [Trajectory](/sdks/evals/scorers/overview#trajectory). Trajectory **config** (which tools should run), not the answer text
-
-You can also point `dataset` at a dashboard Table — covered in [Datasets](/sdks/evals/datasets).
+- `expected` — optional; expected **output** (Contains, Compare, …)
+- `expected_trace` / `expectedTrace` — optional; only for [Trajectory](/sdks/evals/scorers/overview#trajectory). This is Trajectory config (which tools should run), not the answer text
 
 ## Runner
 
-The `runner` is any callable that takes in an `input` and returns a final value (not a stream). There is no framework allowlist.
+The `runner` is any callable that takes an `input` and returns a final value (not a stream). There is no framework allowlist.
 
-For Trajectory, tools must show up as `Tool: <name>` spans on the imported Trace — via a framework helper or `traceTool`, as described in [Runner and tracing](/sdks/evals/agent-tracing).
+For Trajectory, tools must appear as `Tool: <name>` spans on the imported Trace — use a framework helper or `traceTool`. That contract is on [Runner](/sdks/evals/agent-tracing).
 
 ## Scorers and columns
 
-- **Scorers** become scorecard steps on the experiment sheet. Declare them with the [Scorers](/sdks/evals/scorers/overview) helpers; how they roll up is the same as [Scorecards](/features/tables/scorecards) and [Column Types](/features/tables/column-types) in Tables.
-- **Columns** are optional processing steps before scorers. Declare them with [Columns](/sdks/evals/columns/overview); type behavior matches [Column Types](/features/tables/column-types).
+- **Scorers** become scorecard steps on the experiment sheet. Declare them with [Scorers](/sdks/evals/scorers/overview). Rollup matches [Scorecards](/features/tables/scorecards); check types match [Column Types](/features/tables/column-types).
+- **Columns** are optional processing steps before scorers. Declare them with [Columns](/sdks/evals/columns/overview); types match [Column Types](/features/tables/column-types).
 
 ## Other `evaluate(...)` options
 
 | Goal | Python | JavaScript |
 | --- | --- | --- |
 | Cases | `dataset` | `dataset` |
-| Function under test | `runner` | `runner` |
+| Agent under test | `runner` | `runner` |
 | Scorecard checks | `scorers` | `scorers` |
 | Processing columns | `columns` | `columns` |
 | Fail below a bar | `passing_score` | `passingScore` |
@@ -108,4 +95,4 @@ Do **not** pass top-level `sheet_id` / `sheetId`. Use `dataset.sheet_id` / `data
 
 ## What you get back
 
-On success, the SDK creates (or reuses) a Table, writes a dedicated experiment sheet, configures your scorecard, and returns an `EvalResult` with a dashboard URL — including how failures and `passing_score` work in [Results and failures](/sdks/evals/results-and-failures).
+On success, the SDK creates (or reuses) a Table, writes a dedicated experiment sheet, configures your scorecard, and returns an `EvalResult` with a dashboard URL. For failure handling and `passing_score`, see [Results and failures](/sdks/evals/results-and-failures).

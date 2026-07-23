@@ -9,12 +9,12 @@ icon: "circle-check"
 
 ## When the run fails
 
-`EvaluationFailedError` raises when:
+`EvaluationFailedError` is raised when:
 
 - Any scorer cell status is `FAILED`, or
 - You set `passing_score` / `passingScore` and the overall score is missing or below that threshold
 
-Boolean pass bars use a rate in `[0.0, 1.0]` (so `0.8` means 80%).
+Pass bars are rates in `[0.0, 1.0]` (so `0.8` means 80%).
 
 Set `include_failure_examples` / `includeFailureExamples` to print up to five failing rows after the summary.
 

@@ -5,11 +5,11 @@ sidebarTitle: "Runner"
 icon: "diagram-project"
 ---
 
-The `runner` is any callable that takes in an `input` and returns a final value — not a stream. There is no framework allowlist. It sits alongside dataset and scorers in [Building an eval](/sdks/evals/building-an-eval).
+The `runner` is any callable that takes an `input` and returns a final value — not a stream. There is no framework allowlist.
 
 `evaluate(...)` starts an `Eval: <name>` span per case. PromptLayer clients nest under that span automatically.
 
-Copy-paste harnesses for common stacks live in the [Quickstart](/sdks/evals/quickstart).
+Copy-paste harnesses for common frameworks are in the [Quickstart](/sdks/evals/quickstart).
 
 ## Make Trajectory work
 
@@ -21,7 +21,7 @@ Emit those spans with:
 - A framework helper from the table below, or
 - OTEL that PromptLayer already normalizes to `Tool: …`
 
-| Example stack | Typical setup |
+| Framework | Typical setup |
 | --- | --- |
 | OpenAI Agents | `instrument_openai_agents` / `instrumentOpenAIAgents` |
 | Claude Agents | `get_claude_config` / `getClaudeConfig` **inside** the runner |
@@ -32,7 +32,7 @@ Emit those spans with:
 | LiteLLM | `PromptLayer(enable_tracing=True)` + `traceTool` on handlers |
 | Custom agent / other | `traceTool` (or equivalent OTEL) on the handlers you care about |
 
-Under `evaluate(...)`, Vercel does not need a separate `NodeSDK`. For app-wide `/v1/traces` wiring outside evals, use the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [LangChain / LangSmith](/features/integrations#langchain-/-langsmith), [Pydantic AI](/features/integrations#pydantic-ai), or [OpenClaw](/features/integrations#openclaw) integration guides.
+Under `evaluate(...)`, Vercel does not need a separate `NodeSDK`. Outside evals, set up OTEL in the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [LangChain / LangSmith](/features/integrations#langchain-/-langsmith), [Pydantic AI](/features/integrations#pydantic-ai), or [OpenClaw](/features/integrations#openclaw) guides.
 
 ## What `traceTool` does
 
@@ -192,7 +192,7 @@ await evaluate("custom-runner-eval", {
 | Sync | `evaluate(...)` | `evaluate(...)` |
 | Async | `aevaluate(...)` | `evaluate(...)` with an async function (no `aevaluate` export) |
 
-Default concurrency is `1`; raise it with `max_concurrency` / `maxConcurrency` as described in [Concurrency](/sdks/evals/concurrency).
+Default concurrency is `1`. Raise it with `max_concurrency` / `maxConcurrency` — see [Concurrency](/sdks/evals/concurrency).
 
 ## Common errors
 
