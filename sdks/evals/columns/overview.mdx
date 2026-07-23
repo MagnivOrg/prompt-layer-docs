@@ -9,9 +9,33 @@ Pass columns into `evaluate(...)` to transform row data before scorers run. On t
 
 They use the same types as Tables [Column Types](/features/tables/column-types). You can also add them from the [Columns](/features/tables/columns) UI.
 
+## Columns at a glance
+
+| Column | `ColumnType` | Does |
+| --- | --- | --- |
+| [Prompt Template](#prompt-template) | `PROMPT_TEMPLATE` | Run a Registry or inline prompt per row |
+| [JSON Path](#json-path) | `JSON_PATH` | Extract a value from a JSON column |
+| [Coalesce](#coalesce) | `COALESCE` | First non-null value across sources |
+| [Composition](#composition) | `COMPOSITION` | Mirror an upstream column value |
+| [Cosine Similarity](#cosine-similarity) | `COSINE_SIMILARITY` | Embedding similarity between two columns |
+| [AI Data Extraction](#ai-data-extraction) | `AI_DATA_EXTRACTION` | Extract info from a column with an LLM query |
+| [For Loop](#for-loop) | `FOR_LOOP` | Iterate a prompt/workflow over a collection or count |
+| [While Loop](#while-loop) | `WHILE_LOOP` | Repeat a prompt/workflow until a condition or cap |
+
 ## Prompt Template
 
 Run a Prompt Registry or inline prompt per row (`ColumnType.PROMPT_TEMPLATE`). Provide exactly one of `template` or `inline_template`.
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `template` | one of | Registry ref: `name` or `id`; optional `version_number` or `label` (not both) |
+| `inline_template` | one of | Inline prompt content |
+| `prompt_template_variable_mappings` | yes | Variable → column title |
+| `engine` | no | Optional model override |
+| `verbose` | no | Default `false` |
+| `return_template_only` | no | Default `false` |
+| `hydrate_input_variables` | no | Default `true` |
+| `chat_history_source` | no | Optional chat history column |
 
 <CodeGroup>
 ```python Python
@@ -85,20 +109,15 @@ await evaluate("prompt-column-demo", {
 ```
 </CodeGroup>
 
-| Key | Required | Notes |
-| --- | --- | --- |
-| `template` | one of | Registry ref: `name` or `id`; optional `version_number` or `label` (not both) |
-| `inline_template` | one of | Inline prompt content |
-| `prompt_template_variable_mappings` | yes | Variable → column title |
-| `engine` | no | Optional model override |
-| `verbose` | no | Default `false` |
-| `return_template_only` | no | Default `false` |
-| `hydrate_input_variables` | no | Default `true` |
-| `chat_history_source` | no | Optional chat history column |
-
 ## JSON Path
 
 Extract a value from a JSON column (`ColumnType.JSON_PATH`).
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `source` | yes | Column title |
+| `json_path` | yes | JSONPath expression |
+| `return_first_match` | no | Set explicitly; do not rely on defaults |
 
 <CodeGroup>
 ```python Python
@@ -174,15 +193,13 @@ await evaluate("json-path-demo", {
 ```
 </CodeGroup>
 
-| Key | Required | Notes |
-| --- | --- | --- |
-| `source` | yes | Column title |
-| `json_path` | yes | JSONPath expression |
-| `return_first_match` | no | Set explicitly; do not rely on defaults |
-
 ## Coalesce
 
 Return the first non-null value from two or more sources (`ColumnType.COALESCE`).
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `sources` | yes | At least two column titles |
 
 <CodeGroup>
 ```python Python
@@ -262,13 +279,14 @@ await evaluate("coalesce-demo", {
 ```
 </CodeGroup>
 
-| Key | Required | Notes |
-| --- | --- | --- |
-| `sources` | yes | At least two column titles |
-
 ## Composition
 
 Mirror an upstream column value without re-running upstream logic (`ColumnType.COMPOSITION`).
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `source` | one of | Same-sheet title, or `{table}.{sheet}.{column}` |
+| `sources` | one of | Also accepted by the backend |
 
 <CodeGroup>
 ```python Python
@@ -284,14 +302,13 @@ column("Mirrored output", ColumnType.COMPOSITION, { source: "Output" });
 ```
 </CodeGroup>
 
-| Key | Required | Notes |
-| --- | --- | --- |
-| `source` | one of | Same-sheet title, or `{table}.{sheet}.{column}` |
-| `sources` | one of | Also accepted by the backend |
-
 ## Cosine Similarity
 
 Embedding cosine similarity between exactly two source columns (`ColumnType.COSINE_SIMILARITY`). The example below computes a `Similarity` column; score that column when you need a pass/fail bar (often [custom code](/sdks/evals/scorers/overview#custom-code)).
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `sources` | yes | Exactly two column titles |
 
 <CodeGroup>
 ```python Python
@@ -361,13 +378,14 @@ await evaluate("cosine-demo", {
 ```
 </CodeGroup>
 
-| Key | Required | Notes |
-| --- | --- | --- |
-| `sources` | yes | Exactly two column titles |
-
 ## AI Data Extraction
 
 Extract information from a source column with an LLM query (`ColumnType.AI_DATA_EXTRACTION`).
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `source` | yes | Column title |
+| `query` | yes | Non-empty extraction query |
 
 <CodeGroup>
 ```python Python
@@ -442,14 +460,19 @@ await evaluate("extract-demo", {
 ```
 </CodeGroup>
 
-| Key | Required | Notes |
-| --- | --- | --- |
-| `source` | yes | Column title |
-| `query` | yes | Non-empty extraction query |
-
 ## For Loop
 
 Iterate a prompt or workflow over a collection or a fixed count (`ColumnType.FOR_LOOP`). Provide exactly one of `iterator_source` or `max_iterations`.
+
+| Key | Required | Notes |
+| --- | --- | --- |
+| `loop_type` | yes | `prompt` \| `workflow` |
+| `prompt_config` | if prompt | Nested prompt config (`version_number`, not `version`) |
+| `workflow_config` | if workflow | Needs `workflow_id` or `workflow_version_id` |
+| `iterator_source` | one of | Source collection column |
+| `max_iterations` | one of | Positive int |
+| `return_all_outputs` | no | Default `false` |
+| `variable_mappings` | no | Default `{}`; avoid `_iterator_source` / `_iterator_item` as keys |
 
 <CodeGroup>
 ```python Python
@@ -487,19 +510,19 @@ column("Expand items", ColumnType.FOR_LOOP, {
 ```
 </CodeGroup>
 
+## While Loop
+
+Repeat a prompt or workflow until a condition or max iterations (`ColumnType.WHILE_LOOP`).
+
 | Key | Required | Notes |
 | --- | --- | --- |
 | `loop_type` | yes | `prompt` \| `workflow` |
 | `prompt_config` | if prompt | Nested prompt config (`version_number`, not `version`) |
 | `workflow_config` | if workflow | Needs `workflow_id` or `workflow_version_id` |
-| `iterator_source` | one of | Source collection column |
-| `max_iterations` | one of | Positive int |
+| `end_condition_json_path` | no | Stop condition path |
+| `max_iterations` | no | Safety cap |
 | `return_all_outputs` | no | Default `false` |
-| `variable_mappings` | no | Default `{}`; avoid `_iterator_source` / `_iterator_item` as keys |
-
-## While Loop
-
-Repeat a prompt or workflow until a condition or max iterations (`ColumnType.WHILE_LOOP`).
+| `variable_mappings` | no | Default `{}` |
 
 <CodeGroup>
 ```python Python
@@ -538,13 +561,3 @@ column("Refine until done", ColumnType.WHILE_LOOP, {
 });
 ```
 </CodeGroup>
-
-| Key | Required | Notes |
-| --- | --- | --- |
-| `loop_type` | yes | `prompt` \| `workflow` |
-| `prompt_config` | if prompt | Nested prompt config (`version_number`, not `version`) |
-| `workflow_config` | if workflow | Needs `workflow_id` or `workflow_version_id` |
-| `end_condition_json_path` | no | Stop condition path |
-| `max_iterations` | no | Safety cap |
-| `return_all_outputs` | no | Default `false` |
-| `variable_mappings` | no | Default `{}` |
