@@ -22,11 +22,15 @@ Thresholds, weights, and the overall score work the same as [Scorecards](/featur
 | [Trajectory](#trajectory) | `trajectory_scorer` | `trajectoryScorer` | Tool-call sequence matches accepted scenarios |
 | [Custom Code](#custom-code) | named fn / `code_execution_column` | named fn / `codeExecutionColumn` | Your own scoring logic |
 
-Every typed helper also accepts [weight, required, and thresholds](#weight-required-and-thresholds).
+Every typed helper also accepts [shared scoring options](#shared-scoring-options) — weight, required, and thresholds.
 
-## Weight, Required, and Thresholds
+## Shared scoring options
 
-Every typed helper accepts weight, required, and thresholds. Aggregation matches [Scorecards](/features/tables/scorecards) (weighted mean; default pass `0.8`, warn `0.6`).
+Every scorer produces a score in `[0, 1]`. These three options — accepted by every typed helper — control how much a scorer counts and where its pass/fail line sits. They behave exactly like [Scorecards](/features/tables/scorecards) in Tables.
+
+- **Weight** — how much this scorer contributes to the overall score. The scorecard is a weighted mean, so `weight=2` pulls twice as hard as the default `weight=1`. Use it to make the checks you care about most dominate the result.
+- **Required** — if `true`, this scorer failing fails the whole scorecard, no matter how well the weighted average comes out. Use it for must-pass checks (e.g. the agent called the right tools).
+- **Thresholds** — the per-scorer cutoffs that decide pass vs. warn vs. fail, each in `[0, 1]` (default pass `0.8`, warn `0.6`). Raise the pass threshold for a stricter bar on that check.
 
 | Option | Python | JavaScript | Meaning |
 | --- | --- | --- | --- |
@@ -145,7 +149,11 @@ await evaluate("support-bot", {
 ```
 </CodeGroup>
 
-## Compare
+## Scorer types
+
+Each helper below maps to a scorecard check type in [Column Types](/features/tables/column-types). All of them accept the [shared scoring options](#shared-scoring-options) above.
+
+### Compare
 
 Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`. Behavior matches the Compare type in [Column Types](/features/tables/column-types).
 
@@ -224,7 +232,7 @@ await evaluate("compare-demo", {
 ```
 </CodeGroup>
 
-## Contains
+### Contains
 
 Check whether a column contains a literal or another column's value. Pass exactly one of `value` or `value_source` / `valueSource`.
 
@@ -290,7 +298,7 @@ await evaluate("contains-demo", {
 ```
 </CodeGroup>
 
-## Regex
+### Regex
 
 Match a column against a regular expression.
 
@@ -359,7 +367,7 @@ await evaluate("regex-demo", {
 ```
 </CodeGroup>
 
-## Count
+### Count
 
 Score by character, word, sentence, or paragraph count bounds. Require at least one of `min_count` / `minCount` or `max_count` / `maxCount`. Backend `type` values: `chars`, `words`, `sentences`, `paragraphs`.
 
@@ -428,7 +436,7 @@ await evaluate("count-demo", {
 ```
 </CodeGroup>
 
-## Assert Valid
+### Assert Valid
 
 Validate a column as object, number, or SQL. There is no `json` / `boolean` / `string` assert type.
 
@@ -497,7 +505,7 @@ await evaluate("assert-valid-demo", {
 ```
 </CodeGroup>
 
-## LLM Assertion
+### LLM Assertion
 
 Score a column with an LLM judge prompt. Pass exactly one of `prompt` or `prompt_source` / `promptSource`.
 
@@ -574,7 +582,7 @@ await evaluate("llm-assert-demo", {
 ```
 </CodeGroup>
 
-## Trajectory
+### Trajectory
 
 Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — emit them with a framework helper or `traceTool` ([Runner](/sdks/evals/agent-tracing)), or copy a harness from the [Quickstart](/sdks/evals/quickstart).
 
@@ -688,7 +696,7 @@ Put that JSON on each case as `expected_trace` / `expectedTrace` (or on a dashbo
 
 Local helpers: `score_trajectory` / `scoreTrajectory`, `diagnose_trajectory_failure` / `diagnoseTrajectoryFailure`, and JS-only `extractTrajectoryToolNames`.
 
-## Custom Code
+### Custom Code
 
 Prefer passing a **named function by reference** in `scorers`. The SDK serializes it to a `CODE_EXECUTION` scorecard step.
 
@@ -784,7 +792,7 @@ await evaluate("fn-scorer-demo", {
 ```
 </CodeGroup>
 
-### `code_execution_column` / `codeExecutionColumn`
+#### `code_execution_column` / `codeExecutionColumn`
 
 Use this when you want a raw code string instead of a function. `code` is required. Default `language` is `PYTHON` (Python helper) or `JAVASCRIPT` (JS helper). Row values are available as `data`.
 

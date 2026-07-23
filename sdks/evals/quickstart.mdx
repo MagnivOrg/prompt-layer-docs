@@ -155,7 +155,7 @@ promptlayer eval run ./evals
 
 ## Write an eval yourself
 
-Pick a matching example, or use `traceTool` for a custom agent.
+Pick the tab that matches your stack. If you use a framework helper (OpenAI Agents, Claude, Vercel AI), tool spans are collected for you. For a custom agent with no helper, decorate your tool handlers with `traceTool` — it wraps a handler so PromptLayer records the `Tool: <name>` span that the [Trajectory](/sdks/evals/scorers/overview#trajectory) scorer reads. See [Runner](/sdks/evals/agent-tracing) for the full contract.
 
 <Tabs>
   <Tab title="OpenAI Agents">
