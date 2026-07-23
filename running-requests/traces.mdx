@@ -125,6 +125,32 @@ console.log(result);
 ```
 </CodeGroup>
 
+## Tracing Tools
+
+Agent tool calls have their own helper: `traceTool` (Python `@pl_client.traceTool` / JavaScript `pl.traceTool`). It is a thin specialization of `traceable` that names the span `Tool: <name>` and tags it with `node_type=CODE_EXECUTION` plus the tool's identity. Wrap each tool handler you want to record:
+
+<CodeGroup>
+```python Python
+pl_client = PromptLayer(enable_tracing=True)
+
+# name defaults to the function name
+@pl_client.traceTool(name="get_weather")
+def get_weather(city: str) -> str:
+    return f"{city} is 72F and sunny."
+```
+
+```javascript JavaScript
+const pl = new PromptLayer({ enableTracing: true });
+
+// traceTool(name, fn) returns a wrapped function
+const getWeather = pl.traceTool("get_weather", async (city) => `${city} is 72F and sunny.`);
+```
+</CodeGroup>
+
+Like `traceable`, `traceTool` only records when tracing is enabled on that client (`enable_tracing=True` / `enableTracing: true`); on a non-tracing client it is a no-op that calls the function unchanged.
+
+The `Tool: <name>` span name is a contract that PromptLayer's tool-aware features read: the Trace UI surfaces these spans as tool calls, and the SDK evals [Trajectory scorer](/sdks/evals/scorers/overview#trajectory) scores the sequence of tool names against your accepted scenarios. Most framework integrations (OpenAI Agents, Claude, Vercel AI, and the others in [Telemetry Integrations](/features/integrations)) emit these spans for you, so you only reach for `traceTool` on a custom agent that has no helper.
+
 ## Setting Custom Span Names
 
 When tracing functions, you may want to set custom names for your spans to make them more descriptive. Both Python and JavaScript implementations of PromptLayer allow you to set custom span names.

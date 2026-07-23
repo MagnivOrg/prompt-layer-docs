@@ -584,7 +584,7 @@ await evaluate("llm-assert-demo", {
 
 ### Trajectory
 
-Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — emit them with a framework helper or `traceTool` ([Runner](/sdks/evals/agent-tracing)), or copy a harness from the [Quickstart](/sdks/evals/quickstart).
+Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — emit them with a framework helper or [`traceTool`](/running-requests/traces#tracing-tools) (see [Runner](/sdks/evals/agent-tracing)), or copy a harness from the [Quickstart](/sdks/evals/quickstart).
 
 Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `expected_source` / `expectedSource` (usually `"Expected Trace"`).
 
