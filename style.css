@@ -66,11 +66,10 @@ body:has(.promptlayer-landing)
     grid-template-columns: 1fr;
     gap: 1.75rem;
     align-items: center;
-    width: 100vw;
-    margin-left: calc(50% - 50vw);
-    margin-right: calc(50% - 50vw);
     margin-bottom: 3.75rem;
-    padding: 2.4rem max(1.25rem, calc((100vw - 72rem) / 2 + 1.25rem)) 2.85rem;
+    padding: 2.4rem 1.75rem 2.85rem;
+    border-radius: 1.75rem;
+    overflow: hidden;
     box-sizing: border-box;
 }
 
