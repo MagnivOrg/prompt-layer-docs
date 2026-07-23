@@ -7,7 +7,7 @@ icon: "rocket"
 
 Get a runnable eval file in your repo, then run `promptlayer eval run <path>`.
 
-The `runner` is any callable that takes in an `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — see [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
+The `runner` is any callable that takes in an `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — any harness works as long as you follow [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
 
 ## Set up with AI
 
@@ -91,7 +91,7 @@ Follow current PromptLayer SDK evals docs:
   - LiteLLM (Python, if used): `PromptLayer(enable_tracing=True)`, optional `litellm.success_callback = ["promptlayer"]`, and `traceTool` on **existing** tool handlers.
   - Anything else / custom agent: wrap **existing** handlers with PromptLayer `traceTool` (JS: `pl.traceTool("name", fn)`; Python: `@pl.traceTool(name="name")`).
 - For custom / raw OpenAI client runners: keep the repo’s existing client. Prefer the official OpenAI client over `pl.openai.OpenAI()` / `new pl.OpenAI()` unless the repo already depends on the PromptLayer provider wrapper.
-- Dataset cases use `input`, plus `expected` (expected output) and/or `expected_trace` / `expectedTrace` (Trajectory config) when scorers need them.
+- Dataset cases use `input`, plus optional `expected` (expected output). Add `expected_trace` / `expectedTrace` only when using Trajectory.
 - Prefer scorers that match the purpose: Trajectory for tool path, Contains / Compare / LLM assertion for the final answer.
 - Results must land in PromptLayer Tables via the SDK eval runner.
 
@@ -173,7 +173,7 @@ npm install promptlayer @openai/agents zod
 ```
 </CodeGroup>
 
-Call `instrument_openai_agents` / `instrumentOpenAIAgents` once, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. App-wide setup: [OpenAI Agents SDK](/features/integrations#openai-agents-sdk).
+Call `instrument_openai_agents` / `instrumentOpenAIAgents` once, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. For non-eval app wiring, use the [OpenAI Agents SDK](/features/integrations#openai-agents-sdk) integration.
 
 <CodeGroup>
 ```python Python
@@ -274,7 +274,7 @@ npm install promptlayer @anthropic-ai/claude-agent-sdk
 ```
 </CodeGroup>
 
-Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. App-wide setup: [Claude Code](/features/integrations#claude-code).
+Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. For non-eval app wiring, use the [Claude Code](/features/integrations#claude-code) integration.
 
 <CodeGroup>
 ```python Python
@@ -391,7 +391,7 @@ Install:
 npm install promptlayer ai @ai-sdk/openai zod
 ```
 
-Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. See [Vercel AI SDK integration](/features/integrations#vercel-ai-sdk) for app-wide OTEL setup outside evals.
+Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. Outside evals, register OTEL with the [Vercel AI SDK](/features/integrations#vercel-ai-sdk) integration.
 
 ```typescript
 // evals/vercel_weather.eval.ts
@@ -524,7 +524,7 @@ evaluate(
 )
 ```
 
-`evaluate(...)` also always enables tracing on the client it creates, so tool spans nest under each eval case. See [LiteLLM](/features/integrations#litellm) and the [LiteLLM PromptLayer callback docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
+`evaluate(...)` also always enables tracing on the client it creates, so tool spans nest under each eval case. More on callbacks in [LiteLLM](/features/integrations#litellm) and the [LiteLLM PromptLayer docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
   </Tab>
 
   <Tab title="LangChain">
@@ -603,7 +603,7 @@ await evaluate("langchain-weather-eval", {
 });
 ```
 
-Reuse your real LangChain entrypoint as `runner` when you have one. Full OTEL registration: [LangChain / LangSmith](/features/integrations#langchain-/-langsmith).
+Reuse your real LangChain entrypoint as `runner` when you have one. Register OTEL once for the app using [LangChain / LangSmith](/features/integrations#langchain-/-langsmith).
   </Tab>
 
   <Tab title="Pydantic AI">
@@ -664,7 +664,7 @@ evaluate(
 )
 ```
 
-App-wide setup: [Pydantic AI](/features/integrations#pydantic-ai).
+For non-eval app wiring, use the [Pydantic AI](/features/integrations#pydantic-ai) integration.
   </Tab>
 
   <Tab title="OpenClaw">
@@ -697,7 +697,7 @@ evaluate(
 )
 ```
 
-Plugin details: [OpenClaw](/features/integrations#openclaw).
+Install and configure the plugin with the [OpenClaw](/features/integrations#openclaw) integration.
   </Tab>
 </Tabs>
 

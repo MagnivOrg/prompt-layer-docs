@@ -1,24 +1,13 @@
 ---
 title: "Scorers"
-description: "Typed scorecard helpers for SDK evaluate(...)."
+description: "Add scorecard checks to evaluate(...) with typed helpers."
 sidebarTitle: "Scorers"
 icon: "clipboard-check"
 ---
 
-Scorers are scorecard steps on the experiment sheet.
+Pass scorers into `evaluate(...)` to grade each case. On the experiment sheet they show up as scorecard evaluators (Contains, Trajectory, and the rest).
 
-**Source of truth for scorer behavior** (what Compare, Contains, Trajectory, and the rest mean, and how scorecards aggregate):
-
-- [Scorecards](/features/tables/scorecards)
-- [Column Types](/features/tables/column-types)
-
-This page covers the **SDK helpers** that create those steps from `evaluate(...)`. Differences vs the dashboard:
-
-- Prefer typed helpers (`compare_scorer` / `compareScorer`, …) or a named function (custom code)
-- You can also pass `column(title, type, config)` as a scorer
-- Reference columns by **title** (`"Output"`, `"Expected"`, `"Trace"`, or a processing column)
-- Built-ins: `Input`, `Expected`, `Output`, and when needed `Trace` / `Expected Trace`
-- Python uses snake_case; JavaScript uses camelCase for the same options
+Thresholds, weights, and the overall score work the same as [Scorecards](/features/tables/scorecards) in Tables. The underlying check types are documented in [Column Types](/features/tables/column-types).
 
 ## Weight, Required, and Thresholds
 
@@ -141,7 +130,7 @@ await evaluate("support-bot", {
 
 ## Compare
 
-Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`. Type behavior: [Column Types](/features/tables/column-types).
+Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`. Matching rules match the Compare type in [Column Types](/features/tables/column-types).
 
 <CodeGroup>
 ```python Python
@@ -570,7 +559,7 @@ await evaluate("llm-assert-demo", {
 
 ## Trajectory
 
-Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — see [Runner and tracing](/sdks/evals/agent-tracing). Stack examples: [quickstart](/sdks/evals/quickstart).
+Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — emit them with a framework helper or `traceTool` as described in [Runner and tracing](/sdks/evals/agent-tracing), or copy a harness from the [Quickstart](/sdks/evals/quickstart).
 
 Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `expected_source` / `expectedSource` (usually `"Expected Trace"`).
 

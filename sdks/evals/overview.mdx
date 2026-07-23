@@ -1,78 +1,115 @@
 ---
 title: "Overview"
-description: "Run evaluate(...) in code with a dataset, runner, and scorers. Results land in PromptLayer Tables."
+description: "Eval agents from your repo — tool trajectories, final answers, and CI gates. Results land in PromptLayer Tables."
 sidebarTitle: "Overview"
 icon: "book"
 ---
 
-SDK evals measure a function under test from your code. Each eval has three parts:
+SDK evals run your **agent** against a dataset and score each case. Typical checks: Did it call the right tools? Did the final answer look right?
 
-- **Dataset** — cases with `input`, plus optional `expected` (expected output) and `expected_trace` / `expectedTrace` (Trajectory config)
-- **Runner** — any callable that takes in an `input` and returns a final value
-- **Scorers** — scorecard checks (Contains, Compare, Trajectory, and more)
+Each eval has three parts:
+
+- **Dataset** — user messages (and optional expected output / expected tool trajectory)
+- **Runner** — your agent harness: OpenAI Agents, Claude, LangChain, or any callable that takes `input` and returns a final value
+- **Scorers** — scorecard checks such as Trajectory and Contains
 
 ## Why SDK evals
 
-Use SDK evals when the system under test lives in code and you want evals as part of your **testing infrastructure** — local runs, PR checks, and CI — not only experiments you assemble in the dashboard.
+Use SDK evals to treat agent quality like tests — local runs, PR checks, and CI — not only sheets you assemble in the dashboard.
 
-- Gate agent or prompt changes with `passing_score` / `passingScore` before merge
-- Reuse your real agent entrypoint as the `runner` (any framework or a plain function)
-- Land every run on a [Table](/features/tables/overview) experiment sheet you can open in PromptLayer
+- Fail the build when tool use or answers regress (`passing_score` / `passingScore`)
+- Point the `runner` at the same agent you ship
+- Open every run on a [Table](/features/tables/overview) experiment sheet (traces, outputs, scorecard)
 
-Use [Tables](/features/tables/overview) in the dashboard when you want to build sheets without a code runner. SDK runs still create Table experiment sheets.
+Prefer [Tables](/features/tables/overview) in the dashboard when you are iterating on prompts without an agent harness. SDK runs still create Table experiment sheets.
 
 ## How a run works
 
 Define `evaluate(...)` in a file, then run `promptlayer eval run <path>`. Each case runs under an `Eval: <name>` span; results land on a Table experiment sheet.
 
+This OpenAI Agents example instruments the harness, uses the agent as the `runner`, and scores both tool trajectory and final output. The [Quickstart](/sdks/evals/quickstart) has the same pattern for Claude, Vercel AI, LangChain, and other stacks.
+
 <CodeGroup>
 ```python Python
-from openai import OpenAI
-from promptlayer import evaluate, contains_scorer
+# evals/weather_agent.eval.py
+from agents import Agent, Runner, function_tool
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+from promptlayer.integrations.openai_agents import instrument_openai_agents
 
-client = OpenAI()
+instrument_openai_agents()
 
-def run_llm(user_message: str) -> str:
-    completion = client.chat.completions.create(
-        model="gpt-5.6",
-        messages=[
-            {"role": "system", "content": "Answer in one short sentence."},
-            {"role": "user", "content": str(user_message)},
-        ],
-    )
-    return completion.choices[0].message.content or ""
+@function_tool
+def get_weather(city: str) -> str:
+    """Return demo weather for a city."""
+    return f"{city} is 72F and sunny."
+
+agent = Agent(
+    name="Weather agent",
+    instructions="Use get_weather, then answer in one short sentence.",
+    model="gpt-5.6",
+    tools=[get_weather],
+)
+
+def run_agent(user_message: str) -> str:
+    result = Runner.run_sync(agent, user_message)
+    return str(result.final_output)
 
 evaluate(
-    "support-reply-eval",
-    dataset=[{"input": "How do I reset my password?"}],
-    runner=run_llm,
-    scorers=[contains_scorer(source="Output", value="reset")],
-    passing_score=0.8,
+    "weather-agent-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=1.0,
 )
 ```
 
 ```javascript JavaScript
-import OpenAI from "openai";
-import { evaluate, containsScorer } from "promptlayer";
+// evals/weather_agent.eval.ts
+import { Agent, run, tool } from "@openai/agents";
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { z } from "zod";
 
-const client = new OpenAI();
+await instrumentOpenAIAgents();
 
-async function runLlm(userMessage) {
-  const completion = await client.chat.completions.create({
-    model: "gpt-5.6",
-    messages: [
-      { role: "system", content: "Answer in one short sentence." },
-      { role: "user", content: String(userMessage) },
-    ],
-  });
-  return completion.choices[0].message.content ?? "";
+const getWeather = tool({
+  name: "get_weather",
+  description: "Return demo weather for a city.",
+  parameters: z.object({
+    city: z.string(),
+  }),
+  execute: async ({ city }) => `${city} is 72F and sunny.`,
+});
+
+const agent = new Agent({
+  name: "Weather agent",
+  instructions: "Use get_weather, then answer in one short sentence.",
+  model: "gpt-5.6",
+  tools: [getWeather],
+});
+
+async function runAgent(userMessage) {
+  const result = await run(agent, userMessage);
+  return String(result.finalOutput);
 }
 
-await evaluate("support-reply-eval", {
-  dataset: [{ input: "How do I reset my password?" }],
-  runner: runLlm,
-  scorers: [containsScorer({ source: "Output", value: "reset" })],
-  passingScore: 0.8,
+await evaluate("weather-agent-eval", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["get_weather"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+  passingScore: 1.0,
 });
 ```
 </CodeGroup>

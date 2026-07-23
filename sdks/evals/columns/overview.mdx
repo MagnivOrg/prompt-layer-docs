@@ -1,20 +1,13 @@
 ---
 title: "Columns"
-description: "Processing columns for SDK evaluate(...) — column(title, ColumnType, config)."
+description: "Add processing columns to evaluate(...) with column(...)."
 sidebarTitle: "Columns"
 icon: "table-columns"
 ---
 
-Processing columns transform row data before scorers run.
+Pass columns into `evaluate(...)` to transform row data before scorers run. On the experiment sheet they show up as computed columns (Prompt Template, JSON Path, and the rest).
 
-**Source of truth for column type behavior and configs:** [Column Types](/features/tables/column-types) (and [Columns](/features/tables/columns) for the Tables UI).
-
-This page covers the **SDK API** — `column(title, ColumnType.<TYPE>, config)`. Differences vs the dashboard:
-
-- There are no typed `*_column` helpers; use `column(...)` with `ColumnType`
-- Do not declare processing columns as `TEXT` — `Input` / `Expected` / `Output` are built-ins
-- For scorecard checks, use [typed scorer helpers](/sdks/evals/scorers/overview) instead of scorer column types here
-- Config keys generally match Tables; Python helpers use snake_case field names in `config` where the backend expects them
+These use the same computed types as Tables [Column Types](/features/tables/column-types); you can also add them from the [Columns](/features/tables/columns) UI.
 
 ## Prompt Template
 

@@ -65,7 +65,7 @@ await evaluate("support-reply-eval", {
 ```
 </CodeGroup>
 
-Python async runners use `aevaluate`. JavaScript uses async `evaluate`. Stack examples: [Quickstart](/sdks/evals/quickstart).
+Python async runners use `aevaluate`. JavaScript uses async `evaluate`. For agent-harness examples (OpenAI Agents, Claude, LangChain, and more), start from the [Quickstart](/sdks/evals/quickstart).
 
 ## Dataset
 
@@ -73,20 +73,20 @@ Cases feed the runner and scorers:
 
 - `input` — required; passed to the `runner`
 - `expected` — expected **output** (Contains, Compare, …)
-- `expected_trace` / `expectedTrace` — Trajectory **config** (which tools should run), not the answer text
+- `expected_trace` / `expectedTrace` — optional; only needed when you use [Trajectory](/sdks/evals/scorers/overview#trajectory). Trajectory **config** (which tools should run), not the answer text
 
-You can also point `dataset` at a dashboard Table. Details: [Datasets](/sdks/evals/datasets).
+You can also point `dataset` at a dashboard Table — covered in [Datasets](/sdks/evals/datasets).
 
 ## Runner
 
 The `runner` is any callable that takes in an `input` and returns a final value (not a stream). There is no framework allowlist.
 
-For Trajectory, tools must show up as `Tool: <name>` spans on the imported Trace — via a framework helper or `traceTool`. Details: [Runner and tracing](/sdks/evals/agent-tracing).
+For Trajectory, tools must show up as `Tool: <name>` spans on the imported Trace — via a framework helper or `traceTool`, as described in [Runner and tracing](/sdks/evals/agent-tracing).
 
 ## Scorers and columns
 
-- **Scorers** become scorecard steps on the experiment sheet. SDK helpers: [Scorers](/sdks/evals/scorers/overview). Behavior of each type: [Scorecards](/features/tables/scorecards) and [Column Types](/features/tables/column-types).
-- **Columns** are optional processing steps before scorers. SDK API: [Columns](/sdks/evals/columns/overview). Type reference: [Column Types](/features/tables/column-types).
+- **Scorers** become scorecard steps on the experiment sheet. Declare them with the [Scorers](/sdks/evals/scorers/overview) helpers; how they roll up is the same as [Scorecards](/features/tables/scorecards) and [Column Types](/features/tables/column-types) in Tables.
+- **Columns** are optional processing steps before scorers. Declare them with [Columns](/sdks/evals/columns/overview); type behavior matches [Column Types](/features/tables/column-types).
 
 ## Other `evaluate(...)` options
 
@@ -108,4 +108,4 @@ Do **not** pass top-level `sheet_id` / `sheetId`. Use `dataset.sheet_id` / `data
 
 ## What you get back
 
-On success, the SDK creates (or reuses) a Table, writes a dedicated experiment sheet, configures your scorecard, and returns an `EvalResult` with a dashboard URL. See [Results and failures](/sdks/evals/results-and-failures).
+On success, the SDK creates (or reuses) a Table, writes a dedicated experiment sheet, configures your scorecard, and returns an `EvalResult` with a dashboard URL — including how failures and `passing_score` work in [Results and failures](/sdks/evals/results-and-failures).
