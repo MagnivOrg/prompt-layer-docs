@@ -1,0 +1,63 @@
+---
+title: "Building an eval"
+description: "Reference for evaluate(...): dataset, runner, scorers, and every option."
+sidebarTitle: "Building an eval"
+icon: "pen-to-square"
+---
+
+An eval file calls `evaluate(...)`, then you run it:
+
+```bash
+promptlayer eval run path/to/your.eval.py
+```
+
+Use `evaluate` for sync runners and `aevaluate` (Python) for async runners; JavaScript always uses async `evaluate`. For full harness setups (OpenAI Agents, Claude, LangChain, and more), see the [Quickstart](/sdks/evals/quickstart).
+
+## `evaluate(...)` options
+
+`name` is the first positional argument; everything else is keyword-only.
+
+| Option (Python / JS) | Required | Default | Purpose |
+| --- | --- | --- | --- |
+| `name` | ✅ | — | Experiment name; also the `Eval: <name>` span. |
+| `dataset` | ✅ | — | Cases fed to the runner and scorers. See [Dataset](#dataset). |
+| `runner` | ✅ | — | The agent under test. See [Runner](#runner). |
+| `scorers` | ✅ | — | Scorecard checks. See [Columns and scorers](#columns-and-scorers). |
+| `columns` | — | `None` | Processing steps applied before scorers. See [Columns and scorers](#columns-and-scorers). |
+| `passing_score` / `passingScore` | — | `None` | Fail the run below this bar. See [Results and failures](/sdks/evals/results-and-failures). |
+| `max_concurrency` / `maxConcurrency` | — | `1` | Run cases in parallel. |
+| `include_failure_examples` / `includeFailureExamples` | — | `false` | Print failing rows in the CLI output. |
+| `table_id` / `tableId` | — | `None` | Reuse an existing Table instead of creating one. |
+| `folder_id` / `folderId` | — | `None` | Folder for a newly created Table. |
+| `experiment_name` / `experimentName` | — | auto | Name of the experiment sheet. |
+| `api_key` / `apiKey` | — | env | Auth; prefer `PROMPTLAYER_API_KEY` for the CLI. |
+| `base_url` / `baseURL` | — | env | Override the API base URL. |
+
+<Warning>
+Do **not** pass a top-level `sheet_id` / `sheetId`. To read cases from a dashboard sheet, use `dataset.sheet_id` / `dataset.sheetId` instead.
+</Warning>
+
+## Dataset
+
+Cases feed the runner and scorers. [Datasets](/sdks/evals/datasets) covers inline cases and dashboard Tables. Each case supports:
+
+| Field | Required | Purpose |
+| --- | --- | --- |
+| `input` | ✅ | Passed to the `runner`. |
+| `expected` | — | Expected **output** (used by Contains, Compare, …). |
+| `expected_trace` / `expectedTrace` | — | [Trajectory](/sdks/evals/scorers/overview#trajectory) config — which tools should run, not the answer text. |
+
+## Runner
+
+The `runner` is any callable that takes an `input` and returns a final value (not a stream) — no framework allowlist.
+
+For Trajectory, tools must appear as `Tool: <name>` spans on the imported Trace; use a framework helper or [`traceTool`](/running-requests/traces#tracing-tools). The runner and tool-span rules live on [Runner](/sdks/evals/agent-tracing).
+
+## Columns and scorers
+
+- **Columns** are optional processing steps that run before scorers. Declare them with [Columns](/sdks/evals/columns/overview); types match [Column Types](/features/tables/column-types).
+- **Scorers** become scorecard steps on the experiment sheet. Declare them with [Scorers](/sdks/evals/scorers/overview). Rollup matches [Scorecards](/features/tables/scorecards); check types match [Column Types](/features/tables/column-types).
+
+## What you get back
+
+On success, the SDK creates (or reuses) a Table, writes a dedicated experiment sheet, configures your scorecard, and returns an `EvalResult` with a dashboard URL. For failure handling and `passing_score`, see [Results and failures](/sdks/evals/results-and-failures).

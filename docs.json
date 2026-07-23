@@ -56,7 +56,35 @@
               "features/tables/migrate-from-evaluations-and-datasets"
             ]
           },
-
+          {
+            "group": "SDK Evals",
+            "tag": "New",
+            "icon": "vial-circle-check",
+            "pages": [
+              "sdks/evals/overview",
+              {
+                "group": "Writing evals",
+                "icon": "screwdriver-wrench",
+                "pages": [
+                  "sdks/evals/quickstart",
+                  "sdks/evals/building-an-eval",
+                  "sdks/evals/datasets",
+                  "sdks/evals/agent-tracing",
+                  "sdks/evals/columns/overview",
+                  "sdks/evals/scorers/overview"
+                ]
+              },
+              {
+                "group": "Running evals",
+                "icon": "play",
+                "pages": [
+                  "sdks/evals/cli-and-ci",
+                  "sdks/evals/results-and-failures",
+                  "sdks/evals/concurrency"
+                ]
+              }
+            ]
+          },
           {
             "group": "Observability",
             "icon": "chart-column",
@@ -484,6 +512,18 @@
   },
   "redirects": [
     {
+      "source": "/sdks/evals/setup-with-ai",
+      "destination": "/sdks/evals/quickstart"
+    },
+    {
+      "source": "/sdks/evals/agent-runner",
+      "destination": "/sdks/evals/agent-tracing"
+    },
+    {
+      "source": "/sdks/evals/entrypoints",
+      "destination": "/sdks/evals/building-an-eval"
+    },
+    {
       "source": "/",
       "destination": "/overview"
     },
@@ -522,6 +562,98 @@
     {
       "source": "/features/prompt-registry",
       "destination": "/features/prompt-registry/overview"
+    },
+    {
+      "source": "/sdks/evals/python-quickstart",
+      "destination": "/sdks/evals/quickstart"
+    },
+    {
+      "source": "/sdks/evals/javascript-quickstart",
+      "destination": "/sdks/evals/quickstart"
+    },
+    {
+      "source": "/sdks/evals/columns/all-types",
+      "destination": "/sdks/evals/columns/overview"
+    },
+    {
+      "source": "/sdks/evals/columns/text",
+      "destination": "/sdks/evals/columns/overview#text"
+    },
+    {
+      "source": "/sdks/evals/columns/number",
+      "destination": "/sdks/evals/columns/overview"
+    },
+    {
+      "source": "/sdks/evals/columns/boolean",
+      "destination": "/sdks/evals/columns/overview"
+    },
+    {
+      "source": "/sdks/evals/columns/prompt-template",
+      "destination": "/sdks/evals/columns/overview#prompt-template"
+    },
+    {
+      "source": "/sdks/evals/columns/json-path",
+      "destination": "/sdks/evals/columns/overview#json-path"
+    },
+    {
+      "source": "/sdks/evals/columns/coalesce",
+      "destination": "/sdks/evals/columns/overview#coalesce"
+    },
+    {
+      "source": "/sdks/evals/columns/composition",
+      "destination": "/sdks/evals/columns/overview#composition"
+    },
+    {
+      "source": "/sdks/evals/columns/cosine-similarity",
+      "destination": "/sdks/evals/columns/overview#cosine-similarity"
+    },
+    {
+      "source": "/sdks/evals/columns/ai-data-extraction",
+      "destination": "/sdks/evals/columns/overview#ai-data-extraction"
+    },
+    {
+      "source": "/sdks/evals/columns/for-loop",
+      "destination": "/sdks/evals/columns/overview#for-loop"
+    },
+    {
+      "source": "/sdks/evals/columns/while-loop",
+      "destination": "/sdks/evals/columns/overview#while-loop"
+    },
+    {
+      "source": "/sdks/evals/columns/trace",
+      "destination": "/sdks/evals/agent-tracing"
+    },
+    {
+      "source": "/sdks/evals/scorers/compare",
+      "destination": "/sdks/evals/scorers/overview#compare"
+    },
+    {
+      "source": "/sdks/evals/scorers/contains",
+      "destination": "/sdks/evals/scorers/overview#contains"
+    },
+    {
+      "source": "/sdks/evals/scorers/regex",
+      "destination": "/sdks/evals/scorers/overview#regex"
+    },
+    {
+      "source": "/sdks/evals/scorers/count",
+      "destination": "/sdks/evals/scorers/overview#count"
+    },
+    {
+      "source": "/sdks/evals/scorers/assert-valid",
+      "destination": "/sdks/evals/scorers/overview#assert-valid"
+    },
+    {
+      "source": "/sdks/evals/scorers/llm-assertion",
+      "destination": "/sdks/evals/scorers/overview#llm-assertion"
+    },
+    {
+      "source": "/sdks/evals/scorers/trajectory",
+      "destination": "/sdks/evals/scorers/overview#trajectory"
+    },
+    {
+      "source": "/sdks/evals/scorers/custom-code",
+      "destination": "/sdks/evals/scorers/overview#custom-code"
     }
   ]
 }

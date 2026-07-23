@@ -129,7 +129,11 @@ If your sheet uses legacy scoring, migrate in place and keep current integration
 
 Some legacy score configurations cannot be converted automatically, including custom scoring code, missing score columns, and unsupported column types. Check `skipped` before deleting legacy score configuration.
 
-## Python SDK example
+## SDK evals
+
+To create experiment scorecards from code with `evaluate(...)`, use [SDK Evals](/sdks/evals/overview).
+
+## Manual scorecard Python SDK example
 
 ```python
 from promptlayer import PromptLayer

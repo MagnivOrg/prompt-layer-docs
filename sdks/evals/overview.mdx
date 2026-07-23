@@ -1,0 +1,128 @@
+---
+title: "Overview"
+description: "Eval agents using the PromptLayer SDK"
+sidebarTitle: "Overview"
+icon: "book"
+---
+
+In addition to being able to evaluate your agent via our dashboard, you can create an evaluation directly in code with our SDK.
+
+Each eval has four parts:
+- **Dataset** — user messages (and optional expected output / expected tool trajectory)
+- **Runner** — your agent harness (OpenAI Agents, Claude, LangChain, or any callable that takes `input` and returns a final value)
+- **Columns** - optional steps to manipulate your dataset or agent trace
+- **Scorers** — scorecard checks such as Trajectory and Contains
+
+## Why use SDK evals
+
+Use SDK evals when your agent needs to run on your own infrastructure. For example when you need access to internal data, actual tool execution code, and custom harnesses.
+
+This also makes evals a natural fit for CI/CD: run `promptlayer eval run` in your pipeline to catch trajectory or output regressions before they ship, while every result still lands on a PromptLayer Table for you to inspect.
+
+## How a run works
+
+Using our `evaluate` method, wire your dataset, runner, and scorers together in one file, then kick it off with `promptlayer eval run <path>`. Each case runs under its own `Eval: <name>` span, and results stream to a Table sheet on our dashboard for comparison.
+
+The OpenAI Agents example below instruments the harness, uses the agent as the `runner`, and scores both tool trajectory and final output. See the [Quickstart](/sdks/evals/quickstart) for the same pattern across Claude, Vercel AI, LangChain, and other stacks.
+
+<CodeGroup>
+```python Python
+# evals/weather_agent.eval.py
+from agents import Agent, Runner, function_tool
+from promptlayer import evaluate, contains_scorer, trajectory_scorer
+from promptlayer.integrations.openai_agents import instrument_openai_agents
+
+instrument_openai_agents()
+
+@function_tool
+def get_weather(city: str) -> str:
+    """Return demo weather for a city."""
+    return f"{city} is 72F and sunny."
+
+agent = Agent(
+    name="Weather agent",
+    instructions="Use get_weather, then answer in one short sentence.",
+    model="gpt-5.6",
+    tools=[get_weather],
+)
+
+def run_agent(user_message: str) -> str:
+    result = Runner.run_sync(agent, user_message)
+    return str(result.final_output)
+
+evaluate(
+    "weather-agent-eval",
+    dataset=[{"input": "What is the weather in Tokyo?"}],
+    runner=run_agent,
+    scorers=[
+        trajectory_scorer(
+            accepted_scenarios=[["get_weather"]],
+            mode="non_strict",
+        ),
+        contains_scorer(source="Output", value="72"),
+    ],
+    passing_score=1.0,
+)
+```
+
+```javascript JavaScript
+// evals/weather_agent.eval.ts
+import { Agent, run, tool } from "@openai/agents";
+import { instrumentOpenAIAgents } from "promptlayer/openai-agents";
+import { evaluate, containsScorer, trajectoryScorer } from "promptlayer";
+import { z } from "zod";
+
+await instrumentOpenAIAgents();
+
+const getWeather = tool({
+  name: "get_weather",
+  description: "Return demo weather for a city.",
+  parameters: z.object({
+    city: z.string(),
+  }),
+  execute: async ({ city }) => `${city} is 72F and sunny.`,
+});
+
+const agent = new Agent({
+  name: "Weather agent",
+  instructions: "Use get_weather, then answer in one short sentence.",
+  model: "gpt-5.6",
+  tools: [getWeather],
+});
+
+async function runAgent(userMessage) {
+  const result = await run(agent, userMessage);
+  return String(result.finalOutput);
+}
+
+await evaluate("weather-agent-eval", {
+  dataset: [{ input: "What is the weather in Tokyo?" }],
+  runner: runAgent,
+  scorers: [
+    trajectoryScorer({
+      acceptedScenarios: [["get_weather"]],
+      mode: "non_strict",
+    }),
+    containsScorer({ source: "Output", value: "72" }),
+  ],
+  passingScore: 1.0,
+});
+```
+</CodeGroup>
+
+## Where to go next
+
+<CardGroup cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/sdks/evals/quickstart">
+    Scaffold with AI, or copy an example for a common agent stack.
+  </Card>
+  <Card title="Building an eval" icon="pen-to-square" href="/sdks/evals/building-an-eval">
+    Dataset, runner, scorers, and the rest of `evaluate(...)`.
+  </Card>
+  <Card title="Scorers" icon="clipboard-check" href="/sdks/evals/scorers/overview">
+    Typed helpers: Trajectory, Contains, Compare, and more.
+  </Card>
+  <Card title="CLI and CI" icon="terminal" href="/sdks/evals/cli-and-ci">
+    Run files locally and fail CI on a pass bar.
+  </Card>
+</CardGroup>

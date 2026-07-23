@@ -1,0 +1,35 @@
+---
+title: "CLI and CI"
+description: "Run evaluate(...) files locally and fail CI when scores miss your bar."
+sidebarTitle: "CLI and CI"
+icon: "terminal"
+---
+
+Run eval files with:
+
+```bash
+promptlayer eval run path/to/evals
+```
+
+Pass a file or a directory. The CLI picks up `*.eval.py` and `*.eval.ts` (plus common JS variants).
+
+Set `PROMPTLAYER_API_KEY` in the environment before you run.
+
+## Fail CI on a low score
+
+Set `passing_score` / `passingScore` on `evaluate(...)`. If the overall score is below that bar, the process exits non-zero and CI fails.
+
+```bash
+export PROMPTLAYER_API_KEY=...
+promptlayer eval run ./evals
+```
+
+## File layout
+
+```text
+evals/
+  support.eval.py
+  weather_agent.eval.ts
+```
+
+Put a top-level `evaluate(...)` (Python also has `aevaluate`) in each file. The CLI skips common junk folders such as `.git`, `.venv`, and `node_modules`.
