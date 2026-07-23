@@ -11,9 +11,19 @@ SDK evals measure a function under test from your code. Each eval has three part
 - **Runner** — any callable that takes in an `input` and returns a final value
 - **Scorers** — scorecard checks (Contains, Compare, Trajectory, and more)
 
+## Why SDK evals
+
+Use SDK evals when the system under test lives in code and you want evals as part of your **testing infrastructure** — local runs, PR checks, and CI — not only experiments you assemble in the dashboard.
+
+- Gate agent or prompt changes with `passing_score` / `passingScore` before merge
+- Reuse your real agent entrypoint as the `runner` (any framework or a plain function)
+- Land every run on a [Table](/features/tables/overview) experiment sheet you can open in PromptLayer
+
+Use [Tables](/features/tables/overview) in the dashboard when you want to build sheets without a code runner. SDK runs still create Table experiment sheets.
+
 ## How a run works
 
-Define `evaluate(...)` in a file, then run `promptlayer eval run <path>`. Each case runs under an `Eval: <name>` span; results land on a [Table](/features/tables/overview) experiment sheet.
+Define `evaluate(...)` in a file, then run `promptlayer eval run <path>`. Each case runs under an `Eval: <name>` span; results land on a Table experiment sheet.
 
 <CodeGroup>
 ```python Python
@@ -73,8 +83,8 @@ await evaluate("support-reply-eval", {
   <Card title="Quickstart" icon="rocket" href="/sdks/evals/quickstart">
     Scaffold with AI, or copy an example for a common agent stack.
   </Card>
-  <Card title="Runner and tracing" icon="diagram-project" href="/sdks/evals/agent-tracing">
-    Runner contract, `Tool:` spans, and Trace import.
+  <Card title="Building an eval" icon="pen-to-square" href="/sdks/evals/building-an-eval">
+    Dataset, runner, scorers, and the rest of `evaluate(...)`.
   </Card>
   <Card title="Scorers" icon="clipboard-check" href="/sdks/evals/scorers/overview">
     Typed helpers: Trajectory, Contains, Compare, and more.
@@ -83,5 +93,3 @@ await evaluate("support-reply-eval", {
     Run files locally and fail CI on a pass bar.
   </Card>
 </CardGroup>
-
-Use SDK evals when the system under test lives in code. Use [Tables](/features/tables/overview) in the dashboard when you want to build sheets without a runner — SDK runs still create Table experiment sheets you can open in the UI.

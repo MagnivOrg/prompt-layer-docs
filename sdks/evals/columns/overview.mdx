@@ -5,9 +5,16 @@ sidebarTitle: "Columns"
 icon: "table-columns"
 ---
 
-Processing columns transform row data before scorers run. Build them with `column(title, ColumnType.<TYPE>, config)`.
+Processing columns transform row data before scorers run.
 
-For scorecard checks, use [typed scorer helpers](/sdks/evals/scorers/overview). Full product catalog: [Tables column types](/features/tables/column-types).
+**Source of truth for column type behavior and configs:** [Column Types](/features/tables/column-types) (and [Columns](/features/tables/columns) for the Tables UI).
+
+This page covers the **SDK API** — `column(title, ColumnType.<TYPE>, config)`. Differences vs the dashboard:
+
+- There are no typed `*_column` helpers; use `column(...)` with `ColumnType`
+- Do not declare processing columns as `TEXT` — `Input` / `Expected` / `Output` are built-ins
+- For scorecard checks, use [typed scorer helpers](/sdks/evals/scorers/overview) instead of scorer column types here
+- Config keys generally match Tables; Python helpers use snake_case field names in `config` where the backend expects them
 
 ## Prompt Template
 
@@ -548,11 +555,3 @@ column("Refine until done", ColumnType.WHILE_LOOP, {
 | `max_iterations` | no | Safety cap |
 | `return_all_outputs` | no | Default `false` |
 | `variable_mappings` | no | Default `{}` |
-
-## Trace
-
-You do not create `ColumnType.TRACE` with `column(...)`. When a scorer references Trace (Trajectory's default is `"Trace"`), the SDK scaffolds a reserved `Trace` column and imports each case's span tree.
-
-Trajectory scores spans named `Tool: <name>`. See [Runner and tracing](/sdks/evals/agent-tracing).
-
-Reserved titles: `Trace`, `Trace.price`, `Trace.latency`, `Trace link`, `total_trace_time`, `total_price`, `Expected Trace`.

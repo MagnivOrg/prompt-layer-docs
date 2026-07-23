@@ -67,11 +67,17 @@
                 "icon": "screwdriver-wrench",
                 "pages": [
                   "sdks/evals/quickstart",
-                  "sdks/evals/agent-tracing",
-                  "sdks/evals/datasets",
-                  "sdks/evals/entrypoints",
-                  "sdks/evals/scorers/overview",
-                  "sdks/evals/columns/overview"
+                  {
+                    "group": "Building an eval",
+                    "icon": "pen-to-square",
+                    "pages": [
+                      "sdks/evals/building-an-eval",
+                      "sdks/evals/datasets",
+                      "sdks/evals/agent-tracing",
+                      "sdks/evals/scorers/overview",
+                      "sdks/evals/columns/overview"
+                    ]
+                  }
                 ]
               },
               {
@@ -520,6 +526,10 @@
       "destination": "/sdks/evals/agent-tracing"
     },
     {
+      "source": "/sdks/evals/entrypoints",
+      "destination": "/sdks/evals/building-an-eval"
+    },
+    {
       "source": "/",
       "destination": "/overview"
     },
@@ -617,7 +627,7 @@
     },
     {
       "source": "/sdks/evals/columns/trace",
-      "destination": "/sdks/evals/columns/overview#trace"
+      "destination": "/sdks/evals/agent-tracing"
     },
     {
       "source": "/sdks/evals/scorers/compare",

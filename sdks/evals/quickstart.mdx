@@ -7,7 +7,7 @@ icon: "rocket"
 
 Get a runnable eval file in your repo, then run `promptlayer eval run <path>`.
 
-The `runner` is any callable that takes in an `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — see [Runner and tracing](/sdks/evals/agent-tracing).
+The `runner` is any callable that takes in an `input` and returns a final value. The stack tabs below are **examples**, not an allowlist — see [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
 
 ## Set up with AI
 
@@ -715,14 +715,56 @@ promptlayer eval run ./evals/weather_agent.eval.py
 
 ## What you get
 
-Trajectory checks tool names; Contains checks the final answer. The run creates a Table experiment sheet (`Input` / `Output` / `Trace` when needed) and prints a dashboard URL. With `passing_score` / `passingScore`, failures raise `EvaluationFailedError` and the CLI exits non-zero.
+The CLI prints progress, per-scorer results, and a dashboard URL:
+
+```text
+  • Initializing PromptLayer client
+  • Resolving Table
+  • Preparing experiment sheet
+  • Loading dataset
+  • Setting up columns
+  • Setting up scorers
+  • Running cases (1 case, concurrency=1)
+    ✓ runners 1/1
+  • Importing traces and writing rows
+  • Scoring rows
+  ✓ score 1
+Evaluation Results:
+┌────────────┬────────────┐
+│ Scorer     │     Result │
+├────────────┼────────────┤
+│ Trajectory │ 1/1 (100%) │
+│ Contains   │ 1/1 (100%) │
+└────────────┴────────────┘
+
+  ↗ https://dashboard.promptlayer.com/workspace/.../smart-tables/...
+```
+
+Each run also writes a Table experiment sheet with `Input`, `Output`, and (when you score traces) a `Trace` group with price and latency. The score panel shows each scorer — here Trajectory on Trace and Contains on Output — plus the overall pass rate.
+
+<Frame>
+  <img
+    src="/images/evals/weather-agent-eval-results.png"
+    alt="weather-agent-eval experiment sheet showing Input, Output, Trace, and 100% pass for Trajectory and Contains"
+  />
+</Frame>
 
 ## Next
 
-| Goal | Page |
-| --- | --- |
-| Runner / Trace / `Tool:` spans | [Runner and tracing](/sdks/evals/agent-tracing) |
-| Scorers | [Scorers](/sdks/evals/scorers/overview) |
-| Table as dataset | [Datasets](/sdks/evals/datasets) |
-| CI | [CLI and CI](/sdks/evals/cli-and-ci) |
-| App-wide OTEL | [Integrations](/features/integrations) |
+<CardGroup cols={2}>
+  <Card title="Building an eval" icon="pen-to-square" href="/sdks/evals/building-an-eval">
+    Anatomy of `evaluate(...)` — dataset, runner, scorers, and options.
+  </Card>
+  <Card title="Datasets" icon="database" href="/sdks/evals/datasets">
+    Inline cases or a dashboard Table as the dataset.
+  </Card>
+  <Card title="Runner" icon="diagram-project" href="/sdks/evals/agent-tracing">
+    Runner contract, `Tool:` spans, and `traceTool`.
+  </Card>
+  <Card title="Scorers" icon="clipboard-check" href="/sdks/evals/scorers/overview">
+    Typed helpers: Trajectory, Contains, Compare, and more.
+  </Card>
+  <Card title="CLI and CI" icon="terminal" href="/sdks/evals/cli-and-ci">
+    Run files locally and fail CI on a pass bar.
+  </Card>
+</CardGroup>

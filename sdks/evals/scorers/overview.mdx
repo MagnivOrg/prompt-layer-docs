@@ -5,13 +5,24 @@ sidebarTitle: "Scorers"
 icon: "clipboard-check"
 ---
 
-Scorers are scorecard steps on the experiment sheet. Prefer the typed helpers below. You can also pass a named function (custom code) or `column(title, type, config)`.
+Scorers are scorecard steps on the experiment sheet.
 
-Reference columns by **title** (`"Output"`, `"Expected"`, `"Trace"`, or a processing column). Built-ins: `Input`, `Expected`, `Output`, and when needed `Trace` / `Expected Trace`.
+**Source of truth for scorer behavior** (what Compare, Contains, Trajectory, and the rest mean, and how scorecards aggregate):
+
+- [Scorecards](/features/tables/scorecards)
+- [Column Types](/features/tables/column-types)
+
+This page covers the **SDK helpers** that create those steps from `evaluate(...)`. Differences vs the dashboard:
+
+- Prefer typed helpers (`compare_scorer` / `compareScorer`, …) or a named function (custom code)
+- You can also pass `column(title, type, config)` as a scorer
+- Reference columns by **title** (`"Output"`, `"Expected"`, `"Trace"`, or a processing column)
+- Built-ins: `Input`, `Expected`, `Output`, and when needed `Trace` / `Expected Trace`
+- Python uses snake_case; JavaScript uses camelCase for the same options
 
 ## Weight, Required, and Thresholds
 
-Every typed helper accepts weight, required, and thresholds. Scorecards aggregate with a weighted mean (defaults: pass `0.8`, warn `0.6`).
+Every typed helper accepts weight, required, and thresholds. Aggregation matches [Scorecards](/features/tables/scorecards) (weighted mean; defaults pass `0.8`, warn `0.6`).
 
 <CodeGroup>
 ```python Python
@@ -130,7 +141,7 @@ await evaluate("support-bot", {
 
 ## Compare
 
-Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`.
+Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`. Type behavior: [Column Types](/features/tables/column-types).
 
 <CodeGroup>
 ```python Python

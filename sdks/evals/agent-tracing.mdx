@@ -1,11 +1,11 @@
 ---
 title: "Runner and tracing"
 description: "Pass any callable as the evaluate(...) runner. Trajectory scores Tool: spans from the imported Trace."
-sidebarTitle: "Runner and tracing"
+sidebarTitle: "Runner"
 icon: "diagram-project"
 ---
 
-The `runner` is any callable that takes in an `input` and returns a final value — not a stream. There is no framework allowlist.
+Part of [Building an eval](/sdks/evals/building-an-eval). The `runner` is any callable that takes in an `input` and returns a final value — not a stream. There is no framework allowlist.
 
 `evaluate(...)` starts an `Eval: <name>` span per case. PromptLayer clients nest under that span automatically.
 

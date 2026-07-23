@@ -1,11 +1,11 @@
 ---
-title: "Write an eval"
-description: "Define evaluate(...) with a dataset, runner, scorers, and an optional pass bar."
-sidebarTitle: "Write an eval"
+title: "Building an eval"
+description: "Anatomy of evaluate(...): dataset, runner, scorers, and the other options."
+sidebarTitle: "Building an eval"
 icon: "pen-to-square"
 ---
 
-Define `evaluate(...)` in a `*.eval.py` or `*.eval.ts` file, then run:
+An eval file defines `evaluate(...)`, then you run:
 
 ```bash
 promptlayer eval run path/to/your.eval.py
@@ -65,20 +65,44 @@ await evaluate("support-reply-eval", {
 ```
 </CodeGroup>
 
-Python async runners use `aevaluate`. JavaScript uses async `evaluate`. Agent examples: [Quickstart](/sdks/evals/quickstart).
+Python async runners use `aevaluate`. JavaScript uses async `evaluate`. Stack examples: [Quickstart](/sdks/evals/quickstart).
 
-## Options you will use most
+## Dataset
+
+Cases feed the runner and scorers:
+
+- `input` — required; passed to the `runner`
+- `expected` — expected **output** (Contains, Compare, …)
+- `expected_trace` / `expectedTrace` — Trajectory **config** (which tools should run), not the answer text
+
+You can also point `dataset` at a dashboard Table. Details: [Datasets](/sdks/evals/datasets).
+
+## Runner
+
+The `runner` is any callable that takes in an `input` and returns a final value (not a stream). There is no framework allowlist.
+
+For Trajectory, tools must show up as `Tool: <name>` spans on the imported Trace — via a framework helper or `traceTool`. Details: [Runner and tracing](/sdks/evals/agent-tracing).
+
+## Scorers and columns
+
+- **Scorers** become scorecard steps on the experiment sheet. SDK helpers: [Scorers](/sdks/evals/scorers/overview). Behavior of each type: [Scorecards](/features/tables/scorecards) and [Column Types](/features/tables/column-types).
+- **Columns** are optional processing steps before scorers. SDK API: [Columns](/sdks/evals/columns/overview). Type reference: [Column Types](/features/tables/column-types).
+
+## Other `evaluate(...)` options
 
 | Goal | Python | JavaScript |
 | --- | --- | --- |
 | Cases | `dataset` | `dataset` |
 | Function under test | `runner` | `runner` |
 | Scorecard checks | `scorers` | `scorers` |
+| Processing columns | `columns` | `columns` |
 | Fail below a bar | `passing_score` | `passingScore` |
 | Run cases in parallel | `max_concurrency` | `maxConcurrency` |
 | Print failing rows | `include_failure_examples` | `includeFailureExamples` |
-
-Also available: `columns`, `table_id` / `tableId`, `folder_id` / `folderId`, `experiment_name` / `experimentName`, and `api_key` / `apiKey` (prefer env vars for CLI).
+| Reuse a Table | `table_id` | `tableId` |
+| Folder for a new Table | `folder_id` | `folderId` |
+| Experiment sheet name | `experiment_name` | `experimentName` |
+| Auth (prefer env for CLI) | `api_key`, `base_url` | `apiKey`, `baseURL` |
 
 Do **not** pass top-level `sheet_id` / `sheetId`. Use `dataset.sheet_id` / `dataset.sheetId` only when the dataset comes from a dashboard sheet.
 
