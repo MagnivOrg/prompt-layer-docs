@@ -155,7 +155,7 @@ promptlayer eval run ./evals
 
 ## Write an eval yourself
 
-Pick the tab that matches your stack. If you use a framework helper (OpenAI Agents, Claude, Vercel AI), tool spans are collected for you. For a custom agent with no helper, decorate your tool handlers with `traceTool` — it wraps a handler so PromptLayer records the `Tool: <name>` span that the [Trajectory](/sdks/evals/scorers/overview#trajectory) scorer reads. See [Runner](/sdks/evals/agent-tracing) for the full contract.
+Pick the tab that matches your stack. If you use a framework helper (OpenAI Agents, Claude, Vercel AI), tool spans are collected for you. For a custom agent with no helper, create a tracing-enabled client — `pl = PromptLayer(enable_tracing=True)` — and decorate your tool handlers with `@pl.traceTool`. That records the `Tool: <name>` span the [Trajectory](/sdks/evals/scorers/overview#trajectory) scorer reads; without `enable_tracing=True` the decorator is a no-op. You don't need a separate tracing decorator on the runner — `evaluate(...)` already wraps it in the eval span. See [Runner](/sdks/evals/agent-tracing) for the full contract.
 
 <Tabs>
   <Tab title="OpenAI Agents">

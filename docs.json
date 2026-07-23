@@ -74,8 +74,8 @@
                       "sdks/evals/building-an-eval",
                       "sdks/evals/datasets",
                       "sdks/evals/agent-tracing",
-                      "sdks/evals/scorers/overview",
-                      "sdks/evals/columns/overview"
+                      "sdks/evals/columns/overview",
+                      "sdks/evals/scorers/overview"
                     ]
                   }
                 ]
