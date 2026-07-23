@@ -5,20 +5,39 @@ sidebarTitle: "Runner"
 icon: "diagram-project"
 ---
 
-The `runner` is any callable that takes an `input` and returns a final value — not a stream. There is no framework allowlist.
+The `runner` is any callable that takes an `input` and returns a final value — not a stream. There is no framework allowlist, and nothing else is required to run an eval.
 
-`evaluate(...)` starts an `Eval: <name>` span per case. PromptLayer clients nest under that span automatically.
+`evaluate(...)` opens an `Eval: <name>` span per case; any PromptLayer client used inside the runner nests under it automatically.
 
-Copy-paste harnesses for common frameworks are in the [Quickstart](/sdks/evals/quickstart).
+| Runner | Python | JavaScript |
+| --- | --- | --- |
+| Sync | `evaluate(...)` | `evaluate(...)` |
+| Async | `aevaluate(...)` | `evaluate(...)` with an async function (no `aevaluate` export) |
 
-## Make Trajectory work
+Default concurrency is `1`; raise it with `max_concurrency` / `maxConcurrency` (see [Concurrency](/sdks/evals/concurrency)). Copy-paste harnesses for common frameworks are in the [Quickstart](/sdks/evals/quickstart).
 
-[Trajectory](/sdks/evals/scorers/overview#trajectory) scores spans named `Tool: <name>` (for example `Tool: get_weather`).
+## What makes a tool detectable
 
-Emit those spans with:
+Anything that surfaces a tool from a Trace — the [Trajectory](/sdks/evals/scorers/overview#trajectory) scorer and the Trace UI — recognizes it **only** by a span named `Tool: <name>` (for example `Tool: get_weather`). A span without that name is not treated as a tool.
 
-- `traceTool` / `@pl.traceTool` on tool handlers, or
-- A framework helper from the table below, or
+You don't set that name yourself. Decorate a tool handler with `@traceTool` (or use a framework helper) and PromptLayer emits the `Tool: <name>` span for you — see [Emitting tool spans](#emitting-tool-spans).
+
+- **Scoring with Trajectory?** Only the tools you assert on (the names in `accepted_scenarios`) need a tool span. A helper tool you don't score doesn't have to be decorated.
+- **Not scoring tools?** No tool spans are required to run the eval — but decorating still surfaces those calls as tools in the Trace UI. Contains, Compare, and LLM assertion read the `Output`, not tool spans.
+
+How the two modes treat what they observe:
+
+| `mode` | Rule | Untraced / extra tools |
+| --- | --- | --- |
+| `strict` | Observed tools must **exactly equal** the expected list. | An expected tool that isn't traced fails; every traced tool must be in your expected list. |
+| `non_strict` | Expected list must be an ordered **subsequence** of observed. | Extra traced tools are tolerated; only an untraced *expected* tool fails. |
+
+## Emitting tool spans
+
+Pick whichever fits your stack — each produces the `Tool: <name>` span automatically, so you never set a span name yourself:
+
+- `@traceTool` / `pl.traceTool` on a tool handler (the general-purpose option)
+- A framework helper (table below), which instruments tools for you
 - OTEL that PromptLayer already normalizes to `Tool: …`
 
 | Framework | Typical setup |
@@ -30,174 +49,24 @@ Emit those spans with:
 | Pydantic AI | `logfire.instrument_pydantic_ai()` → PromptLayer `/v1/traces` |
 | OpenClaw | `@promptlayer/openclaw-promptlayer` plugin |
 | LiteLLM | `PromptLayer(enable_tracing=True)` + `traceTool` on handlers |
-| Custom agent / other | `traceTool` (or equivalent OTEL) on the handlers you care about |
+| Custom agent / other | `traceTool` (or equivalent OTEL) on the handlers you assert on |
 
-Under `evaluate(...)`, Vercel does not need a separate `NodeSDK`. Outside evals, set up OTEL in the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [LangChain / LangSmith](/features/integrations#langchain-/-langsmith), [Pydantic AI](/features/integrations#pydantic-ai), or [OpenClaw](/features/integrations#openclaw) guides.
+Under `evaluate(...)`, Vercel needs no separate `NodeSDK`. Outside evals, set up OTEL via the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [LangChain / LangSmith](/features/integrations#langchain-/-langsmith), [Pydantic AI](/features/integrations#pydantic-ai), or [OpenClaw](/features/integrations#openclaw) guides.
 
-## What `traceTool` does
+## `traceTool`
 
-`traceTool` wraps a tool handler so PromptLayer records a span named `Tool: <name>` when that handler runs. Trajectory reads those spans from the imported `Trace`.
+`traceTool` wraps a handler so PromptLayer records a `Tool: <name>` span each time it runs — you decorate the function and the span name is derived from the tool name automatically. Use it for custom agents and LiteLLM; frameworks in the table above instrument their tools on their own.
 
-- Python: `@pl.traceTool(name="get_weather")` on the function
+- Python: `@pl.traceTool(name="get_weather")` on the function (name defaults to the function name)
 - JavaScript: `pl.traceTool("get_weather", fn)` returns a wrapped function
 
-Use it for custom agents (and LiteLLM) when the framework does not already emit `Tool:` spans. Enable tracing first with `PromptLayer(enable_tracing=True)` / `new PromptLayer({ enableTracing: true })` — otherwise `traceTool` is a no-op.
-
-It is tool-specific. For general function spans, use [`@traceable` / `wrapWithSpan`](/running-requests/traces) instead. OpenAI Agents, Claude Agents, Vercel, LangChain, Pydantic AI, and OpenClaw usually do not need `traceTool`.
-
-## Custom runner with `traceTool`
-
-<CodeGroup>
-```python Python
-import json
-from openai import OpenAI
-from promptlayer import PromptLayer, evaluate, trajectory_scorer, contains_scorer
-
-pl = PromptLayer(enable_tracing=True)
-client = OpenAI()
-
-@pl.traceTool(name="get_weather")
-def get_weather(city: str) -> str:
-    return f"{city} is 72F and sunny."
-
-TOOLS = [
-    {
-        "type": "function",
-        "function": {
-            "name": "get_weather",
-            "description": "Return demo weather for a city.",
-            "parameters": {
-                "type": "object",
-                "properties": {"city": {"type": "string"}},
-                "required": ["city"],
-            },
-        },
-    }
-]
-
-def run_agent(user_message: str) -> str:
-    messages = [
-        {
-            "role": "system",
-            "content": "Use get_weather, then answer in one short sentence.",
-        },
-        {"role": "user", "content": str(user_message)},
-    ]
-    for _ in range(5):
-        response = client.chat.completions.create(
-            model="gpt-5.6",
-            messages=messages,
-            tools=TOOLS,
-        )
-        message = response.choices[0].message
-        messages.append(message)
-        if not message.tool_calls:
-            return (message.content or "").strip()
-        for tool_call in message.tool_calls:
-            args = json.loads(tool_call.function.arguments)
-            result = get_weather(**args)
-            messages.append(
-                {
-                    "role": "tool",
-                    "tool_call_id": tool_call.id,
-                    "content": result,
-                }
-            )
-    return "Agent stopped without a final answer."
-
-evaluate(
-    "custom-runner-eval",
-    dataset=[{"input": "What is the weather in Tokyo?"}],
-    runner=run_agent,
-    scorers=[
-        trajectory_scorer(accepted_scenarios=[["get_weather"]], mode="non_strict"),
-        contains_scorer(source="Output", value="72"),
-    ],
-)
-```
-
-```javascript JavaScript
-import OpenAI from "openai";
-import { PromptLayer, evaluate, trajectoryScorer, containsScorer } from "promptlayer";
-
-const pl = new PromptLayer({ enableTracing: true });
-const client = new OpenAI();
-
-const getWeather = pl.traceTool("get_weather", async (city) => {
-  return `${city} is 72F and sunny.`;
-});
-
-const tools = [
-  {
-    type: "function",
-    function: {
-      name: "get_weather",
-      description: "Return demo weather for a city.",
-      parameters: {
-        type: "object",
-        properties: { city: { type: "string" } },
-        required: ["city"],
-      },
-    },
-  },
-];
-
-async function runAgent(userMessage) {
-  const messages = [
-    {
-      role: "system",
-      content: "Use get_weather, then answer in one short sentence.",
-    },
-    { role: "user", content: String(userMessage) },
-  ];
-  for (let i = 0; i < 5; i++) {
-    const response = await client.chat.completions.create({
-      model: "gpt-5.6",
-      messages,
-      tools,
-    });
-    const message = response.choices[0].message;
-    messages.push(message);
-    if (!message.tool_calls?.length) {
-      return (message.content ?? "").trim();
-    }
-    for (const toolCall of message.tool_calls) {
-      const args = JSON.parse(toolCall.function.arguments);
-      const result = await getWeather(args.city);
-      messages.push({
-        role: "tool",
-        tool_call_id: toolCall.id,
-        content: result,
-      });
-    }
-  }
-  return "Agent stopped without a final answer.";
-}
-
-await evaluate("custom-runner-eval", {
-  dataset: [{ input: "What is the weather in Tokyo?" }],
-  runner: runAgent,
-  scorers: [
-    trajectoryScorer({ acceptedScenarios: [["get_weather"]], mode: "non_strict" }),
-    containsScorer({ source: "Output", value: "72" }),
-  ],
-});
-```
-</CodeGroup>
-
-## Sync vs async
-
-| Runner | Python | JavaScript |
-| --- | --- | --- |
-| Sync | `evaluate(...)` | `evaluate(...)` |
-| Async | `aevaluate(...)` | `evaluate(...)` with an async function (no `aevaluate` export) |
-
-Default concurrency is `1`. Raise it with `max_concurrency` / `maxConcurrency` — see [Concurrency](/sdks/evals/concurrency).
+Enable tracing first with `PromptLayer(enable_tracing=True)` / `new PromptLayer({ enableTracing: true })` — otherwise `traceTool` is a no-op. It is tool-specific; for general function spans use [`@traceable` / `wrapWithSpan`](/running-requests/traces) instead. A full custom-runner harness using `traceTool` is in the [Quickstart](/sdks/evals/quickstart).
 
 ## Common errors
 
 | Issue | Fix |
 | --- | --- |
-| Empty Trace / Trajectory fails | Emit `Tool:` spans under the eval tracer |
-| Streamed return | Collect the final answer before returning |
-| Awaitable on sync Python path | Use `aevaluate` |
+| Empty Trace / Trajectory fails | Decorate the tools you assert on with `@traceTool` (or a framework helper) so their spans are emitted under the eval tracer |
+| Traced tool missing in `strict` mode | Add it to the expected list, or switch to `non_strict` |
+| Streamed return | Collect the final answer before returning it |
+| Awaitable on the sync Python path | Use `aevaluate` |

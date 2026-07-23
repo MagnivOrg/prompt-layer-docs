@@ -9,9 +9,34 @@ Pass scorers into `evaluate(...)` to grade each case. On the experiment sheet th
 
 Thresholds, weights, and the overall score work the same as [Scorecards](/features/tables/scorecards) in Tables. The underlying check types are documented in [Column Types](/features/tables/column-types).
 
+## Scorers at a glance
+
+| Scorer | Python | JavaScript | Checks |
+| --- | --- | --- | --- |
+| [Compare](#compare) | `compare_scorer` | `compareScorer` | Two columns match (default `Output` vs `Expected`) |
+| [Contains](#contains) | `contains_scorer` | `containsScorer` | A column contains a literal or another column's value |
+| [Regex](#regex) | `regex_scorer` | `regexScorer` | A column matches a regular expression |
+| [Count](#count) | `count_scorer` | `countScorer` | Character / word / sentence / paragraph count within bounds |
+| [Assert Valid](#assert-valid) | `assert_valid_scorer` | `assertValidScorer` | A column is a valid object, number, or SQL |
+| [LLM Assertion](#llm-assertion) | `llm_assertion_scorer` | `llmAssertionScorer` | An LLM judge grades a column |
+| [Trajectory](#trajectory) | `trajectory_scorer` | `trajectoryScorer` | Tool-call sequence matches accepted scenarios |
+| [Custom Code](#custom-code) | named fn / `code_execution_column` | named fn / `codeExecutionColumn` | Your own scoring logic |
+
+Every typed helper also accepts [weight, required, and thresholds](#weight-required-and-thresholds).
+
 ## Weight, Required, and Thresholds
 
 Every typed helper accepts weight, required, and thresholds. Aggregation matches [Scorecards](/features/tables/scorecards) (weighted mean; default pass `0.8`, warn `0.6`).
+
+| Option | Python | JavaScript | Meaning |
+| --- | --- | --- | --- |
+| Weight | `weight` | `weight` | How much this step counts (default `1`) |
+| Required | `required` | `required` | If `true`, failing this step can fail the scorecard |
+| Thresholds | `thresholds` | `thresholds` | Per-step pass / warn cutoffs in `[0, 1]` |
+| Pass alias | `pass_threshold` | `passThreshold` | Sets `thresholds.pass` |
+| Warn alias | `failure_threshold` | `failureThreshold` | Sets `thresholds.warn` |
+
+This support agent example weights the trajectory check higher, marks it required, and sets a pass threshold:
 
 <CodeGroup>
 ```python Python
@@ -119,14 +144,6 @@ await evaluate("support-bot", {
 });
 ```
 </CodeGroup>
-
-| Option | Python | JavaScript | Meaning |
-| --- | --- | --- | --- |
-| Weight | `weight` | `weight` | How much this step counts (default `1`) |
-| Required | `required` | `required` | If `true`, failing this step can fail the scorecard |
-| Thresholds | `thresholds` | `thresholds` | Per-step pass / warn cutoffs in `[0, 1]` |
-| Pass alias | `pass_threshold` | `passThreshold` | Sets `thresholds.pass` |
-| Warn alias | `failure_threshold` | `failureThreshold` | Sets `thresholds.warn` |
 
 ## Compare
 

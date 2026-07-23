@@ -1,19 +1,25 @@
 ---
 title: "Quickstart"
-description: "Scaffold an SDK eval with AI, or copy an example for a common agent stack."
 sidebarTitle: "Quickstart"
 icon: "rocket"
 ---
 
-Get a runnable eval file in your repo, then run `promptlayer eval run <path>`.
 
-The `runner` is any callable that takes an `input` and returns a final value. The tabs below are copy-paste examples, not an allowlist — any harness works if it follows [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
+The main entity that you are evaluating in an eval is represented by a `runner`. The `runner` is any callable that takes an `input` and returns a final value. Any harness works if it follows the instructions set in [Building an eval](/sdks/evals/building-an-eval) and [Runner](/sdks/evals/agent-tracing).
+
+## Set your API keys
+
+Every eval needs your PromptLayer key plus whatever provider your agent already uses. Export them once in your shell — both the AI and manual paths below assume these are set:
+
+```bash
+export PROMPTLAYER_API_KEY=pl_...
+export OPENAI_API_KEY=sk-...        # or your provider's key
+export ANTHROPIC_API_KEY=sk-ant-... # if your agent uses Claude
+```
 
 ## Set up with AI
 
 Paste this prompt into Cursor (or any coding agent) in the repo that has your agent. It scaffolds an eval for you to review and run.
-
-You need `PROMPTLAYER_API_KEY` and your provider keys.
 
 <Prompt
   description="Scaffold a PromptLayer SDK eval from this codebase"
@@ -141,27 +147,18 @@ Create `evals/<agent>.eval.py` or `evals/<agent>.eval.ts` that:
 
 ### After the agent finishes
 
-Review the generated `evals/` file, then:
+With your keys set, review the generated `evals/` file, then run it:
 
 ```bash
-export PROMPTLAYER_API_KEY=pl_...
-export OPENAI_API_KEY=sk-...   # or your provider key
 promptlayer eval run ./evals
 ```
 
 ## Write an eval yourself
 
-```bash
-export PROMPTLAYER_API_KEY=pl_...
-export OPENAI_API_KEY=sk-...        # if needed
-export ANTHROPIC_API_KEY=sk-ant-... # if needed
-```
-
 Pick a matching example, or use `traceTool` for a custom agent.
 
 <Tabs>
   <Tab title="OpenAI Agents">
-Install:
 
 <CodeGroup>
 ```bash Python
@@ -173,7 +170,7 @@ npm install promptlayer @openai/agents zod
 ```
 </CodeGroup>
 
-Call `instrument_openai_agents` / `instrumentOpenAIAgents` once, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. The same helper works outside evals via the [OpenAI Agents SDK](/features/integrations#openai-agents-sdk) integration.
+Call `instrument_openai_agents` / `instrumentOpenAIAgents` once at the top of your file, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. The same helper works outside evals via the [OpenAI Agents SDK](/features/integrations#openai-agents-sdk) integration.
 
 <CodeGroup>
 ```python Python
@@ -703,13 +700,10 @@ Plugin install and config steps are in the [OpenClaw](/features/integrations#ope
 
 ## Run it
 
+Point `promptlayer eval run` at a directory (runs every `*.eval.*` file) or a single file:
+
 ```bash
 promptlayer eval run ./evals
-```
-
-Or a single file:
-
-```bash
 promptlayer eval run ./evals/weather_agent.eval.py
 ```
 

@@ -1,33 +1,29 @@
 ---
 title: "Overview"
-description: "Eval agents from your repo — tool trajectories, final answers, and CI gates. Results land in PromptLayer Tables."
+description: "Eval agents using the PromptLayer SDK"
 sidebarTitle: "Overview"
 icon: "book"
 ---
 
-SDK evals run your **agent** against a dataset and score each case. Typical checks: Did it call the right tools? Did the final answer look right?
+In addition to being able to evaluate your agent via our dashboard, you can create an evaluation directly in code with our SDK.
 
-Each eval has three parts:
-
+Each eval has four parts:
 - **Dataset** — user messages (and optional expected output / expected tool trajectory)
 - **Runner** — your agent harness (OpenAI Agents, Claude, LangChain, or any callable that takes `input` and returns a final value)
+- **Columns** - optional steps to manipulate your dataset or agent trace
 - **Scorers** — scorecard checks such as Trajectory and Contains
 
-## Why SDK evals
+## Why use SDK evals
 
-Use SDK evals to treat agent quality like tests — local runs, PR checks, and CI — not only sheets you assemble in the dashboard.
+Use SDK evals when your agent needs to run on your own infrastructure. For example access to internal data, actual tool execution code, and custom harnesses.
 
-- Fail the build when tool use or answers regress (`passing_score` / `passingScore`)
-- Point the `runner` at the same agent you ship
-- Open every run on a [Table](/features/tables/overview) experiment sheet (traces, outputs, scorecard)
-
-Prefer [Tables](/features/tables/overview) in the dashboard when you are iterating on prompts without an agent harness. SDK runs still create Table experiment sheets.
+This also makes evals a natural fit for CI/CD: run `promptlayer eval run` in your pipeline to catch trajectory or output regressions before they ship, while every result still lands on a PromptLayer Table experiment sheet for you to inspect.
 
 ## How a run works
 
-Define `evaluate(...)` in a file, then run `promptlayer eval run <path>`. Each case runs under an `Eval: <name>` span; results land on a Table experiment sheet.
+Using our `evaluate` method, wire your dataset, runner, and scorers together in one file, then kick it off with `promptlayer eval run <path>`. Each case runs under its own `Eval: <name>` span, and results stream to a Table sheet on our dashboard for comparison.
 
-This OpenAI Agents example instruments the harness, uses the agent as the `runner`, and scores both tool trajectory and final output. The [Quickstart](/sdks/evals/quickstart) has the same pattern for Claude, Vercel AI, LangChain, and other stacks.
+The OpenAI Agents example below instruments the harness, uses the agent as the `runner`, and scores both tool trajectory and final output. See the [Quickstart](/sdks/evals/quickstart) for the same pattern across Claude, Vercel AI, LangChain, and other stacks.
 
 <CodeGroup>
 ```python Python
