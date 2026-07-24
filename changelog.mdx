@@ -4,6 +4,41 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## July 24, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Tool Response Schema Validation**
+Define expected output schemas for tools in the Tool Registry to validate and structure tool responses during agent execution.
+- Add response schema editor alongside function schema in tool configuration
+- Validate tool outputs against defined schemas during agent runs
+- View response schemas in tool version diffs and overview pages
+
+**Mock Tool Execution for Agent Testing**
+Test agent workflows with simulated tool responses without making actual API calls.
+- Enable mock mode in Playground chat and Smart Tables to preview agent behavior
+- Configure mock scenarios and stopping conditions for iterative testing
+- View complete mock execution traces in Smart Table cells
+
+**Claude Opus 5 Model Support**
+Access the new Claude Opus 5 model across Anthropic, Amazon Bedrock, and Google Vertex AI providers.
+- Supports 1M token context with 128K output tokens
+- Includes adaptive thinking capabilities and extended prompt caching
+- Available for complex agentic and enterprise workflows
+
+#### Improvements
+
+- Fix trace table checkbox selection incorrectly opening trace detail view
+- Prevent chat continuation failures when session title generation errors occur
+- Add "Evals in the SDK" to new features modal with video walkthrough
+- Improve Smart Table cell content dialog rendering for mock trace values
+- Update Playground mode switcher UI for clearer mock/live execution toggle
+
+---
+
+
 ## July 23, 2026
 
 ### Deployment 1
