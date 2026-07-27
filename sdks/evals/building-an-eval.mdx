@@ -52,7 +52,7 @@ Cases feed the runner and scorers. [Datasets](/sdks/evals/datasets) covers inlin
 
 The `runner` is any callable that takes an `input` and returns a final value (not a stream) — no framework allowlist.
 
-For Trajectory, tools must appear as `Tool: <name>` spans on the imported Trace; use a framework helper or [`traceTool`](/running-requests/traces#tracing-tools). The runner and tool-span rules live on [Runner](/sdks/evals/agent-tracing).
+For Trajectory, tools must appear as `Tool: <name>` spans on the imported Trace; use a framework helper or [`traceTool`](/features/observability/traces#tracing-tools). The runner and tool-span rules live on [Runner](/sdks/evals/agent-tracing).
 
 ## Columns and scorers
 

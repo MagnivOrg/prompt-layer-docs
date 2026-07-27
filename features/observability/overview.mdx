@@ -1,0 +1,72 @@
+---
+title: "Overview"
+description: "Understand the request logs and traces that make up PromptLayer observability."
+icon: "book"
+---
+
+Observability helps you inspect model calls and follow the execution of AI applications across prompts, agents, tools, and workflows.
+
+PromptLayer organizes observability data into two artifacts:
+
+| Artifact | Use it to |
+| --- | --- |
+| [**Request log**](/features/observability/request-logs) | Inspect one model call, including its input, output, model, timing, tokens, cost, status, metadata, and prompt association. |
+| [**Trace**](/features/observability/traces) | Follow one end-to-end operation as a hierarchy of LLM calls, agents, tools, retrieval steps, and custom application spans. |
+
+A trace can contain multiple model calls and therefore link to multiple request logs. Supported direct GenAI spans create request logs, while spans managed by `PromptLayer.run()` can link to the run's existing request log.
+
+## Where to Go Next
+
+<CardGroup cols={2}>
+  <Card
+    title="Request Logs"
+    icon="rectangle-list"
+    href="/features/observability/request-logs"
+  >
+    Review individual model calls, errors, inputs, outputs, usage, and cost.
+  </Card>
+  <Card
+    title="Traces"
+    icon="diagram-project"
+    href="/features/observability/traces"
+  >
+    Inspect the parent-child execution path across model calls, tools, agents, and application code.
+  </Card>
+  <Card
+    title="Search"
+    icon="magnifying-glass"
+    href="/features/search-and-analytics/search"
+  >
+    Find request logs or traces with content queries, structured filters, and date ranges.
+  </Card>
+  <Card
+    title="Analytics"
+    icon="chart-pie-simple"
+    href="/features/search-and-analytics/analytics"
+  >
+    Aggregate the current request-log or trace query into charts.
+  </Card>
+</CardGroup>
+
+## Configure Observability
+
+Once you know which artifact you need, follow the setup path for the code that produces it:
+
+<CardGroup cols={2}>
+  <Card
+    title="Configure Request Logging"
+    icon="rectangle-list"
+    href="/features/observability/request-logs"
+  >
+    Choose how requests are captured, then add IDs, tags, metadata, scores, and prompt associations.
+  </Card>
+  <Card
+    title="Configure Tracing"
+    icon="diagram-project"
+    href="/features/observability/traces/configuration"
+  >
+    Choose PromptLayer SDK spans, provider auto-instrumentation, a telemetry integration, or OpenTelemetry.
+  </Card>
+</CardGroup>
+
+For indexing details, see the [Search Data Model](/features/search-and-analytics/search-data-model).

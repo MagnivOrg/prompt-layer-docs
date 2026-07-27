@@ -89,34 +89,48 @@
             "group": "Observability",
             "icon": "chart-column",
             "pages": [
-              "features/observability",
-              "running-requests/traces",
+              "features/observability/overview",
               {
-                "group": "SDK Auto-Instrumentation",
-                "icon": "wave-pulse",
+                "group": "Request Logs",
+                "icon": "rectangle-list",
                 "pages": [
-                  "features/auto-instrumentation/overview",
-                  "features/auto-instrumentation/openai"
+                  "features/observability/request-logs",
+                  "features/observability/request-logs/request-ids",
+                  "features/observability/request-logs/tags",
+                  "features/observability/request-logs/metadata",
+                  "features/observability/request-logs/scores",
+                  "features/observability/request-logs/tracking-templates",
+                  "features/observability/request-logs/custom-logging",
+                  "features/observability/request-logs/structured-outputs"
                 ]
               },
-              "features/integrations",
-              "features/opentelemetry",
-              "why-promptlayer/advanced-search",
-              "why-promptlayer/analytics",
               {
-                "group": "Advanced Logging",
-                "icon": "cassette-tape",
+                "group": "Traces",
+                "icon": "diagram-project",
                 "pages": [
-                  "features/prompt-history/request-id",
-                  "features/prompt-history/tagging-requests",
-                  "features/prompt-history/metadata",
-                  "features/prompt-history/scoring-requests",
-                  "features/prompt-history/tracking-templates",
-                  "features/prompt-history/custom-logging",
-                  "features/prompt-history/structured-output-logging",
-                  "features/prompt-history/search-data-model"
+                  "features/observability/traces",
+                  "features/observability/traces/configuration",
+                  {
+                    "group": "SDK Auto-Instrumentation",
+                    "icon": "code",
+                    "pages": [
+                      "features/observability/traces/auto-instrumentation/overview",
+                      "features/observability/traces/auto-instrumentation/openai"
+                    ]
+                  },
+                  "features/observability/traces/integrations",
+                  "features/observability/traces/opentelemetry"
                 ]
               }
+            ]
+          },
+          {
+            "group": "Search & Analytics",
+            "icon": "chart-pie-simple",
+            "pages": [
+              "features/search-and-analytics/search",
+              "features/search-and-analytics/analytics",
+              "features/search-and-analytics/search-data-model"
             ]
           },
           "why-promptlayer/workflows",
@@ -520,6 +534,62 @@
     }
   },
   "redirects": [
+    {
+      "source": "/features/observability",
+      "destination": "/features/observability/overview"
+    },
+    {
+      "source": "/running-requests/traces",
+      "destination": "/features/observability/traces"
+    },
+    {
+      "source": "/features/integrations",
+      "destination": "/features/observability/traces/integrations"
+    },
+    {
+      "source": "/features/opentelemetry",
+      "destination": "/features/observability/traces/opentelemetry"
+    },
+    {
+      "source": "/features/prompt-history/request-id",
+      "destination": "/features/observability/request-logs/request-ids"
+    },
+    {
+      "source": "/features/prompt-history/tagging-requests",
+      "destination": "/features/observability/request-logs/tags"
+    },
+    {
+      "source": "/features/prompt-history/metadata",
+      "destination": "/features/observability/request-logs/metadata"
+    },
+    {
+      "source": "/features/prompt-history/scoring-requests",
+      "destination": "/features/observability/request-logs/scores"
+    },
+    {
+      "source": "/features/prompt-history/tracking-templates",
+      "destination": "/features/observability/request-logs/tracking-templates"
+    },
+    {
+      "source": "/features/prompt-history/custom-logging",
+      "destination": "/features/observability/request-logs/custom-logging"
+    },
+    {
+      "source": "/features/prompt-history/structured-output-logging",
+      "destination": "/features/observability/request-logs/structured-outputs"
+    },
+    {
+      "source": "/features/prompt-history/search-data-model",
+      "destination": "/features/search-and-analytics/search-data-model"
+    },
+    {
+      "source": "/why-promptlayer/advanced-search",
+      "destination": "/features/search-and-analytics/search"
+    },
+    {
+      "source": "/why-promptlayer/analytics",
+      "destination": "/features/search-and-analytics/analytics"
+    },
     {
       "source": "/sdks/evals/setup-with-ai",
       "destination": "/sdks/evals/quickstart"

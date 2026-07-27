@@ -3,7 +3,7 @@ title: "Search Data Model"
 icon: "diagram-project"
 ---
 
-When you log requests through PromptLayer, we process and index the data to make it searchable. Understanding how your data is indexed will help you write more effective filters when using the [Search Request Logs](/reference/search-request-logs) API or the dashboard's advanced search.
+When you log requests through PromptLayer, we process and index the data to make it searchable. Understanding how your data is indexed will help you write more effective filters when using the [Search Request Logs](/reference/search-request-logs) API or [Search in the dashboard](/features/search-and-analytics/search).
 
 ## How Data Gets Indexed
 
@@ -152,7 +152,7 @@ Nested metadata is also supported. If you attach `{"user": {"id": "abc", "role":
 
 Requests logged without an associated prompt template (no `prompt_id`) will have **no** input variables indexed at all.
 
-If you need to filter by values that aren't part of the prompt template, attach them as [metadata](/features/prompt-history/metadata) instead — metadata is always fully indexed.
+If you need to filter by values that aren't part of the prompt template, attach them as [metadata](/features/observability/request-logs/metadata) instead — metadata is always fully indexed.
 </Warning>
 
 For example, if your prompt template uses `{question}` and `{context}`, but you also pass `user_id` as an input variable:
@@ -229,5 +229,5 @@ Nested fields require `nested_key` to identify the flattened key to inspect.
 ## Related
 
 - [Search Request Logs API](/reference/search-request-logs) - API reference for filtering
-- [Metadata](/features/prompt-history/metadata) - Attaching metadata to requests
-- [Advanced Search](/why-promptlayer/advanced-search) - Using search in the dashboard
+- [Metadata](/features/observability/request-logs/metadata) - Attaching metadata to requests
+- [Search](/features/search-and-analytics/search) - Using search in the dashboard

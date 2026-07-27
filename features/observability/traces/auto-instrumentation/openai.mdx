@@ -7,7 +7,7 @@ icon: "robot"
 PromptLayer can auto-instrument the official OpenAI SDK and export supported calls as OpenTelemetry spans. Each supported direct SDK call appears in PromptLayer as both a trace span and an associated request log without changing how you create or use the OpenAI client.
 
 <Note>
-This guide covers the OpenAI model SDK. If you use the OpenAI Agents SDK, follow the [OpenAI Agents SDK integration](/features/integrations#openai-agents-sdk) instead.
+This guide covers the OpenAI model SDK. If you use the OpenAI Agents SDK, follow the [OpenAI Agents SDK integration](/features/observability/traces/integrations#openai-agents-sdk) instead.
 </Note>
 
 ## Supported APIs
@@ -202,7 +202,7 @@ Configure a tracer provider only once and reuse it. If the OpenAI SDK is already
 
 ## Verify the Integration
 
-Run one supported OpenAI request, flush tracing, and open [Traces](/running-requests/traces) in PromptLayer. The OpenAI span should have an associated request log. If the call runs inside `PromptLayer.run()`, PromptLayer links the provider span to the existing run request log instead of creating a duplicate.
+Run one supported OpenAI request, flush tracing, and open [Traces](/features/observability/traces) in PromptLayer. The OpenAI span should have an associated request log. If the call runs inside `PromptLayer.run()`, PromptLayer links the provider span to the existing run request log instead of creating a duplicate.
 
 If no span appears:
 

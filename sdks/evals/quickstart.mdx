@@ -171,7 +171,7 @@ npm install promptlayer @openai/agents zod
 ```
 </CodeGroup>
 
-Call `instrument_openai_agents` / `instrumentOpenAIAgents` once at the top of your file, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. The same helper works outside evals via the [OpenAI Agents SDK](/features/integrations#openai-agents-sdk) integration.
+Call `instrument_openai_agents` / `instrumentOpenAIAgents` once at the top of your file, then run your Agent from the eval `runner`. Tool spans are collected automatically — no `traceTool` needed. The same helper works outside evals via the [OpenAI Agents SDK](/features/observability/traces/integrations#openai-agents-sdk) integration.
 
 <CodeGroup>
 ```python Python
@@ -272,7 +272,7 @@ npm install promptlayer @anthropic-ai/claude-agent-sdk
 ```
 </CodeGroup>
 
-Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. The same helper works outside evals via the [Claude Code](/features/integrations#claude-code) integration.
+Call `get_claude_config` / `getClaudeConfig` **inside** the runner so the Claude session nests under the eval span. Pass `plugin` and `env` into `ClaudeAgentOptions`. The same helper works outside evals via the [Claude Code](/features/observability/traces/integrations#claude-code) integration.
 
 <CodeGroup>
 ```python Python
@@ -389,7 +389,7 @@ Install:
 npm install promptlayer ai @ai-sdk/openai zod
 ```
 
-Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. For app-wide OTEL outside evals, follow the [Vercel AI SDK](/features/integrations#vercel-ai-sdk) integration.
+Enable `experimental_telemetry` on the AI SDK call. `evaluate(...)` already registers PromptLayer's OpenTelemetry exporter, so tool spans nest under the eval case — no separate `NodeSDK` setup for the eval path. For app-wide OTEL outside evals, follow the [Vercel AI SDK](/features/observability/traces/integrations#vercel-ai-sdk) integration.
 
 ```typescript
 // evals/vercel_weather.eval.ts
@@ -443,7 +443,7 @@ Install:
 pip install promptlayer litellm
 ```
 
-Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with [`traceTool`](/running-requests/traces#tracing-tools) for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — `traceTool` is a no-op unless that `PromptLayer` instance has tracing enabled.
+Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with [`traceTool`](/features/observability/traces#tracing-tools) for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — `traceTool` is a no-op unless that `PromptLayer` instance has tracing enabled.
 
 ```python
 # evals/litellm_weather.eval.py
@@ -522,11 +522,11 @@ evaluate(
 )
 ```
 
-`evaluate(...)` enables tracing on its own client for nesting under each eval case, but your separate `PromptLayer(...)` instance still needs `enable_tracing=True` for `@pl.traceTool`. Callbacks: [LiteLLM](/features/integrations#litellm) and the [LiteLLM PromptLayer docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
+`evaluate(...)` enables tracing on its own client for nesting under each eval case, but your separate `PromptLayer(...)` instance still needs `enable_tracing=True` for `@pl.traceTool`. Callbacks: [LiteLLM](/features/observability/traces/integrations#litellm) and the [LiteLLM PromptLayer docs](https://docs.litellm.ai/docs/observability/promptlayer_integration).
   </Tab>
 
   <Tab title="LangChain">
-PromptLayer ingests LangChain spans through the [LangSmith OpenTelemetry bridge](/features/integrations#langchain-/-langsmith) to `https://api.promptlayer.com/v1/traces`.
+PromptLayer ingests LangChain spans through the [LangSmith OpenTelemetry bridge](/features/observability/traces/integrations#langchain-/-langsmith) to `https://api.promptlayer.com/v1/traces`.
 
 Install (JavaScript):
 
@@ -546,7 +546,7 @@ OTEL_EXPORTER_OTLP_ENDPOINT=https://api.promptlayer.com/v1/traces
 OTEL_EXPORTER_OTLP_HEADERS=X-API-KEY=<PROMPTLAYER_API_KEY>
 ```
 
-Register the OTEL provider (same pattern as [Integrations](/features/integrations#langchain-/-langsmith)), then evaluate your agent:
+Register the OTEL provider (same pattern as [Integrations](/features/observability/traces/integrations#langchain-/-langsmith)), then evaluate your agent:
 
 ```typescript
 // evals/langchain_weather.eval.ts
@@ -601,7 +601,7 @@ await evaluate("langchain-weather-eval", {
 });
 ```
 
-Reuse your real LangChain entrypoint as `runner` when you have one. Register OTEL once for the app using [LangChain / LangSmith](/features/integrations#langchain-/-langsmith).
+Reuse your real LangChain entrypoint as `runner` when you have one. Register OTEL once for the app using [LangChain / LangSmith](/features/observability/traces/integrations#langchain-/-langsmith).
   </Tab>
 
   <Tab title="Pydantic AI">
@@ -662,7 +662,7 @@ evaluate(
 )
 ```
 
-The same Logfire → `/v1/traces` path works outside evals via the [Pydantic AI](/features/integrations#pydantic-ai) integration.
+The same Logfire → `/v1/traces` path works outside evals via the [Pydantic AI](/features/observability/traces/integrations#pydantic-ai) integration.
   </Tab>
 
   <Tab title="OpenClaw">
@@ -695,7 +695,7 @@ evaluate(
 )
 ```
 
-Plugin install and config steps are in the [OpenClaw](/features/integrations#openclaw) integration.
+Plugin install and config steps are in the [OpenClaw](/features/observability/traces/integrations#openclaw) integration.
   </Tab>
 </Tabs>
 

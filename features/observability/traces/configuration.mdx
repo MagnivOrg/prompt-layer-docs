@@ -1,0 +1,18 @@
+---
+title: "Configuration"
+description: "Choose how to send traces and linked request logs to PromptLayer."
+icon: "diagram-project"
+---
+
+All tracing setup paths send spans to the same [PromptLayer trace view](/features/observability/traces). Choose the path that matches the code producing telemetry:
+
+| Setup | Use it when |
+| --- | --- |
+| [PromptLayer SDK spans](/features/observability/traces#trace-promptlayer-sdk-runs) | You use `PromptLayer.run()` or want to wrap custom application and tool functions. |
+| [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview) | Your application calls a supported model provider SDK directly. |
+| [Telemetry Integrations](/features/observability/traces/integrations) | A framework, agent SDK, or model router makes the calls. |
+| [OpenTelemetry](/features/observability/traces/opentelemetry) | You already operate an OpenTelemetry pipeline or no dedicated integration supports your library. |
+
+Use the most specific supported setup. These are collection methods, not separate trace products.
+
+After setup, open [Traces](/features/observability/traces) to verify the span hierarchy and linked [request logs](/features/observability/request-logs).

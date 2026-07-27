@@ -337,7 +337,7 @@ PromptLayer automatically handles image storage for generated images:
 
 ## Logging Image Generation Requests
 
-If you're making image generation calls with your own client, you can log them to PromptLayer using [`log_request`](/features/prompt-history/custom-logging). PromptLayer recognizes the following function names for image generation:
+If you're making image generation calls with your own client, you can log them to PromptLayer using [`log_request`](/features/observability/request-logs/custom-logging). PromptLayer recognizes the following function names for image generation:
 
 - `openai.images.generate`
 - `openai.OpenAI.images.generate`
@@ -354,4 +354,4 @@ Image generation outputs work with PromptLayer's evaluation system. Generated im
 - [Tool Calling (Built-in Tools)](/features/prompt-registry/tool-calling)
 - [Python SDK Run Method](/sdks/python#using-the-run-method-recommended)
 - [JavaScript SDK Run Method](/sdks/javascript#using-the-run-method-recommended)
-- [Custom Logging](/features/prompt-history/custom-logging)
+- [Custom Logging](/features/observability/request-logs/custom-logging)

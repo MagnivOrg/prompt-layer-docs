@@ -11,7 +11,7 @@ Building a production-ready voice agent (like an after-hours appointment assista
 
 - **[Prompt Engineering & Version Control](/features/prompt-registry/overview)**: Iterate rapidly on conversation prompts without code deployments
 - **[Multi-Step Workflow Design](/why-promptlayer/workflows)**: Build complex voice agent logic with visual drag-and-drop interfaces
-- **Comprehensive [Observability](/why-promptlayer/analytics)**: Track every interaction with full context of what was said and how the agent responded
+- **Comprehensive [Observability](/features/observability/overview)**: Track every interaction with full context of what was said and how the agent responded
 - **[Rigorous Evaluation](/features/evaluations/overview)**: Test conversation flows, measure quality, and catch issues before they reach customers
 - **Cost Optimization**: Monitor token usage and latency across all voice interactions
 
@@ -155,7 +155,7 @@ Run your agent against each test case and use PromptLayer's evaluation types inc
 
 ### 3. Human Feedback Integration
 
-For production calls, capture customer satisfaction scores using the [Scoring API](/features/prompt-history/scoring-requests):
+For production calls, capture customer satisfaction scores using the [Scoring API](/features/observability/request-logs/scores):
 
 <CodeGroup>
 
@@ -196,7 +196,7 @@ PromptLayer evaluations automatically track and display latency for each request
 
 ## Observability for Voice Interactions
 
-PromptLayer's [Observability](/features/observability) suite gives you full visibility into every voice interaction, even though the audio itself flows through external services.
+PromptLayer's [Observability](/features/observability/overview) suite gives you full visibility into every voice interaction, even though the audio itself flows through external services.
 
 ### What You Can Track
 
@@ -208,7 +208,7 @@ PromptLayer's [Observability](/features/observability) suite gives you full visi
 
 ### Traces for Multi-Step Workflows
 
-When using PromptLayer Agents for voice workflows, [traces](/running-requests/traces) show each step:
+When using PromptLayer Agents for voice workflows, [traces](/features/observability/traces) show each step:
 
 ```
 Voice Call Trace #1234

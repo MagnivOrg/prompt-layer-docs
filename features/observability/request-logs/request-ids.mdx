@@ -3,9 +3,11 @@ title: "Request IDs"
 icon: "id-card"
 ---
 
-Every PromptLayer log has a unique PromptLayer Request ID (`pl_id`). 
+Every PromptLayer log has a unique PromptLayer Request ID (`pl_id`).
 
-All tracking in PromptLayer is based on the `pl_request_id`. This identifier is needed to enrich logs with [metadata](/features/prompt-history/metadata), [scores](/features/prompt-history/scoring-requests), [associated prompt templates](/features/prompt-history/tracking-templates), and more. You can also use it to [retrieve the full request payload](/reference/get-request) as a prompt blueprint.
+See [Request Logs](/features/observability/request-logs) for the record this ID identifies, or return to [Configure Request Logging](/features/observability/request-logs).
+
+All tracking in PromptLayer is based on the `pl_request_id`. This identifier is needed to enrich logs with [metadata](/features/observability/request-logs/metadata), [scores](/features/observability/request-logs/scores), [associated prompt templates](/features/observability/request-logs/tracking-templates), and more. You can also use it to [retrieve the full request payload](/reference/get-request) as a prompt blueprint.
 
 You can quickly grab a request ID from the web UI as shown below.
 
@@ -91,4 +93,3 @@ const plRequestId = result.request_id;
 ```
 
 </CodeGroup>
-

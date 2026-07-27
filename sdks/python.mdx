@@ -18,7 +18,7 @@ pip install promptlayer
 
 ## OpenAI SDK Auto-Instrumentation
 
-PromptLayer can automatically trace supported direct OpenAI SDK calls. See [OpenAI SDK Auto-Instrumentation](/features/auto-instrumentation/openai) for the tracing extra, initialization order, supported APIs, content capture, and flushing.
+PromptLayer can automatically trace supported direct OpenAI SDK calls. See [OpenAI SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/openai) for the tracing extra, initialization order, supported APIs, content capture, and flushing.
 
 ## SDK evals
 
@@ -452,7 +452,7 @@ pl_client.log_request(
 )
 ```
 
-See the [Custom Logging documentation](/features/prompt-history/custom-logging) and [Log Request API Reference](/reference/log-request) for full details.
+See the [Custom Logging documentation](/features/observability/request-logs/custom-logging) and [Log Request API Reference](/reference/log-request) for full details.
 
 ## Error Handling
 
@@ -688,7 +688,7 @@ async def main():
 asyncio.run(main())
 ```
 
-For more information on custom logging, please visit our [Custom Logging Documentation](/features/prompt-history/custom-logging).
+For more information on custom logging, please visit our [Custom Logging Documentation](/features/observability/request-logs/custom-logging).
 
 #### Example 4: Asynchronous Prompt Execution with run Method
 

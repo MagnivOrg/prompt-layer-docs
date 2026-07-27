@@ -33,7 +33,7 @@ This is powered by the A/B Releases feature. When you create an A/B Release, it 
    - Example: Internal employees receive version 4 (dev) 50% of the time.
 6. Save the A/B Release. It will now dynamically route traffic for the specified release label.
 
-**Important**: When [logging requests](/features/prompt-history/tracking-templates), make sure to log the specific version returned, not just the release label. The label will always point to the original version in your logs.
+**Important**: When [logging requests](/features/observability/request-logs/tracking-templates), make sure to log the specific version returned, not just the release label. The label will always point to the original version in your logs.
 
 To stop dynamically routing traffic, simply delete the A/B Release. The release label will revert to its base mapping.
 

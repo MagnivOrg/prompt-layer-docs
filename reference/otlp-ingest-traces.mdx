@@ -13,10 +13,10 @@ Ingest OpenTelemetry traces through PromptLayer's OTLP/HTTP endpoint.
 - Gzip `Content-Encoding` is supported for both formats.
 - Spans can include `promptlayer.prompt.name`, optionally with `promptlayer.prompt.version`, to link the generated request log to an existing prompt template in your workspace.
 - Spans can include `user.id`/`enduser.id`, `gen_ai.conversation.id`/`session.id`, and `promptlayer.metadata.*` attributes to attach searchable user identity and metadata to the generated request log.
-- For SDK setup, GenAI semantic conventions, prompt template linking, metadata, and collector configuration, see [OpenTelemetry](/features/opentelemetry).
+- For SDK setup, GenAI semantic conventions, prompt template linking, metadata, and collector configuration, see [OpenTelemetry](/features/observability/traces/opentelemetry).
 
 ## Related
 
-- [OpenTelemetry](/features/opentelemetry)
-- [Traces](/running-requests/traces)
+- [OpenTelemetry](/features/observability/traces/opentelemetry)
+- [Traces](/features/observability/traces)
 - [Create Spans Bulk](/reference/spans-bulk)

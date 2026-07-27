@@ -1,5 +1,5 @@
 ---
-title: "Traces"
+title: "Overview"
 description: "Understand PromptLayer traces and add custom spans with the PromptLayer SDK."
 icon: "diagram-project"
 ---
@@ -9,7 +9,7 @@ A trace represents one end-to-end operation in your application. It contains a h
 Supported LLM spans link to PromptLayer request logs, so you can move from the full execution path to the input, output, model, tokens, cost, and metadata for an individual model call.
 
 <Note>
-This page explains the trace hierarchy and PromptLayer SDK span helpers. To choose between provider auto-instrumentation, a framework integration, and a custom OpenTelemetry pipeline, start with the [Observability overview](/features/observability#choose-a-tracing-page).
+This page explains the trace hierarchy and PromptLayer SDK span helpers. To choose between provider auto-instrumentation, a framework integration, and a custom OpenTelemetry pipeline, see [Configuration](/features/observability/traces/configuration).
 </Note>
 
 ## Inspect a Trace
@@ -56,7 +56,7 @@ const result = await pl.run({
 For the full `run()` interface, see the [Python SDK](/sdks/python#using-the-run-method-recommended) or [JavaScript SDK](/sdks/javascript#using-the-run-method-recommended).
 
 <Note>
-This setting enables tracing for the PromptLayer client. To trace calls made directly through a provider client such as `OpenAI()`, use [SDK Auto-Instrumentation](/features/auto-instrumentation/overview).
+This setting enables tracing for the PromptLayer client. To trace calls made directly through a provider client such as `OpenAI()`, use [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview).
 </Note>
 
 ## Add Custom Spans
@@ -119,7 +119,7 @@ const answerQuestion = pl.wrapWithSpan(
 
 ## Trace Tools
 
-Use `traceTool` for tool handlers in a custom agent that does not already have a dedicated [Telemetry Integration](/features/integrations). PromptLayer names the span `Tool: <name>` and marks it as a tool call.
+Use `traceTool` for tool handlers in a custom agent that does not already have a dedicated [Telemetry Integration](/features/observability/traces/integrations). PromptLayer names the span `Tool: <name>` and marks it as a tool call.
 
 <CodeGroup>
 ```python Python
@@ -146,6 +146,6 @@ In the span detail panel, hover over a top-level string, number, or boolean attr
 
 ## Analyze Traces
 
-Trace analytics can aggregate whole traces or individual spans. Use [Analytics](/why-promptlayer/analytics) for charts and the PromptLayer AI assistant. For the exact trace- and span-level fields available through the public API, see [Trace Analytics - Custom Queries](/reference/trace-analytics-custom-analytics).
+Trace analytics can aggregate whole traces or individual spans. Use [Analytics](/features/search-and-analytics/analytics) for charts and the PromptLayer AI assistant. For the exact trace- and span-level fields available through the public API, see [Trace Analytics - Custom Queries](/reference/trace-analytics-custom-analytics).
 
 To collect traces from an agent runner inside an SDK evaluation, see [Agent Tracing for Evals](/sdks/evals/agent-tracing).
