@@ -1,0 +1,17 @@
+---
+title: "SDK Auto-Instrumentation"
+description: "Trace calls made through model provider SDKs without wrapping each request."
+icon: "wave-pulse"
+---
+
+Use SDK auto-instrumentation when your application code creates and calls a supported model provider's native client. PromptLayer registers the provider-specific instrumentor and trace exporter, so supported calls become OpenTelemetry spans and linked request logs without replacing the provider client or logging each request manually.
+
+## Provider Guides
+
+| Provider | Languages | Guide |
+| --- | --- | --- |
+| OpenAI | Python and JavaScript | [Auto-Instrument the OpenAI SDK](/features/auto-instrumentation/openai) |
+
+The provider guide is the source of truth for supported API surfaces, installation, initialization order, content capture, exporter settings, flushing, and verification. Coverage and configuration can differ between languages.
+
+If a framework or agent SDK creates the provider client for you, use [Telemetry Integrations](/features/integrations). If no provider guide applies or you already own the telemetry pipeline, use [OpenTelemetry](/features/opentelemetry). See the [Observability overview](/features/observability#choose-a-tracing-page) for the complete routing guide.

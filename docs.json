@@ -90,11 +90,19 @@
             "icon": "chart-column",
             "pages": [
               "features/observability",
+              "running-requests/traces",
+              {
+                "group": "SDK Auto-Instrumentation",
+                "icon": "wave-pulse",
+                "pages": [
+                  "features/auto-instrumentation/overview",
+                  "features/auto-instrumentation/openai"
+                ]
+              },
+              "features/integrations",
+              "features/opentelemetry",
               "why-promptlayer/advanced-search",
               "why-promptlayer/analytics",
-              "running-requests/traces",
-              "features/opentelemetry",
-              "features/integrations",
               {
                 "group": "Advanced Logging",
                 "icon": "cassette-tape",

@@ -1,0 +1,213 @@
+---
+title: "OpenAI SDK"
+description: "Automatically trace supported direct OpenAI SDK calls with PromptLayer."
+icon: "robot"
+---
+
+PromptLayer can auto-instrument the official OpenAI SDK and export supported calls as OpenTelemetry spans. Each supported direct SDK call appears in PromptLayer as both a trace span and an associated request log without changing how you create or use the OpenAI client.
+
+<Note>
+This guide covers the OpenAI model SDK. If you use the OpenAI Agents SDK, follow the [OpenAI Agents SDK integration](/features/integrations#openai-agents-sdk) instead.
+</Note>
+
+## Supported APIs
+
+| OpenAI API | Python | JavaScript |
+| --- | --- | --- |
+| Chat Completions (`chat.completions.create`) | Supported | Supported |
+| Responses (`responses.create`) | Not supported | Supported |
+| Embeddings (`embeddings.create`) | Supported | Supported |
+
+Only the API surfaces in this table are auto-instrumented. Other OpenAI SDK calls continue to work normally, but this integration does not automatically create PromptLayer traces or request logs for them.
+
+## Prerequisites
+
+- A [PromptLayer API key](/quickstart#prerequisites) for the workspace that should receive the traces
+- An OpenAI API key
+- Python 3.10 or later for the Python integration, or Node.js 20 or later for the JavaScript integration
+
+Export the variables for your language before the application starts. The API keys are required for the setup in this guide. The content-capture setting is required if request logs should include prompts, responses, and tool arguments.
+
+<CodeGroup>
+```bash Python
+export PROMPTLAYER_API_KEY="pl_..."
+export OPENAI_API_KEY="sk_..."
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="span_only"
+```
+
+```bash JavaScript
+export PROMPTLAYER_API_KEY="pl_..."
+export OPENAI_API_KEY="sk_..."
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="true"
+```
+</CodeGroup>
+
+Omit `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` if you want metadata-only telemetry without message contents.
+
+## Python
+
+### 1. Install the SDKs
+
+Install PromptLayer with the OpenAI tracing extra:
+
+```bash
+pip install "promptlayer[otel-genai-instrumentation]" openai
+```
+
+### 2. Initialize instrumentation
+
+Call `instrument_openai()` before the first OpenAI request. It configures the OpenAI instrumentor and an authenticated OTLP exporter for PromptLayer.
+
+```python
+from openai import OpenAI
+from promptlayer import instrument_openai
+
+tracer_provider = instrument_openai()
+client = OpenAI()
+
+try:
+    completion = client.chat.completions.create(
+        model="gpt-4.1-mini",
+        messages=[
+            {"role": "user", "content": "Explain distributed tracing in one sentence."}
+        ],
+    )
+    print(completion.choices[0].message.content)
+
+    embedding = client.embeddings.create(
+        model="text-embedding-3-small",
+        input="Distributed tracing connects work across services.",
+    )
+    print(len(embedding.data[0].embedding))
+finally:
+    # Flush pending spans before a short-lived process exits.
+    tracer_provider.force_flush()
+```
+
+`instrument_openai()` is idempotent when called again with the same tracer provider. If your application already owns an OpenTelemetry SDK tracer provider, pass it with `tracer_provider=`.
+
+<Accordion title="Use an existing PromptLayer client">
+If your application already creates a PromptLayer client, `enable_tracing=True` configures the same OpenAI auto-instrumentation when the tracing extra is installed:
+
+```python
+from openai import OpenAI
+from promptlayer import PromptLayer
+
+promptlayer_client = PromptLayer(enable_tracing=True)
+client = OpenAI()
+
+completion = client.chat.completions.create(
+    model="gpt-4.1-mini",
+    messages=[{"role": "user", "content": "Say hello."}],
+)
+
+promptlayer_client.tracer_provider.force_flush()
+```
+
+Use either this setup or `instrument_openai()` for the same tracer provider; you do not need both.
+</Accordion>
+
+## JavaScript
+
+### 1. Install the SDKs
+
+```bash
+npm install promptlayer openai
+```
+
+### 2. Preload PromptLayer instrumentation
+
+Start Node.js with the `promptlayer/register` preload. The preload must run before your application imports `openai`.
+
+```bash
+node --import promptlayer/register app.mjs
+```
+
+For a deployment command that you cannot edit directly, add the preload through `NODE_OPTIONS`:
+
+```bash
+NODE_OPTIONS="--import promptlayer/register" node app.mjs
+```
+
+### 3. Use the OpenAI SDK normally
+
+```javascript
+import OpenAI from "openai";
+import { shutdownTracing } from "promptlayer";
+
+const client = new OpenAI();
+
+try {
+  const completion = await client.chat.completions.create({
+    model: "gpt-4.1-mini",
+    messages: [
+      {
+        role: "user",
+        content: "Explain distributed tracing in one sentence.",
+      },
+    ],
+  });
+  console.log(completion.choices[0]?.message.content);
+
+  const response = await client.responses.create({
+    model: "gpt-4.1-mini",
+    input: "Explain distributed tracing in one sentence.",
+  });
+  console.log(response.output_text);
+
+  const embedding = await client.embeddings.create({
+    model: "text-embedding-3-small",
+    input: "Distributed tracing connects work across services.",
+  });
+  console.log(embedding.data[0]?.embedding.length);
+} finally {
+  // Flush pending spans and stop the PromptLayer-owned tracing provider.
+  await shutdownTracing();
+}
+```
+
+Call `shutdownTracing()` when a short-lived process finishes, not after every request in a long-running server.
+
+## Capture Prompts and Responses
+
+Prompt and response content is disabled by default because it can contain sensitive data. Model names, timing, token usage when available, and other non-content telemetry are still recorded.
+
+The complete export blocks in [Prerequisites](#prerequisites) enable content capture. Use the language-specific value shown there, set it before `instrument_openai()` or the `promptlayer/register` preload runs, and restart an already-running process after changing it.
+
+<Warning>
+Content capture can send user prompts, model responses, and tool arguments to PromptLayer. Review your privacy, retention, and compliance requirements before enabling it.
+</Warning>
+
+## Configuration Reference
+
+| Setting | Required | Description |
+| --- | --- | --- |
+| `PROMPTLAYER_API_KEY` | Yes | Authenticates trace export and selects the PromptLayer workspace. Python can instead pass `api_key=` to `instrument_openai()`. |
+| `OPENAI_API_KEY` | Yes | Authenticates OpenAI SDK requests. It is read by OpenAI and is not sent to PromptLayer. |
+| `PROMPTLAYER_BASE_URL` | No | Overrides the PromptLayer API root. The tracing endpoint defaults to `<base-url>/v1/traces`. |
+| `PROMPTLAYER_OTLP_TRACES_ENDPOINT` | No | Overrides the complete OTLP/HTTP trace endpoint and takes precedence over `PROMPTLAYER_BASE_URL`. |
+| `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` | For content | Includes prompts, responses, and tool arguments. Use `span_only` for Python and `true` for JavaScript. |
+
+Python also accepts `api_key`, `base_url`, `endpoint`, and `tracer_provider` keyword arguments:
+
+```python
+tracer_provider = instrument_openai(
+    api_key="pl_...",
+    endpoint="https://api.promptlayer.com/v1/traces",
+    tracer_provider=application_tracer_provider,
+)
+```
+
+Configure a tracer provider only once and reuse it. If the OpenAI SDK is already instrumented with a different provider, PromptLayer rejects the mismatch instead of silently exporting incomplete traces.
+
+## Verify the Integration
+
+Run one supported OpenAI request, flush tracing, and open [Traces](/running-requests/traces) in PromptLayer. The OpenAI span should have an associated request log. If the call runs inside `PromptLayer.run()`, PromptLayer links the provider span to the existing run request log instead of creating a duplicate.
+
+If no span appears:
+
+- Confirm the initialization or JavaScript preload runs before the first OpenAI call.
+- Confirm the call uses an API surface listed in [Supported APIs](#supported-apis).
+- Confirm `PROMPTLAYER_API_KEY` belongs to the workspace you are checking.
+- Flush or shut down tracing before a short-lived process exits.
+- If only prompt or response content is missing, check the language-specific content-capture value and restart the process.
