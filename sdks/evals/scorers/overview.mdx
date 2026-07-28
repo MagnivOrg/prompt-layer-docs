@@ -13,7 +13,7 @@ Thresholds, weights, and the overall score work the same as [Scorecards](/featur
 
 | Scorer | Python | JavaScript | Checks |
 | --- | --- | --- | --- |
-| [Compare](#compare) | `compare_scorer` | `compareScorer` | Two columns match (default `Output` vs `Expected`) |
+| [Compare](#compare) | `compare_scorer` | `compareScorer` | Two columns match (default `Output` vs `expected`) |
 | [Contains](#contains) | `contains_scorer` | `containsScorer` | A column contains a literal or another column's value |
 | [Regex](#regex) | `regex_scorer` | `regexScorer` | A column matches a regular expression |
 | [Count](#count) | `count_scorer` | `countScorer` | Character / word / sentence / paragraph count within bounds |
@@ -155,7 +155,13 @@ Each helper below maps to a scorecard check type in [Column Types](/features/tab
 
 ### Compare
 
-Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`. Behavior matches the Compare type in [Column Types](/features/tables/column-types).
+Compare two columns. By default that is `Output` vs `expected` as strings. Pass the left column as `source` and the right as `value_source` / `valueSource`. Behavior matches the Compare type in [Column Types](/features/tables/column-types).
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `source` | no | `"Output"` |
+| `value_source` / `valueSource` | no | `"expected"` |
+| `comparison_type` / `comparisonType` | no | `"STRING"` |
 
 Set how they compare with `comparison_type` / `comparisonType`:
 
@@ -194,7 +200,8 @@ evaluate(
     scorers=[
         compare_scorer(
             "Exact match",
-            sources=["Output", "Expected"],
+            source="Output",
+            value_source="expected",
             comparison_type="STRING",
         )
     ],
@@ -224,7 +231,8 @@ await evaluate("compare-demo", {
   scorers: [
     compareScorer({
       title: "Exact match",
-      sources: ["Output", "Expected"],
+      source: "Output",
+      valueSource: "expected",
       comparisonType: "STRING",
     }),
   ],
@@ -586,13 +594,13 @@ await evaluate("llm-assert-demo", {
 
 Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — emit them with a framework helper or [`traceTool`](/running-requests/traces#tracing-tools) (see [Runner](/sdks/evals/agent-tracing)), or copy a harness from the [Quickstart](/sdks/evals/quickstart).
 
-Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `expected_source` / `expectedSource` (usually `"Expected Trace"`).
+Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `value_source` / `valueSource` (usually `"expected_trace"` / `"expectedTrace"`).
 
 | Key | Required | Default |
 | --- | --- | --- |
-| `trace_source` / `traceSource` | yes | `"Trace"` |
+| `source` | no | `"Trace"` |
 | `accepted_scenarios` / `acceptedScenarios` | one of | list of non-empty tool-name lists |
-| `expected_source` / `expectedSource` | one of | column title |
+| `value_source` / `valueSource` | one of | column title |
 | `mode` | no | `"strict"` |
 
 | Mode | Behavior |
@@ -666,7 +674,7 @@ await evaluate("trajectory-demo", {
 ```
 </CodeGroup>
 
-Or read scenarios from an Expected Trace column. Cell JSON:
+Or read scenarios from the `expected_trace` / `expectedTrace` column. Cell JSON:
 
 ```json
 {
@@ -679,14 +687,14 @@ Or read scenarios from an Expected Trace column. Cell JSON:
 <CodeGroup>
 ```python Python
 trajectory_scorer(
-    expected_source="Expected Trace",
+    value_source="expected_trace",
     mode="non_strict",
 )
 ```
 
 ```javascript JavaScript
 trajectoryScorer({
-  expectedSource: "Expected Trace",
+  valueSource: "expectedTrace",
   mode: "non_strict",
 })
 ```
@@ -704,9 +712,10 @@ Parameter names map to columns:
 
 | Param | Column |
 | --- | --- |
-| `input` | `Input` |
+| `input` | `input` |
 | `output` | `Output` |
-| `expected` | `Expected` |
+| `expected` | `expected` |
+| `expected_trace` | `expected_trace` (Python) |
 | `trace` | `Trace` |
 
 Any other param name is looked up as a column title of the same name. Return a number (or `{"score": x}`, which is normalized to `x`).
@@ -829,7 +838,7 @@ evaluate(
         code_execution_column(
             "exact",
             code=(
-                'return 1 if str(data.get("Expected", "")).lower() '
+                'return 1 if str(data.get("expected", "")).lower() '
                 'in str(data.get("Output", "")).lower() else 0'
             ),
         )
@@ -867,7 +876,7 @@ await evaluate("code-scorer-demo", {
   runner: runLlm,
   scorers: [
     codeExecutionColumn("exact", {
-      code: 'return String(data["Output"] || "").toLowerCase().includes(String(data["Expected"] || "").toLowerCase()) ? 1 : 0;',
+      code: 'return String(data["Output"] || "").toLowerCase().includes(String(data["expected"] || "").toLowerCase()) ? 1 : 0;',
     }),
   ],
 });

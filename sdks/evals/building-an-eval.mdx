@@ -43,9 +43,10 @@ Cases feed the runner and scorers. [Datasets](/sdks/evals/datasets) covers inlin
 
 | Field | Required | Purpose |
 | --- | --- | --- |
-| `input` | ✅ | Passed to the `runner`. |
-| `expected` | — | Expected **output** (used by Contains, Compare, …). |
+| `input` | ✅ | Passed to the `runner` (column `input`). |
+| `expected` | — | Expected **output** for Contains, Compare, … (column `expected`). |
 | `expected_trace` / `expectedTrace` | — | [Trajectory](/sdks/evals/scorers/overview#trajectory) config — which tools should run, not the answer text. |
+| other keys | — | Custom TEXT columns (exact title). No reserved or supporting-column name collisions. |
 
 ## Runner
 

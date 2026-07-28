@@ -97,7 +97,8 @@ Follow current PromptLayer SDK evals docs:
   - LiteLLM (Python, if used): `PromptLayer(enable_tracing=True)`, optional `litellm.success_callback = ["promptlayer"]`, and `traceTool` on **existing** tool handlers.
   - Anything else / custom agent: wrap **existing** handlers with PromptLayer `traceTool` (JS: `pl.traceTool("name", fn)`; Python: `@pl.traceTool(name="name")`).
 - For custom / raw OpenAI client runners: keep the repo’s existing client. Prefer the official OpenAI client over `pl.openai.OpenAI()` / `new pl.OpenAI()` unless the repo already depends on the PromptLayer provider wrapper.
-- Dataset cases use `input`, plus optional `expected` (expected output). Add `expected_trace` / `expectedTrace` only when using Trajectory.
+- Dataset cases use `input`, plus optional `expected` (expected output). Add `expected_trace` / `expectedTrace` only when using Trajectory. Extra keys become custom TEXT columns with that exact title (no reserved names: `input`, `expected`, `Output`, `Trace`, `expected_trace` / `expectedTrace`, or legacy `Input` / `Expected` / `Expected Trace`).
+- Builtin sheet columns are `input`, `expected`, `expected_trace` / `expectedTrace`, `Output`, and `Trace`. Compare defaults to `source="Output"` and `value_source` / `valueSource` `"expected"`; Trajectory column mode uses `value_source` / `valueSource` (not `expected_source`).
 - Prefer scorers that match the purpose: Trajectory for tool path, Contains / Compare / LLM assertion for the final answer.
 - Results must land in PromptLayer Tables via the SDK eval runner.
 
@@ -734,12 +735,12 @@ Evaluation Results:
   ↗ https://dashboard.promptlayer.com/workspace/.../smart-tables/...
 ```
 
-Each run also writes a Table experiment sheet with `Input`, `Output`, and (when you score traces) a `Trace` group with price and latency. The score panel shows each scorer — here Trajectory on Trace and Contains on Output — plus the overall pass rate.
+Each run also writes a Table experiment sheet with `input`, `Output`, and (when you score traces) a `Trace` group with price and latency. The score panel shows each scorer — here Trajectory on Trace and Contains on Output — plus the overall pass rate.
 
 <Frame>
   <img
     src="/images/evals/weather-agent-eval-results.png"
-    alt="weather-agent-eval experiment sheet showing Input, Output, Trace, and 100% pass for Trajectory and Contains"
+    alt="weather-agent-eval experiment sheet showing input, Output, Trace, and 100% pass for Trajectory and Contains"
   />
 </Frame>
 

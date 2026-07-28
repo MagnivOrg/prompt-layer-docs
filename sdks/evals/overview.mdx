@@ -8,7 +8,7 @@ icon: "book"
 In addition to being able to evaluate your agent via our dashboard, you can create an evaluation directly in code with our SDK.
 
 Each eval has four parts:
-- **Dataset** — user messages (and optional expected output / expected tool trajectory)
+- **Dataset** — user messages (and optional expected output, expected tool trajectory, or custom fields)
 - **Runner** — your agent harness (OpenAI Agents, Claude, LangChain, or any callable that takes `input` and returns a final value)
 - **Columns** - optional steps to manipulate your dataset or agent trace
 - **Scorers** — scorecard checks such as Trajectory and Contains
