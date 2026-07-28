@@ -33,6 +33,33 @@ General performance and stability improvements
 
 ---
 
+
+### Deployment 3
+
+#### New Features
+
+**Playground Evaluation Drafts**
+Save your Playground evaluations as draft Tables before publishing them to your workspace. Drafts let you iterate on prompt configurations, input mappings, and evaluation criteria without committing to a final version.
+- Create new draft evaluations or continue editing existing drafts directly from the Playground
+- Map Playground variables to Table columns and configure row filters before running evaluations
+- Export drafts as permanent Tables when ready, optionally linking them to prompt versions in your registry
+
+**Signal Annotations**
+Annotate request logs with custom signals to classify, tag, or flag requests based on your own criteria. Signals appear as visual indicators throughout the dashboard and can be used for filtering and analysis.
+- Define signals with custom names, colors, and scope rules to automatically apply them to matching requests
+- Test signals against historical request logs before deployment to verify they work as expected
+- Search and filter requests by signal presence in the request logs view
+
+#### Improvements
+
+- Improved OpenAI instrumentation span correlation with request logs for better trace visibility
+- Enhanced Playground evaluation input set management with support for up to 50 input sets in draft evaluations
+- Improved Smart Table scorecard criterion display with better assertion result visualization
+- Better handling of prompt template variable mappings in evaluation workflows
+- Refined search suggestions to support signal-based filtering in structured search
+
+---
+
 ## July 27, 2026
 
 ### Deployment 1
