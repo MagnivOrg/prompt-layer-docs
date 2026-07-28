@@ -1,107 +1,110 @@
 ---
 title: "OpenRouter"
-description: "Set up OpenRouter as a custom provider in PromptLayer."
+description: "Use OpenRouter as a first-class provider in PromptLayer for chat, image, video, and speech."
 icon: "route"
 ---
 
-[OpenRouter](https://openrouter.ai) provides access to a wide variety of cutting-edge models through a unified API, including models like DeepSeek, Claude, GPT-4, and many others that may not be available through standard providers.
+[OpenRouter](https://openrouter.ai) provides access to hundreds of models from many labs through a single unified API. PromptLayer supports OpenRouter as a **first-class, native provider** using the official OpenRouter SDK — so you configure one API key and get chat, image generation, video generation, and text-to-speech, with full request logging, streaming, and cost tracking.
 
-## Setting Up OpenRouter as a Custom Provider
+<Note>
+OpenRouter is now a native provider — you no longer need to set it up as an OpenAI-compatible custom provider. The legacy [custom provider](/features/custom-providers) approach still works, but the native integration is recommended because it uses the official OpenRouter SDK and unlocks image, video, and speech capabilities.
+</Note>
 
-To use OpenRouter models in PromptLayer:
+## Configuring your OpenRouter API key
 
-1. **Get an OpenRouter API Key**: Sign up at [OpenRouter](https://openrouter.ai) and obtain your API key from their dashboard
-2. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
-3. Click **Create Custom Provider**
-4. Configure the provider with the following details:
-   - **Name**: OpenRouter
-   - **Client**: OpenAI (OpenRouter uses OpenAI-compatible endpoints)
-   - **Base URL**: `https://openrouter.ai/api/v1`
-   - **API Key**: Your OpenRouter API key
+1. **Get an OpenRouter API key**: Sign up at [OpenRouter](https://openrouter.ai) and create a key in their dashboard.
+2. In your PromptLayer **workspace settings**, open the provider API keys section and add your **OpenRouter** key (the same place you add OpenAI, Anthropic, or Google keys).
 
-## Creating Custom Models (Recommended)
-
-For easier model selection in the Playground and Prompt Registry, you can save specific OpenRouter models:
-
-1. In **Settings → Custom Providers and Models**, find your OpenRouter provider in the list
-2. Click on the OpenRouter row to expand it
-3. Click **Create Custom Model** in the expanded section
-4. Configure each model:
-   - **Model Name**: Enter the OpenRouter model identifier (e.g., `deepseek/deepseek-chat`, `anthropic/claude-3.5-sonnet`)
-   - **Display Name**: A friendly name like "DeepSeek Chat" or "Claude 3.5 Sonnet"
-   - **Model Type**: Chat
-5. Repeat for each model you want to use
-
-The full list of available models can be found in [OpenRouter's documentation](https://openrouter.ai/docs/overview/models).
-
-## Available Models
-
-OpenRouter regularly updates their model offerings and provides access to many providers. Example models include:
-
-- **`deepseek/deepseek-chat`**: DeepSeek's latest chat model
-- **`anthropic/claude-3.5-sonnet`**: Claude 3.5 Sonnet via OpenRouter
-- **`openai/gpt-4-turbo`**: GPT-4 Turbo via OpenRouter
-- **`google/gemini-pro-1.5`**: Gemini Pro 1.5 via OpenRouter
-- **`meta-llama/llama-3.1-405b`**: Llama 3.1 405B via OpenRouter
-
-For the complete and up-to-date list of available models, visit [OpenRouter's models documentation](https://openrouter.ai/docs/overview/models).
-
-## Using OpenRouter in PromptLayer
-
-### In the Playground
-
-After setup, you can use OpenRouter models in the PromptLayer Playground:
-
-1. Open the Playground
-2. Select your OpenRouter provider from the provider dropdown
-3. Choose your desired model (or type the model identifier)
-4. Start querying with your prompts
-
-### In the Prompt Registry
-
-OpenRouter models work seamlessly with PromptLayer's Prompt Registry:
-
-- Select OpenRouter models when creating or editing prompt templates
-- Use templates with OpenRouter models in evaluations
-- Track and analyze OpenRouter API usage alongside other providers
-
-### Key Benefits
-
-OpenRouter provides:
-
-- **Wide Model Selection**: Access to models from multiple providers through one API
-- **Automatic Rate Limiting and Failover**: OpenRouter handles rate limiting between providers
-- **Cost Optimization**: Compare pricing across different models and providers
-- **Model Availability**: Access to models that might not be directly available in your region
-
-## SDK Usage
-
-Once you've set up your OpenRouter custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
-
-```python
-from promptlayer import PromptLayer
-
-promptlayer = PromptLayer(api_key="pl_****")
-
-# Run a prompt template that uses your OpenRouter custom provider
-response = promptlayer.run(
-    prompt_name="your-openrouter-prompt",
-    input_variables={"query": "your input"}
-)
-
-# Access the response
-print(response["raw_response"].choices[0].message.content)
-
-# The request is automatically logged with request_id
-print(f"Request ID: {response['request_id']}")
-```
+Your key is stored encrypted per workspace and is used to run OpenRouter requests from the Playground, Prompt Registry, evaluations, and workflows.
 
 <Info>
-Using [`promptlayer.run()`](/sdks/python#using-the-run-method-recommended) ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
+When you run through the SDK with [`promptlayer.run()`](/sdks/python#using-the-run-method-recommended), the OpenRouter call is executed **locally** with the `OPENROUTER_API_KEY` on your machine — your provider key is never sent to PromptLayer.
+</Info>
+
+## Capabilities
+
+OpenRouter models in PromptLayer are grouped by **API type**. When you select OpenRouter in the Playground, an API selector lets you switch between the capabilities below, and the model dropdown lists only the models that support the selected one.
+
+| API type | Description | Example models |
+|----------|-------------|----------------|
+| **Chat** | Chat completions, streaming and non-streaming | `openai/gpt-4o-mini`, `anthropic/claude-3.5-sonnet`, `deepseek/deepseek-chat` |
+| **Images** | Image generation | `openai/gpt-image-1`, `google/gemini-2.5-flash-image` |
+| **Video** | Video generation (async job) | `google/veo-3.1` |
+| **Speech** | Text-to-speech (TTS) | `hexgrad/kokoro-82m`, `google/gemini-3.1-flash-tts-preview` |
+
+Additional chat features are supported per model, gated by OpenRouter's model metadata:
+
+- **Streaming** — token-by-token streaming for chat.
+- **Structured outputs** — JSON Schema `response_format` on models that advertise support.
+- **Function / tool calling** — your Prompt Registry tools map to OpenRouter `tools`.
+- **Server (built-in) tools** — OpenRouter server tools such as web search are available in the Functions editor as built-in tools for OpenRouter models. See [Tool Calling](/features/prompt-registry/tool-calling).
+
+The full, up-to-date catalog is on [OpenRouter's models page](https://openrouter.ai/models).
+
+## Using OpenRouter in the Playground
+
+1. Open the Playground.
+2. Select **OpenRouter** from the provider dropdown.
+3. Choose the **API type** (Chat, Images, Video, or Speech).
+4. Pick a model from the dropdown.
+5. For **Speech**, choose a **voice** and response format in the model controls.
+6. Run your prompt. Chat streams live; image, video, and speech return the generated media inline (audio plays with a built-in player).
+
+Generated media, token counts, and cost appear in the request log the same way as other providers.
+
+### Speech (text-to-speech)
+
+Speech models take the prompt text as the input to synthesize and require a **voice** parameter. PromptLayer merges each model's advertised voices with the common OpenAI-compatible voice aliases and sorts them alphabetically. The response is returned as playable audio and logged as an audio output.
+
+## SDK usage
+
+Once you've configured your OpenRouter key and created a prompt template that uses an OpenRouter model, run it with the PromptLayer SDK. The API type (chat / images / video / speech) is derived from the template's model configuration, so the same `run()` call works for every capability.
+
+<CodeGroup>
+
+```python Python
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")  # OPENROUTER_API_KEY is read from the environment
+
+# Chat (set stream=True for token streaming)
+response = promptlayer.run(
+    prompt_name="your-openrouter-chat-prompt",
+    input_variables={"question": "What is PromptLayer?"},
+)
+print(response["prompt_blueprint"]["prompt_template"]["messages"][-1]["content"])
+print(f"Request ID: {response['request_id']}")
+
+# Speech — the template uses an OpenRouter speech model (e.g. hexgrad/kokoro-82m)
+speech = promptlayer.run(
+    prompt_name="your-openrouter-speech-prompt",
+    input_variables={"text": "Hello from PromptLayer."},
+)
+# Audio is returned as an output_media block (base64 data URI)
+```
+
+```javascript JavaScript
+import { PromptLayer } from "promptlayer";
+
+const promptLayerClient = new PromptLayer({ apiKey: "pl_****" });
+
+const response = await promptLayerClient.run({
+  promptName: "your-openrouter-chat-prompt",
+  inputVariables: { question: "What is PromptLayer?" },
+});
+
+console.log(response.request_id);
+```
+
+</CodeGroup>
+
+<Info>
+Using `promptlayer.run()` ensures your requests are logged to PromptLayer and uses your Prompt Registry templates. This is the recommended approach for production.
 </Info>
 
 ## Related Documentation
 
-- [Custom Providers](/features/custom-providers)
 - [Supported Providers](/features/supported-providers)
+- [Image Generation](/features/image-generation)
+- [Tool Calling](/features/prompt-registry/tool-calling)
 - [OpenRouter Official Documentation](https://openrouter.ai/docs)
