@@ -443,7 +443,7 @@ Install:
 pip install promptlayer litellm
 ```
 
-Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with [`traceTool`](/features/observability/traces#tracing-tools) for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — `traceTool` is a no-op unless that `PromptLayer` instance has tracing enabled.
+Enable PromptLayer tracing with `PromptLayer(enable_tracing=True)`, wrap tools with [`traceTool`](/features/observability/traces/manual-tracing#trace-tools) for Trajectory, and set LiteLLM's PromptLayer callback for request logging. LiteLLM does not emit separate `Tool:` spans on its own — `traceTool` is a no-op unless that `PromptLayer` instance has tracing enabled.
 
 ```python
 # evals/litellm_weather.eval.py

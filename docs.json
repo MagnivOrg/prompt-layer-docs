@@ -109,17 +109,19 @@
                 "icon": "diagram-project",
                 "pages": [
                   "features/observability/traces",
-                  "features/observability/traces/configuration",
+                  "features/observability/traces/manual-tracing",
                   {
                     "group": "SDK Auto-Instrumentation",
                     "icon": "code",
                     "pages": [
                       "features/observability/traces/auto-instrumentation/overview",
-                      "features/observability/traces/auto-instrumentation/openai"
+                      "features/observability/traces/auto-instrumentation/openai",
+                      "features/observability/traces/auto-instrumentation/anthropic",
+                      "features/observability/traces/auto-instrumentation/google"
                     ]
                   },
-                  "features/observability/traces/integrations",
-                  "features/observability/traces/opentelemetry"
+                  "features/observability/traces/opentelemetry",
+                  "features/observability/traces/integrations"
                 ]
               }
             ]

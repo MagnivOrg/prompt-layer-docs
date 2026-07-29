@@ -1,6 +1,6 @@
 ---
 title: "Overview"
-description: "Understand PromptLayer traces and add custom spans with the PromptLayer SDK."
+description: "Understand PromptLayer traces and choose how to instrument your application."
 icon: "diagram-project"
 ---
 
@@ -8,9 +8,18 @@ A trace represents one end-to-end operation in your application. It contains a h
 
 Supported LLM spans link to PromptLayer request logs, so you can move from the full execution path to the input, output, model, tokens, cost, and metadata for an individual model call.
 
-<Note>
-This page explains the trace hierarchy and PromptLayer SDK span helpers. To choose between provider auto-instrumentation, a framework integration, and a custom OpenTelemetry pipeline, see [Configuration](/features/observability/traces/configuration).
-</Note>
+## Choose a Tracing Method
+
+All tracing methods send spans to the same PromptLayer trace view. Choose the method that matches the code producing telemetry:
+
+| Method | Use it when |
+| --- | --- |
+| [Manual Tracing](/features/observability/traces/manual-tracing) | You use `PromptLayer.run()` or want to wrap custom application and tool functions with PromptLayer SDK spans. |
+| [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview) | Your application calls a supported model provider SDK directly. |
+| [Telemetry Integrations](/features/observability/traces/integrations) | A framework, agent SDK, or model router makes the calls. |
+| [OpenTelemetry](/features/observability/traces/opentelemetry) | You already operate an OpenTelemetry pipeline or no dedicated integration supports your library. |
+
+Use the most specific supported method. These are collection methods, not separate trace products.
 
 ## Inspect a Trace
 
@@ -21,122 +30,6 @@ The trace view shows parent-child relationships, duration, status, attributes, i
 <Info>
 The trace list shows root spans. For a long-running operation, child spans can reach PromptLayer before the root span finishes, but the complete trace appears in the list after the root span ends.
 </Info>
-
-## Trace PromptLayer SDK Runs
-
-Enable tracing when you create a PromptLayer client. Calls made through `run()` then participate in the active trace.
-
-<CodeGroup>
-```python Python
-from promptlayer import PromptLayer
-
-pl = PromptLayer(enable_tracing=True)
-
-result = pl.run(
-    prompt_name="simple-greeting",
-    input_variables={"name": "Alice"},
-)
-```
-
-```javascript JavaScript
-import { PromptLayer } from "promptlayer";
-
-const pl = new PromptLayer({
-  apiKey: process.env.PROMPTLAYER_API_KEY,
-  enableTracing: true,
-});
-
-const result = await pl.run({
-  promptName: "simple-greeting",
-  inputVariables: { name: "Alice" },
-});
-```
-</CodeGroup>
-
-For the full `run()` interface, see the [Python SDK](/sdks/python#using-the-run-method-recommended) or [JavaScript SDK](/sdks/javascript#using-the-run-method-recommended).
-
-<Note>
-This setting enables tracing for the PromptLayer client. To trace calls made directly through a provider client such as `OpenAI()`, use [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview).
-</Note>
-
-## Add Custom Spans
-
-Use `traceable` in Python or `wrapWithSpan` in JavaScript to record application functions that are not traced by an integration. Give important spans a descriptive name so they are easy to identify in the trace view.
-
-<CodeGroup>
-```python Python
-@pl.traceable(
-    name="calculate-total",
-    attributes={"component": "billing"},
-)
-def calculate_total(items):
-    return sum(item["price"] for item in items)
-```
-
-```javascript JavaScript
-const calculateTotal = pl.wrapWithSpan(
-  "calculate-total",
-  (items) => items.reduce((total, item) => total + item.price, 0)
-);
-```
-</CodeGroup>
-
-If you omit the Python `name`, PromptLayer uses the function name. JavaScript takes the span name as the first argument to `wrapWithSpan`.
-
-## Nest Spans
-
-Traced functions called inside another active span become children of that span. When an in-process provider or framework integration preserves the active OpenTelemetry context, its spans also appear as children. This allows one trace to combine application, tool, and LLM spans.
-
-<CodeGroup>
-```python Python
-@pl.traceable()
-def retrieve_context(question):
-    return ["Relevant context"]
-
-@pl.traceable(name="answer-question")
-def answer_question(question):
-    context = retrieve_context(question)
-    return {"question": question, "context": context}
-```
-
-```javascript JavaScript
-const retrieveContext = pl.wrapWithSpan(
-  "retrieve-context",
-  async (question) => ["Relevant context"]
-);
-
-const answerQuestion = pl.wrapWithSpan(
-  "answer-question",
-  async (question) => ({
-    question,
-    context: await retrieveContext(question),
-  })
-);
-```
-</CodeGroup>
-
-![Group nests spans](/images/traces/nested-spans.png)
-
-## Trace Tools
-
-Use `traceTool` for tool handlers in a custom agent that does not already have a dedicated [Telemetry Integration](/features/observability/traces/integrations). PromptLayer names the span `Tool: <name>` and marks it as a tool call.
-
-<CodeGroup>
-```python Python
-@pl.traceTool(name="get_weather")
-def get_weather(city: str) -> str:
-    return f"{city} is 72F and sunny."
-```
-
-```javascript JavaScript
-const getWeather = pl.traceTool(
-  "get_weather",
-  async (city) => `${city} is 72F and sunny.`
-);
-```
-</CodeGroup>
-
-`traceTool` records only when tracing is enabled on the client. The tool name is also used by tool-aware features such as the [Trajectory scorer](/sdks/evals/scorers/overview#trajectory).
 
 ## Filter Traces
 

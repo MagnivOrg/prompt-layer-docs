@@ -1,7 +1,7 @@
 ---
 title: "OpenAI SDK"
 description: "Automatically trace supported direct OpenAI SDK calls with PromptLayer."
-icon: "robot"
+icon: "/images/provider-logos/openai.svg"
 ---
 
 PromptLayer can auto-instrument the official OpenAI SDK and export supported calls as OpenTelemetry spans. Each supported direct SDK call appears in PromptLayer as both a trace span and an associated request log without changing how you create or use the OpenAI client.
@@ -14,9 +14,10 @@ This guide covers the OpenAI model SDK. If you use the OpenAI Agents SDK, follow
 
 | OpenAI API | Python | JavaScript |
 | --- | --- | --- |
-| Chat Completions (`chat.completions.create`) | Supported | Supported |
-| Responses (`responses.create`) | Not supported | Supported |
-| Embeddings (`embeddings.create`) | Supported | Supported |
+| Chat Completions (`chat.completions.create`) | Sync, async, and streaming | Supported, including streaming |
+| Structured-output parsing | Sync and async | Not supported |
+| Responses (`responses.create`) | Sync, async, and streaming | Supported, including streaming |
+| Embeddings (`embeddings.create`) | Sync and async | Supported |
 
 Only the API surfaces in this table are auto-instrumented. Other OpenAI SDK calls continue to work normally, but this integration does not automatically create PromptLayer traces or request logs for them.
 
@@ -26,7 +27,7 @@ Only the API surfaces in this table are auto-instrumented. Other OpenAI SDK call
 - An OpenAI API key
 - Python 3.10 or later for the Python integration, or Node.js 20 or later for the JavaScript integration
 
-Export the variables for your language before the application starts. The API keys are required for the setup in this guide. The content-capture setting is required if request logs should include prompts, responses, and tool arguments.
+Export the variables for your language before the application starts. The API keys are required for the setup in this guide. Content capture is strongly recommended so PromptLayer can fully support request inspection, search, analytics, and debugging with your prompts, responses, and tool arguments.
 
 <CodeGroup>
 ```bash Python
@@ -42,7 +43,7 @@ export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="true"
 ```
 </CodeGroup>
 
-Omit `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` if you want metadata-only telemetry without message contents.
+Omit `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` only if your data policies require metadata-only telemetry without message contents. This limits content-aware PromptLayer features.
 
 ## Python
 
@@ -87,13 +88,16 @@ finally:
 `instrument_openai()` is idempotent when called again with the same tracer provider. If your application already owns an OpenTelemetry SDK tracer provider, pass it with `tracer_provider=`.
 
 <Accordion title="Use an existing PromptLayer client">
-If your application already creates a PromptLayer client, `enable_tracing=True` configures the same OpenAI auto-instrumentation when the tracing extra is installed:
+If your application already creates a PromptLayer client, select OpenAI when enabling tracing:
 
 ```python
 from openai import OpenAI
 from promptlayer import PromptLayer
 
-promptlayer_client = PromptLayer(enable_tracing=True)
+promptlayer_client = PromptLayer(
+    enable_tracing=True,
+    tracing_providers=("openai",),
+)
 client = OpenAI()
 
 completion = client.chat.completions.create(
@@ -104,7 +108,7 @@ completion = client.chat.completions.create(
 promptlayer_client.tracer_provider.force_flush()
 ```
 
-Use either this setup or `instrument_openai()` for the same tracer provider; you do not need both.
+Omit `tracing_providers` to instrument every supported provider SDK that is installed. Use either this setup or `instrument_openai()` for the same tracer provider; you do not need both.
 </Accordion>
 
 ## JavaScript
@@ -168,9 +172,11 @@ try {
 
 Call `shutdownTracing()` when a short-lived process finishes, not after every request in a long-running server.
 
+The preload instruments every supported provider. To instrument only OpenAI, call `configureTracing({ providers: ["openai"] })` in a bootstrap module and dynamically import the application afterward. See [Select Providers](/features/observability/traces/auto-instrumentation/overview#select-providers).
+
 ## Capture Prompts and Responses
 
-Prompt and response content is disabled by default because it can contain sensitive data. Model names, timing, token usage when available, and other non-content telemetry are still recorded.
+Prompt and response content is disabled by default because it can contain sensitive data. PromptLayer strongly recommends enabling it when your data policies allow it so search, analytics, request inspection, and debugging can use the complete LLM interaction. Model names, timing, token usage when available, and other non-content telemetry are still recorded when capture is disabled.
 
 The complete export blocks in [Prerequisites](#prerequisites) enable content capture. Use the language-specific value shown there, set it before `instrument_openai()` or the `promptlayer/register` preload runs, and restart an already-running process after changing it.
 
@@ -182,7 +188,7 @@ Content capture can send user prompts, model responses, and tool arguments to Pr
 
 | Setting | Required | Description |
 | --- | --- | --- |
-| `PROMPTLAYER_API_KEY` | Yes | Authenticates trace export and selects the PromptLayer workspace. Python can instead pass `api_key=` to `instrument_openai()`. |
+| `PROMPTLAYER_API_KEY` | Yes | Authenticates trace export and selects the PromptLayer workspace. Python can instead pass `api_key=` to `instrument_openai()` or `configure_tracing()`. |
 | `OPENAI_API_KEY` | Yes | Authenticates OpenAI SDK requests. It is read by OpenAI and is not sent to PromptLayer. |
 | `PROMPTLAYER_BASE_URL` | No | Overrides the PromptLayer API root. The tracing endpoint defaults to `<base-url>/v1/traces`. |
 | `PROMPTLAYER_OTLP_TRACES_ENDPOINT` | No | Overrides the complete OTLP/HTTP trace endpoint and takes precedence over `PROMPTLAYER_BASE_URL`. |
@@ -199,6 +205,8 @@ tracer_provider = instrument_openai(
 ```
 
 Configure a tracer provider only once and reuse it. If the OpenAI SDK is already instrumented with a different provider, PromptLayer rejects the mismatch instead of silently exporting incomplete traces.
+
+For multi-provider Python applications, use `configure_tracing(providers=("openai", ...))` or the `tracing_providers` PromptLayer client option described in the [auto-instrumentation overview](/features/observability/traces/auto-instrumentation/overview#select-providers).
 
 ## Verify the Integration
 
