@@ -71,11 +71,16 @@ evaluate(
             ColumnType.PROMPT_TEMPLATE,
             {
                 "template": {"name": "summarize", "version_number": 1},
-                "prompt_template_variable_mappings": {"topic": "Input"},
+                "prompt_template_variable_mappings": {"topic": "input"},
             },
         )
     ],
-    scorers=[compare_scorer(sources=["Prompt output", "Expected"])],
+    scorers=[
+        compare_scorer(
+            source_column="Prompt output",
+            expected_column="expected",
+        )
+    ],
 )
 ```
 
@@ -105,10 +110,15 @@ await evaluate("prompt-column-demo", {
   columns: [
     column("Prompt output", ColumnType.PROMPT_TEMPLATE, {
       template: { name: "summarize", version_number: 1 },
-      prompt_template_variable_mappings: { topic: "Input" },
+      prompt_template_variable_mappings: { topic: "input" },
     }),
   ],
-  scorers: [compareScorer({ sources: ["Prompt output", "Expected"] })],
+  scorers: [
+    compareScorer({
+      sourceColumn: "Prompt output",
+      expectedColumn: "expected",
+    }),
+  ],
 });
 ```
 </CodeGroup>
@@ -157,7 +167,7 @@ evaluate(
             {"source": "Output", "json_path": "$.user.id", "return_first_match": True},
         )
     ],
-    scorers=[contains_scorer(source="User id", value="42")],
+    scorers=[contains_scorer(source_column="User id", expected="42")],
 )
 ```
 
@@ -192,7 +202,7 @@ await evaluate("json-path-demo", {
       return_first_match: true,
     }),
   ],
-  scorers: [containsScorer({ source: "User id", value: "42" })],
+  scorers: [containsScorer({ sourceColumn: "User id", expected: "42" })],
 });
 ```
 </CodeGroup>
@@ -238,10 +248,10 @@ evaluate(
         column(
             "Primary or output",
             ColumnType.COALESCE,
-            {"sources": ["Expected", "Output"]},
+            {"sources": ["expected", "Output"]},
         )
     ],
-    scorers=[contains_scorer(source="Primary or output", value="primary")],
+    scorers=[contains_scorer(source_column="Primary or output", expected="primary")],
 )
 ```
 
@@ -275,10 +285,10 @@ await evaluate("coalesce-demo", {
   runner: runLlm,
   columns: [
     column("Primary or output", ColumnType.COALESCE, {
-      sources: ["Expected", "Output"],
+      sources: ["expected", "Output"],
     }),
   ],
-  scorers: [containsScorer({ source: "Primary or output", value: "primary" })],
+  scorers: [containsScorer({ sourceColumn: "Primary or output", expected: "primary" })],
 });
 ```
 </CodeGroup>
@@ -342,10 +352,10 @@ evaluate(
         column(
             "Similarity",
             ColumnType.COSINE_SIMILARITY,
-            {"sources": ["Output", "Expected"]},
+            {"sources": ["Output", "expected"]},
         )
     ],
-    scorers=[count_scorer(source="Output", type="words", min_count=1)],
+    scorers=[count_scorer(source_column="Output", type="words", min_count=1)],
 )
 ```
 
@@ -374,10 +384,10 @@ await evaluate("cosine-demo", {
   runner: runLlm,
   columns: [
     column("Similarity", ColumnType.COSINE_SIMILARITY, {
-      sources: ["Output", "Expected"],
+      sources: ["Output", "expected"],
     }),
   ],
-  scorers: [countScorer({ source: "Output", type: "words", minCount: 1 })],
+  scorers: [countScorer({ sourceColumn: "Output", type: "words", minCount: 1 })],
 });
 ```
 </CodeGroup>
@@ -425,7 +435,7 @@ evaluate(
             {"source": "Output", "query": "Extract the order number only"},
         )
     ],
-    scorers=[contains_scorer(source="Order id", value="99")],
+    scorers=[contains_scorer(source_column="Order id", expected="99")],
 )
 ```
 
@@ -459,7 +469,7 @@ await evaluate("extract-demo", {
       query: "Extract the order number only",
     }),
   ],
-  scorers: [containsScorer({ source: "Order id", value: "99" })],
+  scorers: [containsScorer({ sourceColumn: "Order id", expected: "99" })],
 });
 ```
 </CodeGroup>
@@ -487,7 +497,7 @@ column(
     ColumnType.FOR_LOOP,
     {
         "loop_type": "prompt",
-        "iterator_source": "Input",
+        "iterator_source": "input",
         "prompt_config": {
             "template": {"name": "process-item", "version_number": 1},
             "prompt_template_variable_mappings": {"item": "_iterator_item"},
@@ -503,7 +513,7 @@ import { column, ColumnType } from "promptlayer";
 
 column("Expand items", ColumnType.FOR_LOOP, {
   loop_type: "prompt",
-  iterator_source: "Input",
+  iterator_source: "input",
   prompt_config: {
     template: { name: "process-item", version_number: 1 },
     prompt_template_variable_mappings: { item: "_iterator_item" },
@@ -541,7 +551,7 @@ column(
         "end_condition_json_path": "$.done",
         "prompt_config": {
             "template": {"name": "refine", "version_number": 1},
-            "prompt_template_variable_mappings": {"draft": "Input"},
+            "prompt_template_variable_mappings": {"draft": "input"},
         },
         "variable_mappings": {},
         "return_all_outputs": False,
@@ -558,7 +568,7 @@ column("Refine until done", ColumnType.WHILE_LOOP, {
   end_condition_json_path: "$.done",
   prompt_config: {
     template: { name: "refine", version_number: 1 },
-    prompt_template_variable_mappings: { draft: "Input" },
+    prompt_template_variable_mappings: { draft: "input" },
   },
   variable_mappings: {},
   return_all_outputs: false,

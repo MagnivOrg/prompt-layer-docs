@@ -33,7 +33,7 @@ You don't create those spans by hand. Emit them with either:
 - **A framework helper** — OpenAI Agents, Claude, Vercel AI, and the rest in [Telemetry Integrations](/features/integrations) — which instruments your tools automatically.
 - **`traceTool`** on a custom agent's tool handlers. It records the `Tool: <name>` span for you (on a tracing-enabled client); see [Tracing Tools](/running-requests/traces#tracing-tools) for the full contract.
 
-Only the tools you assert on (the names in `accepted_scenarios`) need a span — a helper tool you don't score can stay untraced. How the modes treat what they observe:
+Only the tools you assert on (the names in Trajectory `expected`) need a span — a helper tool you don't score can stay untraced. How the modes treat what they observe:
 
 | `mode` | Rule | Untraced / extra tools |
 | --- | --- | --- |

@@ -9,17 +9,19 @@ Case fields:
 
 - `input` — required; passed to the `runner`
 - `expected` — optional; expected **output** (Contains, Compare, and similar)
-- `expected_trace` / `expectedTrace` — optional; only for [Trajectory](/sdks/evals/scorers/overview#trajectory) scorer. This is Trajectory config that describes the accepted tool scenarios.
+- `expected_trace` / `expectedTrace` — optional; only for [Trajectory](/sdks/evals/scorers/overview#trajectory). Trajectory config that describes the accepted tool scenarios
+- **any other key** — optional custom field; becomes a TEXT column with that exact title
 
 ## Inline cases
 
 <CodeGroup>
 ```python Python
 dataset = [
-    {"input": "What is 2+2?", "expected": "4"},
+    {"input": "What is 2+2?", "expected": "4", "topic": "math"},
     {
         "input": "What is the weather in Tokyo?",
         "expected": "72",
+        "topic": "weather",
         "expected_trace": {
             "accepted_scenarios": [
                 {"required_tools": ["get_weather"]}
@@ -31,10 +33,11 @@ dataset = [
 
 ```javascript JavaScript
 const dataset = [
-  { input: "What is 2+2?", expected: "4" },
+  { input: "What is 2+2?", expected: "4", topic: "math" },
   {
     input: "What is the weather in Tokyo?",
     expected: "72",
+    topic: "weather",
     expectedTrace: {
       accepted_scenarios: [{ required_tools: ["get_weather"] }],
     },
@@ -43,15 +46,18 @@ const dataset = [
 ```
 </CodeGroup>
 
-| Field | Becomes | Meaning |
+| Field | Column title | Meaning |
 | --- | --- | --- |
-| `input` | `Input` | Passed to the `runner` |
-| `expected` | `Expected` | Optional expected output |
-| `expected_trace` / `expectedTrace` | `Expected Trace` | Optional Trajectory config; only needed with Trajectory |
+| `input` | `input` | Passed to the `runner` |
+| `expected` | `expected` | Optional expected output |
+| `expected_trace` / `expectedTrace` | `expected_trace` (Python) / `expectedTrace` (JS) | Optional Trajectory config; only needed with Trajectory |
+| other keys | same as the key | Custom TEXT columns; sparse across rows |
+
+Extra keys become sparse TEXT columns (empty when missing). Point scorers at the same title — for example `contains_scorer(source_column="topic", expected="math")`. Names must not collide with reserved columns (`input`, `expected`, `Output`, `Trace`, `expected_trace` / `expectedTrace`, or legacy `Input` / `Expected` / `Expected Trace`) or with [supporting column](/sdks/evals/columns/overview) titles.
 
 ## Use a dashboard Table
 
-Pass a Table id. The SDK reads `Input` / `Expected` / `Expected Trace` from that sheet and writes results to a **new** experiment sheet.
+Pass a Table id. The SDK reads `input` / `expected` / `expected_trace` (or `expectedTrace` in JS) plus other non-reserved TEXT columns from that sheet and writes results to a **new** experiment sheet. Legacy titles (`Input`, `Expected`, `Expected Trace`) still resolve.
 
 <CodeGroup>
 ```python Python
@@ -74,7 +80,7 @@ evaluate(
     "from-dashboard",
     dataset={"table_id": "00000000-0000-0000-0000-000000000000"},
     runner=run_llm,
-    scorers=[contains_scorer(source="Output", value="reset")],
+    scorers=[contains_scorer(source_column="Output", expected="reset")],
 )
 ```
 
@@ -98,7 +104,7 @@ async function runLlm(userMessage) {
 await evaluate("from-dashboard", {
   dataset: { tableId: "00000000-0000-0000-0000-000000000000" },
   runner: runLlm,
-  scorers: [containsScorer({ source: "Output", value: "reset" })],
+  scorers: [containsScorer({ sourceColumn: "Output", expected: "reset" })],
 });
 ```
 </CodeGroup>
@@ -110,3 +116,4 @@ Optional `sheet_id` / `sheetId` picks a non-default source sheet. Omit it to use
 - Empty dataset or a case without `input`
 - Passing a Table title instead of `table_id` / `tableId`
 - Setting top-level `sheet_id` on `evaluate(...)` — that targets the experiment sheet and is rejected
+- Custom field names that collide with reserved columns or supporting column titles

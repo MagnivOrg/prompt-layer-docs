@@ -40,7 +40,7 @@ try:
         "support-gate",
         dataset=[{"input": "How do I reset my password?"}],
         runner=run_llm,
-        scorers=[contains_scorer(source="Output", value="reset")],
+        scorers=[contains_scorer(source_column="Output", expected="reset")],
         passing_score=0.8,
         include_failure_examples=True,
     )
@@ -71,7 +71,7 @@ try {
   const result = await evaluate("support-gate", {
     dataset: [{ input: "How do I reset my password?" }],
     runner: runLlm,
-    scorers: [containsScorer({ source: "Output", value: "reset" })],
+    scorers: [containsScorer({ sourceColumn: "Output", expected: "reset" })],
     passingScore: 0.8,
     includeFailureExamples: true,
   });

@@ -8,7 +8,7 @@ icon: "book"
 In addition to being able to evaluate your agent via our dashboard, you can create an evaluation directly in code with our SDK.
 
 Each eval has four parts:
-- **Dataset** — user messages (and optional expected output / expected tool trajectory)
+- **Dataset** — user messages (and optional expected output, expected tool trajectory, or custom fields)
 - **Runner** — your agent harness (OpenAI Agents, Claude, LangChain, or any callable that takes `input` and returns a final value)
 - **Columns** - optional steps to manipulate your dataset or agent trace
 - **Scorers** — scorecard checks such as Trajectory and Contains
@@ -56,10 +56,10 @@ evaluate(
     runner=run_agent,
     scorers=[
         trajectory_scorer(
-            accepted_scenarios=[["get_weather"]],
+            expected=[["get_weather"]],
             mode="non_strict",
         ),
-        contains_scorer(source="Output", value="72"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
     passing_score=1.0,
 )
@@ -100,10 +100,10 @@ await evaluate("weather-agent-eval", {
   runner: runAgent,
   scorers: [
     trajectoryScorer({
-      acceptedScenarios: [["get_weather"]],
+      expected: [["get_weather"]],
       mode: "non_strict",
     }),
-    containsScorer({ source: "Output", value: "72" }),
+    containsScorer({ sourceColumn: "Output", expected: "72" }),
   ],
   passingScore: 1.0,
 });

@@ -13,7 +13,7 @@ Thresholds, weights, and the overall score work the same as [Scorecards](/featur
 
 | Scorer | Python | JavaScript | Checks |
 | --- | --- | --- | --- |
-| [Compare](#compare) | `compare_scorer` | `compareScorer` | Two columns match (default `Output` vs `Expected`) |
+| [Compare](#compare) | `compare_scorer` | `compareScorer` | A column matches a literal or another column (default `Output` vs `expected`) |
 | [Contains](#contains) | `contains_scorer` | `containsScorer` | A column contains a literal or another column's value |
 | [Regex](#regex) | `regex_scorer` | `regexScorer` | A column matches a regular expression |
 | [Count](#count) | `count_scorer` | `countScorer` | Character / word / sentence / paragraph count within bounds |
@@ -80,12 +80,12 @@ evaluate(
     scorers=[
         contains_scorer(
             "Has apology",
-            source="Output",
-            value="sorry",
+            source_column="Output",
+            expected="sorry",
             weight=1.0,
         ),
         trajectory_scorer(
-            accepted_scenarios=[["lookup_user", "send_reset"]],
+            expected=[["lookup_user", "send_reset"]],
             weight=2.5,
             required=True,
             pass_threshold=0.9,
@@ -134,12 +134,12 @@ await evaluate("support-bot", {
   scorers: [
     containsScorer({
       title: "Has apology",
-      source: "Output",
-      value: "sorry",
+      sourceColumn: "Output",
+      expected: "sorry",
       weight: 1.0,
     }),
     trajectoryScorer({
-      acceptedScenarios: [["lookup_user", "send_reset"]],
+      expected: [["lookup_user", "send_reset"]],
       weight: 2.5,
       required: true,
       passThreshold: 0.9,
@@ -155,7 +155,14 @@ Each helper below maps to a scorecard check type in [Column Types](/features/tab
 
 ### Compare
 
-Compare two columns. By default that is `Output` vs `Expected` as strings. Pass exactly two column titles in `sources`. Behavior matches the Compare type in [Column Types](/features/tables/column-types).
+Compare a column to a literal or another column. By default that is `Output` vs the `expected` column as strings. Pass the left column as `source_column` / `sourceColumn`, then exactly one of `expected` (literal) or `expected_column` / `expectedColumn`. If you omit both expected options, the SDK uses column `expected`. Behavior matches the Compare type in [Column Types](/features/tables/column-types).
+
+| Key | Required | Default |
+| --- | --- | --- |
+| `source_column` / `sourceColumn` | no | `"Output"` |
+| `expected` | one of | literal value |
+| `expected_column` / `expectedColumn` | one of | `"expected"` when both omitted |
+| `comparison_type` / `comparisonType` | no | `"STRING"` |
 
 Set how they compare with `comparison_type` / `comparisonType`:
 
@@ -194,7 +201,8 @@ evaluate(
     scorers=[
         compare_scorer(
             "Exact match",
-            sources=["Output", "Expected"],
+            source_column="Output",
+            expected_column="expected",
             comparison_type="STRING",
         )
     ],
@@ -224,7 +232,8 @@ await evaluate("compare-demo", {
   scorers: [
     compareScorer({
       title: "Exact match",
-      sources: ["Output", "Expected"],
+      sourceColumn: "Output",
+      expectedColumn: "expected",
       comparisonType: "STRING",
     }),
   ],
@@ -234,13 +243,13 @@ await evaluate("compare-demo", {
 
 ### Contains
 
-Check whether a column contains a literal or another column's value. Pass exactly one of `value` or `value_source` / `valueSource`.
+Check whether a column contains a literal or another column's value. Pass exactly one of `expected` or `expected_column` / `expectedColumn`.
 
 | Key | Required | Default |
 | --- | --- | --- |
-| `source` | yes | `"Output"` |
-| `value` | one of | literal substring |
-| `value_source` / `valueSource` | one of | column title |
+| `source_column` / `sourceColumn` | no | `"Output"` |
+| `expected` | one of | literal substring |
+| `expected_column` / `expectedColumn` | one of | column title |
 
 <CodeGroup>
 ```python Python
@@ -266,7 +275,7 @@ evaluate(
     "contains-demo",
     dataset=[{"input": "I cannot log in to my account."}],
     runner=run_llm,
-    scorers=[contains_scorer(source="Output", value="sorry")],
+    scorers=[contains_scorer(source_column="Output", expected="sorry")],
 )
 ```
 
@@ -293,7 +302,7 @@ async function runLlm(userMessage) {
 await evaluate("contains-demo", {
   dataset: [{ input: "I cannot log in to my account." }],
   runner: runLlm,
-  scorers: [containsScorer({ source: "Output", value: "sorry" })],
+  scorers: [containsScorer({ sourceColumn: "Output", expected: "sorry" })],
 });
 ```
 </CodeGroup>
@@ -304,7 +313,7 @@ Match a column against a regular expression.
 
 | Key | Required | Default |
 | --- | --- | --- |
-| `source` | yes | `"Output"` |
+| `source_column` / `sourceColumn` | no | `"Output"` |
 | `regex_pattern` / `regexPattern` | yes | — |
 
 <CodeGroup>
@@ -334,7 +343,7 @@ evaluate(
     "regex-demo",
     dataset=[{"input": "What is the order id for my headphones?"}],
     runner=run_llm,
-    scorers=[regex_scorer(source="Output", regex_pattern=r"order-\d+")],
+    scorers=[regex_scorer(source_column="Output", regex_pattern=r"order-\d+")],
 )
 ```
 
@@ -362,7 +371,7 @@ async function runLlm(userMessage) {
 await evaluate("regex-demo", {
   dataset: [{ input: "What is the order id for my headphones?" }],
   runner: runLlm,
-  scorers: [regexScorer({ source: "Output", regexPattern: "order-\\d+" })],
+  scorers: [regexScorer({ sourceColumn: "Output", regexPattern: "order-\\d+" })],
 });
 ```
 </CodeGroup>
@@ -373,7 +382,7 @@ Score by character, word, sentence, or paragraph count bounds. Require at least 
 
 | Key | Required | Default |
 | --- | --- | --- |
-| `source` | yes | `"Output"` |
+| `source_column` / `sourceColumn` | no | `"Output"` |
 | `type` | no | `"chars"` |
 | `min_count` / `minCount` | one of min/max | — |
 | `max_count` / `maxCount` | one of min/max | — |
@@ -402,7 +411,7 @@ evaluate(
     "count-demo",
     dataset=[{"input": "How do I reset my password?"}],
     runner=run_llm,
-    scorers=[count_scorer(source="Output", type="words", min_count=1, max_count=5)],
+    scorers=[count_scorer(source_column="Output", type="words", min_count=1, max_count=5)],
 )
 ```
 
@@ -430,7 +439,7 @@ await evaluate("count-demo", {
   dataset: [{ input: "How do I reset my password?" }],
   runner: runLlm,
   scorers: [
-    countScorer({ source: "Output", type: "words", minCount: 1, maxCount: 5 }),
+    countScorer({ sourceColumn: "Output", type: "words", minCount: 1, maxCount: 5 }),
   ],
 });
 ```
@@ -442,7 +451,7 @@ Validate a column as object, number, or SQL. There is no `json` / `boolean` / `s
 
 | Key | Required | Default | Allowed |
 | --- | --- | --- | --- |
-| `source` | yes | `"Output"` | column title |
+| `source_column` / `sourceColumn` | no | `"Output"` | column title |
 | `type` | yes | `"object"` | `object` \| `number` \| `sql` |
 
 <CodeGroup>
@@ -472,7 +481,7 @@ evaluate(
     "assert-valid-demo",
     dataset=[{"input": "Create a support ticket for a billing issue."}],
     runner=run_llm,
-    scorers=[assert_valid_scorer(source="Output", type="object")],
+    scorers=[assert_valid_scorer(source_column="Output", type="object")],
 )
 ```
 
@@ -500,7 +509,7 @@ async function runLlm(userMessage) {
 await evaluate("assert-valid-demo", {
   dataset: [{ input: "Create a support ticket for a billing issue." }],
   runner: runLlm,
-  scorers: [assertValidScorer({ source: "Output", type: "object" })],
+  scorers: [assertValidScorer({ sourceColumn: "Output", type: "object" })],
 });
 ```
 </CodeGroup>
@@ -511,7 +520,7 @@ Score a column with an LLM judge prompt. Pass exactly one of `prompt` or `prompt
 
 | Key | Required | Default |
 | --- | --- | --- |
-| `source` | yes | `"Output"` |
+| `source_column` / `sourceColumn` | no | `"Output"` |
 | `prompt` | one of | literal prompt text |
 | `prompt_source` / `promptSource` | one of | column title |
 | `variable_mappings` / `variableMappings` | no | Prompt variable → column title |
@@ -542,7 +551,7 @@ evaluate(
     runner=run_llm,
     scorers=[
         llm_assertion_scorer(
-            source="Output",
+            source_column="Output",
             prompt="Is this factually reasonable? Reply yes or no.",
         )
     ],
@@ -574,7 +583,7 @@ await evaluate("llm-assert-demo", {
   runner: runLlm,
   scorers: [
     llmAssertionScorer({
-      source: "Output",
+      sourceColumn: "Output",
       prompt: "Is this factually reasonable? Reply yes or no.",
     }),
   ],
@@ -586,13 +595,13 @@ await evaluate("llm-assert-demo", {
 
 Scores `Tool: <name>` spans from the imported `Trace` against accepted scenarios. Any `runner` works if those spans exist — emit them with a framework helper or [`traceTool`](/running-requests/traces#tracing-tools) (see [Runner](/sdks/evals/agent-tracing)), or copy a harness from the [Quickstart](/sdks/evals/quickstart).
 
-Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `expected_source` / `expectedSource` (usually `"Expected Trace"`).
+Pass **exactly one of** inline `expected` (list of tool-name lists), or `expected_column` / `expectedColumn` (usually `"expected_trace"` / `"expectedTrace"`).
 
 | Key | Required | Default |
 | --- | --- | --- |
-| `trace_source` / `traceSource` | yes | `"Trace"` |
-| `accepted_scenarios` / `acceptedScenarios` | one of | list of non-empty tool-name lists |
-| `expected_source` / `expectedSource` | one of | column title |
+| `source_column` / `sourceColumn` | no | `"Trace"` |
+| `expected` | one of | list of non-empty tool-name lists |
+| `expected_column` / `expectedColumn` | one of | column title |
 | `mode` | no | `"strict"` |
 
 | Mode | Behavior |
@@ -600,7 +609,7 @@ Pass **exactly one of** inline `accepted_scenarios` / `acceptedScenarios`, or `e
 | `strict` (default) | Observed tools must equal the scenario exactly |
 | `non_strict` | Required tools appear in order as a subsequence |
 
-Inline `accepted_scenarios`:
+Inline `expected`:
 
 <CodeGroup>
 ```python Python
@@ -627,8 +636,8 @@ evaluate(
     dataset=[{"input": "What is the weather in Tokyo?"}],
     runner=lambda message: str(Runner.run_sync(agent, message).final_output),
     scorers=[
-        trajectory_scorer(accepted_scenarios=[["get_weather"]], mode="non_strict"),
-        contains_scorer(source="Output", value="72"),
+        trajectory_scorer(expected=[["get_weather"]], mode="non_strict"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
 )
 ```
@@ -659,14 +668,14 @@ await evaluate("trajectory-demo", {
   dataset: [{ input: "What is the weather in Tokyo?" }],
   runner: async (userMessage) => String((await run(agent, userMessage)).finalOutput),
   scorers: [
-    trajectoryScorer({ acceptedScenarios: [["get_weather"]], mode: "non_strict" }),
-    containsScorer({ source: "Output", value: "72" }),
+    trajectoryScorer({ expected: [["get_weather"]], mode: "non_strict" }),
+    containsScorer({ sourceColumn: "Output", expected: "72" }),
   ],
 });
 ```
 </CodeGroup>
 
-Or read scenarios from an Expected Trace column. Cell JSON:
+Or read scenarios from the `expected_trace` / `expectedTrace` column. Cell JSON:
 
 ```json
 {
@@ -679,14 +688,14 @@ Or read scenarios from an Expected Trace column. Cell JSON:
 <CodeGroup>
 ```python Python
 trajectory_scorer(
-    expected_source="Expected Trace",
+    expected_column="expected_trace",
     mode="non_strict",
 )
 ```
 
 ```javascript JavaScript
 trajectoryScorer({
-  expectedSource: "Expected Trace",
+  expectedColumn: "expectedTrace",
   mode: "non_strict",
 })
 ```
@@ -704,9 +713,10 @@ Parameter names map to columns:
 
 | Param | Column |
 | --- | --- |
-| `input` | `Input` |
+| `input` | `input` |
 | `output` | `Output` |
-| `expected` | `Expected` |
+| `expected` | `expected` |
+| `expected_trace` | `expected_trace` (Python) |
 | `trace` | `Trace` |
 
 Any other param name is looked up as a column title of the same name. Return a number (or `{"score": x}`, which is normalized to `x`).
@@ -829,7 +839,7 @@ evaluate(
         code_execution_column(
             "exact",
             code=(
-                'return 1 if str(data.get("Expected", "")).lower() '
+                'return 1 if str(data.get("expected", "")).lower() '
                 'in str(data.get("Output", "")).lower() else 0'
             ),
         )
@@ -867,7 +877,7 @@ await evaluate("code-scorer-demo", {
   runner: runLlm,
   scorers: [
     codeExecutionColumn("exact", {
-      code: 'return String(data["Output"] || "").toLowerCase().includes(String(data["Expected"] || "").toLowerCase()) ? 1 : 0;',
+      code: 'return String(data["Output"] || "").toLowerCase().includes(String(data["expected"] || "").toLowerCase()) ? 1 : 0;',
     }),
   ],
 });
