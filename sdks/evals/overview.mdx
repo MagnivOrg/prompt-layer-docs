@@ -56,10 +56,10 @@ evaluate(
     runner=run_agent,
     scorers=[
         trajectory_scorer(
-            accepted_scenarios=[["get_weather"]],
+            expected=[["get_weather"]],
             mode="non_strict",
         ),
-        contains_scorer(source="Output", value="72"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
     passing_score=1.0,
 )
@@ -100,10 +100,10 @@ await evaluate("weather-agent-eval", {
   runner: runAgent,
   scorers: [
     trajectoryScorer({
-      acceptedScenarios: [["get_weather"]],
+      expected: [["get_weather"]],
       mode: "non_strict",
     }),
-    containsScorer({ source: "Output", value: "72" }),
+    containsScorer({ sourceColumn: "Output", expected: "72" }),
   ],
   passingScore: 1.0,
 });

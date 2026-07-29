@@ -77,8 +77,8 @@ evaluate(
     ],
     scorers=[
         compare_scorer(
-            source="Prompt output",
-            value_source="expected",
+            source_column="Prompt output",
+            expected_column="expected",
         )
     ],
 )
@@ -115,8 +115,8 @@ await evaluate("prompt-column-demo", {
   ],
   scorers: [
     compareScorer({
-      source: "Prompt output",
-      valueSource: "expected",
+      sourceColumn: "Prompt output",
+      expectedColumn: "expected",
     }),
   ],
 });
@@ -167,7 +167,7 @@ evaluate(
             {"source": "Output", "json_path": "$.user.id", "return_first_match": True},
         )
     ],
-    scorers=[contains_scorer(source="User id", value="42")],
+    scorers=[contains_scorer(source_column="User id", expected="42")],
 )
 ```
 
@@ -202,7 +202,7 @@ await evaluate("json-path-demo", {
       return_first_match: true,
     }),
   ],
-  scorers: [containsScorer({ source: "User id", value: "42" })],
+  scorers: [containsScorer({ sourceColumn: "User id", expected: "42" })],
 });
 ```
 </CodeGroup>
@@ -251,7 +251,7 @@ evaluate(
             {"sources": ["expected", "Output"]},
         )
     ],
-    scorers=[contains_scorer(source="Primary or output", value="primary")],
+    scorers=[contains_scorer(source_column="Primary or output", expected="primary")],
 )
 ```
 
@@ -288,7 +288,7 @@ await evaluate("coalesce-demo", {
       sources: ["expected", "Output"],
     }),
   ],
-  scorers: [containsScorer({ source: "Primary or output", value: "primary" })],
+  scorers: [containsScorer({ sourceColumn: "Primary or output", expected: "primary" })],
 });
 ```
 </CodeGroup>
@@ -355,7 +355,7 @@ evaluate(
             {"sources": ["Output", "expected"]},
         )
     ],
-    scorers=[count_scorer(source="Output", type="words", min_count=1)],
+    scorers=[count_scorer(source_column="Output", type="words", min_count=1)],
 )
 ```
 
@@ -387,7 +387,7 @@ await evaluate("cosine-demo", {
       sources: ["Output", "expected"],
     }),
   ],
-  scorers: [countScorer({ source: "Output", type: "words", minCount: 1 })],
+  scorers: [countScorer({ sourceColumn: "Output", type: "words", minCount: 1 })],
 });
 ```
 </CodeGroup>
@@ -435,7 +435,7 @@ evaluate(
             {"source": "Output", "query": "Extract the order number only"},
         )
     ],
-    scorers=[contains_scorer(source="Order id", value="99")],
+    scorers=[contains_scorer(source_column="Order id", expected="99")],
 )
 ```
 
@@ -469,7 +469,7 @@ await evaluate("extract-demo", {
       query: "Extract the order number only",
     }),
   ],
-  scorers: [containsScorer({ source: "Order id", value: "99" })],
+  scorers: [containsScorer({ sourceColumn: "Order id", expected: "99" })],
 });
 ```
 </CodeGroup>

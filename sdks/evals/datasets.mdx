@@ -53,7 +53,7 @@ const dataset = [
 | `expected_trace` / `expectedTrace` | `expected_trace` (Python) / `expectedTrace` (JS) | Optional Trajectory config; only needed with Trajectory |
 | other keys | same as the key | Custom TEXT columns; sparse across rows |
 
-Extra keys become sparse TEXT columns (empty when missing). Point scorers at the same title — for example `contains_scorer(source="topic", value="math")`. Names must not collide with reserved columns (`input`, `expected`, `Output`, `Trace`, `expected_trace` / `expectedTrace`, or legacy `Input` / `Expected` / `Expected Trace`) or with [supporting column](/sdks/evals/columns/overview) titles.
+Extra keys become sparse TEXT columns (empty when missing). Point scorers at the same title — for example `contains_scorer(source_column="topic", expected="math")`. Names must not collide with reserved columns (`input`, `expected`, `Output`, `Trace`, `expected_trace` / `expectedTrace`, or legacy `Input` / `Expected` / `Expected Trace`) or with [supporting column](/sdks/evals/columns/overview) titles.
 
 ## Use a dashboard Table
 
@@ -80,7 +80,7 @@ evaluate(
     "from-dashboard",
     dataset={"table_id": "00000000-0000-0000-0000-000000000000"},
     runner=run_llm,
-    scorers=[contains_scorer(source="Output", value="reset")],
+    scorers=[contains_scorer(source_column="Output", expected="reset")],
 )
 ```
 
@@ -104,7 +104,7 @@ async function runLlm(userMessage) {
 await evaluate("from-dashboard", {
   dataset: { tableId: "00000000-0000-0000-0000-000000000000" },
   runner: runLlm,
-  scorers: [containsScorer({ source: "Output", value: "reset" })],
+  scorers: [containsScorer({ sourceColumn: "Output", expected: "reset" })],
 });
 ```
 </CodeGroup>

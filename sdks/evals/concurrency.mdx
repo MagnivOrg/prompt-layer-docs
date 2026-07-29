@@ -48,7 +48,7 @@ evaluate(
     "support-parallel",
     dataset=dataset,
     runner=run_llm,
-    scorers=[contains_scorer(source="Output", value_source="expected")],
+    scorers=[contains_scorer(source_column="Output", expected_column="expected")],
     max_concurrency=4,
 )
 
@@ -58,7 +58,7 @@ asyncio.run(
         "support-parallel-async",
         dataset=dataset,
         runner=run_llm_async,
-        scorers=[contains_scorer(source="Output", value_source="expected")],
+        scorers=[contains_scorer(source_column="Output", expected_column="expected")],
         max_concurrency=4,
     )
 )
@@ -88,7 +88,7 @@ await evaluate("support-parallel", {
     { input: "How do I update billing?", expected: "billing" },
   ],
   runner: runLlm,
-  scorers: [containsScorer({ source: "Output", valueSource: "expected" })],
+  scorers: [containsScorer({ sourceColumn: "Output", expectedColumn: "expected" })],
   maxConcurrency: 4,
 });
 ```

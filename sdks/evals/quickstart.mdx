@@ -98,7 +98,7 @@ Follow current PromptLayer SDK evals docs:
   - Anything else / custom agent: wrap **existing** handlers with PromptLayer `traceTool` (JS: `pl.traceTool("name", fn)`; Python: `@pl.traceTool(name="name")`).
 - For custom / raw OpenAI client runners: keep the repo’s existing client. Prefer the official OpenAI client over `pl.openai.OpenAI()` / `new pl.OpenAI()` unless the repo already depends on the PromptLayer provider wrapper.
 - Dataset cases use `input`, plus optional `expected` (expected output). Add `expected_trace` / `expectedTrace` only when using Trajectory. Extra keys become custom TEXT columns with that exact title (no reserved names: `input`, `expected`, `Output`, `Trace`, `expected_trace` / `expectedTrace`, or legacy `Input` / `Expected` / `Expected Trace`).
-- Builtin sheet columns are `input`, `expected`, `expected_trace` / `expectedTrace`, `Output`, and `Trace`. Compare defaults to `source="Output"` and `value_source` / `valueSource` `"expected"`; Trajectory column mode uses `value_source` / `valueSource` (not `expected_source`).
+- Builtin sheet columns are `input`, `expected`, `expected_trace` / `expectedTrace`, `Output`, and `Trace`. Scorers take `source_column` / `sourceColumn`. Compare / Contains / Trajectory use `expected` (literal or inline scenarios) or `expected_column` / `expectedColumn` (column-backed).
 - Prefer scorers that match the purpose: Trajectory for tool path, Contains / Compare / LLM assertion for the final answer.
 - Results must land in PromptLayer Tables via the SDK eval runner.
 
@@ -204,10 +204,10 @@ evaluate(
     runner=run_agent,
     scorers=[
         trajectory_scorer(
-            accepted_scenarios=[["get_weather"]],
+            expected=[["get_weather"]],
             mode="non_strict",
         ),
-        contains_scorer(source="Output", value="72"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
     passing_score=1.0,
 )
@@ -248,10 +248,10 @@ await evaluate("weather-agent-eval", {
   runner: runAgent,
   scorers: [
     trajectoryScorer({
-      acceptedScenarios: [["get_weather"]],
+      expected: [["get_weather"]],
       mode: "non_strict",
     }),
-    containsScorer({ source: "Output", value: "72" }),
+    containsScorer({ sourceColumn: "Output", expected: "72" }),
   ],
   passingScore: 1.0,
 });
@@ -319,10 +319,10 @@ asyncio.run(
         runner=run_agent,
         scorers=[
             trajectory_scorer(
-                accepted_scenarios=[["Bash"]],
+                expected=[["Bash"]],
                 mode="non_strict",
             ),
-            contains_scorer(source="Output", value="hello"),
+            contains_scorer(source_column="Output", expected="hello"),
         ],
         passing_score=1.0,
     )
@@ -371,10 +371,10 @@ await evaluate("claude-agent-eval", {
   runner: runAgent,
   scorers: [
     trajectoryScorer({
-      acceptedScenarios: [["Bash"]],
+      expected: [["Bash"]],
       mode: "non_strict",
     }),
-    containsScorer({ source: "Output", value: "hello" }),
+    containsScorer({ sourceColumn: "Output", expected: "hello" }),
   ],
   passingScore: 1.0,
 });
@@ -426,10 +426,10 @@ await evaluate("vercel-weather-eval", {
   runner: runAgent,
   scorers: [
     trajectoryScorer({
-      acceptedScenarios: [["get_weather"]],
+      expected: [["get_weather"]],
       mode: "non_strict",
     }),
-    containsScorer({ source: "Output", value: "72" }),
+    containsScorer({ sourceColumn: "Output", expected: "72" }),
   ],
   passingScore: 1.0,
 });
@@ -513,10 +513,10 @@ evaluate(
     runner=run_agent,
     scorers=[
         trajectory_scorer(
-            accepted_scenarios=[["get_weather"]],
+            expected=[["get_weather"]],
             mode="non_strict",
         ),
-        contains_scorer(source="Output", value="72"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
     passing_score=1.0,
 )
@@ -592,10 +592,10 @@ await evaluate("langchain-weather-eval", {
   runner: runAgent,
   scorers: [
     trajectoryScorer({
-      acceptedScenarios: [["get_weather"]],
+      expected: [["get_weather"]],
       mode: "non_strict",
     }),
-    containsScorer({ source: "Output", value: "72" }),
+    containsScorer({ sourceColumn: "Output", expected: "72" }),
   ],
   passingScore: 1.0,
 });
@@ -653,10 +653,10 @@ evaluate(
     runner=run_agent,
     scorers=[
         trajectory_scorer(
-            accepted_scenarios=[["get_weather"]],
+            expected=[["get_weather"]],
             mode="non_strict",
         ),
-        contains_scorer(source="Output", value="72"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
     passing_score=1.0,
 )
@@ -686,10 +686,10 @@ evaluate(
     runner=run_openclaw_agent,
     scorers=[
         trajectory_scorer(
-            accepted_scenarios=[["get_weather"]],  # your real tool names
+            expected=[["get_weather"]],  # your real tool names
             mode="non_strict",
         ),
-        contains_scorer(source="Output", value="72"),
+        contains_scorer(source_column="Output", expected="72"),
     ],
     passing_score=0.8,
 )
