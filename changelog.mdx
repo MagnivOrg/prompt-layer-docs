@@ -57,6 +57,27 @@ Wrangler can now configure, retrieve, and recalculate scorecards directly throug
 
 ---
 
+
+### Deployment 5
+
+#### New Features
+
+**Signals**
+Introduced `Signals` for automated production traffic labeling based on yes/no questions about requests, with reasoning and quote support for each evaluation.
+- Test signals on real logs before enabling them in production
+- Filter request logs by signal results directly from the UI
+- Configure sampling rates per hook to control evaluation frequency
+
+#### Improvements
+
+- Enhanced playground evaluation error handling with clearer validation messages for missing inputs
+- Improved breadcrumb navigation with consistent entity titles across all resource pages
+- Updated model name display with better spacing and alignment for function names
+- Refined signal bubble styling with check/X icons for improved visual clarity
+- Added minimum row count validation when running playground evaluations against sheets
+
+---
+
 ## July 28, 2026
 
 ### Deployment 1
