@@ -172,6 +172,7 @@
               "features/exa-integration",
               "features/xai-integration",
               "features/openrouter-integration",
+              "features/neon-integration",
               "features/concentrate-integration"
             ]
           }
