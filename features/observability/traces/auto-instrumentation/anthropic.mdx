@@ -12,15 +12,18 @@ This guide covers the Anthropic model SDK. If you use the Claude Agent SDK or Cl
 
 ## Supported APIs
 
-| Anthropic API | Python | JavaScript |
+| API surface | Python | JavaScript |
 | --- | --- | --- |
-| Messages (`messages.create`) | Sync and async | Supported |
-| Messages streaming | `messages.create(..., stream=True)` and `messages.stream()`; sync and async | `messages.create({ stream: true })` |
-| Structured message parsing (`messages.parse`) | Sync and async | Not supported |
-| Beta Messages | Not included in the documented Python surface | Create and streaming |
+| Messages (`messages.create`) | Supported (sync and async) | Supported |
+| Messages streaming | Supported (`messages.create(..., stream=True)` and `messages.stream()`; sync and async) | Supported (`messages.create({ stream: true })`) |
+| Structured message parsing (`messages.parse`) | Supported (sync and async) | Not supported |
+| Beta Messages | Not documented | Supported |
+| Beta Messages streaming | Not documented | Supported |
 | Anthropic Vertex | Supported | Supported |
 
-Anthropic Bedrock is not included in JavaScript provider auto-instrumentation. Other Anthropic SDK calls continue to work normally, but unsupported surfaces do not automatically create PromptLayer traces or request logs.
+`Not documented` means the surface is outside the verified coverage for that language.
+
+The Anthropic Bedrock client is not included in this provider integration. To trace direct Boto3 or AWS SDK v3 Bedrock Runtime calls, follow the [AWS Bedrock guide](/features/observability/traces/auto-instrumentation/bedrock). Other Anthropic SDK calls continue to work normally, but unsupported surfaces do not automatically create PromptLayer traces or request logs.
 
 ## Prerequisites
 
@@ -35,7 +38,7 @@ export PROMPTLAYER_API_KEY="pl_..."
 export ANTHROPIC_API_KEY="sk-ant-..."
 ```
 
-PromptLayer strongly recommends setting the language-specific [content-capture value](/features/observability/traces/auto-instrumentation/overview#capture-prompts-and-responses) so request inspection, search, analytics, and debugging can use prompts, responses, and tool content.
+PromptLayer captures supported message content by default. Review the [content-capture behavior and opt-out values](/features/observability/traces/auto-instrumentation/overview#capture-prompts-and-responses) before sending provider requests.
 
 ## Python
 

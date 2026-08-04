@@ -1,35 +1,35 @@
 ---
 title: "AWS Bedrock"
-description: "Automatically trace supported direct Amazon Bedrock Runtime calls made with Boto3."
+description: "Automatically trace supported direct Amazon Bedrock Runtime calls made with Boto3 or AWS SDK v3."
 icon: "aws"
 ---
 
-PromptLayer can auto-instrument Boto3 calls to Amazon Bedrock Runtime and export supported operations as OpenTelemetry spans. Each supported direct Bedrock call appears in PromptLayer as both a trace span and an associated request log without replacing the Boto3 client.
+PromptLayer can auto-instrument Amazon Bedrock Runtime calls made with Boto3 or AWS SDK v3 and export supported operations as OpenTelemetry spans. Each supported direct Bedrock call appears in PromptLayer as both a trace span and an associated request log without replacing the native AWS client.
 
 <Note>
-This Python integration covers direct Boto3 `bedrock-runtime` calls. It does not instrument `aioboto3`, Anthropic's Bedrock client, or the AWS SDK for JavaScript.
+This integration covers direct Boto3 `bedrock-runtime` calls in Python and `@aws-sdk/client-bedrock-runtime` calls in JavaScript. It does not instrument `aioboto3` or the separate Anthropic Bedrock client.
 </Note>
 
 ## Supported APIs
 
-| Boto3 Bedrock Runtime method | Python |
-| --- | --- |
-| Converse (`converse`) | Supported |
-| Converse streaming (`converse_stream`) | Supported |
-| InvokeModel (`invoke_model`) | Supported |
-| InvokeModel streaming (`invoke_model_with_response_stream`) | Supported |
+| API surface | Python | JavaScript |
+| --- | --- | --- |
+| Converse | Supported (`client.converse(...)`) | Supported (`ConverseCommand`) |
+| Converse streaming | Supported (`client.converse_stream(...)`) | Not supported |
+| InvokeModel | Supported (`client.invoke_model(...)`) | Not supported |
+| InvokeModel streaming | Supported (`client.invoke_model_with_response_stream(...)`) | Not supported |
 
-Only the Bedrock Runtime operations in this table receive Bedrock-specific PromptLayer request log enrichment. For streaming operations, consume or close the response stream before flushing so the span can finish.
+Only the language-specific surfaces in this table receive Bedrock-specific PromptLayer request log enrichment. In Python, consume or close a streaming response before flushing so its span can finish.
 
 <Warning>
-Bedrock auto-instrumentation uses the OpenTelemetry Botocore instrumentor. Enabling it also traces other Botocore service calls made by the same process, although Bedrock-specific request log enrichment applies only to the supported `bedrock-runtime` operations.
+Bedrock auto-instrumentation uses the general OpenTelemetry Botocore or AWS SDK instrumentor. Enabling it can also trace other AWS SDK service calls made by the same process, although Bedrock-specific request log enrichment applies only to the supported Bedrock Runtime operations.
 </Warning>
 
 ## Prerequisites
 
 - A [PromptLayer API key](/quickstart#prerequisites) for the workspace that should receive the traces
 - AWS credentials, a region, and access to the Bedrock model or inference profile your application calls
-- Python 3.10 or later
+- Python 3.10 or later for Python, or Node.js 20 or later for JavaScript
 
 Export the PromptLayer API key before the application starts. The example below also uses `AWS_REGION` and `AWS_BEDROCK_MODEL` as application configuration:
 
@@ -37,10 +37,9 @@ Export the PromptLayer API key before the application starts. The example below 
 export PROMPTLAYER_API_KEY="pl_..."
 export AWS_REGION="us-east-1"
 export AWS_BEDROCK_MODEL="your-model-or-inference-profile-id"
-export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="span_only"
 ```
 
-PromptLayer strongly recommends enabling content capture when your data policies allow it so request inspection, search, analytics, and debugging can use Bedrock messages and tool content.
+PromptLayer captures supported Bedrock message content by default. Review [Capture Prompts and Responses](#capture-prompts-and-responses) before sending provider requests.
 
 ## Python
 
@@ -85,9 +84,9 @@ finally:
     tracer_provider.force_flush()
 ```
 
-The canonical selector is `bedrock`. The `amazon.bedrock` and `aws.bedrock` aliases select the same Botocore instrumentor.
+The canonical selector is `bedrock`. Python also accepts `amazon.bedrock` and `aws.bedrock` as aliases for the same Botocore instrumentor.
 
-<Accordion title="Use an existing PromptLayer client">
+<Accordion title="Use an existing Python PromptLayer client">
 If your application already creates a PromptLayer client, select Bedrock when enabling tracing:
 
 ```python
@@ -104,33 +103,103 @@ client = boto3.client("bedrock-runtime", region_name="us-east-1")
 Omit `tracing_providers` to instrument every supported provider SDK that is installed.
 </Accordion>
 
+## JavaScript
+
+### 1. Install the SDKs
+
+```bash
+npm install promptlayer @aws-sdk/client-bedrock-runtime
+```
+
+### 2. Preload PromptLayer instrumentation
+
+The preload must run before the application imports the AWS SDK client:
+
+```bash
+node --import promptlayer/register app.mjs
+```
+
+### 3. Use the AWS SDK normally
+
+```javascript
+import {
+  BedrockRuntimeClient,
+  ConverseCommand,
+} from "@aws-sdk/client-bedrock-runtime";
+import { shutdownTracing } from "promptlayer";
+
+const client = new BedrockRuntimeClient({
+  region: process.env.AWS_REGION,
+});
+
+try {
+  const response = await client.send(
+    new ConverseCommand({
+      modelId: process.env.AWS_BEDROCK_MODEL,
+      messages: [
+        {
+          role: "user",
+          content: [
+            { text: "Explain distributed tracing in one sentence." },
+          ],
+        },
+      ],
+      inferenceConfig: { maxTokens: 128 },
+    }),
+  );
+  console.log(
+    response.output?.message?.content
+      ?.map((block) => block.text ?? "")
+      .join(""),
+  );
+} finally {
+  client.destroy();
+  await shutdownTracing();
+}
+```
+
+The preload instruments every supported provider. To instrument only Bedrock, call `configureTracing({ providers: ["bedrock"] })` in a bootstrap module and dynamically import the application afterward. See [Select Providers](/features/observability/traces/auto-instrumentation/overview#select-providers).
+
 ## Capture Prompts and Responses
 
-Bedrock request and response content is disabled by default because it can contain sensitive data. Set `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT=span_only` before configuring tracing to add supported message content to PromptLayer spans.
+PromptLayer captures supported Bedrock request and response content by default. To export metadata-only telemetry, opt out before tracing is configured:
+
+<CodeGroup>
+```bash Python
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="NO_CONTENT"
+```
+
+```bash JavaScript
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="false"
+```
+</CodeGroup>
+
+JavaScript can instead pass `captureContent: false` to `configureTracing()`.
 
 Content coverage differs by Bedrock Runtime operation:
 
-| Operation | Content added to the PromptLayer span |
-| --- | --- |
-| `converse` | Request messages, system instructions, and the response message |
-| `converse_stream` | Request messages and system instructions; streamed response content is not added |
-| `invoke_model` and `invoke_model_with_response_stream` | Request and response bodies are not added |
+| Operation | Python content | JavaScript content |
+| --- | --- | --- |
+| Converse | Request messages, system instructions, and the response message | Request messages, system instructions, and the response message |
+| Converse streaming | Request messages and system instructions; streamed response content is not added | Not instrumented |
+| InvokeModel and InvokeModel streaming | Request and response bodies are not added | Not instrumented |
 
 All supported operations still include non-content telemetry supplied by the instrumentor, such as the model, timing, token usage when available, and errors.
 
 <Warning>
-Content capture can send user messages, model responses, system instructions, tool arguments and results, and other application data to PromptLayer. Review your privacy, retention, and compliance requirements before enabling it.
+Content capture can send user messages, model responses, system instructions, tool arguments and results, and other application data to PromptLayer. Because it is enabled by default, review your privacy, retention, and compliance requirements and opt out before the first Bedrock request when necessary.
 </Warning>
 
 ## Verify the Integration
 
-Run one supported Bedrock Runtime request, consume any response stream, flush tracing, and open [Traces](/features/observability/traces) in PromptLayer. The Bedrock span should have an associated request log and identify the Converse or InvokeModel API.
+Run one supported Bedrock Runtime request, consume any Python response stream, flush or shut down tracing, and open [Traces](/features/observability/traces) in PromptLayer. The Bedrock span should have an associated request log and identify the Converse or InvokeModel API.
 
 If no span appears:
 
 - Confirm instrumentation is configured before the first Bedrock Runtime request.
-- Confirm the Boto3 client uses `bedrock-runtime` and a method listed in [Supported APIs](#supported-apis).
+- Confirm the client and operation are listed for your language in [Supported APIs](#supported-apis).
+- In JavaScript, confirm the preload or bootstrap runs before `@aws-sdk/client-bedrock-runtime` loads.
 - Confirm `PROMPTLAYER_API_KEY` belongs to the workspace you are checking.
-- For streaming calls, fully consume or close the stream before flushing.
+- For Python streaming calls, fully consume or close the stream before flushing.
 - Flush tracing before a short-lived process exits.
-- If only message content is missing, check the content-capture value and the operation-specific coverage above, then restart the process.
+- If only message content is missing, confirm content capture was not disabled, check the operation-specific coverage above, and restart the process after changing the setting.
