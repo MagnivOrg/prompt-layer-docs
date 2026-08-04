@@ -1,0 +1,157 @@
+---
+title: "Overview"
+description: "Trace calls made through model provider SDKs without wrapping each request."
+icon: "wave-pulse"
+---
+
+Use SDK auto-instrumentation when your application code creates and calls a supported model provider's native client. PromptLayer registers the provider-specific instrumentor and trace exporter, so supported calls become OpenTelemetry spans and linked request logs without replacing the provider client or logging each request manually.
+
+For the resulting hierarchy and dashboard view, see [Traces](/features/observability/traces).
+
+## Provider Guides
+
+<CardGroup cols={3}>
+  <Card
+    title="OpenAI"
+    icon="/images/provider-logos/openai.svg"
+    href="/features/observability/traces/auto-instrumentation/openai"
+  >
+    Python and JavaScript
+  </Card>
+  <Card
+    title="Anthropic"
+    icon="/images/provider-logos/anthropic.svg"
+    href="/features/observability/traces/auto-instrumentation/anthropic"
+  >
+    Python and JavaScript
+  </Card>
+  <Card
+    title="Google"
+    icon="/images/provider-logos/google.svg"
+    href="/features/observability/traces/auto-instrumentation/google"
+  >
+    Python and JavaScript
+  </Card>
+  <Card
+    title="AWS Bedrock"
+    icon="aws"
+    href="/features/observability/traces/auto-instrumentation/bedrock"
+  >
+    Python
+  </Card>
+</CardGroup>
+
+The provider guide is the source of truth for supported API surfaces, installation, initialization order, content capture, exporter settings, flushing, and verification. Coverage and configuration can differ between languages.
+
+## Enable All Installed Providers
+
+Python requires the optional instrumentation extra. Install only the provider SDKs your application uses:
+
+```bash
+pip install "promptlayer[otel-genai-instrumentation]" openai anthropic google-genai boto3
+```
+
+Then enable tracing on the PromptLayer client. By default, the client instruments every supported provider SDK that is installed:
+
+```python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(enable_tracing=True)
+
+# Make direct OpenAI, Anthropic, Google GenAI, or AWS Bedrock calls.
+
+# Flush pending spans before a short-lived process exits.
+pl.tracer_provider.force_flush()
+```
+
+The Python instrumentation extra requires Python 3.10 or later. The core PromptLayer package continues to support Python 3.9.
+
+For JavaScript, install PromptLayer and the provider SDKs your application uses:
+
+```bash
+npm install promptlayer openai @anthropic-ai/sdk @google/genai
+```
+
+Provider SDK modules must load after tracing is configured. In an ESM application, preload PromptLayer before the application module:
+
+```bash
+node --import promptlayer/register app.mjs
+```
+
+The preload reads `PROMPTLAYER_API_KEY` and instruments every supported provider. Call `shutdownTracing()` before a short-lived process exits:
+
+```javascript
+import { shutdownTracing } from "promptlayer";
+
+try {
+  await runApplication();
+} finally {
+  await shutdownTracing();
+}
+```
+
+Do not shut down tracing after every request in a long-running server.
+
+## Select Providers
+
+Omit the provider selection to instrument every supported provider. Pass an empty list or tuple to export PromptLayer spans without provider SDK auto-instrumentation.
+
+<CodeGroup>
+```python Python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(
+    enable_tracing=True,
+    tracing_providers=("anthropic", "google"),
+)
+```
+
+```javascript JavaScript
+import { configureTracing } from "promptlayer";
+
+const tracing = configureTracing({
+  providers: ["anthropic", "google"],
+});
+
+try {
+  // Dynamic import ensures provider SDKs load after instrumentation.
+  await import("./app.mjs");
+} finally {
+  await tracing.shutdown();
+}
+```
+</CodeGroup>
+
+Supported selectors are `openai`, `anthropic`, and `google`. Python also supports `bedrock`, with `amazon.bedrock` and `aws.bedrock` as aliases for the Botocore instrumentor. Python accepts `openai.azure` as an alias for the OpenAI instrumentor. Anthropic Vertex uses `anthropic`; Google clients created with `vertexai=True` use `google`.
+
+Python applications that do not create a PromptLayer client can call `configure_tracing(providers=(...))`. The function returns the configured tracer provider so short-lived processes can call `force_flush()`.
+
+## Capture Prompts and Responses
+
+Provider prompt and response content is disabled by default because it can contain sensitive data. PromptLayer strongly recommends enabling content capture when your data policies allow it. Content capture is crucial for getting the full value from PromptLayer search and analytics because it provides the prompt, response, and tool data used by request inspection, content search, analysis, and debugging.
+
+Without content capture, traces still include model names, timing, token usage when available, and other non-content telemetry. PromptLayer cannot search or analyze prompt, response, and tool content that was not exported.
+
+Set the language-specific value before tracing is configured:
+
+<CodeGroup>
+```bash Python
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="span_only"
+```
+
+```bash JavaScript
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="true"
+```
+</CodeGroup>
+
+JavaScript can instead pass `captureContent: true` to `configureTracing()`.
+
+<Tip>
+For the complete PromptLayer observability experience, enable content capture before your application makes its first provider request.
+</Tip>
+
+<Warning>
+Content capture can send user prompts, model responses, tool arguments, and other application data to PromptLayer. Review your privacy, retention, and compliance requirements before enabling it.
+</Warning>
+
+If a framework or agent SDK creates the provider client for you, use [Telemetry Integrations](/features/observability/traces/integrations). If no provider guide applies or you already own the telemetry pipeline, use [OpenTelemetry](/features/observability/traces/opentelemetry). See the [Tracing overview](/features/observability/traces) for the complete routing guide.

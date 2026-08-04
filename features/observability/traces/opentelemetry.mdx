@@ -1,21 +1,14 @@
 ---
 title: "OpenTelemetry"
-icon: "tower-broadcast"
+description: "Send an existing or custom OpenTelemetry pipeline to PromptLayer."
+icon: "/images/provider-logos/opentelemetry.svg"
 ---
 
-PromptLayer natively supports [OpenTelemetry (OTEL)](https://opentelemetry.io/), the industry-standard observability framework. You can send traces from **any** OpenTelemetry-compatible SDK or Collector directly to PromptLayer — no PromptLayer SDK required.
+Use this path when your application already emits [OpenTelemetry (OTEL)](https://opentelemetry.io/) spans, you use an OpenTelemetry Collector, or no dedicated PromptLayer integration supports your library. You do not need a PromptLayer SDK.
 
-This is ideal when:
+Exported spans appear in [Traces](/features/observability/traces). For a supported model provider SDK or framework, use its dedicated [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview) or [Telemetry Integration](/features/observability/traces/integrations) instead. The [Tracing overview](/features/observability/traces) compares all tracing paths.
 
-- Your framework isn't listed on the [Telemetry Integrations](/features/integrations) page
-- You already have an OpenTelemetry pipeline and want to add PromptLayer as a destination
-- You want vendor-neutral instrumentation
-
-<Note>
-If you're using a supported framework like the [Vercel AI SDK](/features/integrations#vercel-ai-sdk), [OpenAI Agents SDK](/features/integrations#openai-agents-sdk), or [Claude Code](/features/integrations#claude-code), see the [Telemetry Integrations](/features/integrations) page for framework-specific setup — those integrations handle the OTEL configuration for you.
-</Note>
-
-## How It Works
+## OTLP Endpoint
 
 PromptLayer exposes an [OTLP/HTTP endpoint](/reference/otlp-ingest-traces) at:
 
@@ -25,7 +18,7 @@ https://api.promptlayer.com/v1/traces
 
 Any OpenTelemetry SDK or Collector can export traces to this endpoint. Spans that include [GenAI semantic convention](https://opentelemetry.io/docs/specs/semconv/gen-ai/) attributes are automatically converted into PromptLayer request logs.
 
-## Setup
+## Configure an SDK
 
 Configure your OpenTelemetry SDK to export traces to PromptLayer using the OTLP/HTTP exporter.
 
@@ -249,12 +242,6 @@ service:
 
 This lets you fan out traces to PromptLayer alongside your existing observability backends (Datadog, New Relic, Jaeger, etc.) without changing your application code.
 
-## Content Types
+## API Reference
 
-The endpoint accepts both binary protobuf (`application/x-protobuf`, recommended) and JSON (`application/json`) encodings. Both support `Content-Encoding: gzip`.
-
-## Next Steps
-
-- [OTLP Ingest Traces API Reference](/reference/otlp-ingest-traces) — full endpoint documentation
-- [Telemetry Integrations](/features/integrations) — framework-specific setups (Vercel AI SDK, OpenAI Agents, Claude Code)
-- [Traces](/running-requests/traces) — PromptLayer SDK native tracing with `@traceable` and `wrapWithSpan`
+See [Ingest Traces (OTLP)](/reference/otlp-ingest-traces) for authentication, accepted encodings, compression, request schemas, responses, and errors.

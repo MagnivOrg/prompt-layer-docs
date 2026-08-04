@@ -1,0 +1,63 @@
+---
+title: "Search"
+description: "Find request logs and traces with structured filters, date ranges, and request-content search."
+icon: "magnifying-glass"
+---
+
+Search narrows [request logs](/features/observability/request-logs) and [traces](/features/observability/traces) to the data you need. The same query also controls the corresponding Analytics view, so you can move from individual records to aggregate trends without rebuilding your filters.
+
+PromptLayer's current structured search is backed by OpenSearch. The dashboard automatically uses a compatibility mode when your date range includes data from before your workspace's OpenSearch cutover.
+
+## Search in the Dashboard
+
+1. Open [**Request Logs**](/features/observability/request-logs) or [**Traces**](/features/observability/traces) from the PromptLayer sidebar.
+2. Set the date range and timezone.
+3. Select the search bar, then choose a field, operator, and value.
+4. Add more filters to narrow the results.
+5. Stay on the Requests or Traces tab to inspect matching records, or switch to **Analytics** to chart the same query.
+
+Multiple structured filters are combined to narrow the result set. Suggested values are based on the selected field and data available in your workspace.
+
+## Search Request Logs
+
+Request-log search supports a free-text query across prompt input and model output, plus structured filters in these categories:
+
+| Category | Example fields |
+| --- | --- |
+| Prompt and user | Prompt, User ID |
+| Model | Model, Provider |
+| Labels and metadata | Tags, Metadata |
+| Content | Input Text, Output Text, Input Variable, Output, User Intent, Agent Intent |
+| Usage | Input Tokens, Output Tokens, Cost, Latency |
+| Request | Request ID, Request Status, Error Type |
+| Format | Response is JSON, Response is a Tool Call, Tool Name, Request is Part of Trace |
+
+Nested fields such as metadata, structured output, and input variables let you choose a key before matching its value. Use an exact operator for identifiers and short structured values; use a contains operator for longer text. See [Search Data Model](/features/search-and-analytics/search-data-model) for indexing and operator details.
+
+## Search Traces
+
+Trace search separates whole-trace fields from span-level fields:
+
+| Scope | Example fields |
+| --- | --- |
+| Trace | Name, status, ID, user, duration, cost, tokens, models, tools, prompts, workflows, span count |
+| Span | Name, status, kind, duration, cost, tokens, model, prompt, workflow, tool, input, output, exception, attributes |
+
+A span-level filter returns traces containing a matching span. This makes it possible to find an end-to-end run by a tool call, model, exception, or custom span attribute anywhere in its hierarchy.
+
+## Search Older Data
+
+Each workspace has a search cutover date. When the selected date range starts before that date, the dashboard switches to older-data compatibility mode:
+
+- Filters that are unavailable for older data are marked as unavailable.
+- Incompatible active filters are not applied to the older-data query.
+- The Analytics tab is unavailable for that date range.
+
+Move the start of the date range to the displayed cutover date or later to use the complete OpenSearch filter set and Analytics.
+
+## Continue from Search Results
+
+- Select a request or trace to inspect its details.
+- Switch to [Analytics](/features/search-and-analytics/analytics) to aggregate the current query.
+- Select matching request logs or traces and import them into a [Table](/features/tables/overview#import-data).
+- Use the [Search Request Logs API](/reference/search-request-logs) to run structured request-log searches outside the dashboard.

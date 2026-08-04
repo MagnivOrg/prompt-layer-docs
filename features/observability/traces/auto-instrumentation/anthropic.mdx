@@ -1,0 +1,150 @@
+---
+title: "Anthropic SDK"
+description: "Automatically trace supported direct Anthropic SDK calls with PromptLayer."
+icon: "/images/provider-logos/anthropic.svg"
+---
+
+PromptLayer can auto-instrument the official Anthropic SDK and export supported calls as OpenTelemetry spans. Each supported direct SDK call appears in PromptLayer as both a trace span and an associated request log without changing how you create or use the Anthropic client.
+
+<Note>
+This guide covers the Anthropic model SDK. If you use the Claude Agent SDK or Claude Code, follow the [Claude integration](/features/observability/traces/integrations#claude-code) instead.
+</Note>
+
+## Supported APIs
+
+| Anthropic API | Python | JavaScript |
+| --- | --- | --- |
+| Messages (`messages.create`) | Sync and async | Supported |
+| Messages streaming | `messages.create(..., stream=True)` and `messages.stream()`; sync and async | `messages.create({ stream: true })` |
+| Structured message parsing (`messages.parse`) | Sync and async | Not supported |
+| Beta Messages | Not included in the documented Python surface | Create and streaming |
+| Anthropic Vertex | Supported | Supported |
+
+Anthropic Bedrock is not included in JavaScript provider auto-instrumentation. Other Anthropic SDK calls continue to work normally, but unsupported surfaces do not automatically create PromptLayer traces or request logs.
+
+## Prerequisites
+
+- A [PromptLayer API key](/quickstart#prerequisites) for the workspace that should receive the traces
+- An Anthropic API key, or the standard Google Cloud credentials and project configuration for Anthropic Vertex
+- Python 3.10 or later for Python, or Node.js 20 or later for JavaScript
+
+Export the direct Anthropic API keys before the application starts:
+
+```bash
+export PROMPTLAYER_API_KEY="pl_..."
+export ANTHROPIC_API_KEY="sk-ant-..."
+```
+
+PromptLayer strongly recommends setting the language-specific [content-capture value](/features/observability/traces/auto-instrumentation/overview#capture-prompts-and-responses) so request inspection, search, analytics, and debugging can use prompts, responses, and tool content.
+
+## Python
+
+### 1. Install the SDKs
+
+```bash
+pip install "promptlayer[otel-genai-instrumentation]" anthropic
+```
+
+Install Anthropic's Vertex dependencies if your application uses `AnthropicVertex`.
+
+### 2. Configure Anthropic instrumentation
+
+```python
+from anthropic import Anthropic
+from promptlayer import configure_tracing
+
+tracer_provider = configure_tracing(providers=("anthropic",))
+client = Anthropic()
+
+try:
+    message = client.messages.create(
+        model="claude-sonnet-4-20250514",
+        max_tokens=256,
+        messages=[
+            {
+                "role": "user",
+                "content": "Explain distributed tracing in one sentence.",
+            }
+        ],
+    )
+    print(message.content[0].text)
+finally:
+    client.close()
+    tracer_provider.force_flush()
+```
+
+The same `anthropic` selector instruments `AnthropicVertex`. Sync and async clients are supported.
+
+<Accordion title="Use an existing PromptLayer client">
+If your application already creates a PromptLayer client, select Anthropic when enabling tracing:
+
+```python
+from anthropic import Anthropic
+from promptlayer import PromptLayer
+
+pl = PromptLayer(
+    enable_tracing=True,
+    tracing_providers=("anthropic",),
+)
+client = Anthropic()
+```
+
+Omit `tracing_providers` to instrument every supported provider SDK that is installed.
+</Accordion>
+
+## JavaScript
+
+### 1. Install the SDKs
+
+```bash
+npm install promptlayer @anthropic-ai/sdk
+```
+
+For Anthropic Vertex, also install `@anthropic-ai/vertex-sdk`.
+
+### 2. Preload PromptLayer instrumentation
+
+The preload must run before the application imports the Anthropic SDK:
+
+```bash
+node --import promptlayer/register app.mjs
+```
+
+### 3. Use the Anthropic SDK normally
+
+```javascript
+import Anthropic from "@anthropic-ai/sdk";
+import { shutdownTracing } from "promptlayer";
+
+const client = new Anthropic();
+
+try {
+  const message = await client.messages.create({
+    model: "claude-sonnet-4-20250514",
+    max_tokens: 256,
+    messages: [
+      {
+        role: "user",
+        content: "Explain distributed tracing in one sentence.",
+      },
+    ],
+  });
+  console.log(message.content);
+} finally {
+  await shutdownTracing();
+}
+```
+
+The preload instruments every supported provider. To instrument only Anthropic, call `configureTracing({ providers: ["anthropic"] })` in a bootstrap module and dynamically import the application afterward. See [Select Providers](/features/observability/traces/auto-instrumentation/overview#select-providers).
+
+## Verify the Integration
+
+Run one supported Anthropic request, flush or shut down tracing, and open [Traces](/features/observability/traces) in PromptLayer. The Anthropic span should have an associated request log.
+
+If no span appears:
+
+- Confirm instrumentation is configured before the first Anthropic request.
+- In JavaScript, confirm the preload or bootstrap runs before the Anthropic SDK module loads.
+- Confirm the call uses an API surface listed in [Supported APIs](#supported-apis).
+- Confirm `PROMPTLAYER_API_KEY` belongs to the workspace you are checking.
+- Flush or shut down tracing before a short-lived process exits.

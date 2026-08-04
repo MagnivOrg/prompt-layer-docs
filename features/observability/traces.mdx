@@ -1,0 +1,44 @@
+---
+title: "Overview"
+description: "Understand PromptLayer traces and choose how to instrument your application."
+icon: "diagram-project"
+---
+
+A trace represents one end-to-end operation in your application. It contains a hierarchy of **spans**, where each span records one timed step such as an LLM call, agent run, tool call, retrieval step, or application function.
+
+Supported LLM spans link to PromptLayer request logs, so you can move from the full execution path to the input, output, model, tokens, cost, and metadata for an individual model call.
+
+## Choose a Tracing Method
+
+All tracing methods send spans to the same PromptLayer trace view. Choose the method that matches the code producing telemetry:
+
+| Method | Use it when |
+| --- | --- |
+| [Manual Tracing](/features/observability/traces/manual-tracing) | You use `PromptLayer.run()` or want to wrap custom application and tool functions with PromptLayer SDK spans. |
+| [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview) | Your application calls a supported model provider SDK directly. |
+| [Telemetry Integrations](/features/observability/traces/integrations) | A framework, agent SDK, or model router makes the calls. |
+| [OpenTelemetry](/features/observability/traces/opentelemetry) | You already operate an OpenTelemetry pipeline or no dedicated integration supports your library. |
+
+Use the most specific supported method. These are collection methods, not separate trace products.
+
+## Inspect a Trace
+
+The trace view shows parent-child relationships, duration, status, attributes, inputs, outputs, and linked request logs. Root spans represent the full operation; child spans represent the work performed inside it.
+
+![Traces Overview](/images/traces/trace-details.png)
+
+<Info>
+The trace list shows root spans. For a long-running operation, child spans can reach PromptLayer before the root span finishes, but the complete trace appears in the list after the root span ends.
+</Info>
+
+## Filter Traces
+
+The trace list can be filtered by metadata and resource attribute values. Filters search the entire span hierarchy: a trace appears if any root or child span has a matching attribute.
+
+In the span detail panel, hover over a top-level string, number, or boolean attribute and select the filter button to add that value to the trace list filters. Nested objects and arrays can be inspected but cannot be used as direct filter values.
+
+## Analyze Traces
+
+Trace analytics can aggregate whole traces or individual spans. Use [Analytics](/features/search-and-analytics/analytics) for charts and the PromptLayer AI assistant. For the exact trace- and span-level fields available through the public API, see [Trace Analytics - Custom Queries](/reference/trace-analytics-custom-analytics).
+
+To collect traces from an agent runner inside an SDK evaluation, see [Agent Tracing for Evals](/sdks/evals/agent-tracing).

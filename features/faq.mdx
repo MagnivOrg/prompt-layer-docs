@@ -15,7 +15,7 @@ Yes, PromptLayer supports multi-modal image models, including `gpt-4-vision-prev
 To use `gpt-4-vision-preview` with PromptLayer, follow these steps:
 
 1. Ensure you have the PromptLayer and OpenAI Python libraries installed.
-2. Use the [`run()` method](/sdks/python#using-the-run-method-recommended) to execute prompts, or use [`log_request`](/features/prompt-history/custom-logging) to log requests made with your own client.
+2. Use the [`run()` method](/sdks/python#using-the-run-method-recommended) to execute prompts, or use [`log_request`](/features/observability/request-logs/custom-logging) to log requests made with your own client.
 3. Make your request to `gpt-4-vision-preview` with the necessary image inputs, either through image URLs or base64 encoded images.
 4. Check the PromptLayer dashboard to see your request logged!
 
@@ -25,7 +25,7 @@ Multi-modal models are also supported in the Prompt Registry, Playground, and Ev
  
 ## Do you support OpenAI function calling?
 
-Yes, we take great pride in staying up to date. PromptLayer supports [function calling](https://platform.openai.com/docs/guides/function-calling) through the `run()` method and via [custom logging](/features/prompt-history/custom-logging). You can also configure tool calling directly in the [Prompt Registry](/features/prompt-registry/tool-calling).
+Yes, we take great pride in staying up to date. PromptLayer supports [function calling](https://platform.openai.com/docs/guides/function-calling) through the `run()` method and via [custom logging](/features/observability/request-logs/custom-logging). You can also configure tool calling directly in the [Prompt Registry](/features/prompt-registry/tool-calling).
 
 
 ## Does PromptLayer support streaming?
@@ -135,7 +135,7 @@ PromptLayer provides out-of-the-box support for Mistral in our logs, playground,
 
 ## What's the difference between tags and metadata?
 
-Both [tags](/features/prompt-history/tagging-requests) and [metadata](/features/prompt-history/metadata) enable the addition of supplementary information to your request logs, yet they serve distinct purposes. Tags are ideal for classifying requests into a limited number of predefined categories, such as "prod" or "dev". Conversely, metadata is tailored for capturing unique, request-specific details like user IDs or session IDs.
+Both [tags](/features/observability/request-logs/tags) and [metadata](/features/observability/request-logs/metadata) enable the addition of supplementary information to your request logs, yet they serve distinct purposes. Tags are ideal for classifying requests into a limited number of predefined categories, such as "prod" or "dev". Conversely, metadata is tailored for capturing unique, request-specific details like user IDs or session IDs.
 
 ## Why do I see extra input variables in my prompt template? Parsing does not seem to be working.
 

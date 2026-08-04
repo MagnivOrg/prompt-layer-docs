@@ -4,9 +4,77 @@ description: "Send traces, spans, LLM calls, tool calls, and agent telemetry int
 icon: 'handshake'
 ---
 
-Telemetry integrations send observability data from LLM frameworks, agent SDKs, and model routers into PromptLayer. Use these setup paths when you want PromptLayer to capture traces, spans, LLM calls, tool calls, prompts, completions, token usage, and model metadata from tools you already use.
+Use this page when an LLM framework, agent SDK, or model router makes calls or produces telemetry for your application. Each section is the setup guide for that framework or tool.
 
-Don't see your framework listed? You can send traces from **any** OpenTelemetry-compatible SDK or Collector using the [OpenTelemetry](/features/opentelemetry) page, or [email us](mailto:hello@promptlayer.com).
+The resulting spans appear in [Traces](/features/observability/traces). If your tool is not listed, use [OpenTelemetry](/features/observability/traces/opentelemetry) or [email us](mailto:hello@promptlayer.com). If your code calls a model provider SDK directly, use [SDK Auto-Instrumentation](/features/observability/traces/auto-instrumentation/overview). The [Tracing overview](/features/observability/traces) compares all tracing paths.
+
+<CardGroup cols={3}>
+  <Card
+    title="LiteLLM"
+    icon="/images/provider-logos/litellm.svg"
+    href="#litellm"
+  >
+    Model router
+  </Card>
+  <Card
+    title="LlamaIndex"
+    icon="/images/provider-logos/llamaindex.svg"
+    href="#llamaindex"
+  >
+    Data and agent framework
+  </Card>
+  <Card
+    title="Claude Code"
+    icon="/images/provider-logos/anthropic.svg"
+    href="#claude-code"
+  >
+    CLI and agent SDK
+  </Card>
+  <Card
+    title="OpenAI Agents SDK"
+    icon="/images/provider-logos/openai.svg"
+    href="#openai-agents-sdk"
+  >
+    JavaScript and Python agents
+  </Card>
+  <Card
+    title="OpenClaw"
+    icon="/images/provider-logos/openclaw.svg"
+    href="#openclaw"
+  >
+    Agent plugin
+  </Card>
+  <Card
+    title="Vercel AI SDK"
+    icon="/images/provider-logos/vercel.svg"
+    href="#vercel-ai-sdk"
+  >
+    JavaScript AI applications
+  </Card>
+  <Card
+    title="Pydantic AI"
+    icon="/images/provider-logos/pydantic.svg"
+    href="#pydantic-ai"
+  >
+    Python agents
+  </Card>
+  <Card
+    title="LangChain / LangSmith"
+    icon="/images/provider-logos/langchain.svg"
+    href="#langchain--langsmith"
+  >
+    Framework and observability
+  </Card>
+  <Card
+    title="OpenRouter"
+    icon="/images/provider-logos/openrouter.svg"
+    href="#openrouter"
+  >
+    Model router
+  </Card>
+</CardGroup>
+
+*Third-party names and logos belong to their respective owners. Their inclusion identifies supported integrations and does not imply endorsement or partnership.*
 
 ## LiteLLM
 
@@ -16,7 +84,7 @@ Please read the [LiteLLM documentation page](https://docs.litellm.ai/docs/observ
 
 ## LlamaIndex 
 
-[LlamaIndex](https://www.llamaindex.ai/) is a data framework for LLM-based applications. Read more about our integration on the [LlamaIndex documentation page](https://docs.llamaindex.ai/en/stable/module_guides/observability/observability.html#promptlayer)
+[LlamaIndex](https://www.llamaindex.ai/) is a data framework for LLM-based applications. Read more about our integration on the [LlamaIndex documentation page](https://developers.llamaindex.ai/python/framework/module_guides/observability/#promptlayer)
 
 ## Claude Code
 

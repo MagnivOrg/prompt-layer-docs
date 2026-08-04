@@ -1,0 +1,150 @@
+---
+title: "Google SDK"
+description: "Automatically trace supported direct Google GenAI SDK calls with PromptLayer."
+icon: "/images/provider-logos/google.svg"
+---
+
+PromptLayer can auto-instrument the Google GenAI SDK in both Gemini Developer API and Vertex AI modes. Supported calls become OpenTelemetry spans and linked PromptLayer request logs without replacing the native provider client.
+
+## Supported APIs
+
+| Google GenAI API | Python | JavaScript |
+| --- | --- | --- |
+| Generate Content | Sync and async | Supported |
+| Streaming Generate Content | Sync and async | Supported |
+| Embeddings | Sync and async | Not supported |
+| Interactions | Sync and async in supported Google GenAI SDK releases | Not supported |
+| Vertex AI mode | Supported | Supported |
+
+In JavaScript, chat `sendMessage` and `sendMessageStream` calls are also traced. Other Google GenAI SDK calls continue to work normally, but unsupported surfaces do not automatically create PromptLayer traces or request logs.
+
+## Prerequisites
+
+- A [PromptLayer API key](/quickstart#prerequisites) for the workspace that should receive the traces
+- A Gemini API key, or standard Google Cloud credentials, project, and location for Vertex AI
+- Python 3.10 or later for Python, or Node.js 20 or later for JavaScript
+
+For Gemini Developer API calls, export:
+
+```bash
+export PROMPTLAYER_API_KEY="pl_..."
+export GOOGLE_API_KEY="..."
+```
+
+PromptLayer strongly recommends setting the language-specific [content-capture value](/features/observability/traces/auto-instrumentation/overview#capture-prompts-and-responses) so request inspection, search, analytics, and debugging can use prompts, responses, and tool content.
+
+## Python
+
+### 1. Install the SDKs
+
+```bash
+pip install "promptlayer[otel-genai-instrumentation]" google-genai
+```
+
+### 2. Configure Google GenAI instrumentation
+
+```python
+import os
+
+from google import genai
+from promptlayer import configure_tracing
+
+tracer_provider = configure_tracing(providers=("google",))
+client = genai.Client(api_key=os.environ["GOOGLE_API_KEY"])
+
+try:
+    response = client.models.generate_content(
+        model="gemini-2.5-flash",
+        contents="Explain distributed tracing in one sentence.",
+    )
+    print(response.text)
+finally:
+    client.close()
+    tracer_provider.force_flush()
+```
+
+The same `google` selector instruments a client created with `vertexai=True`:
+
+```python
+vertex_client = genai.Client(
+    vertexai=True,
+    project=os.environ["GOOGLE_CLOUD_PROJECT"],
+    location=os.environ["GOOGLE_CLOUD_LOCATION"],
+)
+```
+
+<Accordion title="Use an existing PromptLayer client">
+If your application already creates a PromptLayer client, select Google when enabling tracing:
+
+```python
+from promptlayer import PromptLayer
+
+pl = PromptLayer(
+    enable_tracing=True,
+    tracing_providers=("google",),
+)
+```
+
+Omit `tracing_providers` to instrument every supported provider SDK that is installed.
+</Accordion>
+
+## JavaScript
+
+### 1. Install the SDKs
+
+```bash
+npm install promptlayer @google/genai
+```
+
+### 2. Preload PromptLayer instrumentation
+
+The preload must run before the application imports `@google/genai`:
+
+```bash
+node --import promptlayer/register app.mjs
+```
+
+### 3. Use the Google GenAI SDK normally
+
+```javascript
+import { GoogleGenAI } from "@google/genai";
+import { shutdownTracing } from "promptlayer";
+
+const client = new GoogleGenAI({
+  apiKey: process.env.GOOGLE_API_KEY,
+});
+
+try {
+  const response = await client.models.generateContent({
+    model: "gemini-2.5-flash",
+    contents: "Explain distributed tracing in one sentence.",
+  });
+  console.log(response.text);
+} finally {
+  await shutdownTracing();
+}
+```
+
+The same instrumentation supports a client created in Vertex AI mode:
+
+```javascript
+const vertexClient = new GoogleGenAI({
+  vertexai: true,
+  project: process.env.GOOGLE_CLOUD_PROJECT,
+  location: process.env.GOOGLE_CLOUD_LOCATION,
+});
+```
+
+The preload instruments every supported provider. To instrument only Google, call `configureTracing({ providers: ["google"] })` in a bootstrap module and dynamically import the application afterward. See [Select Providers](/features/observability/traces/auto-instrumentation/overview#select-providers).
+
+## Verify the Integration
+
+Run one supported Google GenAI request, flush or shut down tracing, and open [Traces](/features/observability/traces) in PromptLayer. The provider span should have an associated request log and identify Gemini Developer API or Vertex AI mode.
+
+If no span appears:
+
+- Confirm instrumentation is configured before the first Google GenAI request.
+- In JavaScript, confirm the preload or bootstrap runs before `@google/genai` loads.
+- Confirm the call uses an API surface listed in [Supported APIs](#supported-apis).
+- Confirm `PROMPTLAYER_API_KEY` belongs to the workspace you are checking.
+- Flush or shut down tracing before a short-lived process exits.
