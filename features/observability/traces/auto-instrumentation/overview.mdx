@@ -32,6 +32,13 @@ For the resulting hierarchy and dashboard view, see [Traces](/features/observabi
   >
     Python and JavaScript
   </Card>
+  <Card
+    title="AWS Bedrock"
+    icon="aws"
+    href="/features/observability/traces/auto-instrumentation/bedrock"
+  >
+    Python
+  </Card>
 </CardGroup>
 
 The provider guide is the source of truth for supported API surfaces, installation, initialization order, content capture, exporter settings, flushing, and verification. Coverage and configuration can differ between languages.
@@ -41,7 +48,7 @@ The provider guide is the source of truth for supported API surfaces, installati
 Python requires the optional instrumentation extra. Install only the provider SDKs your application uses:
 
 ```bash
-pip install "promptlayer[otel-genai-instrumentation]" openai anthropic google-genai
+pip install "promptlayer[otel-genai-instrumentation]" openai anthropic google-genai boto3
 ```
 
 Then enable tracing on the PromptLayer client. By default, the client instruments every supported provider SDK that is installed:
@@ -51,7 +58,7 @@ from promptlayer import PromptLayer
 
 pl = PromptLayer(enable_tracing=True)
 
-# Make direct OpenAI, Anthropic, or Google GenAI SDK calls.
+# Make direct OpenAI, Anthropic, Google GenAI, or AWS Bedrock calls.
 
 # Flush pending spans before a short-lived process exits.
 pl.tracer_provider.force_flush()
@@ -115,7 +122,7 @@ try {
 ```
 </CodeGroup>
 
-Supported selectors are `openai`, `anthropic`, and `google`. Python also accepts `openai.azure` as an alias for the OpenAI instrumentor. Anthropic Vertex uses `anthropic`; Google clients created with `vertexai=True` use `google`.
+Supported selectors are `openai`, `anthropic`, and `google`. Python also supports `bedrock`, with `amazon.bedrock` and `aws.bedrock` as aliases for the Botocore instrumentor. Python accepts `openai.azure` as an alias for the OpenAI instrumentor. Anthropic Vertex uses `anthropic`; Google clients created with `vertexai=True` use `google`.
 
 Python applications that do not create a PromptLayer client can call `configure_tracing(providers=(...))`. The function returns the configured tracer provider so short-lived processes can call `force_flush()`.
 

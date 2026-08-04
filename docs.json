@@ -117,7 +117,8 @@
                       "features/observability/traces/auto-instrumentation/overview",
                       "features/observability/traces/auto-instrumentation/openai",
                       "features/observability/traces/auto-instrumentation/anthropic",
-                      "features/observability/traces/auto-instrumentation/google"
+                      "features/observability/traces/auto-instrumentation/google",
+                      "features/observability/traces/auto-instrumentation/bedrock"
                     ]
                   },
                   "features/observability/traces/opentelemetry",
