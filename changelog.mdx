@@ -4,6 +4,61 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## August 03, 2026
+
+### Deployment 1
+
+#### New Features
+
+**OpenRouter Provider Support**
+PromptLayer now integrates with OpenRouter, giving you access to hundreds of models from multiple AI labs through a single API key.
+- Route requests across providers like OpenAI, Anthropic, Google, and Meta without managing separate credentials
+- Access specialized models for chat, image generation, video generation, and text-to-speech
+- Track usage and costs across all OpenRouter models in your PromptLayer dashboard
+
+#### Improvements
+
+- Updated pricing for GPT-5.6 models to reflect OpenAI's recent price reductions
+- Enhanced model selector to display available API types per provider
+- Improved request volume visualization with clearer color coding when no evaluation signals are present
+- Refined model preview display for Hugging Face models
+
+---
+
+
+## July 30, 2026
+
+### Deployment 1
+
+#### Improvements
+- Fixed layout issue in Request Log header where action buttons could overlap with the title on narrow screens
+- Improved schema editor toggle behavior to prevent layout jumps when switching between interactive and JSON views
+- Enhanced chat session dropdown display in maximized view with larger text for better readability
+
+---
+
+
+
+### Deployment 2
+
+#### New Features
+
+**Request Volume Tail Analytics**
+New analytics view showing request volume trends over time with detailed breakdowns by template and invocation site.
+- View historical request patterns with interactive time-series charts
+- Filter by template name, invocation site, or custom signals
+- Analyze request distribution across different parts of your application
+
+#### Improvements
+
+- Enhanced Smart Table cell preview performance when viewing large payloads
+- Improved Smart Table version history navigation with streamlined cell content access
+- Optimized Smart Table status filtering to accurately reflect computed column states
+- Better Smart Table cell display with automatic content type detection and truncation handling
+- Enhanced Smart Table row status counts for more accurate completion tracking
+
+---
+
 ## July 29, 2026
 
 ### Deployment 1
@@ -34,6 +89,47 @@ General performance and stability improvements
 - Signal bindings can now be individually updated or deleted without replacing the entire configuration
 - Multiple bindings for the same prompt template are now supported with different version or label filters
 - Improved signal binding management workflow with more granular control over configuration changes
+
+---
+
+
+### Deployment 4
+
+#### New Features
+
+**Native Scorecard Support in Wrangler**
+Wrangler can now configure, retrieve, and recalculate scorecards directly through natural language commands.
+- Create multi-criterion scorecards with structured evaluation steps including STRUCTURE and ASSERT_VALID validators
+- Configure JSON Schema validation criteria alongside structured output prompts
+- Trigger scorecard recalculations for specific rows or evaluation steps programmatically
+
+#### Improvements
+
+- Enhanced trace entity hydration to support workflow-specific input variable filtering
+- Improved tool call display with entity preview cards for better context visibility
+- Streamlined scorecard step configuration with automatic source column binding from primitive configs
+- Added support for queued message handling in chat interface for better real-time feedback
+
+---
+
+
+### Deployment 5
+
+#### New Features
+
+**Signals**
+Introduced `Signals` for automated production traffic labeling based on yes/no questions about requests, with reasoning and quote support for each evaluation.
+- Test signals on real logs before enabling them in production
+- Filter request logs by signal results directly from the UI
+- Configure sampling rates per hook to control evaluation frequency
+
+#### Improvements
+
+- Enhanced playground evaluation error handling with clearer validation messages for missing inputs
+- Improved breadcrumb navigation with consistent entity titles across all resource pages
+- Updated model name display with better spacing and alignment for function names
+- Refined signal bubble styling with check/X icons for improved visual clarity
+- Added minimum row count validation when running playground evaluations against sheets
 
 ---
 
