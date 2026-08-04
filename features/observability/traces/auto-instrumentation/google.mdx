@@ -8,15 +8,19 @@ PromptLayer can auto-instrument the Google GenAI SDK in both Gemini Developer AP
 
 ## Supported APIs
 
-| Google GenAI API | Python | JavaScript |
+| API surface | Python | JavaScript |
 | --- | --- | --- |
-| Generate Content | Sync and async | Supported |
-| Streaming Generate Content | Sync and async | Supported |
-| Embeddings | Sync and async | Not supported |
-| Interactions | Sync and async in supported Google GenAI SDK releases | Not supported |
+| Generate Content | Supported (sync and async) | Supported |
+| Generate Content streaming | Supported (sync and async) | Supported |
+| Chat | Not documented | Supported (`sendMessage`) |
+| Chat streaming | Not documented | Supported (`sendMessageStream`) |
+| Embeddings | Supported (sync and async) | Not supported |
+| Interactions | Supported (sync and async in supported SDK releases) | Not supported |
 | Vertex AI mode | Supported | Supported |
 
-In JavaScript, chat `sendMessage` and `sendMessageStream` calls are also traced. Other Google GenAI SDK calls continue to work normally, but unsupported surfaces do not automatically create PromptLayer traces or request logs.
+`Not documented` means the surface is outside the verified coverage for that language.
+
+Other Google GenAI SDK calls continue to work normally, but unsupported surfaces do not automatically create PromptLayer traces or request logs.
 
 ## Prerequisites
 
@@ -31,7 +35,7 @@ export PROMPTLAYER_API_KEY="pl_..."
 export GOOGLE_API_KEY="..."
 ```
 
-PromptLayer strongly recommends setting the language-specific [content-capture value](/features/observability/traces/auto-instrumentation/overview#capture-prompts-and-responses) so request inspection, search, analytics, and debugging can use prompts, responses, and tool content.
+PromptLayer captures supported message content by default. Review the [content-capture behavior and opt-out values](/features/observability/traces/auto-instrumentation/overview#capture-prompts-and-responses) before sending provider requests.
 
 ## Python
 
