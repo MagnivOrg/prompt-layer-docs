@@ -16,7 +16,7 @@ Below is the list of LLM providers supported in PromptLayer along with key capab
 - JSON mode / structured outputs.
 - Vision models (e.g., `gpt-4-vision`) — see [FAQ: multimodal](/features/faq#does-promptlayer-support-multi-modal-image-models-like-gpt-4-vision).
 - Streaming via SDK (Python/JS).
-- Tip: You can also connect via [OpenRouter](/features/custom-providers#openrouter) as a custom provider to access many OpenAI-compatible models.
+- Tip: Many OpenAI models are also available through [OpenRouter](/features/openrouter-integration), a first-class provider that routes to hundreds of models with a single key.
 
 ### OpenAI Azure
 
@@ -73,6 +73,14 @@ Limitations:
 - AI21 Jamba and Llama do not support streaming when tools are configured; use non-streaming requests.
 - Cohere and Nova require underscores in tool names — PromptLayer automatically converts hyphens to underscores.
 
+### OpenRouter
+
+- First-class native provider using the official OpenRouter SDK — one key for hundreds of routed models. See the [OpenRouter integration guide](/features/openrouter-integration).
+- **Chat** (streaming + non-streaming), **Image generation**, **Video generation** (async job), and **Speech / text-to-speech** — selectable via the API type selector in the Playground.
+- Structured outputs and function/tool calling on models that advertise support.
+- Server (built-in) tools such as web search are available for OpenRouter models — see [Tool Calling](/features/prompt-registry/tool-calling).
+- Model IDs use OpenRouter's `provider/model` form (e.g., `openai/gpt-4o-mini`, `anthropic/claude-3.5-sonnet`).
+
 ### Mistral
 
 - Streaming supported; tool/function-call support depends on the specific model.
@@ -106,7 +114,7 @@ How to set up:
 3. Optional: Create Custom Models for a cleaner model dropdown in the Playground/Prompt Registry.
 
 Examples:
-- OpenRouter — Base URL: https://openrouter.ai/api/v1 (see [example](/features/custom-providers#openrouter))
+- OpenRouter — now supported as a first-class [native provider](/features/openrouter-integration) (recommended). The OpenAI-compatible base URL `https://openrouter.ai/api/v1` also still works.
 - Exa — Base URL: https://api.exa.ai (see [integration guide](/features/exa-integration))
 - xAI (Grok) — Base URL: https://api.x.ai/v1 (see [integration guide](/features/xai-integration))
 - DeepSeek — Base URL: https://api.deepseek.com (see [FAQ](/features/faq#does-promptlayer-support-deepseek-models))

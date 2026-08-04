@@ -164,6 +164,7 @@
         "group": "Providers",
         "pages": [
           "features/supported-providers",
+          "features/openrouter-integration",
           {
             "group": "Custom Providers",
             "icon": "plug",
@@ -171,7 +172,6 @@
               "features/custom-providers",
               "features/exa-integration",
               "features/xai-integration",
-              "features/openrouter-integration",
               "features/concentrate-integration"
             ]
           }
