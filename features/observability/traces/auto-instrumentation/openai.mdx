@@ -12,12 +12,15 @@ This guide covers the OpenAI model SDK. If you use the OpenAI Agents SDK, follow
 
 ## Supported APIs
 
-| OpenAI API | Python | JavaScript |
+| API surface | Python | JavaScript |
 | --- | --- | --- |
-| Chat Completions (`chat.completions.create`) | Sync, async, and streaming | Supported, including streaming |
-| Structured-output parsing | Sync and async | Not supported |
-| Responses (`responses.create`) | Sync, async, and streaming | Supported, including streaming |
-| Embeddings (`embeddings.create`) | Sync and async | Supported |
+| Chat Completions (`chat.completions.create`) | Supported (sync and async) | Supported |
+| Chat Completions streaming | Supported (sync and async) | Supported |
+| Structured-output parsing | Supported (sync and async) | Not supported |
+| Responses (`responses.create`) | Supported (sync and async) | Supported |
+| Responses streaming | Supported (sync and async) | Supported |
+| Embeddings (`embeddings.create`) | Supported (sync and async) | Supported |
+| Azure OpenAI | Supported | Supported |
 
 Only the API surfaces in this table are auto-instrumented. Other OpenAI SDK calls continue to work normally, but this integration does not automatically create PromptLayer traces or request logs for them.
 
@@ -27,23 +30,21 @@ Only the API surfaces in this table are auto-instrumented. Other OpenAI SDK call
 - An OpenAI API key
 - Python 3.10 or later for the Python integration, or Node.js 20 or later for the JavaScript integration
 
-Export the variables for your language before the application starts. The API keys are required for the setup in this guide. Content capture is strongly recommended so PromptLayer can fully support request inspection, search, analytics, and debugging with your prompts, responses, and tool arguments.
+Export the variables for your language before the application starts. The API keys are required for the setup in this guide. PromptLayer captures supported prompt, response, and tool content by default.
 
 <CodeGroup>
 ```bash Python
 export PROMPTLAYER_API_KEY="pl_..."
 export OPENAI_API_KEY="sk_..."
-export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="span_only"
 ```
 
 ```bash JavaScript
 export PROMPTLAYER_API_KEY="pl_..."
 export OPENAI_API_KEY="sk_..."
-export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="true"
 ```
 </CodeGroup>
 
-Omit `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` only if your data policies require metadata-only telemetry without message contents. This limits content-aware PromptLayer features.
+If your data policies require metadata-only telemetry, use the language-specific opt-out in [Capture Prompts and Responses](#capture-prompts-and-responses) before starting the application. Disabling capture limits content-aware PromptLayer features.
 
 ## Python
 
@@ -176,12 +177,24 @@ The preload instruments every supported provider. To instrument only OpenAI, cal
 
 ## Capture Prompts and Responses
 
-Prompt and response content is disabled by default because it can contain sensitive data. PromptLayer strongly recommends enabling it when your data policies allow it so search, analytics, request inspection, and debugging can use the complete LLM interaction. Model names, timing, token usage when available, and other non-content telemetry are still recorded when capture is disabled.
+PromptLayer captures supported prompt and response content by default so search, analytics, request inspection, and debugging can use the complete LLM interaction. Model names, timing, token usage when available, and other non-content telemetry are still recorded when capture is disabled.
 
-The complete export blocks in [Prerequisites](#prerequisites) enable content capture. Use the language-specific value shown there, set it before `instrument_openai()` or the `promptlayer/register` preload runs, and restart an already-running process after changing it.
+To disable content capture, set the language-specific value before `instrument_openai()` or the `promptlayer/register` preload runs:
+
+<CodeGroup>
+```bash Python
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="NO_CONTENT"
+```
+
+```bash JavaScript
+export OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT="false"
+```
+</CodeGroup>
+
+JavaScript can instead pass `captureContent: false` to `configureTracing()`. Restart an already-running process after changing the setting.
 
 <Warning>
-Content capture can send user prompts, model responses, and tool arguments to PromptLayer. Review your privacy, retention, and compliance requirements before enabling it.
+Content capture can send user prompts, model responses, and tool arguments to PromptLayer. Because it is enabled by default, review your privacy, retention, and compliance requirements and opt out before the first OpenAI request when necessary.
 </Warning>
 
 ## Configuration Reference
@@ -192,7 +205,7 @@ Content capture can send user prompts, model responses, and tool arguments to Pr
 | `OPENAI_API_KEY` | Yes | Authenticates OpenAI SDK requests. It is read by OpenAI and is not sent to PromptLayer. |
 | `PROMPTLAYER_BASE_URL` | No | Overrides the PromptLayer API root. The tracing endpoint defaults to `<base-url>/v1/traces`. |
 | `PROMPTLAYER_OTLP_TRACES_ENDPOINT` | No | Overrides the complete OTLP/HTTP trace endpoint and takes precedence over `PROMPTLAYER_BASE_URL`. |
-| `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` | For content | Includes prompts, responses, and tool arguments. Use `span_only` for Python and `true` for JavaScript. |
+| `OTEL_INSTRUMENTATION_GENAI_CAPTURE_MESSAGE_CONTENT` | No | Controls prompt, response, and tool content capture. Capture is enabled by default. Use `NO_CONTENT` for Python or `false` for JavaScript to disable it. |
 
 Python also accepts `api_key`, `base_url`, `endpoint`, and `tracer_provider` keyword arguments:
 
@@ -218,4 +231,4 @@ If no span appears:
 - Confirm the call uses an API surface listed in [Supported APIs](#supported-apis).
 - Confirm `PROMPTLAYER_API_KEY` belongs to the workspace you are checking.
 - Flush or shut down tracing before a short-lived process exits.
-- If only prompt or response content is missing, check the language-specific content-capture value and restart the process.
+- If only prompt or response content is missing, confirm content capture was not disabled and restart the process after changing the setting.
