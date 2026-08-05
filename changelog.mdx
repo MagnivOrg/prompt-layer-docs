@@ -4,6 +4,32 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## August 05, 2026
+
+### Deployment 1
+
+#### New Features
+
+**AI-Generated Trace Summaries**
+Get instant, natural language descriptions of what each trace accomplishes, powered by AI analysis of spans and tool calls.
+- Automatically summarizes complex multi-step agent flows into one-line descriptions
+- Displays total tool calls, LLM requests, tokens, and cost at a glance on the trace detail page
+- Summaries regenerate when traces grow to stay accurate
+
+**Empty Tool Trajectory Validation**
+Trajectory evaluators now support validating that no tools were called during execution.
+- Use empty tool lists in trajectory scenarios to assert a workflow made zero tool calls
+- Helpful for testing fallback paths or validating that certain flows avoid external API usage
+
+#### Improvements
+
+- Improved rendering performance for long traces with many spans
+- Smart Table composed-source cache now uses row-scoped storage for lower memory overhead
+- Smart Table cells display linked `request_id` and `trace_id` references even when content is truncated
+
+---
+
+
 ## August 04, 2026
 
 ### Deployment 1
