@@ -25,6 +25,15 @@ For example, you can ask whether the assistant answered in the user's language, 
 4. Add one or more hooks to define where the signal runs and how often it is sampled.
 5. Save the signal. When you are ready for production evaluation, turn **Enabled** on.
 
+<Frame>
+  <img
+    src="/images/signals/signals-list.png"
+    alt="Signals list showing signal cards with processed counts and true or false percentages"
+  />
+</Frame>
+
+The Signals list shows each signal's question, scope, and running totals for processed requests and true/false distribution.
+
 ## Scope with hooks
 
 Each hook controls which request logs a signal evaluates and at what rate.
@@ -39,22 +48,26 @@ Each hook has its own **sample rate** (default 50%). PromptLayer evaluates only 
 
 A signal can have multiple hooks. Use this when the same question should apply to different prompts, labels, or sampling rates.
 
+<Frame>
+  <img
+    src="/images/signals/signals-edit.png"
+    alt="Signal editor with statement, scope hooks, sampling rate, and test panel"
+  />
+</Frame>
+
 ## Test before enabling
 
 Before you enable a signal in production, test it on real request logs:
 
-1. Open the test panel on the signal editor.
-2. Add request logs from history or from your current scope.
-3. Run **Try signal** on individual logs or **Test all** across the set.
-4. Review the true/false result, reasoning, and citation for each log.
+1. In the **Test on selected requests** panel, add up to 20 request logs from history or from your current scope.
+2. Run **Try signal** on individual logs or **Test all** across the set.
+3. Review the true/false result, reasoning, and citation for each log.
 
 Testing does not change production behavior. Use it to refine your signal statement and confirm the labels match your expectations.
 
 ## Use results in Request Logs
 
 When a signal is enabled, evaluated requests show **true** or **false** labels in the Request Logs table and in request details. Select a label to filter the table to matching results.
-
-The **Signals** list also shows processed, true, and false counts for each signal so you can track volume and distribution over time.
 
 See [Search](/features/search-and-analytics/search) to filter request logs by signal results from the search bar.
 
