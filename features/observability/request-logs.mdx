@@ -15,7 +15,7 @@ Each request log can include:
 - Estimated cost
 - Status and error details
 - Prompt template association
-- Tags, metadata, scores, and a PromptLayer request ID
+- Tags, metadata, scores, [Signals](/features/observability/request-logs/signals), and a PromptLayer request ID
 
 ## View Request Logs
 
@@ -36,7 +36,7 @@ To review logs for one prompt, open that prompt and select **Analytics & Logs**.
 
 ## Find a Request
 
-Use the date range, free-text query, and structured filters above the Requests table. You can filter by fields such as prompt, model, provider, status, tags, metadata, content, latency, tokens, and cost.
+Use the date range, free-text query, and structured filters above the Requests table. You can filter by fields such as prompt, model, provider, status, tags, metadata, [Signals](/features/observability/request-logs/signals), content, latency, tokens, and cost.
 
 See [Search](/features/search-and-analytics/search) for the dashboard workflow, supported filter categories, and older-data behavior.
 
@@ -48,7 +48,7 @@ When PromptLayer receives a supported GenAI span, it creates a request log for t
 
 ## Configure Request Logs
 
-Use [tags](/features/observability/request-logs/tags), [metadata](/features/observability/request-logs/metadata), and [scores](/features/observability/request-logs/scores) to make requests easier to find and compare. Every log also has a [PromptLayer request ID](/features/observability/request-logs/request-ids) that you can store or use with tracking methods.
+Use [tags](/features/observability/request-logs/tags), [metadata](/features/observability/request-logs/metadata), [scores](/features/observability/request-logs/scores), and [Signals](/features/observability/request-logs/signals) to make requests easier to find and compare. Every log also has a [PromptLayer request ID](/features/observability/request-logs/request-ids) that you can store or use with tracking methods.
 
 Use [Tracking Templates](/features/observability/request-logs/tracking-templates) to associate provider calls with PromptLayer prompts. For manual provider calls or unsupported models, use [Custom Logging](/features/observability/request-logs/custom-logging). If a provider returns JSON, see [Structured Outputs](/features/observability/request-logs/structured-outputs).
 
