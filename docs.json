@@ -150,6 +150,12 @@
             "icon": "wrench"
           },
           {
+            "group": "MCP Servers",
+            "tag": "New",
+            "icon": "server",
+            "pages": ["features/mcp-servers/overview"]
+          },
+          {
             "group": "Skill Collections",
             "tag": "New",
             "icon": "book-sparkles",
