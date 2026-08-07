@@ -99,6 +99,7 @@
                   "features/observability/request-logs/tags",
                   "features/observability/request-logs/metadata",
                   "features/observability/request-logs/scores",
+                  "features/observability/request-logs/signals",
                   "features/observability/request-logs/tracking-templates",
                   "features/observability/request-logs/custom-logging",
                   "features/observability/request-logs/structured-outputs"

@@ -23770,7 +23770,7 @@
             "type": "string",
             "minLength": 1,
             "nullable": true,
-            "description": "Optional span ID. When omitted the row anchors on the trace's earliest root span (Trace export). When provided the row anchors on that span and its direct children become the columns (Span export)."
+            "description": "Optional span ID. When provided, the row is built from this span and its direct children become the dataset columns. When omitted, the full trace is added as the row."
           }
         }
       },
@@ -23794,7 +23794,7 @@
               "trace",
               "span"
             ],
-            "description": "Indicates whether the row was created from a full trace root (`trace`) or a specific span subtree (`span`)."
+            "description": "`\"trace\"` when the row was added from the full trace, or `\"span\"` when added from a specific span."
           }
         }
       },
