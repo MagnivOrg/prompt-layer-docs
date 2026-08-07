@@ -6,6 +6,10 @@ icon: "wave-pulse"
 
 Use SDK auto-instrumentation when your application code creates and calls a supported model provider's native client. PromptLayer registers the provider-specific instrumentor and trace exporter, so supported calls become OpenTelemetry spans and linked request logs without replacing the provider client or logging each request manually.
 
+<Danger>
+Enabling auto-instrumentation creates request logs in PromptLayer for supported provider calls. Request logging may incur costs based on your PromptLayer plan and usage.
+</Danger>
+
 For the resulting hierarchy and dashboard view, see [Traces](/features/observability/traces).
 
 ## Provider Guides
