@@ -4,6 +4,41 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## August 10, 2026
+
+### Deployment 1
+
+#### New Features
+
+**OpenRouter Audio Model Support**
+The `Playground` now supports OpenRouter's audio-capable chat models (e.g., GPT-4 Audio) with integrated voice output capabilities.
+- Select from pre-configured voice options directly in the model parameters panel
+- Audio responses stream in real-time with browser-playable playback controls
+- Voice parameter is automatically configured with sensible defaults for supported models
+
+**OpenRouter Image Generation in Playground**
+Image generation models from OpenRouter (including vector-capable models like Recraft) are now available in the `Playground`.
+- Configure aspect ratio, quality, and output format parameters for each model
+- Vector models (SVG output) automatically show appropriate format options
+- Image outputs display inline with download and preview capabilities
+
+**OpenRouter Speech Model Integration**
+Text-to-speech models from OpenRouter providers (including MiniMax Speech, Deepgram, and MAI Voice) can now be used in the `Playground`.
+- Model-specific voice selection with pre-populated options
+- Response format automatically adapts based on provider requirements (MP3/PCM)
+- Audio speed control where supported by the underlying model
+
+#### Improvements
+
+- `Smart Table` column paste operation now handles multiple cells in a single batch update with conflict detection
+- `Smart Table` sheet navigator scrolling improved when working with tables containing many sheets
+- Audio playback controls enhanced with better transport controls and seeking capabilities
+- Model parameter controls now intelligently show/hide based on actual API support per model
+- `Playground` streaming toggle automatically locks when required or disallowed by selected model
+
+---
+
+
 ## August 05, 2026
 
 ### Deployment 1
