@@ -1,0 +1,114 @@
+---
+title: "Neon AI Gateway"
+description: "Set up Neon AI Gateway as a custom provider in PromptLayer."
+icon: "database"
+---
+
+[Neon AI Gateway](https://neon.com/docs/ai-gateway/overview) is an OpenAI-compatible inference endpoint built into Neon. A single Neon credential reaches models from OpenAI, Google, Meta, Databricks, and Alibaba, so you do not need separate provider accounts or provider API keys.
+
+<Info>
+Neon AI Gateway is in beta. It requires a paid Neon plan and a project in the AWS US East (Ohio) region (`aws-us-east-2`).
+</Info>
+
+## Setting Up Neon AI Gateway as a Custom Provider
+
+Unlike most providers, Neon has no single hostname. Each database branch gets its own gateway host, so the base URL you configure points at one branch.
+
+1. **Create a Neon credential**: in the Neon Console, select your branch, open **Credentials** under **APP BACKEND**, and create a credential with the `ai_gateway:invoke` scope. Copy it before closing the dialog, since it is shown only once. See [AI Gateway authentication](https://neon.com/docs/ai-gateway/authentication).
+2. **Copy the branch host**: the AI Gateway page in the Neon Console shows it in the format `br-<name>-api.ai.<cell>.<region>.aws.neon.tech`.
+3. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
+4. Click **Create Custom Provider**
+5. Configure the provider with the following details:
+   - **Name**: Neon AI Gateway
+   - **Client**: OpenAI (Neon serves an OpenAI-compatible endpoint)
+   - **Base URL**: your branch host plus `/v1`, for example `https://br-winter-pond-aptw82ef-api.ai.c-2.us-east-2.aws.neon.tech/v1`
+   - **API Key**: your Neon credential
+
+A Neon credential is valid on the branch it was created on and on every branch descended from it, so a credential created on `main` also works for preview and CI branches forked from `main`. If you want to run prompts against more than one branch, create one custom provider per branch and reuse the same credential where the lineage allows it.
+
+## Creating Custom Models (Recommended)
+
+For easier model selection in the Playground and Prompt Registry, save the Neon models you use:
+
+1. In **Settings → Custom Providers and Models**, find your Neon provider in the list
+2. Click on the Neon row to expand it
+3. Click **Create Custom Model** in the expanded section
+4. Configure each model:
+   - **Model Name**: the Neon model ID, for example `gpt-5-mini` or `gemini-3-flash`
+   - **Display Name**: a friendly name like "GPT-5 Mini (Neon)"
+   - **Model Type**: Chat
+5. Repeat for each model you want to use
+
+Neon uses short model IDs with no provider prefix. To see what a branch can serve, call its model list endpoint:
+
+```bash
+curl "$NEON_AI_GATEWAY_BASE_URL/v1/models" \
+  -H "Authorization: Bearer $NEON_AI_GATEWAY_TOKEN"
+```
+
+## Available Models
+
+Example model IDs:
+
+- **`gpt-5-mini`**: OpenAI GPT-5 Mini
+- **`gpt-5`**: OpenAI GPT-5
+- **`gemini-3-flash`**: Google Gemini 3 Flash Preview
+- **`llama-4-maverick`**: Meta Llama 4 Maverick
+- **`qwen3-next-80b-a3b-instruct`**: Alibaba Qwen3-Next 80B
+
+For the full catalog with context windows and pricing, see the [Neon model catalog](https://neon.com/docs/ai-gateway/models). The same catalog is published as the [`neon` provider on Models.dev](https://models.dev/providers/neon/).
+
+<Warning>
+A few models are served only on Neon's Responses API path and return a `400` against a `/v1` base URL. The Endpoints column in Neon's [model catalog](https://neon.com/docs/ai-gateway/models) marks which ones, and the set changes, so read it there; at the time of writing it is `gpt-5-3-codex` and `gpt-5-5-pro`. Every model the column lists with `chat/completions` works here.
+</Warning>
+
+## Using Neon AI Gateway in PromptLayer
+
+### In the Playground
+
+1. Open the Playground
+2. Select your Neon provider from the provider dropdown
+3. Choose a model, or type the model ID
+4. Start querying with your prompts
+
+### In the Prompt Registry
+
+Neon models work with PromptLayer's Prompt Registry:
+
+- Select Neon models when creating or editing prompt templates
+- Use templates with Neon models in evaluations
+- Track and analyze Neon usage alongside other providers
+
+Neon reports `pricing` as `null` in `GET /v1/models`, and inference is free during the Neon beta, so expect Neon requests to log token counts without a cost figure.
+
+## SDK Usage
+
+Once you've set up your Neon custom provider and created a prompt template in the dashboard, you can run it programmatically with the PromptLayer SDK:
+
+```python
+from promptlayer import PromptLayer
+
+promptlayer = PromptLayer(api_key="pl_****")
+
+# Run a prompt template that uses your Neon custom provider
+response = promptlayer.run(
+    prompt_name="your-neon-prompt",
+    input_variables={"query": "your input"}
+)
+
+# Access the response
+print(response["raw_response"].choices[0].message.content)
+
+# The request is automatically logged with request_id
+print(f"Request ID: {response['request_id']}")
+```
+
+<Info>
+Using [`promptlayer.run()`](/sdks/python#using-the-run-method-recommended) ensures your requests are properly logged to PromptLayer and leverages your prompt templates from the Prompt Registry. This is the recommended approach for production use.
+</Info>
+
+## Related Documentation
+
+- [Custom Providers](/features/custom-providers)
+- [Supported Providers](/features/supported-providers)
+- [Neon AI Gateway documentation](https://neon.com/docs/ai-gateway/overview)
