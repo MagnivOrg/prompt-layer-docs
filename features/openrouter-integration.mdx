@@ -54,7 +54,7 @@ Generated media, token counts, and cost appear in the request log the same way a
 
 ### Speech (text-to-speech)
 
-Speech models take the prompt text as the input to synthesize and require a **voice** parameter. PromptLayer merges each model's advertised voices with the common OpenAI-compatible voice aliases and sorts them alphabetically. The response is returned as playable audio and logged as an audio output.
+Speech models take the prompt text as the input to synthesize and require a **voice** parameter. The voice dropdown for each model is populated from that model's own OpenRouter-advertised voice list, sorted alphabetically. The response is returned as playable audio and logged as an audio output.
 
 ## SDK usage
 
