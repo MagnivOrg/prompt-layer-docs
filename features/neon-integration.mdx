@@ -59,7 +59,7 @@ Example model IDs:
 For the full catalog with context windows and pricing, see the [Neon model catalog](https://neon.com/docs/ai-gateway/models). The same catalog is published as the [`neon` provider on Models.dev](https://models.dev/providers/neon/).
 
 <Warning>
-`gpt-5-3-codex` and `gpt-5-5-pro` are served only on Neon's Responses API path and return a `400` against a `/v1` base URL. Every other model in the catalog is listed with the `chat/completions` endpoint and works here.
+A few models are served only on Neon's Responses API path and return a `400` against a `/v1` base URL. The Endpoints column in Neon's [model catalog](https://neon.com/docs/ai-gateway/models) marks which ones, and the set changes, so read it there; at the time of writing it is `gpt-5-3-codex` and `gpt-5-5-pro`. Every model the column lists with `chat/completions` works here.
 </Warning>
 
 ## Using Neon AI Gateway in PromptLayer
