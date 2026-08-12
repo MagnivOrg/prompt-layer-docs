@@ -28,6 +28,33 @@ Connect and manage external MCP servers centrally in your workspace to provide t
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Request and Trace Column Imports**
+Smart Tables now support importing Request logs and Traces directly into anchor columns, preserving all nested metadata and execution details.
+- Click "Import" in any Request or Trace column cell to link existing request logs or traces
+- Imported data automatically populates nested metadata columns (latency, cost, model, tokens)
+- View imported source IDs to track which requests/traces are already in your table
+
+**Column Conversion to Anchors**
+Convert existing Prompt Template columns to Request columns or Workflow columns to Trace columns while preserving cell relationships.
+- Right-click column header and select conversion option
+- All downstream dependent columns automatically recalculate with new anchor data
+- Column titles auto-format to maintain consistency across anchor columns
+
+#### Improvements
+
+- Duplicate columns now preserve all nested metadata and virtual field configurations
+- Smart Tables action bar limits selection display to prevent performance issues with large datasets
+- Column group headers support duplicate and import operations on nested execution metadata columns
+- Improved column title allocation when duplicating anchor columns ensures unique naming
+- Cell content dialogs display anchor import status and allow re-import operations
+
+---
+
 ## August 10, 2026
 
 ### Deployment 1
