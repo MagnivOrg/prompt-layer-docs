@@ -4,6 +4,35 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## August 18, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Live Evaluation Progress Tracking**
+Real-time progress indicators now display when running evaluations via the SDK, showing row completion counts and current status as data populates.
+- Dashboard automatically updates with "X of Y rows complete" while evaluations are running
+- SDK can now publish planned row counts before writing data
+- Explicit lifecycle states (running, completed, aborted) prevent stale progress displays
+- WebSocket delivery ensures immediate UI updates without polling delays
+
+**Enhanced Scorecard Status Reporting**
+Scorecard progress now includes granular per-row status breakdowns beyond simple completion percentages.
+- New verdict-based counters show passed, failed, warned, running, and queued rows separately
+- Progress calculations now use database truth instead of Redis approximations for accuracy
+- Partial scores remain visible during long-running evaluations
+
+#### Improvements
+
+- Sheet metadata updates via API no longer require title or index changes
+- Grid row counts stay synchronized during optimistic row creation
+- Safari layout rendering improved for version selector tooltips
+- Sheet creation events now stream to connected clients for immediate list updates
+
+---
+
+
 ## August 14, 2026
 
 ### Deployment 1
