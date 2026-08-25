@@ -1,0 +1,75 @@
+---
+title: "Tiyuvta"
+description: "Set up Tiyuvta as a custom provider in PromptLayer."
+icon: "server"
+---
+
+[Tiyuvta](https://inference.tiyuvta.ai/) serves hosted open models through an OpenAI-compatible API. Add it to PromptLayer as a custom provider to use its models in the Playground, Prompt Registry, and evaluations.
+
+## Get a Tiyuvta API key
+
+Sign in to the [Tiyuvta console](https://inference.tiyuvta.ai/login?next=/app/playground), add prepaid credit, and create an API key. Keep the key available while you configure the custom provider in PromptLayer.
+
+## Configure Tiyuvta in PromptLayer
+
+1. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard.
+2. Click **Add Custom Provider**.
+3. Enter the following values:
+   - **Name**: Tiyuvta
+   - **Client**: OpenAI
+   - **Base URL**: `https://api.tiyuvta.ai/v1`
+   - **API Key**: Your Tiyuvta API key
+
+<Note>
+Include `/v1` in the base URL. Tiyuvta uses OpenAI-compatible request shapes, so select OpenAI as the client.
+</Note>
+
+## Discover available models
+
+Query the public model catalog before adding a model. This endpoint does not require an API key:
+
+```bash
+curl -sS https://api.tiyuvta.ai/v1/models | jq -r '.data[].id'
+```
+
+Copy an exact model ID from the response. The catalog is the source of truth for the models currently available.
+
+## Add a model
+
+1. Return to **Settings → Custom Providers and Models**.
+2. Open the Tiyuvta provider and click **Create Custom Model**.
+3. Select the Tiyuvta provider, paste a model ID from `/v1/models`, and set **Model Type** to **Chat**.
+4. Save the model.
+
+## Send a test request through PromptLayer
+
+In the Prompt Registry, create and save a prompt named `tiyuvta-smoke-test`. Give it a `question` input variable and select the Tiyuvta custom model you added. Then install the PromptLayer SDK and export your PromptLayer API key:
+
+```bash
+pip install -U promptlayer
+export PROMPTLAYER_API_KEY="pl_your_promptlayer_api_key"
+```
+
+Run the saved prompt:
+
+```python
+from promptlayer import PromptLayer
+
+client = PromptLayer()
+response = client.run(
+    prompt_name="tiyuvta-smoke-test",
+    input_variables={"question": "Reply with exactly: tiyuvta connected"},
+    tags=["tiyuvta-smoke-test"],
+)
+
+print(response["raw_response"].choices[0].message.content)
+print(f"Request ID: {response['request_id']}")
+```
+
+The request appears in PromptLayer's request logs with its model, latency, usage, and provider response.
+
+## Related documentation
+
+- [Configure Providers](/features/custom-providers)
+- [Supported Providers](/features/supported-providers)
+- [Tiyuvta quickstart](https://inference.tiyuvta.ai/quickstart)
