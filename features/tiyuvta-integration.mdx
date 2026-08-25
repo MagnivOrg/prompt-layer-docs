@@ -8,7 +8,7 @@ icon: "server"
 
 ## Get a Tiyuvta API key
 
-Sign in to the [Tiyuvta console](https://inference.tiyuvta.ai/login?next=/app/playground), add prepaid credit, and create an API key. Keep the key available while you configure the custom provider in PromptLayer.
+Sign in to the [Tiyuvta API keys page](https://inference.tiyuvta.ai/login?next=/app/keys), add prepaid credit, and create an API key. Keep the key available while you configure the custom provider in PromptLayer.
 
 ## Configure Tiyuvta in PromptLayer
 
@@ -29,7 +29,7 @@ Include `/v1` in the base URL. Tiyuvta uses OpenAI-compatible request shapes, so
 Query the public model catalog before adding a model. This endpoint does not require an API key:
 
 ```bash
-curl -sS https://api.tiyuvta.ai/v1/models | jq -r '.data[].id'
+curl -sS https://api.tiyuvta.ai/v1/models
 ```
 
 Copy an exact model ID from the response. The catalog is the source of truth for the models currently available.
