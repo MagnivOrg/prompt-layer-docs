@@ -203,6 +203,7 @@
             "pages": [
               "features/custom-providers",
               "features/exa-integration",
+              "features/tiyuvta-integration",
               "features/xai-integration",
               "features/concentrate-integration"
             ]
