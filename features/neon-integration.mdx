@@ -7,7 +7,7 @@ icon: "database"
 [Neon AI Gateway](https://neon.com/docs/ai-gateway/overview) is an OpenAI-compatible inference endpoint built into Neon. A single Neon credential reaches models from OpenAI, Google, Meta, Databricks, and Alibaba, so you do not need separate provider accounts or provider API keys.
 
 <Info>
-Neon AI Gateway is in beta. It requires a paid Neon plan and a project in the AWS US East (Ohio) region (`aws-us-east-2`).
+Neon AI Gateway is generally available. It requires a paid Neon plan and is not available in every region; see [Regions](https://neon.com/docs/introduction/regions) for current coverage.
 </Info>
 
 ## Setting Up Neon AI Gateway as a Custom Provider
@@ -79,7 +79,7 @@ Neon models work with PromptLayer's Prompt Registry:
 - Use templates with Neon models in evaluations
 - Track and analyze Neon usage alongside other providers
 
-Neon reports `pricing` as `null` in `GET /v1/models`, and inference is free during the Neon beta, so expect Neon requests to log token counts without a cost figure.
+Neon reports `pricing` as `null` in `GET /v1/models`, so expect Neon requests to log token counts without a cost figure unless you set prices from the [model catalog](https://neon.com/docs/ai-gateway/models).
 
 ## SDK Usage
 
