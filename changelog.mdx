@@ -13,6 +13,25 @@ General performance and stability improvements
 ---
 
 
+
+### Deployment 2
+
+#### New Features
+
+**Safe Retries for the Bulk Spans API**
+Retrying a bulk spans request no longer creates duplicate request logs, so timeouts and lost responses can be recovered safely. (docs)
+- Resubmitting a span returns its original request log, including the original ID.
+- Retries do not increase request-log usage counts.
+- A span submitted without a request log can receive one on a later submission.
+- If duplicate logs already exist, the oldest log is returned.
+
+#### Improvements
+- Bulk span batches now commit atomically, so a failure rolls back both spans and their request logs.
+- Concurrent retries of the same span are serialized, which prevents duplicate request logs.
+- A failure while scheduling trace recomputation after a successful commit is now logged instead of returning an error.
+
+---
+
 ## October 29, 2026
 
 ### Deployment 1
