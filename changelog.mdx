@@ -4,6 +4,39 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## October 31, 2026
+
+### Deployment 1
+
+#### New Features
+
+**Scorecard Evaluator Metrics**
+Column evaluators in Scorecard now support additional statistical metrics and a classification view for comparing outputs against expected values.
+- Percentile, MAE, and RMSE aggregations are available for column evaluators.
+- A classification report shows per-class results for evaluator columns.
+- Columns with expected values can be compared against actual outputs for accuracy-based metrics.
+
+**Duplicate Smart Tables**
+You can now duplicate an existing Smart Table to reuse its structure as a starting point.
+- Duplicate a table from its actions menu.
+- Choose whether the copy includes computed values.
+- Give the copy a custom title.
+
+**Export Prompt Template Versions**
+You can now export a prompt template version as a structured file for use outside PromptLayer.
+- Export is available from the version selector.
+- The export includes model settings, labels, input variables, and tool configuration.
+- Referenced snippets and their versions are included in the export.
+
+#### Improvements
+
+- Rename Smart Tables directly from the registry menu.
+- Smart Table prompt cells now record which snippet versions were used to produce their output.
+- Snippet versions used during prompt execution are captured for easier traceability.
+
+---
+
+
 ## October 30, 2026
 
 ### Deployment 1
