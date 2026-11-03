@@ -1,36 +1,36 @@
 ---
-title: "The Grid"
-description: "Set up The Grid instruments as a custom provider in PromptLayer."
+title: "The Grid AI"
+description: "Set up The Grid AI instruments as a custom provider in PromptLayer."
 icon: "grid"
 ---
 
-[The Grid](https://thegrid.ai) is an inference marketplace that serves models from several labs behind one OpenAI-compatible API. Instruments address a **capability tier** rather than a specific lab's model name — `text-standard`, `code-prime` and `agent-max` each route to a current model for that tier — so a prompt template keeps working when the underlying model is replaced.
+[The Grid AI](https://thegrid.ai) is an inference marketplace that serves models from several labs behind one OpenAI-compatible API. Instruments address a **capability tier** rather than a specific lab's model name: `text-standard`, `code-prime` and `agent-max` each route to a current model for that tier, so a prompt template keeps working when the underlying model is replaced.
 
-## Setting Up The Grid as a Custom Provider
+## Setting Up The Grid AI as a Custom Provider
 
-To use The Grid instruments in PromptLayer:
+To use The Grid AI instruments in PromptLayer:
 
 1. Navigate to **Settings → Custom Providers and Models** in your PromptLayer dashboard
 2. Click **Create Custom Provider**
 3. Configure the provider with the following details:
-   - **Name**: The Grid (or your preferred name)
+   - **Name**: The Grid AI (or your preferred name)
    - **Client**: OpenAI
    - **Base URL**: `https://api.thegrid.ai/v1`
-   - **API Key**: Your The Grid API key (get one at [thegrid.ai](https://thegrid.ai))
+   - **API Key**: Your The Grid AI API key (get one at [thegrid.ai](https://thegrid.ai))
 
 <Note>
-The Grid uses OpenAI-compatible endpoints, which is why we select OpenAI as the client type.
+The Grid AI uses OpenAI-compatible endpoints, which is why we select OpenAI as the client type.
 </Note>
 
 ## Creating Custom Models (Recommended)
 
 For easier model selection in the Playground and Prompt Registry, create custom models:
 
-1. In **Settings → Custom Providers and Models**, find your The Grid provider in the list
+1. In **Settings → Custom Providers and Models**, find your The Grid AI provider in the list
 2. Click on the row to expand it
 3. Click **Create Custom Model**
 4. Configure each model:
-   - **Provider**: Select the The Grid provider you created
+   - **Provider**: Select the The Grid AI provider you created
    - **Model Name**: The instrument identifier (e.g., `text-standard`, `agent-max`)
    - **Display Name**: A friendly name like "Text Standard"
    - **Model Type**: Chat
@@ -46,23 +46,24 @@ Instruments come in capability tiers across text, code and agent families:
 | `text-prime`, `text-max` | Harder reasoning, at higher latency and cost |
 | `code-standard`, `code-prime`, `code-max` | Reading and writing code |
 | `agent-standard`, `agent-prime`, `agent-max` | Multi-step tool use |
+| `bytedance-pro-latest`, `claude-opus-latest`, `deepseek-pro-latest`, `gemini-pro-latest`, `glm-latest`, `gpt-sol-latest`, `kimi-latest`, `minimax-latest` | One lab's current model (lab-pinned) |
 
-There are also lab-pinned instruments such as `claude-opus-latest`, `gemini-pro-latest` and `deepseek-pro-latest`.
+Lab-pinned instruments (the last row) restrict routing to one lab, and follow that lab's newest qualifying model.
 
-`GET https://api.thegrid.ai/v1/models` returns the complete, current list with context windows and capability flags. For details, see [The Grid's instrument specifications](https://thegrid.ai/docs/instrument-specifications/current-instruments).
+`GET https://api.thegrid.ai/v1/models` returns the complete, current list with context windows and capability flags. For details, see [The Grid AI's instrument specifications](https://thegrid.ai/docs/instrument-specifications/current-instruments).
 
-## Using The Grid in PromptLayer
+## Using The Grid AI in PromptLayer
 
 ### In the Playground
 
 1. Open the Playground
-2. Select your The Grid provider from the provider dropdown
+2. Select your The Grid AI provider from the provider dropdown
 3. Choose an instrument
 4. Start querying with your prompts
 
 ### In the Prompt Registry
 
-Instruments work with PromptLayer's Prompt Registry — select them when creating or editing templates, use those templates in evaluations, and track usage alongside your other providers.
+Instruments work with PromptLayer's Prompt Registry: select them when creating or editing templates, use those templates in evaluations, and track usage alongside your other providers.
 
 ### Reasoning and token budgets
 
@@ -81,7 +82,7 @@ from promptlayer import PromptLayer
 
 promptlayer = PromptLayer(api_key="pl_****")
 
-# Run a prompt template configured to use a The Grid instrument
+# Run a prompt template configured to use a The Grid AI instrument
 response = promptlayer.run(
     prompt_name="your-thegrid-prompt",
     input_variables={"topic": "quantum computing"}
@@ -95,4 +96,4 @@ print(f"Request ID: {response['request_id']}")
 
 - [Custom Providers](/features/custom-providers)
 - [Supported Providers](/features/supported-providers)
-- [The Grid Official Documentation](https://thegrid.ai/docs)
+- [The Grid AI Official Documentation](https://thegrid.ai/docs)
