@@ -743,6 +743,26 @@
     {
       "source": "/sdks/evals/scorers/custom-code",
       "destination": "/sdks/evals/scorers/overview#custom-code"
+    },
+    {
+      "source": "/why-promptlayer/how-it-works",
+      "destination": "/overview"
+    },
+    {
+      "source": "/why-promptlayer/prompt-management",
+      "destination": "/features/prompt-registry/overview"
+    },
+    {
+      "source": "/why-promptlayer/evaluation-and-ranking",
+      "destination": "/features/evaluations/overview"
+    },
+    {
+      "source": "/features/prompt-history/traces",
+      "destination": "/features/observability/traces"
+    },
+    {
+      "source": "/features/evaluations/datasets",
+      "destination": "/features/evaluations/datasets-overview"
     }
   ]
 }
