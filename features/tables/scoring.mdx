@@ -5,7 +5,10 @@ icon: "gauge"
 ---
 
 <Warning>
-  Legacy table scoring is deprecated for new workflows. Use [Scorecards](/features/tables/scorecards) for new evaluation workflows and migration planning.
+  Legacy table scoring is deprecated, and custom code scoring can no longer be set up in the app. Use [Scorecards](/features/tables/scorecards) instead:
+
+  - **Code Check** runs your own Python or JavaScript on each row.
+  - **Column Evaluator** computes sheet-wide metrics such as average, percentile, MAE, RMSE, and a classification report. See [Column evaluators](/features/tables/scorecards#column-evaluators).
 </Warning>
 
 Scoring turns a sheet into a summary signal you can compare across runs, prompt versions, and workflow changes.
