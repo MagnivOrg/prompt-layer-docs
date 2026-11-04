@@ -30,6 +30,7 @@ Available evaluator types include:
 
 | Evaluator | Use when |
 | --- | --- |
+| **Column Evaluator** | You need one metric across a whole column, such as accuracy or p95 latency. |
 | **AI Judge** | You need rubric-based grading for subjective output quality. |
 | **Code Check** | You need deterministic checks with custom logic. |
 | **Compare Values** | You need expected column, numeric threshold, or JSON comparison checks. |
@@ -37,7 +38,25 @@ Available evaluator types include:
 | **Regex Match** | You need exact pattern checks for structured strings. |
 | **Valid Format** | You need JSON, XML, or schema-style validation. |
 
-You can also add a column summary. Column summaries run once across the whole column. Row evaluators run once per row, then roll up into the overall score.
+Row evaluators run once per row, then roll up into the overall score. Column evaluators run once across a whole column.
+
+## Column evaluators
+
+Add a **Column Evaluator** and pick an option under **Evaluate by**:
+
+| Option | Compares against | Result |
+| --- | --- | --- |
+| **Average numeric value** | None | Mean of a numeric column, such as a 1–5 rating. |
+| **Most frequent value** | None | The most common label or winner. |
+| **Lowest numeric value** / **Highest numeric value** | None | The smallest or largest number, optionally shown with a label from the same row. |
+| **Percentile** | None | p50, p95, p99, or any percentile of a numeric column, such as latency or cost. |
+| **Mean absolute error (MAE)** | Expected column | Average miss. Lower is better. |
+| **Root mean squared error (RMSE)** | Expected column | Like MAE, but weights large misses more. |
+| **Classification report** | Expected label column | Accuracy, per-label precision, recall, and F1, plus a confusion matrix. |
+
+Classification accuracy can count toward the scorecard score. The other metrics report a value without changing the score.
+
+In a classification report, each row passes or fails on whether its label matches the expected label, so the **Failed** filter lists misclassified rows. Labels match ignoring case and surrounding whitespace. MAE and RMSE show each row's miss.
 
 ## Configure an evaluator
 
