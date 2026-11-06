@@ -49,6 +49,12 @@ When you run a parent template that contains snippets, the system 'renders' the 
 
 *Rendering snippets from the Playground*
 
+### See a prompt with snippets filled in
+
+- **X-Ray Mode:** on the prompt's page, click the stethoscope icon to expand every snippet inline.
+- **Export:** hover a version in the version list and click **Export**. The JSON file has the template with snippets filled in and the exact snippet versions used.
+- **API:** [`GET /prompt-templates/{identifier}`](/reference/templates-get-raw) returns the template with snippets filled in and a `snippets` list of the versions used.
+
 ### Webhooks
 
 When you update a snippet, there will be a webhook of type `prompt_template_updated` for all of the templates that import the snippet.

@@ -66,6 +66,13 @@ Stop or cancel work when a run was started by mistake, the configuration is wron
 
 Open computed cells to inspect outputs, errors, execution details, or prompt request details. Use failed cells to debug configuration or source data, and use stale cells to decide what needs rerunning before scoring.
 
+### See where a result came from
+
+Each Prompt Template cell records the prompt version, snippet versions, and request that produced it.
+
+- **Request:** hover the cell and click the link icon to open its request log.
+- **Prompt and snippet versions:** open the cell. The header shows the prompt version, such as `grader v3`, and any snippet versions. Click the prompt version to open it.
+
 ## Update cells through the API
 
 Use the API when a job, script, or external workflow should add rows, edit cells, or queue recalculation.
