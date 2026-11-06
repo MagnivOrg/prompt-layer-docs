@@ -9,9 +9,18 @@ See [Request Logs](/features/observability/request-logs) for the record this ID 
 
 All tracking in PromptLayer is based on the `pl_request_id`. This identifier is needed to enrich logs with [metadata](/features/observability/request-logs/metadata), [scores](/features/observability/request-logs/scores), [associated prompt templates](/features/observability/request-logs/tracking-templates), and more. You can also use it to [retrieve the full request payload](/reference/get-request) as a prompt blueprint.
 
-You can quickly grab a request ID from the web UI as shown below.
+In the web UI, the request ID appears at the top of each request log. The video below shows it at 0:24.
 
-<img src="/images/copy-request-id.gif" width="60%"/>
+<Frame>
+  <iframe
+    src="https://player.mux.com/JaIrnqRMD2B54K4hItDdWXWujYY00hvN01ociZW28F4028"
+    title="Find and debug any LLM request"
+    style={{ width: "100%", aspectRatio: "16/9", border: 0 }}
+    allow="accelerometer; gyroscope; autoplay; encrypted-media; picture-in-picture"
+    allowFullScreen
+    loading="lazy"
+  ></iframe>
+</Frame>
 
 Specific instructions for retrieving the ID programmatically are below.
 
