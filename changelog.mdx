@@ -4,6 +4,19 @@ description: "Daily updates on new features and improvements to PromptLayer."
 icon: "rocket"
 ---
 
+## November 22, 2026
+
+### Deployment 1
+
+#### Improvements
+- Long-running Gemini and Vertex AI requests no longer hang indefinitely when a response stalls, and they now time out cleanly with a clear error.
+- Cancelling a `Smart Tables` execution now releases cells that were queued but had not started, so they are no longer held in a locked state.
+- Custom Gemini models now correctly apply top-level `thinkingLevel`, `thinkingBudget`, and `includeThoughts` parameters when they are not inherited from a base model.
+- Requests to Gemini models that use JSON response mode now show the `json_object` response format in request logs.
+
+---
+
+
 ## November 06, 2026
 
 ### Deployment 1
