@@ -155,7 +155,7 @@ pl_client.templates.publish(
 
 ```bash GitLab CI / GitHub Actions
 # Example CI step — publish prompt to PromptLayer
-curl -X POST https://api.promptlayer.com/prompt-templates \
+curl -X POST https://api.promptlayer.com/rest/prompt-templates \
   -H "X-API-KEY: $PROMPTLAYER_API_KEY" \
   -H "Content-Type: application/json" \
   -d @prompts/order-summary.json
